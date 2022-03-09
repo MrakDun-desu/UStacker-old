@@ -4,7 +4,7 @@ namespace Blockstacker.Common
 {
     public class MonoSingleton : MonoBehaviour
     {
-        private MonoSingleton _instance;
+        private static MonoSingleton _instance;
 
         private void Awake()
         {
