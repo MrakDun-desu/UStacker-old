@@ -1,6 +1,6 @@
 using System;
 
-namespace Blockstacker.AppSettings.SettingGroups
+namespace Blockstacker.Settings.SettingGroups
 {
     [Serializable]
     public class OtherSettings
