@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
-using Blockstacker.Settings.SettingGroups;
+using Blockstacker.Settings.Groups;
 using UnityEngine;
 
 namespace Blockstacker.Settings
@@ -17,6 +17,7 @@ namespace Blockstacker.Settings
             public VideoSettings Video = new();
             public CustomizationSettings Customization = new();
             public OtherSettings Others = new();
+            public string Rebinds;
         }
 
         private static readonly SettingsContainer Settings = new();
@@ -26,6 +27,7 @@ namespace Blockstacker.Settings
         public static VideoSettings Video => Settings.Video;
         public static CustomizationSettings Customization => Settings.Customization;
         public static OtherSettings Other => Settings.Others;
+        public static string Rebinds { get => Settings.Rebinds; set => Settings.Rebinds = value; }
 
         private static string SettingsPath => Path.Combine(Application.persistentDataPath, "appSettings.json");
 

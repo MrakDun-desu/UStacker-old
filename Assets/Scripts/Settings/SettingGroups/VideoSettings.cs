@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Blockstacker.Settings.SettingGroups
+namespace Blockstacker.Settings.Groups
 {
     [Serializable]
     public class VideoSettings

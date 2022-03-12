@@ -1,6 +1,6 @@
 using System;
 
-namespace Blockstacker.Settings.SettingGroups
+namespace Blockstacker.Settings.Groups
 {
     [Serializable]
     public class HandlingSettings
