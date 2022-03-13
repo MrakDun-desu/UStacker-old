@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Blockstacker.Settings.Changers
 {
-    public class InputPresetManager : MonoBehaviour, ISettingChanger
+    public class InputPresetChanger : MonoBehaviour, ISettingChanger
     {
         [SerializeField] private TMP_Dropdown _presetPickerDropdown;
         [SerializeField] private TMP_InputField _newPresetNameField;
