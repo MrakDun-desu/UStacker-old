@@ -20,6 +20,11 @@ namespace Blockstacker.Settings.Changers
         private static event Action RebindChanged;
         private RebindingOperation _currentOperation;
 
+        private void Start()
+        {
+            OnValidate();
+        }
+
         private void OnValidate()
         {
             if (_action == null) return;
@@ -36,12 +41,16 @@ namespace Blockstacker.Settings.Changers
 
         private void OnEnable()
         {
+            InputPresetChanger.RebindsChanged += RefreshNames;
             RebindChanged += RefreshNames;
+            RebindChanged += CheckBindingOverlaps;
         }
 
         private void OnDisable()
         {
+            InputPresetChanger.RebindsChanged -= RefreshNames;
             RebindChanged -= RefreshNames;
+            RebindChanged -= CheckBindingOverlaps;
         }
 
         private void RefreshNames()
@@ -58,7 +67,7 @@ namespace Blockstacker.Settings.Changers
         private void CheckBindingOverlaps()
         {
             for (var i = 0; i < _bindingTexts.Length; i++) {
-                _bindingTexts[i].color = IsBindingUnique(i) ? Color.red : Color.black;
+                _bindingTexts[i].color = IsBindingUnique(i) ? Color.black : Color.red;
             }
         }
 
