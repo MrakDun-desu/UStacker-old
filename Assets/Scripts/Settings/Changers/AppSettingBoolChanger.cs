@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Blockstacker.Settings.Changers
 {
-    public class AppSettingBoolChanger : AppSettingChanger<bool>
+    public class AppSettingBoolChanger : AppSettingChangerBase<bool>
     {
         [Space]
         [SerializeField] private Toggle _toggle;

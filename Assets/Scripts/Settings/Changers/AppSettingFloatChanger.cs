@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Blockstacker.Settings.Changers
 {
-    public class AppSettingFloatChanger : AppSettingChanger<float>
+    public class AppSettingFloatChanger : AppSettingChangerBase<float>
     {
         [Space]
         [SerializeField] private TMP_InputField _valueField;
@@ -14,6 +14,7 @@ namespace Blockstacker.Settings.Changers
         [SerializeField] private float _range;
         [SerializeField] private float _minValue;
         [SerializeField] private float _maxValue;
+        [SerializeField] private bool _clampValue;
 
         private void Start()
         {
@@ -35,6 +36,9 @@ namespace Blockstacker.Settings.Changers
         {
             if (string.IsNullOrEmpty(value)) value = "0";
             var newValue = float.Parse(value);
+            if (_clampValue) {
+                newValue = Mathf.Clamp(newValue, _minValue, _maxValue);
+            }
             _slider.SetRealValue(newValue);
             SetValue(newValue);
             OnSettingChanged();

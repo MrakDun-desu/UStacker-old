@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Blockstacker.Settings.Changers
 {
-    public class AppSettingChanger<T> : MonoBehaviour, ISettingChanger
+    public abstract class AppSettingChangerBase<T> : MonoBehaviour, ISettingChanger
     {
         [SerializeField] protected string[] _controlPath = new string[0];
 
@@ -17,13 +17,13 @@ namespace Blockstacker.Settings.Changers
             }
         }
 
+        protected void OnSettingChanged() => SettingChanged?.Invoke();
+
         public void SetValue(T value)
         {
             if (AppSettings.TrySetValue(value, _controlPath)) {
                 SettingChanged?.Invoke();
             }
         }
-
-        protected void OnSettingChanged() => SettingChanged?.Invoke();
     }
 }
