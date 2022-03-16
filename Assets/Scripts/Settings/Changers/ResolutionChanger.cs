@@ -1,4 +1,5 @@
 using System;
+using Blockstacker.Common.Extensions;
 using TMPro;
 using UnityEngine;
 
@@ -18,9 +19,7 @@ namespace Blockstacker.Settings.Changers
             for (int i = 0; i < _resolutions.Length; i++) {
                 Resolution resolution = _resolutions[i];
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(resolution.ToString()));
-                if (resolution.width == Screen.currentResolution.width &&
-                    resolution.height == Screen.currentResolution.height &&
-                    resolution.refreshRate == Screen.currentResolution.refreshRate) {
+                if (resolution.IsEqualTo(Screen.currentResolution)) {
                     _dropdown.SetValueWithoutNotify(i);
                 }
             }
