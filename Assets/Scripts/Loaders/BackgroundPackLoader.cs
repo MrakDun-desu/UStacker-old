@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Blockstacker.Settings;
@@ -7,9 +8,11 @@ namespace Blockstacker.Loaders
 {
     public static class BackgroundPackLoader
     {
-        private static Dictionary<string, Sprite> _backgrounds = new();
         private static string _currentBackgroundPack => Path.Combine(_backgroundPackPath, AppSettings.Customization.SkinFolder);
         private static string _backgroundPackPath => Path.Combine(Application.persistentDataPath, "backgroundPacks");
+
+        public static Dictionary<string, Texture2D> _backgrounds = new();
+        public static event Action<string> BackgroundChanged;
 
         public static IEnumerable<string> EnumerateBackgroundPacks()
         {
@@ -18,6 +21,11 @@ namespace Blockstacker.Loaders
                 var slashIndex = path.LastIndexOf("/") + 1;
                 yield return path[slashIndex..];
             }
+        }
+
+        public static void Reload()
+        {
+
         }
     }
 }

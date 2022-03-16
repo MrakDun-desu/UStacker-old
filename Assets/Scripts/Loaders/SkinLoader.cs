@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Blockstacker.Settings;
@@ -7,9 +8,11 @@ namespace Blockstacker.Loaders
 {
     public static class SkinLoader
     {
-        private static Dictionary<string, Sprite> _skins = new();
         private static string _currentSkin => Path.Combine(_skinPath, AppSettings.Customization.SkinFolder);
         private static string _skinPath => Path.Combine(Application.persistentDataPath, "skins");
+
+        public static Dictionary<string, Sprite> _skins = new();
+        public static event Action<string> SkinChanged;
 
         public static IEnumerable<string> EnumerateSkins()
         {
@@ -18,6 +21,11 @@ namespace Blockstacker.Loaders
                 var slashIndex = path.LastIndexOf("/") + 1;
                 yield return path[slashIndex..];
             }
+        }
+
+        public static void Reload()
+        {
+
         }
     }
 }
