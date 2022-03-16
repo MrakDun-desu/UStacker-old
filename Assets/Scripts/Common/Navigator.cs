@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 namespace Blockstacker.Common
 {
-    public class Navigator : MonoSingleton
+    public class Navigator : MonoBehaviour
     {
         public void LoadMenu() => SceneManager.LoadScene("Scene_Menu");
         public void LoadSettings() => SceneManager.LoadScene("Scene_GlobalSettings");
