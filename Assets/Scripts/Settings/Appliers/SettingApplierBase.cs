@@ -7,7 +7,7 @@ namespace Blockstacker.Settings.Appliers
     {
         protected ISettingChanger _settingChanger;
 
-        protected void Awake() => _settingChanger = GetComponent<ISettingChanger>();
+        protected virtual void Awake() => _settingChanger = GetComponent<ISettingChanger>();
 
         protected void OnEnable() => _settingChanger.SettingChanged += OnSettingChanged;
 
