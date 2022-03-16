@@ -11,7 +11,7 @@ namespace Blockstacker.Startup
         public event Action SettingChanged;
         private void Awake()
         {
-            AppSettings.Load();
+            AppSettings.TryLoad();
             SettingChanged?.Invoke();
             SceneManager.LoadScene("Scene_Menu");
         }

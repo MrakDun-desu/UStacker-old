@@ -31,17 +31,23 @@ namespace Blockstacker.Settings
 
         private static string SettingsPath => Path.Combine(Application.persistentDataPath, "appSettings.json");
 
-        public static void Save()
+        public static bool TrySave(string path = null)
         {
-            File.WriteAllText(SettingsPath, JsonUtility.ToJson(Settings));
+            path ??= SettingsPath;
+            int slashIndex = path.LastIndexOf("/");
+            if (!Directory.Exists(path[..slashIndex])) return false;
+            File.WriteAllText(path, JsonUtility.ToJson(Settings));
+            return true;
         }
 
-        public static void Load()
+        public static bool TryLoad(string path = null)
         {
-            if (!File.Exists(SettingsPath))
-                return;
+            path ??= SettingsPath;
+            if (!File.Exists(path))
+                return false;
 
-            JsonUtility.FromJsonOverwrite(File.ReadAllText(SettingsPath), Settings);
+            JsonUtility.FromJsonOverwrite(File.ReadAllText(path), Settings);
+            return true;
         }
 
         public static bool TrySetValue<T>(T value, string[] path)
