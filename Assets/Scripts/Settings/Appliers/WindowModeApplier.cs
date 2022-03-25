@@ -7,7 +7,8 @@ namespace Blockstacker.Settings.Appliers
     {
         public override void OnSettingChanged()
         {
-            Enum.TryParse(AppSettings.Video.FullscreenMode, out FullScreenMode newMode);
+            if (!Enum.TryParse(AppSettings.Video.FullscreenMode, out FullScreenMode newMode))
+                return;
 
             if (Screen.fullScreenMode == newMode) return;
             Screen.fullScreenMode = newMode;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Blockstacker.Common.Extensions;
 using TMPro;
 using UnityEngine;
@@ -30,7 +31,7 @@ namespace Blockstacker.Settings.Changers
             if (_action == null) return;
 
             if (_bindingName != null) {
-                var slashIndex = _action.name.LastIndexOf("/") + 1;
+                var slashIndex = _action.name.LastIndexOfAny(new char[] { '/', '\\' }) + 1;
                 var nameString = _action.name[slashIndex..];
                 _bindingName.text = nameString.FormatCamelCase();
             }
@@ -95,10 +96,16 @@ namespace Blockstacker.Settings.Changers
         {
             _currentOperation.Dispose();
             if (_rebindOverlay != null)
-                _rebindOverlay.SetActive(false);
+                StartCoroutine(DeactivateOverlay());
             RefreshNames();
             RebindChanged?.Invoke();
             AppSettings.Rebinds = _actionAsset.SaveBindingOverridesAsJson();
+        }
+
+        private IEnumerator DeactivateOverlay()
+        {
+            yield return new WaitForSeconds(.1f);
+            _rebindOverlay.SetActive(false);
         }
 
         public void DoRebind(int index)

@@ -18,7 +18,7 @@ namespace Blockstacker.Loaders
         {
             if (!Directory.Exists(_soundPackPath)) yield break;
             foreach (var path in Directory.EnumerateDirectories(_soundPackPath)) {
-                var slashIndex = path.LastIndexOf("/") + 1;
+                var slashIndex = path.LastIndexOfAny(new char[] { '/', '\\' }) + 1;
                 yield return path[slashIndex..];
             }
         }

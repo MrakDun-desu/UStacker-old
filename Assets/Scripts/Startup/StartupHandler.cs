@@ -9,7 +9,7 @@ namespace Blockstacker.Startup
     public class StartupHandler : MonoBehaviour, ISettingChanger
     {
         public event Action SettingChanged;
-        private void Awake()
+        private void Start()
         {
             AppSettings.TryLoad();
             SettingChanged?.Invoke();

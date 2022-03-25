@@ -17,7 +17,9 @@ namespace Blockstacker.Settings.Appliers
                 Debug.LogError("Setting could not be found!");
                 return;
             }
-            _mixer.SetFloat(_propertyName, AppSettings.GetValue<float>(path));
+            var value = AppSettings.GetValue<float>(path);
+            if (value <= 0) value = 0.0001f;
+            _mixer.SetFloat(_propertyName, Mathf.Log10(value) * 20);
         }
     }
 }

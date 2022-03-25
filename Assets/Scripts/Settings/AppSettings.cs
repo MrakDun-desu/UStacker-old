@@ -34,7 +34,7 @@ namespace Blockstacker.Settings
         public static bool TrySave(string path = null)
         {
             path ??= SettingsPath;
-            int slashIndex = path.LastIndexOf("/");
+            int slashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
             if (!Directory.Exists(path[..slashIndex])) return false;
             File.WriteAllText(path, JsonUtility.ToJson(Settings));
             return true;

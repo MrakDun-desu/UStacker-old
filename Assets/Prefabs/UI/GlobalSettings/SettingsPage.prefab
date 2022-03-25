@@ -358,6 +358,7 @@ GameObject:
   - component: {fileID: 1050105722268137380}
   - component: {fileID: 3339758060632849367}
   - component: {fileID: 8971725410065491994}
+  - component: {fileID: 1724833579765541041}
   m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
@@ -480,6 +481,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1724833579765541041}
+        m_TargetAssemblyTypeName: Blockstacker.Settings.SettingSaver, Assembly-CSharp
+        m_MethodName: Save
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1724833579765541041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2494006755138512575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de130a9014048e84b85f8925c8366aa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2994506421734062918
 GameObject:
   m_ObjectHideFlags: 0
@@ -703,7 +728,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 4340147108552387946}
   m_Direction: 2
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
