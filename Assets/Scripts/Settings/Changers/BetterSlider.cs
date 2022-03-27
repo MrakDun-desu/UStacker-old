@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Blockstacker.Settings.Changers
@@ -12,7 +13,18 @@ namespace Blockstacker.Settings.Changers
         public float MinValue { set => _minValue = value; }
         public float MaxValue { set => _maxValue = value; }
 
-        public float Range { get => _slider.maxValue; set => _slider.maxValue = value; }
+        public float Range
+        {
+            get
+            {
+                if (_slider != null) return _slider.maxValue;
+                return default;
+            }
+            set
+            {
+                if (_slider != null) _slider.maxValue = value;
+            }
+        }
         private float RealRange => _maxValue - _minValue;
 
         private Slider _slider;

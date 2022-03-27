@@ -1352,6 +1352,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BasicEventSystem
       objectReference: {fileID: 0}
+    - target: {fileID: 8926028778059803004, guid: 0ca020bfccda32d4bb7696b3def578c0, type: 3}
+      propertyPath: m_FirstSelected
+      value: 
+      objectReference: {fileID: 610878766}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ca020bfccda32d4bb7696b3def578c0, type: 3}
 --- !u!1001 &8692974509622913041

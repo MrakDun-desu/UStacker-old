@@ -10,6 +10,7 @@ namespace Blockstacker.Settings.Appliers
         public override void OnSettingChanged()
         {
             _actionAsset.LoadBindingOverridesFromJson(AppSettings.Rebinds);
+            Debug.Log(_actionAsset.SaveBindingOverridesAsJson());
         }
     }
 }

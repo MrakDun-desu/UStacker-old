@@ -7,9 +7,9 @@ namespace Blockstacker.Settings.Groups
     public class VideoSettings
     {
         public string FullscreenMode = "";
-        public Vector2Int Resolution;
+        public Vector2Int Resolution = new(1920, 1080);
         public int RefreshRate;
-        public float BackgroundVisibility = .6f;
+        public float BackgroundVisibility = 1;
         public float ParticleCount = 1;
         public bool UseVsync = false;
     }

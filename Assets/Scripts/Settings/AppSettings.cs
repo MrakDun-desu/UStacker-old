@@ -35,8 +35,8 @@ namespace Blockstacker.Settings
         {
             path ??= SettingsPath;
             int slashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
-            if (!Directory.Exists(path[..slashIndex])) return false;
-            File.WriteAllText(path, JsonUtility.ToJson(Settings));
+            if (!Directory.Exists(path[..slashIndex]) || string.IsNullOrEmpty(path[..slashIndex])) return false;
+            File.WriteAllText(path, JsonUtility.ToJson(Settings, true));
             return true;
         }
 

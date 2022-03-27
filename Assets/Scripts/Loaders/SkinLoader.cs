@@ -11,7 +11,7 @@ namespace Blockstacker.Loaders
         private static string _currentSkin => Path.Combine(_skinPath, AppSettings.Customization.SkinFolder);
         private static string _skinPath => Path.Combine(Application.persistentDataPath, "skins");
 
-        public static Dictionary<string, Sprite> _skins = new();
+        public static Dictionary<string, Sprite> Skins = new();
         public static event Action<string> SkinChanged;
 
         public static IEnumerable<string> EnumerateSkins()

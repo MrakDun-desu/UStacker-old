@@ -1,5 +1,4 @@
 using Blockstacker.DiscordPresence;
-using UnityEngine;
 
 namespace Blockstacker.Settings.Appliers
 {

@@ -11,7 +11,7 @@ namespace Blockstacker.Loaders
         private static string _currentSoundPack => Path.Combine(_soundPackPath, AppSettings.Customization.SkinFolder);
         private static string _soundPackPath => Path.Combine(Application.persistentDataPath, "soundPacks");
 
-        public static Dictionary<string, AudioClip> _sounds = new();
+        public static Dictionary<string, AudioClip> Sounds = new();
         public static event Action<string> SoundChanged;
 
         public static IEnumerable<string> EnumerateSoundPacks()

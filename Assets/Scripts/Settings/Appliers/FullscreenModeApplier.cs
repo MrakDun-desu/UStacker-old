@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Blockstacker.Settings.Appliers
 {
-    public class WindowModeApplier : SettingApplierBase
+    public class FullscreenModeApplier : SettingApplierBase
     {
         public override void OnSettingChanged()
         {

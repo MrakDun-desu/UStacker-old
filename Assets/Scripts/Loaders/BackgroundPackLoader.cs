@@ -11,7 +11,7 @@ namespace Blockstacker.Loaders
         private static string _currentBackgroundPack => Path.Combine(_backgroundPackPath, AppSettings.Customization.SkinFolder);
         private static string _backgroundPackPath => Path.Combine(Application.persistentDataPath, "backgroundPacks");
 
-        public static Dictionary<string, Texture2D> _backgrounds = new();
+        public static Dictionary<string, Texture2D> Backgrounds = new();
         public static event Action<string> BackgroundChanged;
 
         public static IEnumerable<string> EnumerateBackgroundPacks()

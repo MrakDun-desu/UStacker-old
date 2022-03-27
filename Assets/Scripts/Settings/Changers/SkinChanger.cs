@@ -9,6 +9,7 @@ namespace Blockstacker.Settings.Changers
     {
         [Space]
         [SerializeField] private TMP_Dropdown _dropdown;
+        [SerializeField] private string _emptyPrompt = "No skin available";
 
         public event Action SettingChanged;
 
@@ -17,6 +18,7 @@ namespace Blockstacker.Settings.Changers
         public void OptionPicked(int value)
         {
             var newSkin = _dropdown.options[value].text;
+            if (newSkin.Equals(_emptyPrompt)) return;
             AppSettings.Customization.SkinFolder = newSkin;
             SettingChanged?.Invoke();
         }
@@ -31,6 +33,9 @@ namespace Blockstacker.Settings.Changers
                     _dropdown.SetValueWithoutNotify(i);
                 }
                 i++;
+            }
+            if (i == 0) {
+                _dropdown.options.Add(new TMP_Dropdown.OptionData(_emptyPrompt));
             }
             _dropdown.RefreshShownValue();
         }
