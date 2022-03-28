@@ -11,9 +11,11 @@ namespace Blockstacker.DiscordPresence
 
         private void Update() => discord?.RunCallbacks();
 
-        private void OnDisable() => Stop();
+        private void OnDisable() => DisconnectFromDiscord();
 
-        public void Start()
+        private void OnApplicationQuit() => DisconnectFromDiscord();
+
+        public void ConnectToDiscord()
         {
             discord = new Discord.Discord(ApplicationID, (ulong)Discord.CreateFlags.Default);
             var activityManager = discord.GetActivityManager();
@@ -33,7 +35,7 @@ namespace Blockstacker.DiscordPresence
             });
         }
 
-        public void Stop()
+        public void DisconnectFromDiscord()
         {
             discord?.Dispose();
             discord = null;

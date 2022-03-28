@@ -6,7 +6,7 @@ namespace Blockstacker.Common
     {
         private static MonoSingleton _instance;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             transform.parent = null;
             if (_instance == null) {

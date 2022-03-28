@@ -174,7 +174,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.06007476, g: 0.22678486, b: 0.4716981, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -270,13 +270,11 @@ GameObject:
   - component: {fileID: 1505477400}
   - component: {fileID: 1505477399}
   - component: {fileID: 1505477398}
-  - component: {fileID: 1505477397}
   - component: {fileID: 1505477396}
   - component: {fileID: 1505477395}
   - component: {fileID: 1505477394}
   - component: {fileID: 1505477393}
   - component: {fileID: 1505477391}
-  - component: {fileID: 1505477390}
   m_Layer: 0
   m_Name: StartupHandler
   m_TagString: Untagged
@@ -296,6 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 394ad0533231644418ea6feb7fda7830, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _actionAsset: {fileID: -944628639613478452, guid: ffdfab209b8a7fc44b5fe46d6bf57835, type: 3}
 --- !u!4 &1505477389
 Transform:
   m_ObjectHideFlags: 0
@@ -311,18 +310,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1505477390
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1505477387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0180bc8d90e151a48855451df97e1a20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1505477391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -393,19 +380,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mixer: {fileID: 24100000, guid: 23c16a5d4563fe1469b4393b170162b7, type: 2}
   _propertyName: MasterVolume
---- !u!114 &1505477397
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1505477387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76d5052252ba23e4b8fe972bf5f5ea30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _actionAsset: {fileID: -944628639613478452, guid: ffdfab209b8a7fc44b5fe46d6bf57835, type: 3}
 --- !u!114 &1505477398
 MonoBehaviour:
   m_ObjectHideFlags: 0

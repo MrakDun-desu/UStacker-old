@@ -17,10 +17,10 @@ namespace Blockstacker.Settings.Appliers
             if (_dcController == null) return;
 
             if (AppSettings.Other.UseDiscordRichPresence) {
-                _dcController.Start();
+                _dcController.ConnectToDiscord();
             }
             else {
-                _dcController.Stop();
+                _dcController.DisconnectFromDiscord();
             }
         }
     }
