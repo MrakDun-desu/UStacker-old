@@ -1,6 +1,6 @@
 using System;
-using Blockstacker.Settings;
-using Blockstacker.Settings.Changers;
+using Blockstacker.GlobalSettings;
+using Blockstacker.GlobalSettings.Changers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
