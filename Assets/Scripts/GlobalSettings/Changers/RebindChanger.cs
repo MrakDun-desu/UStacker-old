@@ -115,7 +115,6 @@ namespace Blockstacker.GlobalSettings.Changers
 
             _currentOperation = _action.action.PerformInteractiveRebinding(index)
                 .WithControlsExcluding("Mouse")
-                .WithControlsExcluding("<Keyboard>/anyKey")
                 .WithCancelingThrough("<Mouse>/leftButton")
                 .OnMatchWaitForAnother(.1f)
                 .OnCancel(_ => RebindCancelled(index))

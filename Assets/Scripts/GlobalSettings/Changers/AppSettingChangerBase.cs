@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Blockstacker.Common.Extensions;
 using TMPro;
 using UnityEngine;
@@ -13,6 +12,7 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private bool _autoformatName = true;
 
         public event Action SettingChanged;
+        public static event Action<string> SettingChangedWithName;
 
         protected void OnValidate()
         {
@@ -23,12 +23,17 @@ namespace Blockstacker.GlobalSettings.Changers
                 _title.text = _controlPath[^1].FormatCamelCase();
         }
 
-        protected void OnSettingChanged() => SettingChanged?.Invoke();
+        protected void OnSettingChanged()
+        {
+            SettingChanged?.Invoke();
+            SettingChangedWithName?.Invoke(string.Join("/", _controlPath));
+        }
 
         public void SetValue(T value)
         {
             if (AppSettings.TrySetValue(value, _controlPath)) {
                 SettingChanged?.Invoke();
+                SettingChangedWithName?.Invoke(string.Join("/", _controlPath));
             }
         }
     }
