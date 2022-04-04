@@ -2,7 +2,7 @@ using Blockstacker.GameSettings.Enums;
 
 namespace Blockstacker.GameSettings.Changers
 {
-    public class KickTableChanger : GameSettingChangerBase<KickTable>
+    public class KickTableChanger : GameSettingChangerBase<KickTableType>
     {
     }
 }

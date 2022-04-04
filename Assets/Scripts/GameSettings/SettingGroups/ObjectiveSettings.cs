@@ -15,5 +15,6 @@ namespace Blockstacker.GameSettings.SettingGroups
         public int MaxCheeseHeight = 10;
         public bool UseCustomCheeseScript = false;
         public string CustomCheeseScriptName = "";
+        public string CustomCheeseScript = "";
     }
 }

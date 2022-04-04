@@ -6,6 +6,7 @@ namespace Blockstacker.GameSettings.Enums
         FourteenBag,
         Classic,
         Pairs,
-        Random
+        Random,
+        Custom
     }
 }
