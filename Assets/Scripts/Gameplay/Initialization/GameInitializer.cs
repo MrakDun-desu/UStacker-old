@@ -17,7 +17,7 @@ namespace Blockstacker.Gameplay.Initialization
         public static event Action GameInitialized;
         public UnityEvent<string> GameFailedToInitialize;
 
-        private void Awake()
+        private void Start()
         {
             StringBuilder errorBuilder = new();
             if (TryInitialize(errorBuilder)) {
