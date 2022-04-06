@@ -19,20 +19,20 @@ MonoBehaviour:
       - {x: 0, y: 0}
       - {x: -1, y: 0}
       - {x: 2, y: 0}
-      - {x: -1, y: 2}
       - {x: 2, y: -1}
+      - {x: -1, y: 2}
       ZeroToOne:
       - {x: 0, y: 0}
-      - {x: -2, y: 0}
       - {x: 1, y: 0}
+      - {x: -2, y: 0}
       - {x: -2, y: -1}
       - {x: 1, y: 2}
       OneToZero:
       - {x: 0, y: 0}
-      - {x: 2, y: 0}
       - {x: -1, y: 0}
-      - {x: 2, y: 1}
+      - {x: 2, y: 0}
       - {x: -1, y: -2}
+      - {x: 1, y: 2}
       OneToTwo:
       - {x: 0, y: 0}
       - {x: -1, y: 0}
@@ -41,10 +41,10 @@ MonoBehaviour:
       - {x: 2, y: -1}
       TwoToOne:
       - {x: 0, y: 0}
-      - {x: 1, y: 0}
-      - {x: -2, y: 0}
-      - {x: 1, y: -2}
-      - {x: -2, y: 1}
+      - {x: 2, y: 0}
+      - {x: -1, y: 0}
+      - {x: 2, y: 1}
+      - {x: -1, y: -2}
       TwoToThree:
       - {x: 0, y: 0}
       - {x: 2, y: 0}
@@ -53,16 +53,24 @@ MonoBehaviour:
       - {x: -1, y: -2}
       ThreeToTwo:
       - {x: 0, y: 0}
-      - {x: -2, y: 0}
       - {x: 1, y: 0}
-      - {x: -2, y: -1}
+      - {x: -2, y: 0}
       - {x: 1, y: 2}
+      - {x: -2, y: -1}
       ThreeToZero:
       - {x: 0, y: 0}
       - {x: 1, y: 0}
       - {x: -2, y: 0}
       - {x: 1, y: -2}
       - {x: -2, y: 1}
+      ZeroToTwo:
+      - {x: 0, y: 0}
+      TwoToZero:
+      - {x: 0, y: 0}
+      OneToThree:
+      - {x: 0, y: 0}
+      ThreeToOne:
+      - {x: 0, y: 0}
     TKickTable:
       StartState: 0
       ZeroToThree:
@@ -113,6 +121,14 @@ MonoBehaviour:
       - {x: -1, y: -1}
       - {x: 0, y: 2}
       - {x: -1, y: 2}
+      ZeroToTwo:
+      - {x: 0, y: 0}
+      TwoToZero:
+      - {x: 0, y: 0}
+      OneToThree:
+      - {x: 0, y: 0}
+      ThreeToOne:
+      - {x: 0, y: 0}
     OKickTable:
       StartState: 0
       ZeroToThree:
@@ -163,6 +179,14 @@ MonoBehaviour:
       - {x: -1, y: -1}
       - {x: 0, y: 2}
       - {x: -1, y: 2}
+      ZeroToTwo:
+      - {x: 0, y: 0}
+      TwoToZero:
+      - {x: 0, y: 0}
+      OneToThree:
+      - {x: 0, y: 0}
+      ThreeToOne:
+      - {x: 0, y: 0}
     JKickTable:
       StartState: 0
       ZeroToThree:
@@ -213,6 +237,14 @@ MonoBehaviour:
       - {x: -1, y: -1}
       - {x: 0, y: 2}
       - {x: -1, y: 2}
+      ZeroToTwo:
+      - {x: 0, y: 0}
+      TwoToZero:
+      - {x: 0, y: 0}
+      OneToThree:
+      - {x: 0, y: 0}
+      ThreeToOne:
+      - {x: 0, y: 0}
     LKickTable:
       StartState: 0
       ZeroToThree:
@@ -263,6 +295,14 @@ MonoBehaviour:
       - {x: -1, y: -1}
       - {x: 0, y: 2}
       - {x: -1, y: 2}
+      ZeroToTwo:
+      - {x: 0, y: 0}
+      TwoToZero:
+      - {x: 0, y: 0}
+      OneToThree:
+      - {x: 0, y: 0}
+      ThreeToOne:
+      - {x: 0, y: 0}
     SKickTable:
       StartState: 0
       ZeroToThree:
@@ -313,6 +353,14 @@ MonoBehaviour:
       - {x: -1, y: -1}
       - {x: 0, y: 2}
       - {x: -1, y: 2}
+      ZeroToTwo:
+      - {x: 0, y: 0}
+      TwoToZero:
+      - {x: 0, y: 0}
+      OneToThree:
+      - {x: 0, y: 0}
+      ThreeToOne:
+      - {x: 0, y: 0}
     ZKickTable:
       StartState: 0
       ZeroToThree:
@@ -363,3 +411,11 @@ MonoBehaviour:
       - {x: -1, y: -1}
       - {x: 0, y: 2}
       - {x: -1, y: 2}
+      ZeroToTwo:
+      - {x: 0, y: 0}
+      TwoToZero:
+      - {x: 0, y: 0}
+      OneToThree:
+      - {x: 0, y: 0}
+      ThreeToOne:
+      - {x: 0, y: 0}

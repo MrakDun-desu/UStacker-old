@@ -11,14 +11,14 @@ namespace Blockstacker.GameSettings
         [Serializable]
         internal class SettingsContainer
         {
-            public RulesSettings GameRules = new();
-            public ObjectiveSettings GameObjective = new();
+            public RulesSettings Rules = new();
+            public ObjectiveSettings Objective = new();
             public PresentationSettings Presentation = new();
         }
 
         [SerializeField] private SettingsContainer Settings = new();
-        public RulesSettings GameRules => Settings.GameRules;
-        public ObjectiveSettings GameObjective => Settings.GameObjective;
+        public RulesSettings Rules => Settings.Rules;
+        public ObjectiveSettings Objective => Settings.Objective;
         public PresentationSettings Presentation => Settings.Presentation;
 
 
