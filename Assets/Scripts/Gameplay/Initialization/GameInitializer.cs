@@ -13,6 +13,9 @@ namespace Blockstacker.Gameplay.Initialization
         [SerializeField] private GameSettingsSO _gameSettingsAsset;
         [SerializeField] private Piece[] _availablePieces = new Piece[0];
         [SerializeField] private GameManager _gameManager;
+        [SerializeField] private KickSystemSO _srsKickSystemSO;
+        [SerializeField] private KickSystemSO _srsPlusKickSystemSO;
+
 
         public static event Action GameInitialized;
         public UnityEvent<string> GameFailedToInitialize;
@@ -30,12 +33,18 @@ namespace Blockstacker.Gameplay.Initialization
 
         public bool TryInitialize(StringBuilder errorBuilder)
         {
-            List<InitializerBase> initializers = new();
-            initializers.Add(new RulesGeneralInitializer(
+            List<InitializerBase> initializers = new()
+            {
+                new RulesGeneralInitializer(
                 errorBuilder, _gameSettingsAsset,
                 _availablePieces.Length,
-                _gameManager));
-            initializers.Add(new RulesHandlingInitializer(errorBuilder, _gameSettingsAsset));
+                _gameManager),
+                new RulesHandlingInitializer(errorBuilder, _gameSettingsAsset),
+                new RulesControlsInitializer(
+                errorBuilder, _gameSettingsAsset,
+                _srsKickSystemSO.KickSystem,
+                _srsPlusKickSystemSO.KickSystem)
+            };
 
             for (var i = 0; i < initializers.Count; i++) {
                 initializers[i].Execute();

@@ -12,7 +12,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         public bool UnlimitedHold = false;
         public KickTableType KickTable = KickTableType.SRS;
         public string CustomKickTableName = "";
-        public KickSystem CustomKickTable;
+        public KickSystem ActualKickTable;
         public float PiecePlacedDelay = 0;
         public float LineClearDelay = 0;
         public OnTouchGround OnTouchGround = OnTouchGround.LimitedTime;
