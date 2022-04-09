@@ -1,4 +1,5 @@
 using System;
+using Blockstacker.GameSettings.Enums;
 
 namespace Blockstacker.GameSettings.SettingGroups
 {
@@ -7,10 +8,8 @@ namespace Blockstacker.GameSettings.SettingGroups
     {
         public float Gravity = .02f;
         public float LockDelay = .5f;
-        public bool UseLevelling = true;
-        public bool UseMasterLevels = true;
         public uint StartingLevel = 1;
-        public bool UseCustomLevellingScript = false;
+        public LevellingSystem LevellingSystem = LevellingSystem.Guideline;
         public string CustomLevellingScriptName = "";
         public string CustomLevellingScript = "";
     }
