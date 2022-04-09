@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Blockstacker.Gameplay.LevellingSystems
@@ -75,38 +76,17 @@ namespace Blockstacker.Gameplay.LevellingSystems
         {
             InData = inData;
             OutData = outData;
-            InData.Changed += ComputeScore;
+            InData.Changed += DataUpdated;
             _currentLevel = (uint)Mathf.Min(startingLevel, 29);
             var linesToNextIndex = (startingLevel > 19) ? 1 : startingLevel;
             _linesToNextLevel = _linesToLevelIncrease[linesToNextIndex];
             OutData.SetValues(CalculateGravity(), 0, _currentLevel, 0);
         }
 
-        private void ComputeScore(string changedValue)
+        private void DataUpdated()
         {
-            switch (changedValue) {
-                case "newLinesCleared":
-                    if (!InData.TryGetValue("newLinesCleared", out int newLinesCleared)) {
-                        return;
-                    }
-                    if (newLinesCleared > 4 || newLinesCleared < 1) return;
-                    AddScoreByNewLinesCleared(newLinesCleared);
-                    break;
-                case "newLinesSoftDropped":
-                    if (!InData.TryGetValue("newLinesSoftDropped", out int newLinesSoftDropped)) {
-                        return;
-                    }
-                    AddScoreByNewLinesSoftDropped(newLinesSoftDropped);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private float CalculateGravity()
-        {
-            var effectiveLevel = Mathf.Min(29, (int)_currentLevel);
-            return (float)_levelGravities[effectiveLevel];
+            AddScoreByNewLinesCleared(InData.newLinesCleared);
+            AddScoreByNewLinesSoftDropped(InData.newLinesSoftDropped);
         }
 
         private void AddScoreByNewLinesSoftDropped(int newLinesSoftDropped)
@@ -132,5 +112,12 @@ namespace Blockstacker.Gameplay.LevellingSystems
             }
             OutData.SetValues(CalculateGravity(), 0, _currentLevel, OutData.score + scoreAddition);
         }
+
+        private float CalculateGravity()
+        {
+            var effectiveLevel = Mathf.Min(29, (int)_currentLevel);
+            return (float)_levelGravities[effectiveLevel];
+        }
+
     }
 }

@@ -43,7 +43,11 @@ namespace Blockstacker.Gameplay.Initialization
                 new RulesControlsInitializer(
                 errorBuilder, _gameSettingsAsset,
                 _srsKickSystemSO.KickSystem,
-                _srsPlusKickSystemSO.KickSystem)
+                _srsPlusKickSystemSO.KickSystem),
+                new RulesLevellingInitializer(
+                    errorBuilder, _gameSettingsAsset,
+                    _gameManager
+                )
             };
 
             for (var i = 0; i < initializers.Count; i++) {

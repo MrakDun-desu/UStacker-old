@@ -1,3 +1,4 @@
+using Blockstacker.Gameplay.LevellingSystems;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Randomizers;
 using Blockstacker.GameSettings;
@@ -11,6 +12,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private Board _board;
 
         public IRandomizer randomizer;
+        public ILevellingSystem levellingSystem;
 
     }
 }

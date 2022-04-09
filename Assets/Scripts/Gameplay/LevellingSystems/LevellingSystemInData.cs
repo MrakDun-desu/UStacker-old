@@ -5,32 +5,22 @@ namespace Blockstacker.Gameplay.LevellingSystems
 {
     public class LevellingSystemInData
     {
-        private readonly Dictionary<string, object> _data = new();
+        public float timePassed;
+        public int newLinesCleared;
+        public int newCheeseLinesCleared;
+        public int newLinesSoftDropped;
+        public int newLinesHardDropped;
+        public int newFinesseFaults;
+        public bool wasPiecePlaced;
+        public bool wasSpin;
+        public bool wasSpinMini;
+        public bool wasAllClear;
+        public bool wasColorClear;
 
-        public bool TryGetValue<T>(string name, out T value)
-        {
-            if (!_data.TryGetValue(name, out var data)) {
-                value = default;
-                return false;
-            }
-            if (data == null) {
-                value = default;
-                return false;
-            }
-            if (data is T) {
-                value = default;
-                return false;
-            }
-            value = (T)data;
-            return true;
-        }
+        public Dictionary<string, object> customData;
 
-        public void SetValue(string name, object value, bool notify = true)
-        {
-            _data[name] = value;
-            if (notify) Changed?.Invoke(name);
-        }
+        public void Confirm() => Changed?.Invoke();
 
-        public event Action<string> Changed;
+        public event Action Changed;
     }
 }
