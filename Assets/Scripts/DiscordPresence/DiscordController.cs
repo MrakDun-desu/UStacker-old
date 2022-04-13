@@ -5,7 +5,7 @@ namespace Blockstacker.DiscordPresence
 {
     public class DiscordController : MonoSingleton
     {
-        private long ApplicationID => 953585016779202580;
+        private static long ApplicationID => 953585016779202580;
         private Discord.Discord discord;
 
 

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Blockstacker.Gameplay.Enums;
 
 namespace Blockstacker.Gameplay.Randomizers
 {
@@ -11,7 +10,7 @@ namespace Blockstacker.Gameplay.Randomizers
 
         private void InitializeCurrentPieces()
         {
-            for (int i = 0; i < _count; i++) {
+            for (var i = 0; i < _count; i++) {
                 _currentValues.AddRange(_availableValues);
             }
         }

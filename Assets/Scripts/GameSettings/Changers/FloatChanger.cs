@@ -1,4 +1,3 @@
-using Blockstacker.GlobalSettings.Changers;
 using UnityEngine;
 
 namespace Blockstacker.GameSettings.Changers
@@ -6,7 +5,7 @@ namespace Blockstacker.GameSettings.Changers
     public class FloatChanger : GameSettingChangerBase<float>
     {
         [Space]
-        [SerializeField] private bool _clampValue = false;
+        [SerializeField] private bool _clampValue;
         [SerializeField] private float _maxValue;
         [SerializeField] private float _minValue;
 

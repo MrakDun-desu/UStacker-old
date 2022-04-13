@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 
@@ -16,6 +17,6 @@ public class FrameText : MonoBehaviour
 
     public void ShowFrames(float source)
     {
-        _text.text = Math.Round(source * _framesPerSecond, 2).ToString() + "F";
+        _text.text = Math.Round(source * _framesPerSecond, 2).ToString(CultureInfo.InvariantCulture) + "F";
     }
 }

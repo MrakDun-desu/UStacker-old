@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Blockstacker.Gameplay.Communication
 {
-    public class Messenger
+    public static class Mediator
     {
-        private readonly Dictionary<Type, List<Delegate>> _registeredActions;
+        private static readonly Dictionary<Type, List<Delegate>> _registeredActions;
 
-        public void Register<TMessage>(Action<TMessage> action)
+        public static void Register<TMessage>(Action<TMessage> action)
             where TMessage : IMessage
         {
             var key = typeof(TMessage);
@@ -17,7 +17,7 @@ namespace Blockstacker.Gameplay.Communication
             _registeredActions[key].Add(action);
         }
 
-        public void Unregister<TMessage>(Action<TMessage> action)
+        public static void Unregister<TMessage>(Action<TMessage> action)
             where TMessage : IMessage
         {
             var key = typeof(TMessage);
@@ -26,7 +26,7 @@ namespace Blockstacker.Gameplay.Communication
             _registeredActions[key].Remove(action);
         }
 
-        public void Send<TMessage>(TMessage message)
+        public static void Send<TMessage>(TMessage message)
             where TMessage : IMessage
         {
             if (!_registeredActions.TryGetValue(message.GetType(), out var actions)) return;
@@ -34,6 +34,10 @@ namespace Blockstacker.Gameplay.Communication
             foreach (var action in actions) {
                 action?.DynamicInvoke(message);
             }
+        }
+        
+        public static void Clear() {
+            _registeredActions.Clear();
         }
     }
 }

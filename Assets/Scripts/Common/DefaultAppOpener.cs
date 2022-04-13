@@ -8,7 +8,7 @@ namespace Blockstacker.Common
     {
         public void OpenInPersistentPath(string path)
         {
-            string pathToFile = Path.Combine(Application.persistentDataPath, path);
+            var pathToFile = Path.Combine(Application.persistentDataPath, path);
             if (!Directory.Exists(pathToFile) && !File.Exists(pathToFile))
                 Directory.CreateDirectory(pathToFile);
             Process.Start(pathToFile);

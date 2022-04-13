@@ -51,7 +51,7 @@ namespace Blockstacker.Gameplay.Initialization
                 _gameSettings.Rules.General.RandomBagScript = File.ReadAllText(randomBagScriptPath);
             }
 
-            bool isValid = true;
+            var isValid = true;
 
             IRandomizer randomizer = _gameSettings.Rules.General.RandomBagType switch
             {

@@ -57,7 +57,7 @@ namespace Blockstacker.Loaders
 
         private static async Task<AudioClip> GetAudioClipAsync(string path)
         {
-            int dotIndex = path.LastIndexOf('.') + 1;
+            var dotIndex = path.LastIndexOf('.') + 1;
             var extension = path[dotIndex..];
             AudioType? audioType = extension switch
             {
@@ -74,7 +74,7 @@ namespace Blockstacker.Loaders
 
             if (audioType == null) return null;
 
-            using UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(
+            using var request = UnityWebRequestMultimedia.GetAudioClip(
                 "file://" + Path.Combine(CurrentSoundPack, path),
                 (AudioType)audioType
                 );

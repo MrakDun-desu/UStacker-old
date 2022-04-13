@@ -1,6 +1,5 @@
 using System.IO;
 using System.Text;
-using Blockstacker.Gameplay.Levelling;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
 using UnityEngine;
@@ -11,18 +10,16 @@ namespace Blockstacker.Gameplay.Initialization
     {
         private static string LevellingSystemsPath
             => Path.Combine(Application.persistentDataPath, "levellingSystems");
-        private GameManager _manager;
-
         public RulesLevellingInitializer(
             StringBuilder problemBuilder,
-            GameSettingsSO gameSettings,
-            GameManager manager) : base(problemBuilder, gameSettings)
+            GameSettingsSO gameSettings
+            ) : base(problemBuilder, gameSettings)
         {
-            _manager = manager;
         }
 
         public override void Execute()
         {
+            // TODO
             if (_gameSettings.Rules.Levelling.LevellingSystem ==
                 LevellingSystem.Custom) {
                 var levellingSystemPath = Path.Combine(
@@ -39,15 +36,6 @@ namespace Blockstacker.Gameplay.Initialization
                     File.ReadAllText(levellingSystemPath);
             }
 
-            bool isValid = true;
-            // TODO
-            // _manager.levellingSystem = _gameSettings.Rules.Levelling.LevellingSystem switch
-            // {
-            // };
-
-            if (!isValid) {
-                _errorBuilder.AppendLine("Custom levelling system is not valid.");
-            }
         }
     }
 }

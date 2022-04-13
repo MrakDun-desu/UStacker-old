@@ -34,7 +34,7 @@ namespace Blockstacker.GlobalSettings
         public static bool TrySave(string path = null)
         {
             path ??= SettingsPath;
-            int slashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
+            var slashIndex = path.LastIndexOfAny(new[] { '/', '\\' });
             if (!Directory.Exists(path[..slashIndex]) || string.IsNullOrEmpty(path[..slashIndex])) return false;
             File.WriteAllText(path, JsonUtility.ToJson(Settings, true));
             return true;
@@ -56,7 +56,7 @@ namespace Blockstacker.GlobalSettings
             FieldInfo fieldInfo = null;
             object oldObject = null;
             object obj = Settings;
-            Type type = obj.GetType();
+            var type = obj.GetType();
             foreach (var fieldName in path) {
                 fieldInfo = type.GetField(fieldName);
                 if (fieldInfo == null) return false;
@@ -70,7 +70,7 @@ namespace Blockstacker.GlobalSettings
 
             if (type != typeof(T)) return false;
 
-            fieldInfo.SetValue(oldObject, value);
+            fieldInfo?.SetValue(oldObject, value);
             return true;
         }
 
@@ -78,9 +78,9 @@ namespace Blockstacker.GlobalSettings
         {
             if (path.Length == 0) return default;
             object obj = Settings;
-            Type type = obj.GetType();
+            var type = obj.GetType();
             foreach (var fieldName in path) {
-                FieldInfo fieldInfo = type.GetField(fieldName);
+                var fieldInfo = type.GetField(fieldName);
                 if (fieldInfo == null) return default;
 
                 obj = fieldInfo.GetValue(obj);
@@ -98,9 +98,9 @@ namespace Blockstacker.GlobalSettings
         {
             if (path.Length == 0) return false;
             object obj = Settings;
-            Type type = obj.GetType();
+            var type = obj.GetType();
             foreach (var fieldName in path) {
-                FieldInfo fieldInfo = type.GetField(fieldName);
+                var fieldInfo = type.GetField(fieldName);
                 if (fieldInfo == null) return false;
 
                 obj = fieldInfo.GetValue(obj);

@@ -31,7 +31,7 @@ namespace Blockstacker.GlobalSettings.Changers
             if (_action == null) return;
 
             if (_bindingName != null) {
-                var slashIndex = _action.name.LastIndexOfAny(new char[] { '/', '\\' }) + 1;
+                var slashIndex = _action.name.LastIndexOfAny(new[] { '/', '\\' }) + 1;
                 var nameString = _action.name[slashIndex..];
                 _bindingName.text = nameString.FormatCamelCase();
             }

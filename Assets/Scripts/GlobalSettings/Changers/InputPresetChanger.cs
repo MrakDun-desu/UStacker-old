@@ -51,17 +51,17 @@ namespace Blockstacker.GlobalSettings.Changers
             }
         }
 
-        private string ExtractOptionName(string filename)
+        private static string ExtractOptionName(string filename)
         {
-            var dotIndex = filename.LastIndexOf(".");
-            int slashIndex = filename.LastIndexOfAny(new char[] { '\\', '/' }) + 1;
+            var dotIndex = filename.LastIndexOf(".", StringComparison.Ordinal);
+            var slashIndex = filename.LastIndexOfAny(new[] { '\\', '/' }) + 1;
 
             return filename[slashIndex..dotIndex];
         }
 
-        private string WrapOptionName(string optionName) => Path.Combine(PresetPath, $"{optionName}.json");
+        private static string WrapOptionName(string optionName) => Path.Combine(PresetPath, $"{optionName}.json");
 
-        private bool IsNameValid(string presetName)
+        private static bool IsNameValid(string presetName)
         {
             var isEmpty = string.IsNullOrEmpty(presetName) || presetName.Length <= 0;
             var validationPattern = new StringBuilder();
@@ -85,7 +85,6 @@ namespace Blockstacker.GlobalSettings.Changers
             AppSettings.Rebinds = File.ReadAllText(filename);
             SettingChanged?.Invoke();
             RebindsChanged?.Invoke();
-            return;
         }
 
         public void StartSavingPreset() => _newPresetBlocker.SetActive(true);

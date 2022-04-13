@@ -13,7 +13,7 @@ namespace Blockstacker.Gameplay.Initialization
     public class GameInitializer : MonoBehaviour
     {
         [SerializeField] private GameSettingsSO _gameSettingsAsset;
-        [SerializeField] private Piece[] _availablePieces = new Piece[0];
+        [SerializeField] private Piece[] _availablePieces = Array.Empty<Piece>();
         [SerializeField] private GameManager _gameManager;
         [SerializeField] private KickSystemSO _srsKickSystemSO;
         [SerializeField] private KickSystemSO _srsPlusKickSystemSO;
@@ -35,7 +35,7 @@ namespace Blockstacker.Gameplay.Initialization
             GameFailedToInitialize.Invoke(errorBuilder.ToString());
         }
 
-        public bool TryInitialize(StringBuilder errorBuilder)
+        private bool TryInitialize(StringBuilder errorBuilder)
         {
             List<InitializerBase> initializers = new()
             {
@@ -55,12 +55,12 @@ namespace Blockstacker.Gameplay.Initialization
                 )
             };
 
-            for (var i = 0; i < initializers.Count; i++) {
-                initializers[i].Execute();
+            foreach (var initializer in initializers)
+            {
+                initializer.Execute();
             }
 
-            if (errorBuilder.Length > 0) return false;
-            return true;
+            return errorBuilder.Length <= 0;
         }
     }
 }

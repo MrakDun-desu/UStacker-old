@@ -24,7 +24,7 @@ namespace Blockstacker.Gameplay
                 block.Clear();
             }
             _blocks.RemoveAt(lineNumber);
-            for (int i = lineNumber; i < _blocks.Count; i++) {
+            for (var i = lineNumber; i < _blocks.Count; i++) {
                 foreach (var block in _blocks[i]) {
                     if (block == null) continue;
                     block.transform.position -= Up;
@@ -35,9 +35,9 @@ namespace Blockstacker.Gameplay
 
         private void CheckAndClearLines()
         {
-            for (int i = 0; i < _blocks.Count; i++) {
+            for (var i = 0; i < _blocks.Count; i++) {
                 var line = _blocks[i];
-                bool isFull = true;
+                var isFull = true;
                 foreach (var block in line) {
                     if (block == null) {
                         isFull = false;

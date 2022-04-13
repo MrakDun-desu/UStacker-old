@@ -28,7 +28,7 @@ namespace Blockstacker.GameSettings
             FieldInfo fieldInfo = null;
             object oldObject = null;
             object obj = Settings;
-            Type type = obj.GetType();
+            var type = obj.GetType();
             foreach (var fieldName in path) {
                 fieldInfo = type.GetField(fieldName);
                 if (fieldInfo == null) return false;
@@ -42,7 +42,7 @@ namespace Blockstacker.GameSettings
 
             if (type != typeof(T)) return false;
 
-            fieldInfo.SetValue(oldObject, value);
+            if (fieldInfo != null) fieldInfo.SetValue(oldObject, value);
             return true;
         }
 
@@ -50,9 +50,9 @@ namespace Blockstacker.GameSettings
         {
             if (path.Length == 0) return default;
             object obj = Settings;
-            Type type = obj.GetType();
+            var type = obj.GetType();
             foreach (var fieldName in path) {
-                FieldInfo fieldInfo = type.GetField(fieldName);
+                var fieldInfo = type.GetField(fieldName);
                 if (fieldInfo == null) return default;
 
                 obj = fieldInfo.GetValue(obj);
@@ -70,9 +70,9 @@ namespace Blockstacker.GameSettings
         {
             if (path.Length == 0) return false;
             object obj = Settings;
-            Type type = obj.GetType();
+            var type = obj.GetType();
             foreach (var fieldName in path) {
-                FieldInfo fieldInfo = type.GetField(fieldName);
+                var fieldInfo = type.GetField(fieldName);
                 if (fieldInfo == null) return false;
 
                 obj = fieldInfo.GetValue(obj);
@@ -81,8 +81,7 @@ namespace Blockstacker.GameSettings
                 type = obj.GetType();
             }
 
-            if (type != typeof(T)) return false;
-            return true;
+            return type == typeof(T);
         }
 
     }

@@ -1,4 +1,3 @@
-using System;
 using NLua;
 using NLua.Exceptions;
 using UnityEngine;
@@ -9,7 +8,7 @@ namespace Blockstacker.Gameplay.Randomizers
     {
         private readonly string _script;
         private readonly int _pieceCount;
-        private readonly Lua _luaState;
+        private readonly Lua _luaState = new();
 
         private bool ValidateScript(int seed)
         {
@@ -19,7 +18,7 @@ namespace Blockstacker.Gameplay.Randomizers
             catch (LuaScriptException) {
                 return false;
             }
-            object nextPiece = _luaState["nextPiece"];
+            var nextPiece = _luaState["nextPiece"];
             if (nextPiece is null) return false;
             if (nextPiece.GetType() != typeof(double) &&
                 nextPiece.GetType() != typeof(long) &&
@@ -46,11 +45,11 @@ namespace Blockstacker.Gameplay.Randomizers
             _luaState.DoString(_script);
             var result = _luaState["nextPiece"];
 
-            int nextPiece = result switch
+            var nextPiece = result switch
             {
-                double => (int)(double)result,
-                long => (int)(long)result,
-                int => (int)result,
+                double d => (int)d,
+                long l => (int)l,
+                int i => i,
                 _ => 0
             };
 

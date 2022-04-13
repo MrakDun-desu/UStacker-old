@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Blockstacker.Gameplay.Communication;
 using UnityEngine;
 
@@ -9,12 +8,10 @@ namespace Blockstacker.Gameplay.Levelling
         private uint _currentLevel;
         private int _linesToNextLevel;
 
-        private Messenger _messenger;
-
         // for simplicity - calculation is gravity multiplier divided by frames per row
         // multiplier = nes tetris framerate / reference frame rate = 60.0988 / 60
         // frames per row - taken from https://tetris.wiki/Tetris_(NES,_Nintendo)
-        private static readonly double[] _levelGravities = new double[] {
+        private static readonly double[] _levelGravities = {
             1.0016466666666666 / 48,
             1.0016466666666666 / 43,
             1.0016466666666666 / 38,
@@ -49,7 +46,7 @@ namespace Blockstacker.Gameplay.Levelling
 
         // used only with the first set level, taken from https://listfist.com/list-of-tetris-levels-by-lines-nes
         // if level is more than 19, 10 is used
-        private static readonly int[] _linesToLevelIncrease = new int[] {
+        private static readonly int[] _linesToLevelIncrease = {
             10,
             20,
             30,
@@ -72,22 +69,21 @@ namespace Blockstacker.Gameplay.Levelling
             140
         };
 
-        public NesLevellingSystem(Messenger messenger, uint startingLevel)
+        public NesLevellingSystem(uint startingLevel)
         {
             _currentLevel = (uint)Mathf.Min(startingLevel, 29);
-            var linesToNextIndex = (startingLevel > 19) ? 1 : startingLevel;
+            var linesToNextIndex = startingLevel > 19 ? 1 : startingLevel;
             _linesToNextLevel = _linesToLevelIncrease[linesToNextIndex];
-            _messenger = messenger;
 
-            messenger.Register<PiecePlacedMessage>(HandlePiecePlaced);
-            messenger.Register<LinesDroppedMessage>(HandleLinesDropped);
+            Mediator.Register<PiecePlacedMessage>(HandlePiecePlaced);
+            Mediator.Register<LinesDroppedMessage>(HandleLinesDropped);
 
-            var newGravity = new GravityChangedMessage() { gravity = CalculateGravity() };
-            var newLevel = new LevelChangedMessage() { level = _currentLevel };
-            var newLockDelay = new LockDelayChangedMessage() { lockDelay = 0 };
-            messenger.Send(newGravity);
-            messenger.Send(newLevel);
-            messenger.Send(newLockDelay);
+            var newGravity = new GravityChangedMessage { gravity = CalculateGravity() };
+            var newLevel = new LevelChangedMessage { level = _currentLevel };
+            var newLockDelay = new LockDelayChangedMessage { lockDelay = 0 };
+            Mediator.Send(newGravity);
+            Mediator.Send(newLevel);
+            Mediator.Send(newLockDelay);
         }
 
         private void HandlePiecePlaced(PiecePlacedMessage piecePlaced)
@@ -106,20 +102,20 @@ namespace Blockstacker.Gameplay.Levelling
                 _linesToNextLevel += 10;
                 _currentLevel += 1;
 
-                var newGravity = new GravityChangedMessage() { gravity = CalculateGravity() };
-                var newLevel = new LevelChangedMessage() { level = _currentLevel };
-                _messenger.Send(newGravity);
-                _messenger.Send(newLevel);
+                var newGravity = new GravityChangedMessage { gravity = CalculateGravity() };
+                var newLevel = new LevelChangedMessage { level = _currentLevel };
+                Mediator.Send(newGravity);
+                Mediator.Send(newLevel);
             }
 
-            var newScore = new ScoreChangedMessage() { score = scoreAddition };
-            _messenger.Send(newScore);
+            var newScore = new ScoreChangedMessage { score = scoreAddition };
+            Mediator.Send(newScore);
         }
 
         private void HandleLinesDropped(LinesDroppedMessage linesDropped)
         {
-            var newScore = new ScoreChangedMessage() { score = linesDropped.count };
-            _messenger.Send(newScore);
+            var newScore = new ScoreChangedMessage { score = linesDropped.count };
+            Mediator.Send(newScore);
         }
 
         private float CalculateGravity()

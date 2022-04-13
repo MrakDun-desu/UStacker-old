@@ -7,7 +7,7 @@ namespace Blockstacker.Gameplay.Pieces
 {
     public class Block : MonoBehaviour
     {
-        [SerializeField] private UnityAction _onCleared;
+        private UnityAction _onCleared;
         [SerializeField] private Vector2 _initialPosition;
         public PieceType PieceType;
         public event Action<Block> Cleared;

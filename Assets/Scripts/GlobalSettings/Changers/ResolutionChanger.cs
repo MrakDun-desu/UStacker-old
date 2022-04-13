@@ -16,8 +16,8 @@ namespace Blockstacker.GlobalSettings.Changers
         {
             _resolutions = Screen.resolutions;
             _dropdown.ClearOptions();
-            for (int i = 0; i < _resolutions.Length; i++) {
-                Resolution resolution = _resolutions[i];
+            for (var i = 0; i < _resolutions.Length; i++) {
+                var resolution = _resolutions[i];
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(resolution.ToString()));
                 if (resolution.IsEqualTo(Screen.currentResolution)) {
                     _dropdown.SetValueWithoutNotify(i);
