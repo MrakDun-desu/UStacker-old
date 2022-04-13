@@ -1,15 +1,15 @@
 using System.Collections.Generic;
+using Blockstacker.Gameplay.Communication;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.LevellingSystems
+namespace Blockstacker.Gameplay.Levelling
 {
-    public class NesLevellingSystem : ILevellingSystem
+    public class NesLevellingSystem
     {
-        public LevellingSystemInData InData { get; private set; }
-        public LevellingSystemOutData OutData { get; private set; }
-
         private uint _currentLevel;
         private int _linesToNextLevel;
+
+        private Messenger _messenger;
 
         // for simplicity - calculation is gravity multiplier divided by frames per row
         // multiplier = nes tetris framerate / reference frame rate = 60.0988 / 60
@@ -72,31 +72,27 @@ namespace Blockstacker.Gameplay.LevellingSystems
             140
         };
 
-        public void Initialize(LevellingSystemInData inData, LevellingSystemOutData outData, uint startingLevel)
+        public NesLevellingSystem(Messenger messenger, uint startingLevel)
         {
-            InData = inData;
-            OutData = outData;
-            InData.Changed += DataUpdated;
             _currentLevel = (uint)Mathf.Min(startingLevel, 29);
             var linesToNextIndex = (startingLevel > 19) ? 1 : startingLevel;
             _linesToNextLevel = _linesToLevelIncrease[linesToNextIndex];
-            OutData.SetValues(CalculateGravity(), 0, _currentLevel, 0);
+            _messenger = messenger;
+
+            messenger.Register<PiecePlacedMessage>(HandlePiecePlaced);
+            messenger.Register<LinesDroppedMessage>(HandleLinesDropped);
+
+            var newGravity = new GravityChangedMessage() { gravity = CalculateGravity() };
+            var newLevel = new LevelChangedMessage() { level = _currentLevel };
+            var newLockDelay = new LockDelayChangedMessage() { lockDelay = 0 };
+            messenger.Send(newGravity);
+            messenger.Send(newLevel);
+            messenger.Send(newLockDelay);
         }
 
-        private void DataUpdated()
+        private void HandlePiecePlaced(PiecePlacedMessage piecePlaced)
         {
-            AddScoreByNewLinesCleared(InData.newLinesCleared);
-            AddScoreByNewLinesSoftDropped(InData.newLinesSoftDropped);
-        }
-
-        private void AddScoreByNewLinesSoftDropped(int newLinesSoftDropped)
-        {
-            OutData.SetValues(OutData.gravity, 0, _currentLevel, OutData.score + newLinesSoftDropped);
-        }
-
-        private void AddScoreByNewLinesCleared(int newLinesCleared)
-        {
-            long scoreAddition = newLinesCleared switch
+            long scoreAddition = piecePlaced.linesCleared switch
             {
                 1 => 40,
                 2 => 100,
@@ -105,12 +101,25 @@ namespace Blockstacker.Gameplay.LevellingSystems
                 _ => 0
             };
             scoreAddition *= _currentLevel + 1;
-            _linesToNextLevel -= newLinesCleared;
+            _linesToNextLevel -= piecePlaced.linesCleared;
             if (_linesToNextLevel <= 0) {
                 _linesToNextLevel += 10;
                 _currentLevel += 1;
+
+                var newGravity = new GravityChangedMessage() { gravity = CalculateGravity() };
+                var newLevel = new LevelChangedMessage() { level = _currentLevel };
+                _messenger.Send(newGravity);
+                _messenger.Send(newLevel);
             }
-            OutData.SetValues(CalculateGravity(), 0, _currentLevel, OutData.score + scoreAddition);
+
+            var newScore = new ScoreChangedMessage() { score = scoreAddition };
+            _messenger.Send(newScore);
+        }
+
+        private void HandleLinesDropped(LinesDroppedMessage linesDropped)
+        {
+            var newScore = new ScoreChangedMessage() { score = linesDropped.count };
+            _messenger.Send(newScore);
         }
 
         private float CalculateGravity()

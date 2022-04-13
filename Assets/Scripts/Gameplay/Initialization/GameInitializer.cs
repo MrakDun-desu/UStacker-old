@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Blockstacker.Gameplay.Pieces;
+using Blockstacker.Gameplay.Presentation;
 using Blockstacker.GameSettings;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,6 +17,8 @@ namespace Blockstacker.Gameplay.Initialization
         [SerializeField] private GameManager _gameManager;
         [SerializeField] private KickSystemSO _srsKickSystemSO;
         [SerializeField] private KickSystemSO _srsPlusKickSystemSO;
+        [SerializeField] private GameCountdown _countdown;
+        [SerializeField] private TMP_Text _gameTitle;
 
 
         public static event Action GameInitialized;
@@ -24,7 +28,7 @@ namespace Blockstacker.Gameplay.Initialization
         {
             StringBuilder errorBuilder = new();
             if (TryInitialize(errorBuilder)) {
-                GameInitialized.Invoke();
+                GameInitialized?.Invoke();
                 return;
             }
 
@@ -36,17 +40,18 @@ namespace Blockstacker.Gameplay.Initialization
             List<InitializerBase> initializers = new()
             {
                 new RulesGeneralInitializer(
-                errorBuilder, _gameSettingsAsset,
-                _availablePieces.Length,
-                _gameManager),
+                    errorBuilder, _gameSettingsAsset,
+                    _availablePieces.Length,
+                    _gameManager),
                 new RulesHandlingInitializer(errorBuilder, _gameSettingsAsset),
                 new RulesControlsInitializer(
-                errorBuilder, _gameSettingsAsset,
-                _srsKickSystemSO.KickSystem,
-                _srsPlusKickSystemSO.KickSystem),
-                new RulesLevellingInitializer(
                     errorBuilder, _gameSettingsAsset,
-                    _gameManager
+                    _srsKickSystemSO.KickSystem,
+                    _srsPlusKickSystemSO.KickSystem),
+                new PresentationInitializer(
+                    errorBuilder, _gameSettingsAsset,
+                    _gameTitle,
+                    _countdown
                 )
             };
 

@@ -1,12 +1,9 @@
 using NLua;
 
-namespace Blockstacker.Gameplay.LevellingSystems
+namespace Blockstacker.Gameplay.Levelling
 {
-    public class CustomLevellingSystem : ILevellingSystem
+    public class CustomLevellingSystem
     {
-        public LevellingSystemInData InData { get; private set; }
-        public LevellingSystemOutData OutData { get; private set; }
-
         private Lua _luaState = new();
         private string _customScript;
 
@@ -19,13 +16,6 @@ namespace Blockstacker.Gameplay.LevellingSystems
         {
             _customScript = levellingSystemScript;
             isValid = ValidateScript();
-        }
-
-        public void Initialize(LevellingSystemInData inData, LevellingSystemOutData outData, uint startingLevel)
-        {
-            InData = inData;
-            OutData = outData;
-            InData.Changed += DataUpdated;
         }
 
         private void DataUpdated()

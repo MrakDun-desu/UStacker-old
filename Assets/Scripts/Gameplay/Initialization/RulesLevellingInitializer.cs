@@ -1,6 +1,6 @@
 using System.IO;
 using System.Text;
-using Blockstacker.Gameplay.LevellingSystems;
+using Blockstacker.Gameplay.Levelling;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
 using UnityEngine;
@@ -40,16 +40,10 @@ namespace Blockstacker.Gameplay.Initialization
             }
 
             bool isValid = true;
-            _manager.levellingSystem = _gameSettings.Rules.Levelling.LevellingSystem switch
-            {
-                LevellingSystem.Guideline => new GuidelineLevellingSystem(),
-                LevellingSystem.Nintendo => new NesLevellingSystem(),
-                LevellingSystem.Custom => new CustomLevellingSystem(
-                    _gameSettings.Rules.Levelling.CustomLevellingScript,
-                    out isValid
-                ),
-                _ => new GuidelineLevellingSystem()
-            };
+            // TODO
+            // _manager.levellingSystem = _gameSettings.Rules.Levelling.LevellingSystem switch
+            // {
+            // };
 
             if (!isValid) {
                 _errorBuilder.AppendLine("Custom levelling system is not valid.");
