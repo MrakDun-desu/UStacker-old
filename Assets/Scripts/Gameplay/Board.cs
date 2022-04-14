@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Blockstacker.Gameplay.Pieces;
 using UnityEngine;
 
@@ -37,13 +38,7 @@ namespace Blockstacker.Gameplay
         {
             for (var i = 0; i < _blocks.Count; i++) {
                 var line = _blocks[i];
-                var isFull = true;
-                foreach (var block in line) {
-                    if (block == null) {
-                        isFull = false;
-                        break;
-                    }
-                }
+                var isFull = line.All(block => block != null);
                 if (isFull) {
                     ClearLine(i);
                 }
