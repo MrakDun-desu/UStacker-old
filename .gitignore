@@ -28,6 +28,9 @@
 .vscode/
 .idea/
 
+# Rider asset
+RiderScriptEditorPersistedState.asset
+
 # Gradle cache directory
 .gradle/
 
