@@ -4,6 +4,7 @@ namespace Blockstacker.GameSettings.Enums
     {
         Nintendo,
         Guideline,
-        Custom
+        Custom,
+        None
     }
 }

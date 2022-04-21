@@ -9,7 +9,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         public float Gravity = .02f;
         public float LockDelay = .5f;
         public uint StartingLevel = 1;
-        public LevellingSystem LevellingSystem = LevellingSystem.Guideline;
+        public LevellingSystem LevellingSystem = LevellingSystem.None;
         public string CustomLevellingScriptName = "";
         public string CustomLevellingScript = "";
     }

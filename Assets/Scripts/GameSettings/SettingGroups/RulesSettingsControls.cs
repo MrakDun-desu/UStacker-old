@@ -10,9 +10,9 @@ namespace Blockstacker.GameSettings.SettingGroups
         public bool AllowHardDrop = true;
         public bool AllowHold = true;
         public bool UnlimitedHold = false;
-        public KickTableType KickTable = KickTableType.SRS;
-        public string CustomKickTableName = "";
-        public KickSystem ActualKickTable;
+        public RotationSystemType RotationSystem = RotationSystemType.SRS;
+        public string CustomRotationSystemName = "";
+        public RotationSystem ActiveRotationTable;
         public float PiecePlacedDelay = 0;
         public float LineClearDelay = 0;
         public OnTouchGround OnTouchGround = OnTouchGround.LimitedTime;

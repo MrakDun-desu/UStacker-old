@@ -9,7 +9,7 @@ namespace Blockstacker.Gameplay.Initialization
 {
     public class RulesGeneralInitializer : InitializerBase
     {
-        private static string RandomizersPath => Path.Combine(Application.persistentDataPath, "randomBagScripts");
+        private static string RandomizersPath => Path.Combine(Application.persistentDataPath, "ruleCustomization/randomizers");
         private readonly int _pieceCount;
         private readonly GameManager _manager;
         public RulesGeneralInitializer(
@@ -30,40 +30,35 @@ namespace Blockstacker.Gameplay.Initialization
 
         private void InitializeSeed()
         {
-            int newSeed;
-            if (_gameSettings.Rules.General.UseRandomSeed) {
-                newSeed = Random.Range(int.MinValue, int.MaxValue);
-            }
-            else {
-                newSeed = _gameSettings.Rules.General.SpecificSeed;
-            }
+            var newSeed = _gameSettings.Rules.General.UseRandomSeed ? 
+                Random.Range(int.MinValue, int.MaxValue) : _gameSettings.Rules.General.SpecificSeed;
             Random.InitState(newSeed);
         }
 
         private void InitializeRandomizer()
         {
-            if (_gameSettings.Rules.General.RandomBagType == RandomBagType.Custom) {
-                var randomBagScriptPath = Path.Combine(RandomizersPath, _gameSettings.Rules.General.RandomBagName);
-                if (!File.Exists(randomBagScriptPath)) {
-                    _errorBuilder.AppendLine("Custom random bag script not found.");
+            if (_gameSettings.Rules.General.RandomizerType == RandomizerType.Custom) {
+                var randomizerScriptPath = Path.Combine(RandomizersPath, _gameSettings.Rules.General.CustomRandomizerName);
+                if (!File.Exists(randomizerScriptPath)) {
+                    _errorBuilder.AppendLine("Custom randomizer script not found.");
                     return;
                 }
-                _gameSettings.Rules.General.RandomBagScript = File.ReadAllText(randomBagScriptPath);
+                _gameSettings.Rules.General.CustomRandomizerScript = File.ReadAllText(randomizerScriptPath);
             }
 
             var isValid = true;
 
-            IRandomizer randomizer = _gameSettings.Rules.General.RandomBagType switch
+            IRandomizer randomizer = _gameSettings.Rules.General.RandomizerType switch
             {
-                RandomBagType.SevenBag => new CountPerBagRandomizer(_pieceCount),
-                RandomBagType.FourteenBag => new CountPerBagRandomizer(_pieceCount, 2),
-                RandomBagType.Random => new RandomRandomizer(_pieceCount),
-                RandomBagType.Classic => new ClassicRandomizer(_pieceCount),
-                RandomBagType.Pairs => new PairsRandomizer(_pieceCount),
-                RandomBagType.Custom => new CustomRandomizer(
+                RandomizerType.SevenBag => new CountPerBagRandomizer(_pieceCount),
+                RandomizerType.FourteenBag => new CountPerBagRandomizer(_pieceCount, 2),
+                RandomizerType.Random => new RandomRandomizer(_pieceCount),
+                RandomizerType.Classic => new ClassicRandomizer(_pieceCount),
+                RandomizerType.Pairs => new PairsRandomizer(_pieceCount),
+                RandomizerType.Custom => new CustomRandomizer(
                     _pieceCount,
-                    _gameSettings.Rules.General.RandomBagScript,
-                    _gameSettings.Rules.General.ActualSeed,
+                    _gameSettings.Rules.General.CustomRandomizerScript,
+                    _gameSettings.Rules.General.ActiveSeed,
                     out isValid),
                 _ => new CountPerBagRandomizer(_pieceCount),
             };

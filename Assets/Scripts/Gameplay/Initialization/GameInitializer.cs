@@ -15,8 +15,8 @@ namespace Blockstacker.Gameplay.Initialization
         [SerializeField] private GameSettingsSO _gameSettingsAsset;
         [SerializeField] private Piece[] _availablePieces = Array.Empty<Piece>();
         [SerializeField] private GameManager _gameManager;
-        [SerializeField] private KickSystemSO _srsKickSystemSO;
-        [SerializeField] private KickSystemSO _srsPlusKickSystemSO;
+        [SerializeField] private RotationSystemSO _srsRotationSystemSo;
+        [SerializeField] private RotationSystemSO _srsPlusRotationSystemSo;
         [SerializeField] private GameCountdown _countdown;
         [SerializeField] private TMP_Text _gameTitle;
 
@@ -46,8 +46,8 @@ namespace Blockstacker.Gameplay.Initialization
                 new RulesHandlingInitializer(errorBuilder, _gameSettingsAsset),
                 new RulesControlsInitializer(
                     errorBuilder, _gameSettingsAsset,
-                    _srsKickSystemSO.KickSystem,
-                    _srsPlusKickSystemSO.KickSystem),
+                    _srsRotationSystemSo._rotationSystem,
+                    _srsPlusRotationSystemSo._rotationSystem),
                 new PresentationInitializer(
                     errorBuilder, _gameSettingsAsset,
                     _gameTitle,

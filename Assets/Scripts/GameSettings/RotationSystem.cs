@@ -3,7 +3,7 @@ using System;
 namespace Blockstacker.GameSettings
 {
     [Serializable]
-    public class KickSystem
+    public class RotationSystem
     {
         public KickTable IKickTable = new();
         public KickTable TKickTable = new();

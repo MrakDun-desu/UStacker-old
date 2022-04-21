@@ -5,6 +5,7 @@ namespace Blockstacker.GameSettings.SettingGroups
     [Serializable]
     public class RulesSettingsHandling
     {
+        public bool OverrideHandling = false;
         public float DelayedAutoShift = .125f;
         public float AutomaticRepeatRate = 0;
         public float SoftDropFactor = float.PositiveInfinity;

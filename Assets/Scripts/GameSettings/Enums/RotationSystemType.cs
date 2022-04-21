@@ -1,6 +1,6 @@
 namespace Blockstacker.GameSettings.Enums
 {
-    public enum KickTableType
+    public enum RotationSystemType
     {
         SRS,
         SRSPlus,

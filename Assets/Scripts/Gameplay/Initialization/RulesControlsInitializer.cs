@@ -8,47 +8,47 @@ namespace Blockstacker.Gameplay.Initialization
 {
     public class RulesControlsInitializer : InitializerBase
     {
-        private KickSystem _srsKickSystem;
-        private KickSystem _srsPlusKickSystem;
+        private readonly RotationSystem _srsRotationSystem;
+        private readonly RotationSystem _srsPlusRotationSystem;
 
         private static string KickSystemsPath => Path.Combine(
-            Application.persistentDataPath, "kickTables"
+            Application.persistentDataPath, "ruleCustomization/rotationSystems"
         );
 
         public RulesControlsInitializer(
             StringBuilder errorBuilder,
             GameSettingsSO gameSettings,
-            KickSystem srsKickSystem,
-            KickSystem srsPlusKickSystem)
+            RotationSystem srsRotationSystem,
+            RotationSystem srsPlusRotationSystem)
             : base(errorBuilder, gameSettings)
         {
-            _srsKickSystem = srsKickSystem;
-            _srsPlusKickSystem = srsPlusKickSystem;
+            _srsRotationSystem = srsRotationSystem;
+            _srsPlusRotationSystem = srsPlusRotationSystem;
         }
 
         public override void Execute()
         {
-            KickSystem customSystem = new();
-            if (_gameSettings.Rules.Controls.KickTable ==
-                KickTableType.Custom) {
+            RotationSystem customSystem = new();
+            if (_gameSettings.Rules.Controls.RotationSystem ==
+                RotationSystemType.Custom) {
 
                 var kickTablePath = Path.Combine(KickSystemsPath,
-                 _gameSettings.Rules.General.RandomBagName);
+                 _gameSettings.Rules.General.CustomRandomizerName);
                 if (!File.Exists(kickTablePath)) {
-                    _errorBuilder.AppendLine("Custom kicktable not found.");
+                    _errorBuilder.AppendLine("Custom rotation system not found.");
                     return;
                 }
                 JsonUtility.FromJsonOverwrite(File.ReadAllText(kickTablePath), customSystem);
             }
 
-            _gameSettings.Rules.Controls.ActualKickTable =
-                _gameSettings.Rules.Controls.KickTable switch
+            _gameSettings.Rules.Controls.ActiveRotationTable =
+                _gameSettings.Rules.Controls.RotationSystem switch
                 {
-                    KickTableType.SRS => _srsKickSystem,
-                    KickTableType.SRSPlus => _srsPlusKickSystem,
-                    KickTableType.None => new(),
-                    KickTableType.Custom => customSystem,
-                    _ => new()
+                    RotationSystemType.SRS => _srsRotationSystem,
+                    RotationSystemType.SRSPlus => _srsPlusRotationSystem,
+                    RotationSystemType.None => new RotationSystem(),
+                    RotationSystemType.Custom => customSystem,
+                    _ => new RotationSystem()
                 };
 
         }

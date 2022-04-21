@@ -6,13 +6,13 @@ namespace Blockstacker.GameSettings.SettingGroups
     [Serializable]
     public class RulesSettingsGeneral
     {
-        public RandomBagType RandomBagType = RandomBagType.SevenBag;
-        public string RandomBagName = "";
-        public string RandomBagScript = "";
+        public RandomizerType RandomizerType = RandomizerType.SevenBag;
+        public string CustomRandomizerName = "";
+        public string CustomRandomizerScript = "";
         public AllowedSpins AllowedSpins = AllowedSpins.TSpins;
         public bool UseRandomSeed = true;
         public int SpecificSeed = 0;
-        public int ActualSeed = 0;
+        public int ActiveSeed = 0;
         public uint NextPieceCount = 5;
     }
 }
