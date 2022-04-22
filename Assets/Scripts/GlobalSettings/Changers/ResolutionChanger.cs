@@ -8,7 +8,7 @@ namespace Blockstacker.GlobalSettings.Changers
     public class ResolutionChanger : MonoBehaviour, ISettingChanger
     {
         [SerializeField] private TMP_Dropdown _dropdown;
-        private Resolution[] _resolutions = new Resolution[0];
+        private Resolution[] _resolutions = Array.Empty<Resolution>();
 
         public event Action SettingChanged;
 

@@ -4,7 +4,7 @@ namespace Blockstacker.GlobalSettings.Appliers
 {
     public class DiscordActivityApplier : SettingApplierBase
     {
-        DiscordController _dcController;
+        private DiscordController _dcController;
 
         protected override void Awake()
         {
