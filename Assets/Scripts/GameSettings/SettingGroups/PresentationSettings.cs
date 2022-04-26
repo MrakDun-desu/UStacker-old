@@ -7,7 +7,7 @@ namespace Blockstacker.GameSettings.SettingGroups
     {
         public string Title = "Custom game";
         public bool UseCountdown = true;
-        public float CountdownInterval = .1f;
+        public float CountdownInterval = 1;
         public uint CountdownCount = 3;
     }
 }

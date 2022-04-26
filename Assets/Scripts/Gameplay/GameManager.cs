@@ -9,7 +9,5 @@ namespace Blockstacker.Gameplay
         [SerializeField] private GameSettingsSO _gameSettings;
         [SerializeField] private Board _board;
 
-        public IRandomizer randomizer;
-
     }
 }

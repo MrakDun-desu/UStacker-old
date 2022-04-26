@@ -6,11 +6,10 @@ namespace Blockstacker.Gameplay.Initialization
 {
     public class RulesBoardDimensionsInitializer : InitializerBase
     {
-        private Board _board;
-        private GameObject _boardBackground;
-        private GameObject _gridPiece;
-        private Camera _camera;
-        private GameManager _manager;
+        private readonly Board _board;
+        private readonly GameObject _boardBackground;
+        private readonly GameObject _gridPiece;
+        private readonly Camera _camera;
 
         public RulesBoardDimensionsInitializer(
             StringBuilder errorBuilder,
@@ -18,21 +17,20 @@ namespace Blockstacker.Gameplay.Initialization
             Board board,
             GameObject boardBackground,
             GameObject gridPiece,
-            Camera camera,
-            GameManager manager)
+            Camera camera
+            )
             : base(errorBuilder, gameSettings)
         {
             _board = board;
             _boardBackground = boardBackground;
             _gridPiece = gridPiece;
             _camera = camera;
-            _manager = manager;
         }
 
         public override void Execute()
         {
             var boardDimensions = _gameSettings.Rules.BoardDimensions;
-            _board.Width = 10;
+            _board.Width = _gameSettings.Rules.BoardDimensions.BoardWidth;
             _boardBackground.transform.localScale = new Vector3(
                 boardDimensions.BoardWidth,
                 boardDimensions.BoardHeight,
@@ -51,7 +49,11 @@ namespace Blockstacker.Gameplay.Initialization
                 }
             }
 
-            _camera.orthographicSize = boardDimensions.BoardHeight * .5f + 4;
+            _camera.orthographicSize = boardDimensions.BoardHeight * .5f + _gameSettings.Rules.BoardDimensions.BoardPadding;
+            _camera.transform.position = new Vector3(
+                _gameSettings.Rules.BoardDimensions.BoardWidth * .5f,
+                _gameSettings.Rules.BoardDimensions.BoardHeight * .5f,
+                _camera.transform.position.z);
         }
     }
 }

@@ -30,10 +30,10 @@ namespace Blockstacker.Gameplay.Pieces
 
         public void Reset()
         {
-            transform.position = new Vector3(
+            transform.localPosition = new Vector3(
                 _initialPosition.x,
                 _initialPosition.y,
-                transform.position.z
+                transform.localPosition.z
             );
         }
     }

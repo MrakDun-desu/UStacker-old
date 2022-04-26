@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text;
+using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Randomizers;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
@@ -11,15 +12,19 @@ namespace Blockstacker.Gameplay.Initialization
     {
         private static string RandomizersPath => Path.Combine(Application.persistentDataPath, "ruleCustomization/randomizers");
         private readonly int _pieceCount;
-        private readonly GameManager _manager;
+        private readonly PieceSpawner _spawner;
+        private readonly Piece[] _availablePieces;
+        
         public RulesGeneralInitializer(
             StringBuilder problemBuilder,
             GameSettingsSO gameSettings,
             int pieceCount,
-            GameManager manager) : base(problemBuilder, gameSettings)
+            PieceSpawner spawner,
+            Piece[] availablePieces) : base(problemBuilder, gameSettings)
         {
             _pieceCount = pieceCount;
-            _manager = manager;
+            _spawner = spawner;
+            _availablePieces = availablePieces;
         }
 
         public override void Execute()
@@ -32,6 +37,7 @@ namespace Blockstacker.Gameplay.Initialization
         {
             var newSeed = _gameSettings.Rules.General.UseRandomSeed ? 
                 Random.Range(int.MinValue, int.MaxValue) : _gameSettings.Rules.General.SpecificSeed;
+            _gameSettings.Rules.General.ActiveSeed = newSeed;
             Random.InitState(newSeed);
         }
 
@@ -68,7 +74,8 @@ namespace Blockstacker.Gameplay.Initialization
                 return;
             }
 
-            _manager.randomizer = randomizer;
+            _spawner.Randomizer = randomizer;
+            _spawner.AvailablePieces = _availablePieces;
         }
     }
 }

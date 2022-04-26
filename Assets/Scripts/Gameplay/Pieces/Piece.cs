@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Blockstacker.Gameplay.Enums;
+using Blockstacker.GameSettings.Enums;
 using UnityEngine;
 
 namespace Blockstacker.Gameplay.Pieces
@@ -9,12 +10,13 @@ namespace Blockstacker.Gameplay.Pieces
     {
         public PieceType PieceType;
         public List<Block> Blocks;
+        public Vector2 SpawnOffset;
+        public RotationState RotationState;
 
-        public event Action BlockCleared;
+        public static event Action<Piece> PieceCleared;
 
         private void Awake()
         {
-            RefreshBlocks();
             foreach (var block in Blocks) {
                 block.Cleared += OnBlockCleared;
                 block.PieceType = PieceType;
@@ -24,20 +26,19 @@ namespace Blockstacker.Gameplay.Pieces
         private void OnBlockCleared(Block sender)
         {
             Blocks.Remove(sender);
-            if (Blocks.Count == 0) {
-                enabled = false;
-                return;
+            if (Blocks.Count == 0)
+            {
+                PieceCleared?.Invoke(this);
             }
-            BlockCleared?.Invoke();
         }
 
-        public void RefreshBlocks()
-        {
-            var blocksInChildren = GetComponentsInChildren<Block>();
-            Blocks.AddRange(blocksInChildren);
-            foreach (var block in Blocks) {
-                block.Reset();
-            }
-        }
+        // public void RefreshBlocks()
+        // {
+        //     var blocksInChildren = GetComponentsInChildren<Block>();
+        //     Blocks.AddRange(blocksInChildren);
+        //     foreach (var block in Blocks) {
+        //         block.Reset();
+        //     }
+        // }
     }
 }

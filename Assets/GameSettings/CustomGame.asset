@@ -13,36 +13,459 @@ MonoBehaviour:
   m_Name: CustomGame
   m_EditorClassIdentifier: 
   Settings:
-    GameRules:
-      RandomBagType: 0
-      AllowedSpins: 0
-      UseRandomSeed: 1
-      SpecificSeed: 0
-      NextPieceCount: 5
-      Allow180Spins: 1
-      AllowHardDrop: 1
-      AllowHold: 1
-      KickTable: 0
-      CustomKickTableName: 
-      PiecePlacedDelay: 0
-      LineClearDelay: 0
-      OnTouchGround: 0
-      OnTouchGroundAmount: 5
-      ShowGhostPiece: 1
-      Gravity: 0.02
-      LockDelay: 0.5
-      UseLevelling: 1
-      UseMasterLevels: 1
-      StartingLevel: 1
-      UseCustomLevellingScript: 0
-      CustomLevellingScriptName: 
-      DelayedAutoShift: 0.125
-      AutomaticRepeatRate: 0
-      SoftDropFactor: Infinity
-      DasCutDelay: 0
-      UseDasCancelling: 1
-      UseDiagonalLock: 0
-    GameObjective:
+    Rules:
+      General:
+        RandomizerType: 0
+        CustomRandomizerName: 
+        CustomRandomizerScript: 
+        AllowedSpins: 0
+        UseRandomSeed: 1
+        SpecificSeed: 0
+        ActiveSeed: 764889303
+        NextPieceCount: 5
+      Controls:
+        Allow180Spins: 1
+        AllowHardDrop: 1
+        AllowHold: 1
+        UnlimitedHold: 0
+        RotationSystem: 0
+        CustomRotationSystemName: 
+        ActiveRotationTable:
+          IKickTable:
+            StartState: 0
+            ZeroToThree:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: 2, y: 0}
+            - {x: -1, y: 2}
+            - {x: 2, y: -1}
+            ZeroToOne:
+            - {x: 0, y: 0}
+            - {x: -2, y: 0}
+            - {x: 1, y: 0}
+            - {x: -2, y: -1}
+            - {x: 1, y: 2}
+            OneToZero:
+            - {x: 0, y: 0}
+            - {x: 2, y: 0}
+            - {x: -1, y: 0}
+            - {x: 2, y: 1}
+            - {x: -1, y: -2}
+            OneToTwo:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: 2, y: 0}
+            - {x: -1, y: 2}
+            - {x: 2, y: -1}
+            TwoToOne:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: -2, y: 0}
+            - {x: 1, y: -2}
+            - {x: -2, y: 1}
+            TwoToThree:
+            - {x: 0, y: 0}
+            - {x: 2, y: 0}
+            - {x: -1, y: 0}
+            - {x: 2, y: 1}
+            - {x: -1, y: -2}
+            ThreeToTwo:
+            - {x: 0, y: 0}
+            - {x: -2, y: 0}
+            - {x: 1, y: 0}
+            - {x: -2, y: -1}
+            - {x: 1, y: 2}
+            ThreeToZero:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: -2, y: 0}
+            - {x: 1, y: -2}
+            - {x: -2, y: 1}
+            ZeroToTwo:
+            - {x: 0, y: 0}
+            TwoToZero:
+            - {x: 0, y: 0}
+            OneToThree:
+            - {x: 0, y: 0}
+            ThreeToOne:
+            - {x: 0, y: 0}
+          TKickTable:
+            StartState: 0
+            ZeroToThree:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: 1}
+            - {x: 0, y: -2}
+            - {x: 1, y: -2}
+            ZeroToOne:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: 1}
+            - {x: 0, y: -2}
+            - {x: -1, y: -2}
+            OneToZero:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: -1}
+            - {x: 0, y: 2}
+            - {x: 1, y: 2}
+            OneToTwo:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: -1}
+            - {x: 0, y: 2}
+            - {x: 1, y: 2}
+            TwoToOne:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: 1}
+            - {x: 0, y: -2}
+            - {x: -1, y: -2}
+            TwoToThree:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: 1}
+            - {x: 0, y: -2}
+            - {x: 1, y: -2}
+            ThreeToTwo:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: -1}
+            - {x: 0, y: 2}
+            - {x: -1, y: 2}
+            ThreeToZero:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: -1}
+            - {x: 0, y: 2}
+            - {x: -1, y: 2}
+            ZeroToTwo:
+            - {x: 0, y: 0}
+            TwoToZero:
+            - {x: 0, y: 0}
+            OneToThree:
+            - {x: 0, y: 0}
+            ThreeToOne:
+            - {x: 0, y: 0}
+          OKickTable:
+            StartState: 0
+            ZeroToThree:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: 1}
+            - {x: 0, y: -2}
+            - {x: 1, y: -2}
+            ZeroToOne:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: 1}
+            - {x: 0, y: -2}
+            - {x: -1, y: -2}
+            OneToZero:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: -1}
+            - {x: 0, y: 2}
+            - {x: 1, y: 2}
+            OneToTwo:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: -1}
+            - {x: 0, y: 2}
+            - {x: 1, y: 2}
+            TwoToOne:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: 1}
+            - {x: 0, y: -2}
+            - {x: -1, y: -2}
+            TwoToThree:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: 1}
+            - {x: 0, y: -2}
+            - {x: 1, y: -2}
+            ThreeToTwo:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: -1}
+            - {x: 0, y: 2}
+            - {x: -1, y: 2}
+            ThreeToZero:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: -1}
+            - {x: 0, y: 2}
+            - {x: -1, y: 2}
+            ZeroToTwo:
+            - {x: 0, y: 0}
+            TwoToZero:
+            - {x: 0, y: 0}
+            OneToThree:
+            - {x: 0, y: 0}
+            ThreeToOne:
+            - {x: 0, y: 0}
+          JKickTable:
+            StartState: 0
+            ZeroToThree:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: 1}
+            - {x: 0, y: -2}
+            - {x: 1, y: -2}
+            ZeroToOne:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: 1}
+            - {x: 0, y: -2}
+            - {x: -1, y: -2}
+            OneToZero:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: -1}
+            - {x: 0, y: 2}
+            - {x: 1, y: 2}
+            OneToTwo:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: -1}
+            - {x: 0, y: 2}
+            - {x: 1, y: 2}
+            TwoToOne:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: 1}
+            - {x: 0, y: -2}
+            - {x: -1, y: -2}
+            TwoToThree:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: 1}
+            - {x: 0, y: -2}
+            - {x: 1, y: -2}
+            ThreeToTwo:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: -1}
+            - {x: 0, y: 2}
+            - {x: -1, y: 2}
+            ThreeToZero:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: -1}
+            - {x: 0, y: 2}
+            - {x: -1, y: 2}
+            ZeroToTwo:
+            - {x: 0, y: 0}
+            TwoToZero:
+            - {x: 0, y: 0}
+            OneToThree:
+            - {x: 0, y: 0}
+            ThreeToOne:
+            - {x: 0, y: 0}
+          LKickTable:
+            StartState: 0
+            ZeroToThree:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: 1}
+            - {x: 0, y: -2}
+            - {x: 1, y: -2}
+            ZeroToOne:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: 1}
+            - {x: 0, y: -2}
+            - {x: -1, y: -2}
+            OneToZero:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: -1}
+            - {x: 0, y: 2}
+            - {x: 1, y: 2}
+            OneToTwo:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: -1}
+            - {x: 0, y: 2}
+            - {x: 1, y: 2}
+            TwoToOne:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: 1}
+            - {x: 0, y: -2}
+            - {x: -1, y: -2}
+            TwoToThree:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: 1}
+            - {x: 0, y: -2}
+            - {x: 1, y: -2}
+            ThreeToTwo:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: -1}
+            - {x: 0, y: 2}
+            - {x: -1, y: 2}
+            ThreeToZero:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: -1}
+            - {x: 0, y: 2}
+            - {x: -1, y: 2}
+            ZeroToTwo:
+            - {x: 0, y: 0}
+            TwoToZero:
+            - {x: 0, y: 0}
+            OneToThree:
+            - {x: 0, y: 0}
+            ThreeToOne:
+            - {x: 0, y: 0}
+          SKickTable:
+            StartState: 0
+            ZeroToThree:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: 1}
+            - {x: 0, y: -2}
+            - {x: 1, y: -2}
+            ZeroToOne:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: 1}
+            - {x: 0, y: -2}
+            - {x: -1, y: -2}
+            OneToZero:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: -1}
+            - {x: 0, y: 2}
+            - {x: 1, y: 2}
+            OneToTwo:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: -1}
+            - {x: 0, y: 2}
+            - {x: 1, y: 2}
+            TwoToOne:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: 1}
+            - {x: 0, y: -2}
+            - {x: -1, y: -2}
+            TwoToThree:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: 1}
+            - {x: 0, y: -2}
+            - {x: 1, y: -2}
+            ThreeToTwo:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: -1}
+            - {x: 0, y: 2}
+            - {x: -1, y: 2}
+            ThreeToZero:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: -1}
+            - {x: 0, y: 2}
+            - {x: -1, y: 2}
+            ZeroToTwo:
+            - {x: 0, y: 0}
+            TwoToZero:
+            - {x: 0, y: 0}
+            OneToThree:
+            - {x: 0, y: 0}
+            ThreeToOne:
+            - {x: 0, y: 0}
+          ZKickTable:
+            StartState: 0
+            ZeroToThree:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: 1}
+            - {x: 0, y: -2}
+            - {x: 1, y: -2}
+            ZeroToOne:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: 1}
+            - {x: 0, y: -2}
+            - {x: -1, y: -2}
+            OneToZero:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: -1}
+            - {x: 0, y: 2}
+            - {x: 1, y: 2}
+            OneToTwo:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: -1}
+            - {x: 0, y: 2}
+            - {x: 1, y: 2}
+            TwoToOne:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: 1}
+            - {x: 0, y: -2}
+            - {x: -1, y: -2}
+            TwoToThree:
+            - {x: 0, y: 0}
+            - {x: 1, y: 0}
+            - {x: 1, y: 1}
+            - {x: 0, y: -2}
+            - {x: 1, y: -2}
+            ThreeToTwo:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: -1}
+            - {x: 0, y: 2}
+            - {x: -1, y: 2}
+            ThreeToZero:
+            - {x: 0, y: 0}
+            - {x: -1, y: 0}
+            - {x: -1, y: -1}
+            - {x: 0, y: 2}
+            - {x: -1, y: 2}
+            ZeroToTwo:
+            - {x: 0, y: 0}
+            TwoToZero:
+            - {x: 0, y: 0}
+            OneToThree:
+            - {x: 0, y: 0}
+            ThreeToOne:
+            - {x: 0, y: 0}
+        PiecePlacedDelay: 0
+        LineClearDelay: 0
+        OnTouchGround: 0
+        OnTouchGroundAmount: 5
+        ShowGhostPiece: 1
+      Levelling:
+        Gravity: 0.02
+        LockDelay: 0.5
+        StartingLevel: 1
+        LevellingSystem: 3
+        CustomLevellingScriptName: 
+        CustomLevellingScript: 
+      BoardDimensions:
+        BoardHeight: 10
+        BoardWidth: 6
+        LethalHeight: 20
+        PieceSpawnHeight: 22
+        TopoutCondition: 2
+        AllowClutchClears: 1
+        BoardPadding: 5
+      Handling:
+        OverrideHandling: 0
+        DelayedAutoShift: 0.125
+        AutomaticRepeatRate: 0
+        SoftDropFactor: Infinity
+        DasCutDelay: 0
+        UseDasCancelling: 1
+        UseDiagonalLock: 0
+    Objective:
       MainStat: 1
       GameEndCondition: 2
       EndConditionCount: 40
@@ -52,8 +475,9 @@ MonoBehaviour:
       MaxCheeseHeight: 10
       UseCustomCheeseScript: 0
       CustomCheeseScriptName: 
+      CustomCheeseScript: 
     Presentation:
       Title: Custom game
       UseCountdown: 1
-      CountdownInterval: 0.1
+      CountdownInterval: 1
       CountdownCount: 3

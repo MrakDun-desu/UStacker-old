@@ -12,11 +12,8 @@ namespace Blockstacker.Gameplay
         public uint Width { get; set; }
         public Vector3 Up => transform.up;
         public Vector3 Right => transform.right;
-        public Vector3 BoardDirection => transform.up + transform.right;
-
-        public event Action<int> LineCleared;
-        public event Action BoardStateChanged;
-
+        private Vector3 BoardDirection => transform.up + transform.right;
+        
         private void ClearLine(int lineNumber)
         {
             if (_blocks.Count >= lineNumber) return;
@@ -31,7 +28,6 @@ namespace Blockstacker.Gameplay
                     block.transform.position -= Up;
                 }
             }
-            LineCleared?.Invoke(lineNumber);
         }
 
         private void CheckAndClearLines()
@@ -75,20 +71,17 @@ namespace Blockstacker.Gameplay
             return _blocks[blockPos.y][blockPos.x] == null;
         }
 
-        public bool CanPlace(Block block)
+        public bool CanPlace(Block block, Vector2Int offset = new())
         {
-            return CanPlace(WorldSpaceToBoardPosition(block.transform.position));
+            return CanPlace(WorldSpaceToBoardPosition(block.transform.position) + offset);
         }
 
-        public bool CanPlace(Piece piece)
+        public bool CanPlace(Piece piece, Vector2Int offset = new())
         {
-            foreach (var block in piece.Blocks) {
-                if (!CanPlace(block)) return false;
-            }
-            return true;
+            return piece.Blocks.All(block => CanPlace(block, offset));
         }
 
-        public void Place(Block block, bool sendEvent = false)
+        public void Place(Block block)
         {
             var blockPos = WorldSpaceToBoardPosition(block.transform.position);
             if (!CanPlace(blockPos)) return;
@@ -100,18 +93,15 @@ namespace Blockstacker.Gameplay
                 _blocks.Add(new Block[Width]);
             }
             _blocks[blockPos.y][blockPos.x] = block;
-
-            if (sendEvent) BoardStateChanged?.Invoke();
         }
 
-        public void Place(Piece piece, bool sendEvent = true)
+        public void Place(Piece piece)
         {
             if (!CanPlace(piece)) return;
             foreach (var block in piece.Blocks) {
                 Place(block);
             }
             CheckAndClearLines();
-            if (sendEvent) BoardStateChanged?.Invoke();
         }
 
     }

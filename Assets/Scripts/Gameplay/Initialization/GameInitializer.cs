@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Presentation;
 using Blockstacker.GameSettings;
@@ -15,24 +16,27 @@ namespace Blockstacker.Gameplay.Initialization
         [SerializeField] private GameSettingsSO _gameSettingsAsset;
         [SerializeField] private Piece[] _availablePieces = Array.Empty<Piece>();
         [SerializeField] private GameManager _gameManager;
+        [SerializeField] private PieceSpawner _pieceSpawner;
+        [SerializeField] private Board _board;
+        [SerializeField] private GameObject _boardBackground;
         [SerializeField] private RotationSystemSO _srsRotationSystemSo;
         [SerializeField] private RotationSystemSO _srsPlusRotationSystemSo;
         [SerializeField] private GameCountdown _countdown;
         [SerializeField] private TMP_Text _gameTitle;
+        [SerializeField] private GameObject _gridPiece;
 
-
-        public static event Action GameInitialized;
+        public UnityEvent GameInitialized;
         public UnityEvent<string> GameFailedToInitialize;
 
         private void Start()
         {
             StringBuilder errorBuilder = new();
             if (TryInitialize(errorBuilder)) {
-                GameInitialized?.Invoke();
+                GameInitialized.Invoke();
                 return;
             }
 
-            GameFailedToInitialize.Invoke(errorBuilder.ToString());
+            GameFailedToInitialize.Invoke("Game failed to initialize:\n" + errorBuilder);
         }
 
         private bool TryInitialize(StringBuilder errorBuilder)
@@ -42,7 +46,8 @@ namespace Blockstacker.Gameplay.Initialization
                 new RulesGeneralInitializer(
                     errorBuilder, _gameSettingsAsset,
                     _availablePieces.Length,
-                    _gameManager),
+                    _pieceSpawner,
+                    _availablePieces),
                 new RulesHandlingInitializer(errorBuilder, _gameSettingsAsset),
                 new RulesControlsInitializer(
                     errorBuilder, _gameSettingsAsset,
@@ -52,13 +57,22 @@ namespace Blockstacker.Gameplay.Initialization
                     errorBuilder, _gameSettingsAsset,
                     _gameTitle,
                     _countdown
-                )
+                ),
+                new RulesBoardDimensionsInitializer(
+                    errorBuilder, _gameSettingsAsset,
+                    _board,
+                    _boardBackground,
+                    _gridPiece,
+                    Camera.main 
+                    )
             };
 
             foreach (var initializer in initializers)
             {
                 initializer.Execute();
             }
+            
+            Mediator.Clear();
 
             return errorBuilder.Length <= 0;
         }

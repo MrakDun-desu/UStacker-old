@@ -5,7 +5,7 @@ namespace Blockstacker.Gameplay.Communication
 {
     public static class Mediator
     {
-        private static readonly Dictionary<Type, List<Delegate>> _registeredActions;
+        private static readonly Dictionary<Type, List<Delegate>> _registeredActions = new();
 
         public static void Register<TMessage>(Action<TMessage> action)
             where TMessage : IMessage
