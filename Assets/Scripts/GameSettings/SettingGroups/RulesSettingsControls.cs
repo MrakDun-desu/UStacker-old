@@ -12,7 +12,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         public bool UnlimitedHold = false;
         public RotationSystemType RotationSystem = RotationSystemType.SRS;
         public string CustomRotationSystemName = "";
-        public RotationSystem ActiveRotationTable;
+        public RotationSystem ActiveRotationSystem;
         public float PiecePlacedDelay = 0;
         public float LineClearDelay = 0;
         public OnTouchGround OnTouchGround = OnTouchGround.LimitedTime;

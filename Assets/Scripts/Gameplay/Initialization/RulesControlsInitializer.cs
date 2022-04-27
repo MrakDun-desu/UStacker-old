@@ -10,6 +10,7 @@ namespace Blockstacker.Gameplay.Initialization
     {
         private readonly RotationSystem _srsRotationSystem;
         private readonly RotationSystem _srsPlusRotationSystem;
+        private readonly InputProcessor _inputProcessor;
 
         private static string KickSystemsPath => Path.Combine(
             Application.persistentDataPath, "ruleCustomization/rotationSystems"
@@ -19,11 +20,13 @@ namespace Blockstacker.Gameplay.Initialization
             StringBuilder errorBuilder,
             GameSettingsSO gameSettings,
             RotationSystem srsRotationSystem,
-            RotationSystem srsPlusRotationSystem)
+            RotationSystem srsPlusRotationSystem,
+            InputProcessor inputProcessor)
             : base(errorBuilder, gameSettings)
         {
             _srsRotationSystem = srsRotationSystem;
             _srsPlusRotationSystem = srsPlusRotationSystem;
+            _inputProcessor = inputProcessor;
         }
 
         public override void Execute()
@@ -41,7 +44,7 @@ namespace Blockstacker.Gameplay.Initialization
                 JsonUtility.FromJsonOverwrite(File.ReadAllText(kickTablePath), customSystem);
             }
 
-            _gameSettings.Rules.Controls.ActiveRotationTable =
+            _gameSettings.Rules.Controls.ActiveRotationSystem =
                 _gameSettings.Rules.Controls.RotationSystem switch
                 {
                     RotationSystemType.SRS => _srsRotationSystem,
@@ -50,6 +53,11 @@ namespace Blockstacker.Gameplay.Initialization
                     RotationSystemType.Custom => customSystem,
                     _ => new RotationSystem()
                 };
+
+            if (!_gameSettings.Rules.Controls.AllowHold)
+                _inputProcessor.DeactivateHold();
+
+            _inputProcessor.KickHandler = new KickHandler(_gameSettings.Rules.Controls.ActiveRotationSystem);
 
         }
     }

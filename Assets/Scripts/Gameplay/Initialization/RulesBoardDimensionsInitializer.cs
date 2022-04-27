@@ -18,7 +18,7 @@ namespace Blockstacker.Gameplay.Initialization
             GameObject boardBackground,
             GameObject gridPiece,
             Camera camera
-            )
+        )
             : base(errorBuilder, gameSettings)
         {
             _board = board;
@@ -31,25 +31,30 @@ namespace Blockstacker.Gameplay.Initialization
         {
             var boardDimensions = _gameSettings.Rules.BoardDimensions;
             _board.Width = _gameSettings.Rules.BoardDimensions.BoardWidth;
+            _board.Height = _gameSettings.Rules.BoardDimensions.BoardHeight;
             _boardBackground.transform.localScale = new Vector3(
                 boardDimensions.BoardWidth,
                 boardDimensions.BoardHeight,
                 1
             );
 
-            for (var x = 0; x < boardDimensions.BoardWidth; x++)
+            var boardGrid = new GameObject("Grid");
+            boardGrid.transform.SetParent(_board.transform);
+
+            for (var y = 0; y < boardDimensions.BoardHeight; y++)
             {
-                for (var y = 0; y < boardDimensions.BoardHeight; y++)
+                for (var x = 0; x < boardDimensions.BoardWidth; x++)
                 {
                     var gridPiece = Object.Instantiate(_gridPiece,
-                        _board.gameObject.transform,
+                        boardGrid.transform,
                         false);
                     gridPiece.transform.localPosition = new Vector3(
                         x, y, gridPiece.transform.localPosition.z);
                 }
             }
 
-            _camera.orthographicSize = boardDimensions.BoardHeight * .5f + _gameSettings.Rules.BoardDimensions.BoardPadding;
+            _camera.orthographicSize =
+                boardDimensions.BoardHeight * .5f + _gameSettings.Rules.BoardDimensions.BoardPadding;
             _camera.transform.position = new Vector3(
                 _gameSettings.Rules.BoardDimensions.BoardWidth * .5f,
                 _gameSettings.Rules.BoardDimensions.BoardHeight * .5f,

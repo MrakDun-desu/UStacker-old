@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Gameplay.Pieces;
@@ -8,22 +7,23 @@ namespace Blockstacker.Gameplay
 {
     public class Board : MonoBehaviour
     {
-        public readonly List<Block[]> _blocks = new();
+        public readonly List<Block[]> Blocks = new();
         public uint Width { get; set; }
+        public uint Height { get; set; }
         public Vector3 Up => transform.up;
         public Vector3 Right => transform.right;
         private Vector3 BoardDirection => transform.up + transform.right;
         
         private void ClearLine(int lineNumber)
         {
-            if (_blocks.Count >= lineNumber) return;
-            foreach (var block in _blocks[lineNumber]) {
+            if (Blocks.Count >= lineNumber) return;
+            foreach (var block in Blocks[lineNumber]) {
                 if (block == null) continue;
                 block.Clear();
             }
-            _blocks.RemoveAt(lineNumber);
-            for (var i = lineNumber; i < _blocks.Count; i++) {
-                foreach (var block in _blocks[i]) {
+            Blocks.RemoveAt(lineNumber);
+            for (var i = lineNumber; i < Blocks.Count; i++) {
+                foreach (var block in Blocks[i]) {
                     if (block == null) continue;
                     block.transform.position -= Up;
                 }
@@ -32,8 +32,8 @@ namespace Blockstacker.Gameplay
 
         private void CheckAndClearLines()
         {
-            for (var i = 0; i < _blocks.Count; i++) {
-                var line = _blocks[i];
+            for (var i = 0; i < Blocks.Count; i++) {
+                var line = Blocks[i];
                 var isFull = line.All(block => block != null);
                 if (isFull) {
                     ClearLine(i);
@@ -61,14 +61,14 @@ namespace Blockstacker.Gameplay
 
         public bool CanPlace(Vector2Int blockPos)
         {
-            if (blockPos.x < 0 || blockPos.x > Width ||
+            if (blockPos.x < 0 || blockPos.x >= Width ||
                 blockPos.y < 0) return false;
 
-            if (_blocks.Count <= blockPos.y) {
+            if (Blocks.Count <= blockPos.y) {
                 return true;
             }
 
-            return _blocks[blockPos.y][blockPos.x] == null;
+            return Blocks[blockPos.y][blockPos.x] == null;
         }
 
         public bool CanPlace(Block block, Vector2Int offset = new())
@@ -85,14 +85,14 @@ namespace Blockstacker.Gameplay
         {
             var blockPos = WorldSpaceToBoardPosition(block.transform.position);
             if (!CanPlace(blockPos)) return;
-            while (_blocks.Count <= blockPos.y) {
-                _blocks.Add(new Block[Width]);
+            while (Blocks.Count <= blockPos.y) {
+                Blocks.Add(new Block[Width]);
             }
-            _blocks[blockPos.y][blockPos.x] = block;
-            while (_blocks.Count <= blockPos.y) {
-                _blocks.Add(new Block[Width]);
+            Blocks[blockPos.y][blockPos.x] = block;
+            while (Blocks.Count <= blockPos.y) {
+                Blocks.Add(new Block[Width]);
             }
-            _blocks[blockPos.y][blockPos.x] = block;
+            Blocks[blockPos.y][blockPos.x] = block;
         }
 
         public void Place(Piece piece)

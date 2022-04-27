@@ -11,6 +11,7 @@ namespace Blockstacker.Gameplay.Pieces
         public PieceType PieceType;
         public List<Block> Blocks;
         public Vector2 SpawnOffset;
+        public Vector2 ContainerOffset;
         public RotationState RotationState;
 
         public static event Action<Piece> PieceCleared;

@@ -14,23 +14,33 @@ namespace Blockstacker.Gameplay.Initialization
         private readonly int _pieceCount;
         private readonly PieceSpawner _spawner;
         private readonly Piece[] _availablePieces;
+        private readonly Board _board;
+        private readonly PieceContainer _pieceContainerPrefab;
+        private readonly InputProcessor _inputProcessor;
         
         public RulesGeneralInitializer(
             StringBuilder problemBuilder,
             GameSettingsSO gameSettings,
             int pieceCount,
             PieceSpawner spawner,
-            Piece[] availablePieces) : base(problemBuilder, gameSettings)
+            Piece[] availablePieces,
+            Board board,
+            PieceContainer pieceContainerPrefab,
+            InputProcessor inputProcessor) : base(problemBuilder, gameSettings)
         {
             _pieceCount = pieceCount;
             _spawner = spawner;
             _availablePieces = availablePieces;
+            _board = board;
+            _pieceContainerPrefab = pieceContainerPrefab;
+            _inputProcessor = inputProcessor;
         }
 
         public override void Execute()
         {
             InitializeSeed();
             InitializeRandomizer();
+            InitializePieceContainers();
         }
 
         private void InitializeSeed()
@@ -76,6 +86,28 @@ namespace Blockstacker.Gameplay.Initialization
 
             _spawner.Randomizer = randomizer;
             _spawner.AvailablePieces = _availablePieces;
+        }
+
+        private void InitializePieceContainers()
+        {
+            var pieceHolder = Object.Instantiate(_pieceContainerPrefab, _board.transform);
+            pieceHolder.transform.localPosition = new Vector3(
+                -PieceContainer.Width,
+                (int)_board.Height - PieceContainer.Height
+                );
+
+            _inputProcessor.PieceHolder = pieceHolder;
+
+            
+            for (var i = 0; i < _gameSettings.Rules.General.NextPieceCount; i++)
+            {
+                var pieceContainer = Object.Instantiate(_pieceContainerPrefab, _board.transform);
+                pieceContainer.transform.localPosition = new Vector3(
+                    (int)_board.Width,
+                    (int)_board.Height - PieceContainer.Height * (i + 1)
+                );
+                _spawner.PreviewContainers.Add(pieceContainer);
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Blockstacker.Loaders
 {
     public static class SkinLoader
     {
-        // TODO
+        // TODO add skin loading and names
         // private static readonly string _blockSkinName = "blockSkin";
         // private static readonly string[] _blockSpriteNames = new string[] {
         // };

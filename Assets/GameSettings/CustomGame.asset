@@ -21,7 +21,7 @@ MonoBehaviour:
         AllowedSpins: 0
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: 764889303
+        ActiveSeed: 809971959
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
@@ -450,10 +450,10 @@ MonoBehaviour:
         CustomLevellingScriptName: 
         CustomLevellingScript: 
       BoardDimensions:
-        BoardHeight: 10
-        BoardWidth: 6
+        BoardHeight: 20
+        BoardWidth: 10
         LethalHeight: 20
-        PieceSpawnHeight: 22
+        PieceSpawnHeight: 21
         TopoutCondition: 2
         AllowClutchClears: 1
         BoardPadding: 5
