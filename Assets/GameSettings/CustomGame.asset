@@ -21,7 +21,7 @@ MonoBehaviour:
         AllowedSpins: 0
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: 809971959
+        ActiveSeed: 1621750571
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
@@ -30,7 +30,7 @@ MonoBehaviour:
         UnlimitedHold: 0
         RotationSystem: 0
         CustomRotationSystemName: 
-        ActiveRotationTable:
+        ActiveRotationSystem:
           IKickTable:
             StartState: 0
             ZeroToThree:
@@ -479,5 +479,5 @@ MonoBehaviour:
     Presentation:
       Title: Custom game
       UseCountdown: 1
-      CountdownInterval: 1
+      CountdownInterval: 0.2
       CountdownCount: 3

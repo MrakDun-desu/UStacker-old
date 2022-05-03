@@ -22,7 +22,7 @@ namespace Blockstacker.Gameplay
             var pieceTransform = _piece.transform;
             pieceTransform.SetParent(transform);
             pieceTransform.localPosition = new Vector3(_piece.ContainerOffset.x + Width * .5f, _piece.ContainerOffset.y + Height * .5f);
-            pieceTransform.rotation = Quaternion.identity;
+            pieceTransform.rotation = transform.rotation;
             return temp;
         }
 

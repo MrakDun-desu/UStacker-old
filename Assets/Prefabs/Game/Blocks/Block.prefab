@@ -129,5 +129,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 212dcad1910ff8f45a46be7d7add2308, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _onCleared:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3163467946176739645}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _initialPosition: {x: 0, y: 0}
   PieceType: 0

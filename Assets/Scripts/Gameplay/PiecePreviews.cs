@@ -6,12 +6,13 @@ namespace Blockstacker.Gameplay
 {
     public class PiecePreviews
     {
-        private readonly IList<PieceContainer> _containers;
+        private readonly List<PieceContainer> _containers;
         private Piece lastPiece;
 
-        public PiecePreviews(IList<PieceContainer> containers)
+        public PiecePreviews(List<PieceContainer> containers)
         {
             _containers = containers;
+            _containers.Sort((x, y) => x.transform.position.y > y.transform.position.y ? 1 : -1);
         }
         
         public Piece AddPiece(Piece newPiece)
@@ -22,6 +23,6 @@ namespace Blockstacker.Gameplay
             lastPiece = newPiece;
             return temp;
         }
-        
     }
+
 }

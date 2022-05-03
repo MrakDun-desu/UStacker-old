@@ -2,8 +2,8 @@
 {
     public enum RotateDirection
     {
-        Left,
-        Right,
+        Clockwise,
+        Counterclockwise,
         OneEighty
     }
 }

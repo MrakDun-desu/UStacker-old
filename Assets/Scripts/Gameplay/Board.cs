@@ -10,13 +10,14 @@ namespace Blockstacker.Gameplay
         public readonly List<Block[]> Blocks = new();
         public uint Width { get; set; }
         public uint Height { get; set; }
-        public Vector3 Up => transform.up;
-        public Vector3 Right => transform.right;
-        private Vector3 BoardDirection => transform.up + transform.right;
+        public Vector3 Up => transform.up * transform.localScale.y;
+        public Vector3 Right => transform.right * transform.localScale.x;
+        
+        private Transform _helperTransform;
         
         private void ClearLine(int lineNumber)
         {
-            if (Blocks.Count >= lineNumber) return;
+            if (Blocks.Count <= lineNumber) return;
             foreach (var block in Blocks[lineNumber]) {
                 if (block == null) continue;
                 block.Clear();
@@ -30,33 +31,36 @@ namespace Blockstacker.Gameplay
             }
         }
 
-        private void CheckAndClearLines()
+        private int CheckAndClearLines()
         {
+            var linesCleared = 0;
             for (var i = 0; i < Blocks.Count; i++) {
                 var line = Blocks[i];
                 var isFull = line.All(block => block != null);
-                if (isFull) {
-                    ClearLine(i);
-                }
+                if (!isFull) continue;
+                linesCleared++;
+                ClearLine(i);
             }
+
+            return linesCleared;
         }
 
         public Vector2Int WorldSpaceToBoardPosition(Vector3 worldSpacePos)
         {
-            worldSpacePos -= transform.position;
-            var boardPosition = new Vector2(
-                worldSpacePos.x / BoardDirection.x,
-                worldSpacePos.y / BoardDirection.y
-            );
-            return new Vector2Int(Mathf.RoundToInt(boardPosition.x), Mathf.RoundToInt(boardPosition.y));
+            if (_helperTransform == null)
+            {
+                _helperTransform = new GameObject("Helper").transform;
+                _helperTransform.SetParent(transform);
+            }
+
+            _helperTransform.position = worldSpacePos;
+            return new Vector2Int((int)_helperTransform.localPosition.x,
+                (int)_helperTransform.localPosition.y);
         }
 
         public Vector3 BoardPositionToWorldSpace(Vector2Int boardPos)
         {
-            return new Vector3(
-                boardPos.x * BoardDirection.x,
-                boardPos.y * BoardDirection.y
-            );
+            return transform.position + boardPos.x * Right + boardPos.y * Up;
         }
 
         public bool CanPlace(Vector2Int blockPos)
@@ -89,19 +93,16 @@ namespace Blockstacker.Gameplay
                 Blocks.Add(new Block[Width]);
             }
             Blocks[blockPos.y][blockPos.x] = block;
-            while (Blocks.Count <= blockPos.y) {
-                Blocks.Add(new Block[Width]);
-            }
-            Blocks[blockPos.y][blockPos.x] = block;
         }
 
-        public void Place(Piece piece)
+        public bool Place(Piece piece)
         {
-            if (!CanPlace(piece)) return;
+            if (!CanPlace(piece)) return false;
             foreach (var block in piece.Blocks) {
                 Place(block);
             }
-            CheckAndClearLines();
+            var linesCleared = CheckAndClearLines();
+            return linesCleared > 0;
         }
 
     }

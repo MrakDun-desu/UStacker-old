@@ -140,7 +140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &465133845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,15 +156,10 @@ MonoBehaviour:
   _settings: {fileID: 11400000, guid: 82a8dfd8c479a9746b991978530983d6, type: 2}
   _recorder: {fileID: 589515533}
   _board: {fileID: 878271531}
+  _timer: {fileID: 1765704643}
+  _spawner: {fileID: 1685487601}
   ActivePiece: {fileID: 0}
   PieceHolder: {fileID: 0}
-  Handling:
-    DelayedAutoShift: 0.125
-    AutomaticRepeatRate: 0
-    SoftDropFactor: Infinity
-    DasCutDelay: 0
-    UseDasCancelling: 1
-    UseDiagonalLock: 0
 --- !u!4 &465133846
 Transform:
   m_ObjectHideFlags: 0
@@ -823,6 +818,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1740704098}
   m_CullTransparentMesh: 1
+--- !u!1 &1765704642
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1765704644}
+  - component: {fileID: 1765704643}
+  m_Layer: 0
+  m_Name: GameTimer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1765704643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1765704642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b92ad990d790484ba7eecfe39353d85e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1765704644
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1765704642}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1815941595
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,6 +929,30 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1685487601}
+        m_TargetAssemblyTypeName: Blockstacker.Gameplay.PieceSpawner, Assembly-CSharp
+        m_MethodName: SpawnPiece
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 465133844}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &1815941598
 MonoBehaviour:

@@ -28,8 +28,6 @@ namespace Blockstacker.Gameplay
                 var nextIndex = Randomizer.GetNextPiece();
                 _previews.AddPiece(Instantiate(AvailablePieces[nextIndex]));
             }
-
-            SpawnPiece();
         }
 
         public void SpawnPiece()
@@ -37,18 +35,23 @@ namespace Blockstacker.Gameplay
             var nextIndex = Randomizer.GetNextPiece();
             var nextPiece = _previews.AddPiece(Instantiate(AvailablePieces[nextIndex]));
 
+            SpawnPiece(nextPiece);
+        }
+
+        public void SpawnPiece(Piece piece)
+        {
             var boardTransform = _board.transform;
             var piecePos = new Vector3(
                 (int) _settings.Rules.BoardDimensions.BoardWidth / 2,
                 (int) _settings.Rules.BoardDimensions.PieceSpawnHeight,
                 boardTransform.position.z
             );
-            var pieceTransform = nextPiece.transform;
+            var pieceTransform = piece.transform;
             pieceTransform.SetParent(boardTransform);
-            pieceTransform.localPosition = piecePos + new Vector3(nextPiece.SpawnOffset.x, nextPiece.SpawnOffset.y);
+            pieceTransform.localPosition = piecePos + new Vector3(piece.SpawnOffset.x, piece.SpawnOffset.y);
             pieceTransform.localScale = boardTransform.localScale;
 
-            _inputProcessor.ActivePiece = nextPiece;
+            _inputProcessor.ActivePiece = piece;
         }
     }
 }

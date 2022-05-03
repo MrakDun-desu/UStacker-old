@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Blockstacker.Gameplay.Enums;
 using Blockstacker.GameSettings.Enums;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Blockstacker.Gameplay.Pieces
 {
@@ -13,8 +14,7 @@ namespace Blockstacker.Gameplay.Pieces
         public Vector2 SpawnOffset;
         public Vector2 ContainerOffset;
         public RotationState RotationState;
-
-        public static event Action<Piece> PieceCleared;
+        public UnityEvent PieceCleared;
 
         private void Awake()
         {
@@ -27,10 +27,9 @@ namespace Blockstacker.Gameplay.Pieces
         private void OnBlockCleared(Block sender)
         {
             Blocks.Remove(sender);
-            if (Blocks.Count == 0)
-            {
-                PieceCleared?.Invoke(this);
-            }
+            if (Blocks.Count != 0) return;
+            PieceCleared.Invoke();
+            Destroy(gameObject);
         }
 
         // public void RefreshBlocks()

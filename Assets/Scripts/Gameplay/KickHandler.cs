@@ -21,8 +21,8 @@ namespace Blockstacker.Gameplay
         {
             var table = direction switch
             {
-                RotateDirection.Left => TryKickLeft(piece),
-                RotateDirection.Right => TryKickRight(piece),
+                RotateDirection.Clockwise => TryKickLeft(piece),
+                RotateDirection.Counterclockwise => TryKickRight(piece),
                 RotateDirection.OneEighty => TryKickOneEighty(piece),
                 _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
             };
