@@ -9,7 +9,5 @@ namespace Blockstacker.GameSettings.SettingGroups
         public RulesSettingsControls Controls = new();
         public RulesSettingsLevelling Levelling = new();
         public RulesSettingsBoardDimensions BoardDimensions = new();
-        public RulesSettingsHandling Handling = new();
-
     }
 }

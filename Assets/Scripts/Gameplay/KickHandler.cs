@@ -21,15 +21,14 @@ namespace Blockstacker.Gameplay
         {
             var table = direction switch
             {
-                RotateDirection.Clockwise => TryKickLeft(piece),
-                RotateDirection.Counterclockwise => TryKickRight(piece),
+                RotateDirection.Clockwise => TryKickCw(piece),
+                RotateDirection.Counterclockwise => TryKickCcw(piece),
                 RotateDirection.OneEighty => TryKickOneEighty(piece),
                 _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
             };
 
             result = Vector2Int.zero;
             wasLast = false;
-            if (board.CanPlace(piece)) return true;
 
             for (var i = 0; i < table.Length; i++)
             {
@@ -44,7 +43,7 @@ namespace Blockstacker.Gameplay
             return false;
         }
 
-        private Vector2Int[] TryKickRight(Piece piece)
+        private Vector2Int[] TryKickCw(Piece piece)
         {
             return piece.PieceType switch
             {
@@ -108,7 +107,7 @@ namespace Blockstacker.Gameplay
             };
         }
 
-        private Vector2Int[] TryKickLeft(Piece piece)
+        private Vector2Int[] TryKickCcw(Piece piece)
         {
             return piece.PieceType switch
             {

@@ -21,7 +21,7 @@ MonoBehaviour:
         AllowedSpins: 0
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: 1621750571
+        ActiveSeed: 574131343
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
@@ -442,6 +442,14 @@ MonoBehaviour:
         OnTouchGround: 0
         OnTouchGroundAmount: 5
         ShowGhostPiece: 1
+        OverrideHandling: 1
+        Handling:
+          DelayedAutoShift: 0.125
+          AutomaticRepeatRate: 0
+          SoftDropFactor: Infinity
+          DasCutDelay: 0
+          AntiDasBehavior: 1
+          DiagonalLockBehavior: 1
       Levelling:
         Gravity: 0.02
         LockDelay: 0.5
@@ -457,14 +465,6 @@ MonoBehaviour:
         TopoutCondition: 2
         AllowClutchClears: 1
         BoardPadding: 5
-      Handling:
-        OverrideHandling: 0
-        DelayedAutoShift: 0.125
-        AutomaticRepeatRate: 0
-        SoftDropFactor: Infinity
-        DasCutDelay: 0
-        UseDasCancelling: 1
-        UseDiagonalLock: 0
     Objective:
       MainStat: 1
       GameEndCondition: 2

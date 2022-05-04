@@ -1,5 +1,6 @@
 using System;
 using Blockstacker.GameSettings.Enums;
+using Blockstacker.GlobalSettings.Groups;
 
 namespace Blockstacker.GameSettings.SettingGroups
 {
@@ -18,5 +19,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         public OnTouchGround OnTouchGround = OnTouchGround.LimitedTime;
         public float OnTouchGroundAmount = 5;
         public bool ShowGhostPiece = true;
+        public bool OverrideHandling = false;
+        public HandlingSettings Handling = new();
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using Blockstacker.GlobalSettings.Enums;
 
 namespace Blockstacker.GlobalSettings.Groups
 {
@@ -9,8 +10,7 @@ namespace Blockstacker.GlobalSettings.Groups
         public float AutomaticRepeatRate = 0;
         public float SoftDropFactor = float.PositiveInfinity;
         public float DasCutDelay = 0;
-        public bool UseDasCancelling = true;
-        public bool UseDiagonalLock = false;
-
+        public AntiDasBehavior AntiDasBehavior = AntiDasBehavior.CancelFirstDirection;
+        public DiagonalLockBehavior DiagonalLockBehavior = DiagonalLockBehavior.DontLock;
     }
 }

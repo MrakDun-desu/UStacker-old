@@ -13,7 +13,7 @@ namespace Blockstacker.Gameplay
         public Vector3 Up => transform.up * transform.localScale.y;
         public Vector3 Right => transform.right * transform.localScale.x;
         
-        private Transform _helperTransform;
+        [SerializeField] private Transform _helperTransform;
         
         private void ClearLine(int lineNumber)
         {
@@ -40,6 +40,7 @@ namespace Blockstacker.Gameplay
                 if (!isFull) continue;
                 linesCleared++;
                 ClearLine(i);
+                i--;
             }
 
             return linesCleared;
@@ -47,15 +48,10 @@ namespace Blockstacker.Gameplay
 
         public Vector2Int WorldSpaceToBoardPosition(Vector3 worldSpacePos)
         {
-            if (_helperTransform == null)
-            {
-                _helperTransform = new GameObject("Helper").transform;
-                _helperTransform.SetParent(transform);
-            }
-
             _helperTransform.position = worldSpacePos;
-            return new Vector2Int((int)_helperTransform.localPosition.x,
-                (int)_helperTransform.localPosition.y);
+            var localPosition = _helperTransform.localPosition;
+            return new Vector2Int(Mathf.FloorToInt(localPosition.x),
+                Mathf.FloorToInt(localPosition.y));
         }
 
         public Vector3 BoardPositionToWorldSpace(Vector2Int boardPos)
@@ -72,17 +68,23 @@ namespace Blockstacker.Gameplay
                 return true;
             }
 
-            return Blocks[blockPos.y][blockPos.x] == null;
+            return Blocks[blockPos.y][blockPos.x] is null;
         }
 
         public bool CanPlace(Block block, Vector2Int offset = new())
         {
-            return CanPlace(WorldSpaceToBoardPosition(block.transform.position) + offset);
+            var boardPosition = WorldSpaceToBoardPosition(block.transform.position);
+            return CanPlace(boardPosition + offset);
         }
 
         public bool CanPlace(Piece piece, Vector2Int offset = new())
         {
-            return piece.Blocks.All(block => CanPlace(block, offset));
+            foreach (var block in piece.Blocks)
+            {
+                if (!CanPlace(block, offset)) return false;
+            }
+
+            return true;
         }
 
         public void Place(Block block)
