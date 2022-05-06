@@ -31,5 +31,6 @@ namespace Blockstacker.Gameplay.Pieces
                 transform.localPosition.z
             );
         }
+
     }
 }

@@ -12,19 +12,23 @@ namespace Blockstacker.Gameplay
         public uint Height { get; set; }
         public Vector3 Up => transform.up * transform.localScale.y;
         public Vector3 Right => transform.right * transform.localScale.x;
-        
+
         [SerializeField] private Transform _helperTransform;
-        
+
         private void ClearLine(int lineNumber)
         {
             if (Blocks.Count <= lineNumber) return;
-            foreach (var block in Blocks[lineNumber]) {
+            foreach (var block in Blocks[lineNumber])
+            {
                 if (block == null) continue;
                 block.Clear();
             }
+
             Blocks.RemoveAt(lineNumber);
-            for (var i = lineNumber; i < Blocks.Count; i++) {
-                foreach (var block in Blocks[i]) {
+            for (var i = lineNumber; i < Blocks.Count; i++)
+            {
+                foreach (var block in Blocks[i])
+                {
                     if (block == null) continue;
                     block.transform.position -= Up;
                 }
@@ -34,7 +38,8 @@ namespace Blockstacker.Gameplay
         private int CheckAndClearLines()
         {
             var linesCleared = 0;
-            for (var i = 0; i < Blocks.Count; i++) {
+            for (var i = 0; i < Blocks.Count; i++)
+            {
                 var line = Blocks[i];
                 var isFull = line.All(block => block != null);
                 if (!isFull) continue;
@@ -54,58 +59,60 @@ namespace Blockstacker.Gameplay
                 Mathf.FloorToInt(localPosition.y));
         }
 
-        public Vector3 BoardPositionToWorldSpace(Vector2Int boardPos)
-        {
-            return transform.position + boardPos.x * Right + boardPos.y * Up;
-        }
+        public Vector3 BoardPositionToWorldSpace(Vector2Int boardPos) =>
+            transform.position + boardPos.x * Right + boardPos.y * Up;
 
-        public bool CanPlace(Vector2Int blockPos)
+        public bool CanPlace(Vector2Int blockPosition)
         {
-            if (blockPos.x < 0 || blockPos.x >= Width ||
-                blockPos.y < 0) return false;
+            if (blockPosition.x < 0 || blockPosition.x >= Width ||
+                blockPosition.y < 0) return false;
 
-            if (Blocks.Count <= blockPos.y) {
+            if (Blocks.Count <= blockPosition.y)
+            {
                 return true;
             }
 
-            return Blocks[blockPos.y][blockPos.x] is null;
+            return Blocks[blockPosition.y][blockPosition.x] is null;
         }
 
-        public bool CanPlace(Block block, Vector2Int offset = new())
+        public bool CanPlace(Vector3 realPosition, Vector2Int offset = new())
         {
-            var boardPosition = WorldSpaceToBoardPosition(block.transform.position);
+            var boardPosition = WorldSpaceToBoardPosition(realPosition);
             return CanPlace(boardPosition + offset);
         }
 
         public bool CanPlace(Piece piece, Vector2Int offset = new())
         {
-            foreach (var block in piece.Blocks)
-            {
-                if (!CanPlace(block, offset)) return false;
-            }
+            return piece.Blocks.All(block => CanPlace(block.transform.position, offset));
+        }
 
-            return true;
+        public bool CanPlace(IEnumerable<Transform> transforms, Vector2Int offset = new())
+        {
+            return transforms.All(tf => CanPlace(tf.position, offset));
         }
 
         public void Place(Block block)
         {
             var blockPos = WorldSpaceToBoardPosition(block.transform.position);
             if (!CanPlace(blockPos)) return;
-            while (Blocks.Count <= blockPos.y) {
+            while (Blocks.Count <= blockPos.y)
+            {
                 Blocks.Add(new Block[Width]);
             }
+
             Blocks[blockPos.y][blockPos.x] = block;
         }
 
         public bool Place(Piece piece)
         {
             if (!CanPlace(piece)) return false;
-            foreach (var block in piece.Blocks) {
+            foreach (var block in piece.Blocks)
+            {
                 Place(block);
             }
+
             var linesCleared = CheckAndClearLines();
             return linesCleared > 0;
         }
-
     }
 }

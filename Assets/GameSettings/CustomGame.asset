@@ -21,7 +21,7 @@ MonoBehaviour:
         AllowedSpins: 0
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: 574131343
+        ActiveSeed: 1069595783
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
@@ -449,9 +449,9 @@ MonoBehaviour:
           SoftDropFactor: Infinity
           DasCutDelay: 0
           AntiDasBehavior: 1
-          DiagonalLockBehavior: 1
+          DiagonalLockBehavior: 0
       Levelling:
-        Gravity: 0.02
+        Gravity: 0.019999999552965164
         LockDelay: 0.5
         StartingLevel: 1
         LevellingSystem: 3

@@ -9,8 +9,8 @@ namespace Blockstacker.Gameplay.Pieces
 {
     public class Piece : MonoBehaviour
     {
+        public List<Block> Blocks = new();
         public PieceType PieceType;
-        public List<Block> Blocks;
         public Vector2 SpawnOffset;
         public Vector2 ContainerOffset;
         public RotationState RotationState;

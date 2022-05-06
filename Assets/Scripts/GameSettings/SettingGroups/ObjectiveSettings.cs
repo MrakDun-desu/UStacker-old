@@ -8,7 +8,7 @@ namespace Blockstacker.GameSettings.SettingGroups
     {
         public MainStat MainStat = MainStat.Time;
         public GameEndCondition GameEndCondition = GameEndCondition.LinesCleared;
-        public float EndConditionCount = 40;
+        public double EndConditionCount = 40;
         public bool ToppingOutIsOkay = false;
         public bool GenerateCheese = false;
         public CheeseGeneration CheeseGeneration = CheeseGeneration.Singles;

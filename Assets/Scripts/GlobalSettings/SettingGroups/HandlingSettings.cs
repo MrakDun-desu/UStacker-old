@@ -6,10 +6,10 @@ namespace Blockstacker.GlobalSettings.Groups
     [Serializable]
     public class HandlingSettings
     {
-        public float DelayedAutoShift = .125f;
-        public float AutomaticRepeatRate = 0;
-        public float SoftDropFactor = float.PositiveInfinity;
-        public float DasCutDelay = 0;
+        public double DelayedAutoShift = .125f;
+        public double AutomaticRepeatRate = 0;
+        public double SoftDropFactor = float.PositiveInfinity;
+        public double DasCutDelay = 0;
         public AntiDasBehavior AntiDasBehavior = AntiDasBehavior.CancelFirstDirection;
         public DiagonalLockBehavior DiagonalLockBehavior = DiagonalLockBehavior.DontLock;
     }

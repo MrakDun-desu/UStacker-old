@@ -7,8 +7,8 @@ namespace Blockstacker.Gameplay.Initialization
 {
     public class PresentationInitializer : InitializerBase
     {
-        private TMP_Text _title;
-        private GameCountdown _countdown;
+        private readonly TMP_Text _title;
+        private readonly GameCountdown _countdown;
 
         public PresentationInitializer(
             StringBuilder problemBuilder,

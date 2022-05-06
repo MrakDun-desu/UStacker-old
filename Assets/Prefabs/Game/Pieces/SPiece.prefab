@@ -339,6 +339,26 @@ PrefabInstance:
       propertyPath: Blocks.Array.data[7]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 7662263200456811721, guid: 458d0a52522b0684ba11b2b19537fc6d, type: 3}
+      propertyPath: <Blocks>k__BackingField.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7662263200456811721, guid: 458d0a52522b0684ba11b2b19537fc6d, type: 3}
+      propertyPath: <Blocks>k__BackingField.Array.data[0]
+      value: 
+      objectReference: {fileID: 5260880244826099078}
+    - target: {fileID: 7662263200456811721, guid: 458d0a52522b0684ba11b2b19537fc6d, type: 3}
+      propertyPath: <Blocks>k__BackingField.Array.data[1]
+      value: 
+      objectReference: {fileID: 7362444400325713607}
+    - target: {fileID: 7662263200456811721, guid: 458d0a52522b0684ba11b2b19537fc6d, type: 3}
+      propertyPath: <Blocks>k__BackingField.Array.data[2]
+      value: 
+      objectReference: {fileID: 1800341213277880155}
+    - target: {fileID: 7662263200456811721, guid: 458d0a52522b0684ba11b2b19537fc6d, type: 3}
+      propertyPath: <Blocks>k__BackingField.Array.data[3]
+      value: 
+      objectReference: {fileID: 4426044806958326522}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 458d0a52522b0684ba11b2b19537fc6d, type: 3}
 --- !u!4 &211800979117125650 stripped
