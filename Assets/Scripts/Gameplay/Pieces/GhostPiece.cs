@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Blockstacker.GameSettings;
 using UnityEngine;
 
 namespace Blockstacker.Gameplay.Pieces
@@ -8,10 +10,23 @@ namespace Blockstacker.Gameplay.Pieces
         public List<Transform> Blocks = new();
         [SerializeField] private GameObject _blockPrefab;
         [SerializeField] private Board _board;
+        [SerializeField] private GameSettingsSO _settings;
 
         private Piece _activePiece;
+
+        private void Awake()
+        {
+            if (_settings.Rules.Controls.ShowGhostPiece) return;
+            foreach (var block in Blocks)
+            {
+                block.gameObject.SetActive(false);
+            }
+        }
+
         public void SetActivePiece(Piece value)
         {
+            if (!_settings.Rules.Controls.ShowGhostPiece) return;
+            
             _activePiece = value;
             
             while (_activePiece.Blocks.Count > value.Blocks.Count)
@@ -28,6 +43,7 @@ namespace Blockstacker.Gameplay.Pieces
 
         public void Render()
         {
+            if (!_settings.Rules.Controls.ShowGhostPiece) return;
             transform.position = _activePiece.transform.position;
             for (var i = 0; i < Blocks.Count; i++)
             {

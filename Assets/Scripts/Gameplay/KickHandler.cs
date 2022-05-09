@@ -16,8 +16,7 @@ namespace Blockstacker.Gameplay
             _rotationSystem = rotationSystem;
         }
 
-        public bool TryKick(Piece piece, Board board, RotateDirection direction, out Vector2Int result,
-            out bool wasLast)
+        public bool TryKick(Piece piece, Board board, RotateDirection direction, out Vector2Int result)
         {
             var table = direction switch
             {
@@ -28,14 +27,11 @@ namespace Blockstacker.Gameplay
             };
 
             result = Vector2Int.zero;
-            wasLast = false;
 
-            for (var i = 0; i < table.Length; i++)
+            foreach (var kick in table)
             {
-                var kick = table[i];
                 if (!board.CanPlace(piece, kick)) continue;
                 result = kick;
-                if (i == table.Length - 1) wasLast = true;
 
                 return true;
             }

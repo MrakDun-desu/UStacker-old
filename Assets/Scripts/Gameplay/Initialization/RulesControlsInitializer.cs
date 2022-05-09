@@ -54,9 +54,6 @@ namespace Blockstacker.Gameplay.Initialization
                     _ => new RotationSystem()
                 };
 
-            if (!_gameSettings.Rules.Controls.AllowHold)
-                _inputProcessor.DeactivateHold();
-
             _inputProcessor.KickHandler = new KickHandler(_gameSettings.Rules.Controls.ActiveRotationSystem);
 
         }

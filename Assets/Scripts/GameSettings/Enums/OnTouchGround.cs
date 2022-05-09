@@ -1,6 +1,6 @@
 namespace Blockstacker.GameSettings.Enums
 {
-    public enum OnTouchGround
+    public enum OnTouchGround : byte
     {
         LimitedTime,
         LimitedMoves,

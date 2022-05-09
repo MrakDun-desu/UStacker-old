@@ -1,6 +1,6 @@
 namespace Blockstacker.GameSettings.Enums
 {
-    public enum RotationSystemType
+    public enum RotationSystemType : byte
     {
         SRS,
         SRSPlus,

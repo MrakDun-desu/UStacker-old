@@ -1,6 +1,6 @@
 namespace Blockstacker.GameSettings.Enums
 {
-    public enum MainStat
+    public enum MainStat : byte
     {
         Score,
         Time,

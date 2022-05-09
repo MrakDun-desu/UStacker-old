@@ -16,6 +16,11 @@ namespace Blockstacker.Gameplay
             get => _scale;
             set
             {
+                if (value == 0)
+                {
+                    _stopwatch.Stop();
+                    return;
+                }
                 _startOffset = _stopwatch.Elapsed * _scale + _startOffset;
                 if (_stopwatch.IsRunning)
                     _stopwatch.Restart();

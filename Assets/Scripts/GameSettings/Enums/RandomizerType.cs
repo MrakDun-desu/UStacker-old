@@ -1,6 +1,6 @@
 namespace Blockstacker.GameSettings.Enums
 {
-    public enum RandomizerType
+    public enum RandomizerType : byte
     {
         SevenBag,
         FourteenBag,

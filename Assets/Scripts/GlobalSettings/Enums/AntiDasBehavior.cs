@@ -1,6 +1,6 @@
 ﻿namespace Blockstacker.GlobalSettings.Enums
 {
-    public enum AntiDasBehavior
+    public enum AntiDasBehavior : byte
     {
         DontCancel,
         CancelFirstDirection,

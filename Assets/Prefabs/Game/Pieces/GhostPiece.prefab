@@ -55,6 +55,7 @@ MonoBehaviour:
   - {fileID: 6394872968187968455}
   _blockPrefab: {fileID: 2642920995141522598, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
   _board: {fileID: 0}
+  _settings: {fileID: 11400000, guid: 82a8dfd8c479a9746b991978530983d6, type: 2}
 --- !u!1001 &326579193159287435
 PrefabInstance:
   m_ObjectHideFlags: 0

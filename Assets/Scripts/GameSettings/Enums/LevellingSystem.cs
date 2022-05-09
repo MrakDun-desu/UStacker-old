@@ -1,6 +1,6 @@
 namespace Blockstacker.GameSettings.Enums
 {
-    public enum LevellingSystem
+    public enum LevellingSystem : byte
     {
         Nintendo,
         Guideline,

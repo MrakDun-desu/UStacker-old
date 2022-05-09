@@ -1,6 +1,6 @@
 namespace Blockstacker.GameSettings.Enums
 {
-    public enum TopoutCondition
+    public enum TopoutCondition : byte
     {
         PieceSpawn,
         LethalHeightStrict,

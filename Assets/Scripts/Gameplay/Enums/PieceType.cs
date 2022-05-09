@@ -1,6 +1,6 @@
 namespace Blockstacker.Gameplay.Enums
 {
-    public enum PieceType
+    public enum PieceType : short
     {
         IPiece,
         TPiece,

@@ -21,7 +21,7 @@ MonoBehaviour:
         AllowedSpins: 0
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: 1199034144
+        ActiveSeed: -1309504178
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
@@ -441,14 +441,15 @@ MonoBehaviour:
         LineClearDelay: 0
         OnTouchGround: 0
         OnTouchGroundAmount: 5
-        ShowGhostPiece: 1
+        ShowGhostPiece: 0
         OverrideHandling: 1
         Handling:
-          DelayedAutoShift: 0.83333
+          DelayedAutoShift: 0.1
           AutomaticRepeatRate: 0
           SoftDropFactor: Infinity
           DasCutDelay: 0
-          AntiDasBehavior: 1
+          DelayDasOn: 0
+          AntiDasBehavior: 2
           DiagonalLockBehavior: 0
       Levelling:
         Gravity: 0.02
