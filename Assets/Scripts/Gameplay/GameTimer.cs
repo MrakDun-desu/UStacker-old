@@ -54,5 +54,10 @@ namespace Blockstacker.Gameplay
             _stopwatch.Stop();
         }
 
+        public void ResetTiming()
+        {
+            _stopwatch.Reset();
+        }
+
     }
 }

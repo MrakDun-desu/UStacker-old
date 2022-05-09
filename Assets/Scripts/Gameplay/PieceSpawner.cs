@@ -19,10 +19,13 @@ namespace Blockstacker.Gameplay
 
         private PiecePreviews _previews;
 
-        public void Init()
+        public void InitContainers()
         {
             _previews = new PiecePreviews(PreviewContainers);
+        }
 
+        public void PrespawnPieces()
+        {
             foreach (var _ in PreviewContainers)
             {
                 var nextIndex = Randomizer.GetNextPiece();
@@ -52,6 +55,14 @@ namespace Blockstacker.Gameplay
             pieceTransform.localScale = boardTransform.localScale;
 
             _inputProcessor.ActivePiece = piece;
+        }
+
+        public void EmptyAllContainers()
+        {
+            foreach (var container in PreviewContainers)
+            {
+                Destroy(container.SwapPiece(null).gameObject);
+            }
         }
     }
 }

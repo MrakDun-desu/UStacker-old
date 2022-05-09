@@ -9,7 +9,6 @@ using UnityEngine.InputSystem;
 
 namespace Blockstacker.Gameplay
 {
-    [RequireComponent(typeof(PlayerInput))]
     public class InputProcessor : MonoBehaviour
     {
         [Header("Dependencies")] [SerializeField]
@@ -46,7 +45,7 @@ namespace Blockstacker.Gameplay
             }
         }
 
-        private double _pieceSpawnTime;
+        private double _pieceSpawnTime = double.PositiveInfinity;
         private bool _pieceIsNull = true;
 
         private HandlingSettings _handling;
@@ -77,16 +76,32 @@ namespace Blockstacker.Gameplay
         {
             _normalDropTime = 1 / 60d / _settings.Rules.Levelling.Gravity;
             _effectiveDropTime = _normalDropTime;
-            _handling = _settings.Rules.Controls.Handling;
-
-            _timer.StartTiming();
             _dropTimer = _normalDropTime;
+            _handling = _settings.Rules.Controls.Handling;
+        }
+
+        public void DeleteActivePiece()
+        {
+            enabled = false;
+            if (_activePiece != null)
+                Destroy(_activePiece.gameObject);
+            ActivePiece = null;
+            var holdPiece = PieceHolder.SwapPiece(null);
+            if (holdPiece != null)
+                Destroy(holdPiece.gameObject);
+        }
+
+        public void ResetProcessor()
+        {
+            Awake();
+            enabled = true;
         }
 
         #region Input event handling
 
         public void OnMovePieceLeft(InputAction.CallbackContext ctx)
         {
+            if (!enabled) return;
             var actionTime = _timer.CurrentTime;
             if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeVertical &&
                 _effectiveDropTime < _normalDropTime)
@@ -117,6 +132,7 @@ namespace Blockstacker.Gameplay
 
         public void OnMovePieceRight(InputAction.CallbackContext ctx)
         {
+            if (!enabled) return;
             var actionTime = _timer.CurrentTime;
             if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeVertical &&
                 _effectiveDropTime < _normalDropTime)
@@ -147,6 +163,7 @@ namespace Blockstacker.Gameplay
 
         public void OnSoftDrop(InputAction.CallbackContext ctx)
         {
+            if (!enabled) return;
             var actionTime = _timer.CurrentTime;
             if (ctx.performed)
             {
@@ -165,6 +182,7 @@ namespace Blockstacker.Gameplay
 
         public void OnHardDrop(InputAction.CallbackContext ctx)
         {
+            if (!enabled) return;
             var actionTime = _timer.CurrentTime;
             if (_pieceIsNull) return;
             if (!ctx.performed) return;
@@ -178,6 +196,7 @@ namespace Blockstacker.Gameplay
 
         public void OnRotateCounterclockwise(InputAction.CallbackContext ctx)
         {
+            if (!enabled) return;
             var actionTime = _timer.CurrentTime;
             if (_pieceIsNull) return;
             if (!ctx.performed) return;
@@ -204,6 +223,7 @@ namespace Blockstacker.Gameplay
 
         public void OnRotateClockwise(InputAction.CallbackContext ctx)
         {
+            if (!enabled) return;
             var actionTime = _timer.CurrentTime;
             if (_pieceIsNull) return;
             if (!ctx.performed) return;
@@ -230,6 +250,7 @@ namespace Blockstacker.Gameplay
 
         public void OnRotate180(InputAction.CallbackContext ctx)
         {
+            if (!enabled) return;
             var actionTime = _timer.CurrentTime;
             if (_pieceIsNull) return;
             if (!ctx.performed) return;
@@ -257,6 +278,7 @@ namespace Blockstacker.Gameplay
 
         public void OnSwapHoldPiece(InputAction.CallbackContext ctx)
         {
+            if (!enabled) return;
             var actionTime = _timer.CurrentTime;
             if (_pieceIsNull) return;
             if (!ctx.performed) return;
@@ -279,7 +301,7 @@ namespace Blockstacker.Gameplay
             _hardLockAmount = double.PositiveInfinity;
             _usedHold = true;
         }
-
+        
         #endregion
 
         #region Update

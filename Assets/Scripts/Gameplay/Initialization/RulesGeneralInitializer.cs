@@ -17,6 +17,7 @@ namespace Blockstacker.Gameplay.Initialization
         private readonly Board _board;
         private readonly PieceContainer _pieceContainerPrefab;
         private readonly InputProcessor _inputProcessor;
+        private readonly bool _isRestarting;
         
         public RulesGeneralInitializer(
             StringBuilder problemBuilder,
@@ -26,7 +27,8 @@ namespace Blockstacker.Gameplay.Initialization
             Piece[] availablePieces,
             Board board,
             PieceContainer pieceContainerPrefab,
-            InputProcessor inputProcessor) : base(problemBuilder, gameSettings)
+            InputProcessor inputProcessor,
+            bool isRestarting = false) : base(problemBuilder, gameSettings)
         {
             _pieceCount = pieceCount;
             _spawner = spawner;
@@ -34,13 +36,15 @@ namespace Blockstacker.Gameplay.Initialization
             _board = board;
             _pieceContainerPrefab = pieceContainerPrefab;
             _inputProcessor = inputProcessor;
+            _isRestarting = isRestarting;
         }
 
         public override void Execute()
         {
             InitializeSeed();
             InitializeRandomizer();
-            InitializePieceContainers();
+            if (!_isRestarting)
+                InitializePieceContainers();
         }
 
         private void InitializeSeed()
@@ -97,7 +101,6 @@ namespace Blockstacker.Gameplay.Initialization
                 );
 
             _inputProcessor.PieceHolder = pieceHolder;
-
             
             for (var i = 0; i < _gameSettings.Rules.General.NextPieceCount; i++)
             {

@@ -5,11 +5,12 @@ using UnityEngine.Events;
 
 namespace Blockstacker.Gameplay.Presentation
 {
-    [RequireComponent(typeof(TextMeshProUGUI))]
+    [RequireComponent(typeof(TMP_Text))]
     public class GameCountdown : MonoBehaviour
     {
         public float CountdownInterval = .1f;
         public uint CountdownCount = 3;
+        [SerializeField] private string _lastMessage = "Start!";
         [SerializeField] private UnityEvent CountdownFinished;
 
         private TMP_Text _countdownText;
@@ -32,7 +33,8 @@ namespace Blockstacker.Gameplay.Presentation
                 yield return new WaitForSeconds(CountdownInterval);
             }
 
-            _countdownText.text = "Start!";
+            _countdownText.text = _lastMessage;
+            yield return new WaitForSeconds(CountdownInterval);
             CountdownFinished.Invoke();
         }
         

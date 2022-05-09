@@ -114,5 +114,16 @@ namespace Blockstacker.Gameplay
             var linesCleared = CheckAndClearLines();
             return linesCleared > 0;
         }
+
+        public void ClearAllBlocks()
+        {
+            foreach (var block in Blocks.SelectMany(line => line))
+            {
+                if (block == null) continue;
+                block.Clear();
+            }
+            
+            Blocks.Clear();
+        }
     }
 }

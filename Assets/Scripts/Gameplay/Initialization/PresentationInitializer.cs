@@ -29,7 +29,7 @@ namespace Blockstacker.Gameplay.Initialization
                 _countdown.CountdownCount = _gameSettings.Presentation.CountdownCount;
             }
             else {
-                _countdown.CountdownInterval = 0;
+                _countdown.CountdownInterval = .5f;
                 _countdown.CountdownCount = 0;
             }
         }
