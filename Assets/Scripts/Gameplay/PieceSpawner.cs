@@ -12,6 +12,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private Board _board;
         [SerializeField] private InputProcessor _inputProcessor;
+        [SerializeField] private GameManager _manager;
 
         public Piece[] AvailablePieces;
         public IRandomizer Randomizer;
@@ -55,8 +56,11 @@ namespace Blockstacker.Gameplay
             pieceTransform.localScale = boardTransform.localScale;
 
             _inputProcessor.ActivePiece = piece;
-        }
 
+            if (!_board.CanPlace(piece)) 
+                _manager.EndGame();
+        }
+        
         public void EmptyAllContainers()
         {
             foreach (var container in PreviewContainers)

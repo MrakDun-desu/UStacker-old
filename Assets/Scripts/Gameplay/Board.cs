@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Gameplay.Pieces;
+using Blockstacker.GameSettings;
+using Blockstacker.GameSettings.Enums;
 using UnityEngine;
 
 namespace Blockstacker.Gameplay
@@ -10,10 +13,13 @@ namespace Blockstacker.Gameplay
         public readonly List<Block[]> Blocks = new();
         public uint Width { get; set; }
         public uint Height { get; set; }
+        public uint LethalHeight { get; set; }
         public Vector3 Up => transform.up * transform.localScale.y;
         public Vector3 Right => transform.right * transform.localScale.x;
 
+        [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private Transform _helperTransform;
+        [SerializeField] private GameManager _manager;
 
         private void ClearLine(int lineNumber)
         {
@@ -106,13 +112,41 @@ namespace Blockstacker.Gameplay
         public bool Place(Piece piece)
         {
             if (!CanPlace(piece)) return false;
+            
+            var isPartlyBelowLethal = false;
+            var isCompletelyBelowLethal = true;
+            
             foreach (var block in piece.Blocks)
             {
                 Place(block);
+                var blockPos = WorldSpaceToBoardPosition(block.transform.position);
+                if (blockPos.y < LethalHeight) isPartlyBelowLethal = true;
+                if (blockPos.y >= LethalHeight) isCompletelyBelowLethal = false;
             }
 
             var linesCleared = CheckAndClearLines();
-            return linesCleared > 0;
+
+            var linesWereCleared = linesCleared > 0;
+            
+            if (_settings.Rules.BoardDimensions.AllowClutchClears && linesWereCleared) return true;
+            
+            switch (_settings.Rules.BoardDimensions.TopoutCondition)
+            {
+                case TopoutCondition.PieceSpawn:
+                    break;
+                case TopoutCondition.LethalHeightStrict:
+                    if (!isCompletelyBelowLethal)
+                        _manager.EndGame();
+                    break;
+                case TopoutCondition.LethalHeightLoose:
+                    if (!isPartlyBelowLethal)
+                        _manager.EndGame();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return linesWereCleared;
         }
 
         public void ClearAllBlocks()

@@ -8,10 +8,14 @@ namespace Blockstacker.Gameplay
 {
     public class GameManager : MonoBehaviour
     {
+        [SerializeField] private GameSettingsSO _settings;
+        
         [SerializeField] private UnityEvent GameStarted;
         [SerializeField] private UnityEvent GamePaused;
         [SerializeField] private UnityEvent GameResumed;
         [SerializeField] private UnityEvent GameRestarted;
+        [SerializeField] private UnityEvent GameLost;
+        [SerializeField] private UnityEvent GameEnded;
 
         private bool _gameRunning;
 
@@ -36,14 +40,22 @@ namespace Blockstacker.Gameplay
 
             _gameRunning = !_gameRunning;
         }
+        
+        public void Restart() => GameRestarted.Invoke();
+
+        public void EndGame()
+        {
+            if (_settings.Objective.ToppingOutIsOkay)
+                GameEnded.Invoke();
+            else
+                GameLost.Invoke();
+        }
 
         public void TogglePause(InputAction.CallbackContext ctx)
         {
             if (ctx.performed)
                 TogglePause();
         }
-
-        public void Restart() => GameRestarted.Invoke();
 
         public void Restart(InputAction.CallbackContext ctx)
         {

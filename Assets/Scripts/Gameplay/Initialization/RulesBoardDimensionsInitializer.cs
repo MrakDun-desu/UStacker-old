@@ -32,6 +32,7 @@ namespace Blockstacker.Gameplay.Initialization
             var boardDimensions = _gameSettings.Rules.BoardDimensions;
             _board.Width = _gameSettings.Rules.BoardDimensions.BoardWidth;
             _board.Height = _gameSettings.Rules.BoardDimensions.BoardHeight;
+            _board.LethalHeight = _gameSettings.Rules.BoardDimensions.LethalHeight;
             _boardBackground.transform.localScale = new Vector3(
                 boardDimensions.BoardWidth,
                 boardDimensions.BoardHeight,
