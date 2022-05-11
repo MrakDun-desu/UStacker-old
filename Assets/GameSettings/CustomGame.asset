@@ -21,7 +21,7 @@ MonoBehaviour:
         AllowedSpins: 0
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: -803614390
+        ActiveSeed: 26842967
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
@@ -444,7 +444,7 @@ MonoBehaviour:
         ShowGhostPiece: 1
         OverrideHandling: 0
         Handling:
-          DelayedAutoShift: 0.125
+          DelayedAutoShift: 0.1
           AutomaticRepeatRate: 0
           SoftDropFactor: Infinity
           DasCutDelay: 0
@@ -463,7 +463,7 @@ MonoBehaviour:
         BoardWidth: 10
         LethalHeight: 20
         PieceSpawnHeight: 21
-        TopoutCondition: 2
+        TopoutCondition: 0
         AllowClutchClears: 1
         BoardPadding: 5
     Objective:

@@ -2,8 +2,8 @@ using System.Collections.Generic;
 
 namespace Blockstacker.Gameplay.Communication
 {
-    public class CheeseGeneratedMessage : IMessage
+    public class CheeseGeneratedMessage : Message
     {
-        public List<bool[]> cheeseRows;
+        public List<bool[]> CheeseRows;
     }
 }

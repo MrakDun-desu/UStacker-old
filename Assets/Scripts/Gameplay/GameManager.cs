@@ -1,5 +1,7 @@
-using Blockstacker.Gameplay.Randomizers;
+using System;
+using Blockstacker.Gameplay.Communication;
 using Blockstacker.GameSettings;
+using Blockstacker.GameSettings.Enums;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -9,7 +11,11 @@ namespace Blockstacker.Gameplay
     public class GameManager : MonoBehaviour
     {
         [SerializeField] private GameSettingsSO _settings;
+        [SerializeField] private MediatorSO _mediator;
+        [SerializeField] private GameTimer _timer;
+        [SerializeField] private StatCounter _statCounter;
         
+        [Space]
         [SerializeField] private UnityEvent GameStarted;
         [SerializeField] private UnityEvent GamePaused;
         [SerializeField] private UnityEvent GameResumed;
@@ -19,6 +25,8 @@ namespace Blockstacker.Gameplay
 
         private bool _gameRunning;
 
+        #region Game event management
+        
         public void StartGame()
         {
             _gameRunning = true;
@@ -29,12 +37,10 @@ namespace Blockstacker.Gameplay
         {
             if (_gameRunning)
             {
-                Debug.Log("Paused");
                 GamePaused.Invoke();
             }
             else
             {
-                Debug.Log("Resumed");
                 GameResumed.Invoke();
             }
 
@@ -62,5 +68,48 @@ namespace Blockstacker.Gameplay
             if (ctx.performed)
                 Restart();
         }
+        
+        #endregion
+
+        #region Game end condition checks
+
+        private void Awake()
+        {
+            _mediator.Register<PiecePlacedMessage>(OnPiecePlaced);
+        }
+
+        private void Update()
+        {
+            if (_settings.Objective.GameEndCondition != GameEndCondition.Time) return;
+            
+            if (_timer.CurrentTime > _settings.Objective.EndConditionCount) EndGame();
+        }
+
+        private void OnPiecePlaced(PiecePlacedMessage _)
+        {
+            switch (_settings.Objective.GameEndCondition)
+            {
+                case GameEndCondition.Score:
+                    break;
+                case GameEndCondition.Time:
+                    break;
+                case GameEndCondition.LinesCleared:
+                    if (_statCounter.LinesCleared >= _settings.Objective.EndConditionCount) 
+                        EndGame();
+                    break;
+                case GameEndCondition.CheeseLinesCleared:
+                    break;
+                case GameEndCondition.PiecesUsed:
+                    if (_statCounter.PiecesPlaced >= _settings.Objective.EndConditionCount)
+                        EndGame();
+                    break;
+                case GameEndCondition.None:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        #endregion
     }
 }

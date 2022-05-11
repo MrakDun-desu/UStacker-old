@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
@@ -20,6 +21,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private Transform _helperTransform;
         [SerializeField] private GameManager _manager;
+        [SerializeField] private MediatorSO _mediator;
 
         private void ClearLine(int lineNumber)
         {
@@ -41,9 +43,9 @@ namespace Blockstacker.Gameplay
             }
         }
 
-        private int CheckAndClearLines()
+        private uint CheckAndClearLines()
         {
-            var linesCleared = 0;
+            uint linesCleared = 0;
             for (var i = 0; i < Blocks.Count; i++)
             {
                 var line = Blocks[i];
@@ -109,7 +111,7 @@ namespace Blockstacker.Gameplay
             Blocks[blockPos.y][blockPos.x] = block;
         }
 
-        public bool Place(Piece piece)
+        public bool Place(Piece piece, double placementTime)
         {
             if (!CanPlace(piece)) return false;
             
@@ -127,6 +129,9 @@ namespace Blockstacker.Gameplay
             var linesCleared = CheckAndClearLines();
 
             var linesWereCleared = linesCleared > 0;
+            var wasAllClear = Blocks.Count == 0;
+            
+            _mediator.Send(new PiecePlacedMessage{LinesCleared = linesCleared, WasAllClear = wasAllClear, Time = placementTime});
             
             if (_settings.Rules.BoardDimensions.AllowClutchClears && linesWereCleared) return true;
             

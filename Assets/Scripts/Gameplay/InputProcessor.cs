@@ -1,4 +1,6 @@
 ﻿using System;
+using Blockstacker.Gameplay.Communication;
+using Blockstacker.Gameplay.Enums;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
@@ -18,6 +20,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private PieceSpawner _spawner;
         [SerializeField] private GhostPiece _ghostPiece;
         [SerializeField] private GameTimer _timer;
+        [SerializeField] private MediatorSO _mediator;
 
         [Header("Dependencies filled by initializer")]
         public PieceContainer PieceHolder;
@@ -109,6 +112,8 @@ namespace Blockstacker.Gameplay
 
             if (ctx.performed)
             {
+                _mediator.Send(new InputActionMessage
+                    {ActionType = ActionType.MoveLeft, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
                 _holdingLeftStart = actionTime;
                 _dasLeftStart = actionTime;
                 if (_handling.AntiDasBehavior != AntiDasBehavior.DontCancel)
@@ -127,6 +132,9 @@ namespace Blockstacker.Gameplay
                 _holdingLeftStart = double.PositiveInfinity;
                 _dasLeftStart = double.PositiveInfinity;
                 _dasLeftActive = false;
+
+                _mediator.Send(new InputActionMessage
+                    {ActionType = ActionType.MoveLeft, KeyActionType = KeyActionType.KeyUp, Time = actionTime});
             }
         }
 
@@ -140,6 +148,9 @@ namespace Blockstacker.Gameplay
 
             if (ctx.performed)
             {
+                _mediator.Send(new InputActionMessage
+                    {ActionType = ActionType.MoveRight, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
+                
                 _holdingRightStart = actionTime;
                 _dasRightStart = actionTime;
                 if (_handling.AntiDasBehavior != AntiDasBehavior.DontCancel)
@@ -152,12 +163,16 @@ namespace Blockstacker.Gameplay
                 if (!_board.CanPlace(ActivePiece, Vector2Int.right)) return;
                 MovePiece(Vector2Int.right);
                 UpdatePiecePlacementVars(actionTime);
+
             }
             else if (ctx.canceled)
             {
                 _holdingRightStart = double.PositiveInfinity;
                 _dasRightStart = double.PositiveInfinity;
                 _dasRightActive = false;
+
+                _mediator.Send(new InputActionMessage
+                    {ActionType = ActionType.MoveRight, KeyActionType = KeyActionType.KeyUp, Time = actionTime});
             }
         }
 
@@ -167,16 +182,20 @@ namespace Blockstacker.Gameplay
             var actionTime = _timer.CurrentTime;
             if (ctx.performed)
             {
+                _mediator.Send(new InputActionMessage
+                    {ActionType = ActionType.Softdrop, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
+                
                 if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeHorizontal &&
                     (_holdingLeftStart < actionTime ||
                      _holdingRightStart < actionTime)) return;
                 _effectiveDropTime = _normalDropTime / _handling.SoftDropFactor;
                 _dropTimer = actionTime;
             }
-
-            if (ctx.canceled)
+            else if (ctx.canceled)
             {
                 _effectiveDropTime = _normalDropTime;
+                _mediator.Send(new InputActionMessage
+                    {ActionType = ActionType.Softdrop, KeyActionType = KeyActionType.KeyUp, Time = actionTime});
             }
         }
 
@@ -187,6 +206,10 @@ namespace Blockstacker.Gameplay
             if (_pieceIsNull) return;
             if (!ctx.performed) return;
             if (!_settings.Rules.Controls.AllowHardDrop) return;
+            
+            _mediator.Send(new InputActionMessage
+                {ActionType = ActionType.Harddrop, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
+            
             if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeHorizontal &&
                 (_holdingLeftStart < actionTime ||
                  _holdingRightStart < actionTime)) return;
@@ -202,6 +225,9 @@ namespace Blockstacker.Gameplay
             if (!ctx.performed) return;
             const int rotationAngle = 90;
 
+            _mediator.Send(new InputActionMessage
+                {ActionType = ActionType.RotateCCW, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
+            
             ActivePiece.transform.Rotate(Vector3.forward, rotationAngle);
             if (!KickHandler.TryKick(
                     ActivePiece,
@@ -228,6 +254,9 @@ namespace Blockstacker.Gameplay
             if (_pieceIsNull) return;
             if (!ctx.performed) return;
             const int rotationAngle = -90;
+
+            _mediator.Send(new InputActionMessage
+                {ActionType = ActionType.RotateCW, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
 
             ActivePiece.transform.Rotate(Vector3.forward, rotationAngle);
             if (!KickHandler.TryKick(
@@ -257,6 +286,9 @@ namespace Blockstacker.Gameplay
             if (!_settings.Rules.Controls.Allow180Spins) return;
             const int rotationAngle = 180;
 
+            _mediator.Send(new InputActionMessage
+                {ActionType = ActionType.Rotate180, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
+
             ActivePiece.transform.Rotate(Vector3.forward, rotationAngle);
             if (!KickHandler.TryKick(
                     ActivePiece,
@@ -283,6 +315,10 @@ namespace Blockstacker.Gameplay
             if (_pieceIsNull) return;
             if (!ctx.performed) return;
             if (!_settings.Rules.Controls.AllowHold) return;
+
+            _mediator.Send(new InputActionMessage
+                {ActionType = ActionType.Hold, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
+            
             if (_usedHold && !_settings.Rules.Controls.UnlimitedHold) return;
 
             var newPiece = PieceHolder.SwapPiece(ActivePiece);
@@ -301,10 +337,11 @@ namespace Blockstacker.Gameplay
             _hardLockAmount = double.PositiveInfinity;
             _usedHold = true;
         }
-        
+
         #endregion
 
         #region Update
+
         private void Update()
         {
             HandleDas();
@@ -399,13 +436,16 @@ namespace Blockstacker.Gameplay
         {
             var functionStartTime = _timer.CurrentTime;
             if (_pieceIsNull) return;
+
+            var movementVector = Vector2Int.down;
+
             while (_dropTimer < functionStartTime)
             {
                 _dropTimer += _effectiveDropTime;
 
-                if (_board.CanPlace(ActivePiece, Vector2Int.down))
+                if (_board.CanPlace(ActivePiece, movementVector))
                 {
-                    MovePiece(Vector2Int.down, false);
+                    movementVector.y -= 1;
                     continue;
                 }
 
@@ -432,6 +472,12 @@ namespace Blockstacker.Gameplay
                 _dropTimer = _effectiveDropTime + functionStartTime;
                 break;
             }
+
+            movementVector.y += 1;
+            MovePiece(movementVector, false);
+
+            _mediator.Send(new LinesDroppedMessage
+                {Count = (uint) -movementVector.y, WasHardDrop = false, Time = functionStartTime});
 
             if (_lockTime < functionStartTime &&
                 _settings.Rules.Controls.OnTouchGround != OnTouchGround.InfiniteMovement)
@@ -468,7 +514,7 @@ namespace Blockstacker.Gameplay
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Placement))
                 _dasDelay = functionStartTime + _handling.DasCutDelay;
         }
-        
+
         #endregion
 
         private void MovePiece(Vector2Int moveVector, bool renderGhost = true)
@@ -494,8 +540,11 @@ namespace Blockstacker.Gameplay
 
             movementVector.y += 1;
             MovePiece(movementVector, false);
+            
+            _mediator.Send(new LinesDroppedMessage
+                {Count = (uint) -movementVector.y, WasHardDrop = true, Time = placementTime});
 
-            var linesCleared = _board.Place(ActivePiece);
+            var linesCleared = _board.Place(ActivePiece, placementTime);
             var spawnTime = _settings.Rules.Controls.PiecePlacedDelay;
             if (linesCleared)
                 spawnTime += _settings.Rules.Controls.LineClearDelay;

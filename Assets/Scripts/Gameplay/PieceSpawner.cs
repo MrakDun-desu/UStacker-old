@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Randomizers;
 using Blockstacker.GameSettings;
@@ -63,9 +64,9 @@ namespace Blockstacker.Gameplay
         
         public void EmptyAllContainers()
         {
-            foreach (var container in PreviewContainers)
+            foreach (var piece in PreviewContainers.Select(container => container.SwapPiece(null)).Where(piece => piece != null))
             {
-                Destroy(container.SwapPiece(null).gameObject);
+                Destroy(piece.gameObject);
             }
         }
     }

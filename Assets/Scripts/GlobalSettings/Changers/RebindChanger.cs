@@ -43,6 +43,7 @@ namespace Blockstacker.GlobalSettings.Changers
         private void OnEnable()
         {
             InputPresetChanger.RebindsChanged += RefreshNames;
+            InputPresetChanger.RebindsChanged += CheckBindingOverlaps;
             RebindChanged += RefreshNames;
             RebindChanged += CheckBindingOverlaps;
         }
@@ -50,6 +51,7 @@ namespace Blockstacker.GlobalSettings.Changers
         private void OnDisable()
         {
             InputPresetChanger.RebindsChanged -= RefreshNames;
+            InputPresetChanger.RebindsChanged -= CheckBindingOverlaps;
             RebindChanged -= RefreshNames;
             RebindChanged -= CheckBindingOverlaps;
         }

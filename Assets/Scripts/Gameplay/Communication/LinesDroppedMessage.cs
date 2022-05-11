@@ -1,8 +1,8 @@
 namespace Blockstacker.Gameplay.Communication
 {
-    public class LinesDroppedMessage : IMessage
+    public class LinesDroppedMessage : Message
     {
-        public int count;
-        public bool wasHardDrop = false;
+        public uint Count;
+        public bool WasHardDrop = false;
     }
 }

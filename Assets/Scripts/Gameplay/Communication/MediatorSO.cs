@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Blockstacker.Gameplay.Communication
 {
-    public static class Mediator
+    [CreateAssetMenu(menuName = "Blockstacker/Mediator", fileName = "Mediator")]
+    public class MediatorSO : ScriptableObject
     {
-        private static readonly Dictionary<Type, List<Delegate>> _registeredActions = new();
+        private readonly Dictionary<Type, List<Delegate>> _registeredActions = new();
 
-        public static void Register<TMessage>(Action<TMessage> action)
-            where TMessage : IMessage
+        public void Register<TMessage>(Action<TMessage> action)
+            where TMessage : Message
         {
             var key = typeof(TMessage);
             if (!_registeredActions.ContainsKey(key)) {
@@ -17,8 +19,8 @@ namespace Blockstacker.Gameplay.Communication
             _registeredActions[key].Add(action);
         }
 
-        public static void Unregister<TMessage>(Action<TMessage> action)
-            where TMessage : IMessage
+        public void Unregister<TMessage>(Action<TMessage> action)
+            where TMessage : Message
         {
             var key = typeof(TMessage);
             if (!_registeredActions.ContainsKey(key)) return;
@@ -26,8 +28,8 @@ namespace Blockstacker.Gameplay.Communication
             _registeredActions[key].Remove(action);
         }
 
-        public static void Send<TMessage>(TMessage message)
-            where TMessage : IMessage
+        public void Send<TMessage>(TMessage message)
+            where TMessage : Message
         {
             if (!_registeredActions.TryGetValue(message.GetType(), out var actions)) return;
 
@@ -36,7 +38,7 @@ namespace Blockstacker.Gameplay.Communication
             }
         }
         
-        public static void Clear() {
+        public void Clear() {
             _registeredActions.Clear();
         }
     }

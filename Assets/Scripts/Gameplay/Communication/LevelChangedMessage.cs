@@ -1,7 +1,7 @@
 namespace Blockstacker.Gameplay.Communication
 {
-    public class LevelChangedMessage : IMessage
+    public class LevelChangedMessage : Message
     {
-        public uint level;
+        public uint Level;
     }
 }
