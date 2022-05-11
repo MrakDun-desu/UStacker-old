@@ -6,7 +6,7 @@ namespace Blockstacker.GameSettings.Enums
         Time,
         LinesCleared,
         CheeseLinesCleared,
-        PiecesUsed,
+        PiecesPlaced,
         None
     }
 }

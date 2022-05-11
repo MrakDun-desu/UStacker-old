@@ -141,11 +141,11 @@ namespace Blockstacker.Gameplay
                     break;
                 case TopoutCondition.LethalHeightStrict:
                     if (!isCompletelyBelowLethal)
-                        _manager.EndGame();
+                        _manager.LoseGame();
                     break;
                 case TopoutCondition.LethalHeightLoose:
                     if (!isPartlyBelowLethal)
-                        _manager.EndGame();
+                        _manager.LoseGame();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

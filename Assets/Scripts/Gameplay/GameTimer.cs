@@ -43,6 +43,8 @@ namespace Blockstacker.Gameplay
                     _stopwatch.Reset();
             }
         }
+
+        public TimeSpan CurrentTimeAsSpan => _stopwatch.Elapsed * _scale + _startOffset;
         
         public void StartTiming()
         {

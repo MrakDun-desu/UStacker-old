@@ -47,6 +47,8 @@ namespace Blockstacker.Gameplay
             private set => _statContainer.Quads = value;
         }
 
+        public StatContainer Stats => _statContainer;
+
         private void Awake()
         {
             _mediator.Register<InputActionMessage>(OnInputAction);

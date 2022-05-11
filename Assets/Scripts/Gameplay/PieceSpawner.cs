@@ -59,7 +59,7 @@ namespace Blockstacker.Gameplay
             _inputProcessor.ActivePiece = piece;
 
             if (!_board.CanPlace(piece)) 
-                _manager.EndGame();
+                _manager.LoseGame();
         }
         
         public void EmptyAllContainers()

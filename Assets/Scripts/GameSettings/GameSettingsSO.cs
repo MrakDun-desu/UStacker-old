@@ -9,18 +9,19 @@ namespace Blockstacker.GameSettings
     public class GameSettingsSO : ScriptableObject
     {
         [Serializable]
-        internal class SettingsContainer
+        public class SettingsContainer
         {
             public RulesSettings Rules = new();
             public ObjectiveSettings Objective = new();
             public PresentationSettings Presentation = new();
         }
 
-        [SerializeField] private SettingsContainer Settings = new();
+        [SerializeField] public SettingsContainer Settings = new();
         public RulesSettings Rules => Settings.Rules;
         public ObjectiveSettings Objective => Settings.Objective;
         public PresentationSettings Presentation => Settings.Presentation;
 
+        public void OverrideSettings(SettingsContainer settings) => Settings = settings;
 
         public bool TrySetValue<T>(T value, string[] path)
         {

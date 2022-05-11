@@ -14,6 +14,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private GameTimer _timer;
         [SerializeField] private StatCounter _statCounter;
+        [SerializeField] private GameRecorder _gameRecorder;
         
         [Space]
         [SerializeField] private UnityEvent GameStarted;
@@ -24,17 +25,23 @@ namespace Blockstacker.Gameplay
         [SerializeField] private UnityEvent GameEnded;
 
         private bool _gameRunning;
+        private bool _gameEnded;
+        public GameReplay Replay;
 
         #region Game event management
         
         public void StartGame()
         {
             _gameRunning = true;
+            Replay.GameSettings = new GameSettingsSO.SettingsContainer();
+            JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(_settings.Settings), Replay.GameSettings);
             GameStarted.Invoke();
         }
 
         public void TogglePause()
         {
+            if (_gameEnded) return;
+            
             if (_gameRunning)
             {
                 GamePaused.Invoke();
@@ -46,15 +53,29 @@ namespace Blockstacker.Gameplay
 
             _gameRunning = !_gameRunning;
         }
-        
-        public void Restart() => GameRestarted.Invoke();
+
+        public void Restart()
+        {
+            _gameEnded = false;
+            GameRestarted.Invoke();
+        }
+
+        public void LoseGame()
+        {
+            _gameEnded = true;
+            if (_settings.Objective.ToppingOutIsOkay)
+                EndGame();
+            else
+                GameLost.Invoke();
+        }
 
         public void EndGame()
         {
-            if (_settings.Objective.ToppingOutIsOkay)
-                GameEnded.Invoke();
-            else
-                GameLost.Invoke();
+            _gameEnded = true;
+            Replay.ActionList = _gameRecorder.ActionList;
+            Replay.Stats = _statCounter.Stats;
+            Replay.GameLength = _timer.CurrentTimeAsSpan;
+            GameEnded.Invoke();
         }
 
         public void TogglePause(InputAction.CallbackContext ctx)
@@ -99,7 +120,7 @@ namespace Blockstacker.Gameplay
                     break;
                 case GameEndCondition.CheeseLinesCleared:
                     break;
-                case GameEndCondition.PiecesUsed:
+                case GameEndCondition.PiecesPlaced:
                     if (_statCounter.PiecesPlaced >= _settings.Objective.EndConditionCount)
                         EndGame();
                     break;
