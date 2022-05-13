@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Blockstacker.GlobalSettings.Enums;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Blockstacker.GlobalSettings.Changers
 {
@@ -10,11 +10,8 @@ namespace Blockstacker.GlobalSettings.Changers
     {
         [SerializeField] private List<TMP_Text> _optionNames = new();
 
-        private static DelayDasOn[] Values => new[]
-        {
-            DelayDasOn.Placement,
-            DelayDasOn.Rotation
-        };
+        [SerializeField] private Toggle _placementToggle;
+        [SerializeField] private Toggle _rotationToggle;
 
         private static string[] ShownValues => new[]
         {
@@ -30,6 +27,9 @@ namespace Blockstacker.GlobalSettings.Changers
             {
                 _optionNames[i].text = ShownValues[i];
             }
+            
+            _placementToggle.SetIsOnWithoutNotify(AppSettings.Handling.DelayDasOn.HasFlag(DelayDasOn.Placement));
+            _rotationToggle.SetIsOnWithoutNotify(AppSettings.Handling.DelayDasOn.HasFlag(DelayDasOn.Rotation));
         }
 
         public void SetPlacement(bool value)

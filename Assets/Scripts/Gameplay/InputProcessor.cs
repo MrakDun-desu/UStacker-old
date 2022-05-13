@@ -344,9 +344,10 @@ namespace Blockstacker.Gameplay
 
         private void Update()
         {
+            HandlePieceSpawning();
+            if (_pieceIsNull) return;
             HandleDas();
             HandleGravity();
-            HandlePieceSpawning();
         }
 
         private void HandleDas()

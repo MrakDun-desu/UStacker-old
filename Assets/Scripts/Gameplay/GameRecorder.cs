@@ -20,5 +20,10 @@ namespace Blockstacker.Gameplay
             ActionList.Add(message);
             ActionList.Sort((a, b) => a.Time > b.Time ? 1 : -1);
         }
+
+        public void ClearActionList()
+        {
+            ActionList.Clear();
+        }
     }
 }

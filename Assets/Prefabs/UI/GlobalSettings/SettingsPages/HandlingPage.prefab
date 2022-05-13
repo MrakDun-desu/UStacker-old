@@ -610,7 +610,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &1566612952300207816
 GameObject:
   m_ObjectHideFlags: 0
@@ -1216,6 +1216,8 @@ MonoBehaviour:
   _optionNames:
   - {fileID: 3874993111030067032}
   - {fileID: 8853549123629841358}
+  _placementToggle: {fileID: 6313913464447924366}
+  _rotationToggle: {fileID: 5209150671336582887}
 --- !u!1 &3094902741582437466
 GameObject:
   m_ObjectHideFlags: 0
@@ -1971,7 +1973,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &4485227421200750152
 GameObject:
   m_ObjectHideFlags: 0

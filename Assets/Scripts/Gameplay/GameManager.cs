@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
+using Gameplay.Stats;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -24,6 +26,9 @@ namespace Blockstacker.Gameplay
         [SerializeField] private UnityEvent GameLost;
         [SerializeField] private UnityEvent GameEnded;
 
+        public static event Action GameRestartedEvent;
+        public static event Action GameEndedEvent;
+
         private bool _gameRunning;
         private bool _gameEnded;
         public GameReplay Replay;
@@ -33,8 +38,8 @@ namespace Blockstacker.Gameplay
         public void StartGame()
         {
             _gameRunning = true;
-            Replay.GameSettings = new GameSettingsSO.SettingsContainer();
-            JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(_settings.Settings), Replay.GameSettings);
+            Replay.GameSettings =
+                JsonUtility.FromJson<GameSettingsSO.SettingsContainer>(JsonUtility.ToJson(_settings.Settings));
             GameStarted.Invoke();
         }
 
@@ -58,6 +63,7 @@ namespace Blockstacker.Gameplay
         {
             _gameEnded = false;
             GameRestarted.Invoke();
+            GameRestartedEvent?.Invoke();
         }
 
         public void LoseGame()
@@ -72,10 +78,12 @@ namespace Blockstacker.Gameplay
         public void EndGame()
         {
             _gameEnded = true;
-            Replay.ActionList = _gameRecorder.ActionList;
-            Replay.Stats = _statCounter.Stats;
+            Replay.ActionList = new List<InputActionMessage>();
+            Replay.ActionList.AddRange(_gameRecorder.ActionList);
+            Replay.Stats = JsonUtility.FromJson<StatContainer>(JsonUtility.ToJson(_statCounter.Stats));
             Replay.GameLength = _timer.CurrentTimeAsSpan;
             GameEnded.Invoke();
+            GameEndedEvent?.Invoke();
         }
 
         public void TogglePause(InputAction.CallbackContext ctx)

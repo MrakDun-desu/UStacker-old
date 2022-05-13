@@ -935,6 +935,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: BackgroundCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 7198592304762667749, guid: 0ed263f4373fd7f469bdb84de977e4ba, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8290584842433092627, guid: 0ed263f4373fd7f469bdb84de977e4ba, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ed263f4373fd7f469bdb84de977e4ba, type: 3}
 --- !u!224 &571397788 stripped
@@ -4656,27 +4664,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1629129559848783570, guid: e8c8e9ac0c2185a4593c9821be3076b5, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -920
+      value: -800
       objectReference: {fileID: 0}
     - target: {fileID: 1629129559949905875, guid: e8c8e9ac0c2185a4593c9821be3076b5, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1629129559949905875, guid: e8c8e9ac0c2185a4593c9821be3076b5, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1629129559949905875, guid: e8c8e9ac0c2185a4593c9821be3076b5, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1890
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1629129559949905875, guid: e8c8e9ac0c2185a4593c9821be3076b5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 945
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1629129559949905875, guid: e8c8e9ac0c2185a4593c9821be3076b5, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -680
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1629129560570348972, guid: e8c8e9ac0c2185a4593c9821be3076b5, type: 3}
       propertyPath: m_AnchorMax.y
@@ -4756,7 +4764,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1629129561740710386, guid: e8c8e9ac0c2185a4593c9821be3076b5, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -800
+      value: -680
       objectReference: {fileID: 0}
     - target: {fileID: 1646959101647536859, guid: e8c8e9ac0c2185a4593c9821be3076b5, type: 3}
       propertyPath: m_Pivot.x

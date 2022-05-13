@@ -21,7 +21,7 @@ MonoBehaviour:
         AllowedSpins: 0
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: 26842967
+        ActiveSeed: 661792409
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
@@ -444,7 +444,7 @@ MonoBehaviour:
         ShowGhostPiece: 1
         OverrideHandling: 0
         Handling:
-          DelayedAutoShift: 0.1
+          DelayedAutoShift: 0.125
           AutomaticRepeatRate: 0
           SoftDropFactor: Infinity
           DasCutDelay: 0
@@ -469,7 +469,7 @@ MonoBehaviour:
     Objective:
       MainStat: 1
       GameEndCondition: 2
-      EndConditionCount: 40
+      EndConditionCount: 5
       ToppingOutIsOkay: 0
       GenerateCheese: 0
       CheeseGeneration: 1

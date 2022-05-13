@@ -52,9 +52,10 @@ namespace Blockstacker.Gameplay
                 boardTransform.position.z
             );
             var pieceTransform = piece.transform;
+            pieceTransform.SetParent(null);
+            pieceTransform.localScale = boardTransform.localScale;
             pieceTransform.SetParent(boardTransform);
             pieceTransform.localPosition = piecePos + new Vector3(piece.SpawnOffset.x, piece.SpawnOffset.y);
-            pieceTransform.localScale = boardTransform.localScale;
 
             _inputProcessor.ActivePiece = piece;
 

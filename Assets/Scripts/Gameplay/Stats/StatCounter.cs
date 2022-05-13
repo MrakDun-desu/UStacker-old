@@ -1,9 +1,8 @@
-﻿using System;
-using Blockstacker.Gameplay.Communication;
+﻿using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Enums;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay
+namespace Gameplay.Stats
 {
     public class StatCounter : MonoBehaviour
     {

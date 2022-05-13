@@ -1,28 +1,100 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
+using Blockstacker.GlobalSettings;
+using Blockstacker.GlobalSettings.Appliers;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Blockstacker.Gameplay
 {
     public class Board : MonoBehaviour
     {
-        public readonly List<Block[]> Blocks = new();
-        public uint Width { get; set; }
-        public uint Height { get; set; }
-        public uint LethalHeight { get; set; }
-        public Vector3 Up => transform.up * transform.localScale.y;
-        public Vector3 Right => transform.right * transform.localScale.x;
-
         [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private Transform _helperTransform;
         [SerializeField] private GameManager _manager;
         [SerializeField] private MediatorSO _mediator;
+        [SerializeField] private SpriteRenderer _backgroundRenderer;
+        [SerializeField] private Camera _camera;
+        [SerializeField] private float _boardZoomFactor = 1000;
+        [Range(0.00001f, 1)] [SerializeField] private float _minimumBoardScale = 0.1f;
+        
+        private readonly List<Block[]> Blocks = new();
+        public uint Width { get; set; }
+        public uint Height { get; set; }
+        public uint LethalHeight { get; set; }
+        private Vector3 Up => transform.up * transform.localScale.y;
+        private Vector3 Right => transform.right * transform.localScale.x;
 
+        private Vector3 _dragStartPosition;
+        private Vector3 _dragStartTransformPosition;
+
+        private void Awake()
+        {
+            _backgroundRenderer.color = _backgroundRenderer.color.WithAlpha(AppSettings.Gameplay.BoardVisibility);
+
+            ChangeBoardZoom(AppSettings.Gameplay.BoardZoom);
+            
+            BackgroundVisibilityApplier.VisibilityChanged += newAlpha =>
+            {
+                _backgroundRenderer.color = _backgroundRenderer.color.WithAlpha(newAlpha);
+            };
+
+            BoardZoomApplier.BoardZoomChanged += ChangeBoardZoom;
+        }
+
+        private void Update()
+        {
+            HandleBoardZooming();
+            HandleBoardDrag();
+        }
+
+        private void HandleBoardZooming()
+        {
+            if (!AppSettings.Gameplay.CtrlScrollToChangeBoardZoom) return;
+
+            var mouse = Mouse.current;
+
+            if (!Keyboard.current.ctrlKey.isPressed) return;
+
+            var mouseScroll = mouse.scroll.ReadValue().y;
+            var newScale = transform.localScale.x + mouseScroll / _boardZoomFactor;
+            ChangeBoardZoom(newScale < _minimumBoardScale ? _minimumBoardScale : newScale);
+        }
+
+        private void HandleBoardDrag()
+        {
+            if (!AppSettings.Gameplay.DragMiddleButtonToRepositionBoard) return;
+
+            var middleButton = Mouse.current.middleButton;
+            var mouse = Mouse.current;
+            if (middleButton.wasPressedThisFrame)
+            {
+                _dragStartPosition = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
+                _dragStartTransformPosition = transform.position;
+            } else if (middleButton.isPressed)
+            {
+                var currentPosition = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
+                var positionDifference = currentPosition - _dragStartPosition;
+                transform.position = _dragStartTransformPosition + positionDifference;
+            }
+        }
+
+        private void ChangeBoardZoom(float zoom)
+        {
+            transform.localScale = new Vector3(zoom, zoom, 1);
+            var cameraTransform = _camera.transform;
+            cameraTransform.position = new Vector3(
+                Width * zoom * .5f,
+                Height * zoom * .5f,
+                cameraTransform.position.z);
+        }
+        
         private void ClearLine(int lineNumber)
         {
             if (Blocks.Count <= lineNumber) return;
@@ -59,7 +131,7 @@ namespace Blockstacker.Gameplay
             return linesCleared;
         }
 
-        public Vector2Int WorldSpaceToBoardPosition(Vector3 worldSpacePos)
+        private Vector2Int WorldSpaceToBoardPosition(Vector3 worldSpacePos)
         {
             _helperTransform.position = worldSpacePos;
             var localPosition = _helperTransform.localPosition;
@@ -83,7 +155,7 @@ namespace Blockstacker.Gameplay
             return Blocks[blockPosition.y][blockPosition.x] is null;
         }
 
-        public bool CanPlace(Vector3 realPosition, Vector2Int offset = new())
+        private bool CanPlace(Vector3 realPosition, Vector2Int offset = new())
         {
             var boardPosition = WorldSpaceToBoardPosition(realPosition);
             return CanPlace(boardPosition + offset);
@@ -114,10 +186,10 @@ namespace Blockstacker.Gameplay
         public bool Place(Piece piece, double placementTime)
         {
             if (!CanPlace(piece)) return false;
-            
+
             var isPartlyBelowLethal = false;
             var isCompletelyBelowLethal = true;
-            
+
             foreach (var block in piece.Blocks)
             {
                 Place(block);
@@ -130,11 +202,12 @@ namespace Blockstacker.Gameplay
 
             var linesWereCleared = linesCleared > 0;
             var wasAllClear = Blocks.Count == 0;
-            
-            _mediator.Send(new PiecePlacedMessage{LinesCleared = linesCleared, WasAllClear = wasAllClear, Time = placementTime});
-            
+
+            _mediator.Send(new PiecePlacedMessage
+                {LinesCleared = linesCleared, WasAllClear = wasAllClear, Time = placementTime});
+
             if (_settings.Rules.BoardDimensions.AllowClutchClears && linesWereCleared) return true;
-            
+
             switch (_settings.Rules.BoardDimensions.TopoutCondition)
             {
                 case TopoutCondition.PieceSpawn:
@@ -161,7 +234,7 @@ namespace Blockstacker.Gameplay
                 if (block == null) continue;
                 block.Clear();
             }
-            
+
             Blocks.Clear();
         }
     }
