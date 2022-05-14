@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5272668286066716934}
-  - component: {fileID: 2549851754436337575}
+  - component: {fileID: 6162707504374873289}
   m_Layer: 5
-  m_Name: FloatChanger
+  m_Name: DoubleChanger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -39,7 +39,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2549851754436337575
+--- !u!114 &6162707504374873289
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1854013574095846600}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30d456b2c1d914b409312577413d2a49, type: 3}
+  m_Script: {fileID: 11500000, guid: 0ee22a2129da4609be4b80895bb40d26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _gameSettingsSO: {fileID: 11400000, guid: 82a8dfd8c479a9746b991978530983d6, type: 2}
@@ -95,7 +95,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 250, y: 0}
-  m_SizeDelta: {x: 400, y: 80}
+  m_SizeDelta: {x: 400, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2029170096225504616
 CanvasRenderer:
@@ -334,8 +334,8 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2549851754436337575}
-        m_TargetAssemblyTypeName: Blockstacker.GameSettings.Changers.GameSettingFloatChanger,
+      - m_Target: {fileID: 6162707504374873289}
+        m_TargetAssemblyTypeName: Blockstacker.GameSettings.Changers.GameSettingDoubleChanger,
           Assembly-CSharp
         m_MethodName: SetValue
         m_Mode: 0
@@ -542,7 +542,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6482799323495061115}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

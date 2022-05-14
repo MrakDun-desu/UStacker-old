@@ -92,8 +92,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Blockstacker.Settings.Changers.AppSettingFloatChanger,
+      - m_Target: {fileID: 1267377875690824151}
+        m_TargetAssemblyTypeName: Blockstacker.GlobalSettings.Changers.AppSettingDoubleChanger,
           Assembly-CSharp
         m_MethodName: OnSliderMoved
         m_Mode: 1
@@ -501,8 +501,8 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Blockstacker.Settings.Changers.AppSettingFloatChanger,
+      - m_Target: {fileID: 1267377875690824151}
+        m_TargetAssemblyTypeName: Blockstacker.GlobalSettings.Changers.AppSettingDoubleChanger,
           Assembly-CSharp
         m_MethodName: OnValueRewritten
         m_Mode: 0

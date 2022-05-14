@@ -610,7 +610,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &1566612952300207816
 GameObject:
   m_ObjectHideFlags: 0
@@ -4120,7 +4120,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7742643563894403970, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
       propertyPath: m_Value
-      value: 1.0000004
+      value: 1.0000006
       objectReference: {fileID: 0}
     - target: {fileID: 8157086686339900590, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
       propertyPath: m_Pivot.x
@@ -4322,7 +4322,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5812546566113959904, guid: d4acacca99c450a4999a47eb9c9ae043, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 240.00002
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5812546566113959904, guid: d4acacca99c450a4999a47eb9c9ae043, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

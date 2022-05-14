@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Blockstacker.Gameplay;
 using NLua;
 using NLua.Exceptions;
@@ -16,23 +17,34 @@ namespace Gameplay.Stats
         [Range(0, 5)][SerializeField] private float _updateInterval = .1f;
 
         private Lua _luaState;
+        private Coroutine _updateStatCor;
         
         private void Awake()
         {
             _luaState = new Lua();
             _luaState["stats"] = _counter.Stats;
-            var updateStatCor = StartCoroutine(UpdateStatCor());
-            GameManager.GameRestartedEvent += () =>
-            {
-                _luaState["stats"] = _counter.Stats;
-                if (updateStatCor != null) return;
-                updateStatCor = StartCoroutine(UpdateStatCor());
-            };
-            GameManager.GameEndedEvent += () =>
-            {
-                StopCoroutine(updateStatCor);
-                updateStatCor = null;
-            };
+            _updateStatCor = StartCoroutine(UpdateStatCor());
+            GameManager.GameRestartedEvent += HandleGameRestarted;
+            GameManager.GameEndedEvent += HandleGameEnded;
+        }
+
+        private void OnDestroy()
+        {
+            GameManager.GameRestartedEvent -= HandleGameRestarted;
+            GameManager.GameEndedEvent -= HandleGameEnded;
+        }
+
+        private void HandleGameRestarted()
+        {
+            _luaState["stats"] = _counter.Stats;
+            if (_updateStatCor != null) return;
+            _updateStatCor = StartCoroutine(UpdateStatCor());
+        }
+
+        private void HandleGameEnded()
+        {
+            StopCoroutine(_updateStatCor);
+            _updateStatCor = null;
         }
 
         private IEnumerator UpdateStatCor()

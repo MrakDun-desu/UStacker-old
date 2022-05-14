@@ -1,4 +1,5 @@
-﻿using Blockstacker.Common.Extensions;
+﻿using System;
+using Blockstacker.Common.Extensions;
 using Blockstacker.GlobalSettings;
 using Blockstacker.GlobalSettings.Appliers;
 using UnityEngine;
@@ -9,17 +10,24 @@ namespace Blockstacker.Gameplay
     public class GridPiece : MonoBehaviour
     {
         private SpriteRenderer _renderer;
-        
+
         private void Awake()
         {
             _renderer = GetComponent<SpriteRenderer>();
 
             _renderer.color = _renderer.color.WithAlpha(AppSettings.Gameplay.GridVisibility);
 
-            GridVisibilityApplier.VisibilityChanged += newAlpha =>
-            {
-                _renderer.color = _renderer.color.WithAlpha(newAlpha);
-            };
+            GridVisibilityApplier.VisibilityChanged += ChangeVisibility;
+        }
+
+        private void OnDestroy()
+        {
+            GridVisibilityApplier.VisibilityChanged += ChangeVisibility;
+        }
+
+        private void ChangeVisibility(float newAlpha)
+        {
+            _renderer.color = _renderer.color.WithAlpha(newAlpha);
         }
     }
 }

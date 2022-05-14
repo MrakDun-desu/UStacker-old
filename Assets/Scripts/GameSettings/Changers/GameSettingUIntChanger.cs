@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Blockstacker.GameSettings.Changers
 {
-    public class UIntChanger : GameSettingChangerBase<uint>
+    public class GameSettingUIntChanger : GameSettingChangerWithField<uint>
     {
         [Space]
         [SerializeField] private bool _clampValue;
@@ -21,11 +21,10 @@ namespace Blockstacker.GameSettings.Changers
             if (_clampValue) {
                 if (uintValue < _minValue) uintValue = _minValue;
                 if (uintValue > _maxValue) uintValue = _maxValue;
-                SetValue(uintValue);
             }
-            else {
-                SetValue(uintValue);
-            }
+            
+            SetValue(uintValue);
+            _valueField.SetTextWithoutNotify(uintValue.ToString());
         }
     }
 }

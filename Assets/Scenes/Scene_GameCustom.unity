@@ -12014,6 +12014,10 @@ PrefabInstance:
       propertyPath: _manager
       value: 
       objectReference: {fileID: 1579597091}
+    - target: {fileID: 5700344587777127980, guid: 588bcbcdc318aaf439c941e012c49a79, type: 3}
+      propertyPath: _statCounterScript
+      value: return tostring(stats.PiecesPlaced)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 588bcbcdc318aaf439c941e012c49a79, type: 3}
 --- !u!1001 &6203196272078392141

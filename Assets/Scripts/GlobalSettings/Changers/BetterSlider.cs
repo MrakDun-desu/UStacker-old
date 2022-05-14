@@ -33,7 +33,10 @@ namespace Blockstacker.GlobalSettings.Changers
             _slider = GetComponent<Slider>();
         }
 
-        public float GetRealValue() => _slider.value / Range * RealRange + _minValue;
+        public float GetRealValue()
+        {
+            return _slider.value / Range * RealRange + _minValue;
+        }
 
         public void SetRealValue(float value)
         {

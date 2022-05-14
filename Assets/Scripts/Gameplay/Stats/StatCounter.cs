@@ -50,6 +50,7 @@ namespace Gameplay.Stats
 
         private void Awake()
         {
+            _statContainer = new StatContainer();
             _mediator.Register<InputActionMessage>(OnInputAction);
             _mediator.Register<PiecePlacedMessage>(OnPiecePlaced);
         }

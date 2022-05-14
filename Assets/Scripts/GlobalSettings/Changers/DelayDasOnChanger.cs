@@ -34,18 +34,20 @@ namespace Blockstacker.GlobalSettings.Changers
 
         public void SetPlacement(bool value)
         {
-            const DelayDasOn mask = ~DelayDasOn.Placement;
-            var newValue = AppSettings.Handling.DelayDasOn & mask;
+            var oldValue = AppSettings.Handling.DelayDasOn;
             if (value)
-                AppSettings.Handling.DelayDasOn = newValue;
+                AppSettings.Handling.DelayDasOn = oldValue | DelayDasOn.Placement;
+            else
+                AppSettings.Handling.DelayDasOn = oldValue & ~DelayDasOn.Placement;
         }
 
         public void SetRotation(bool value)
         {
-            const DelayDasOn mask = ~DelayDasOn.Rotation;
-            var newValue = AppSettings.Handling.DelayDasOn & mask;
+            var oldValue = AppSettings.Handling.DelayDasOn;
             if (value)
-                AppSettings.Handling.DelayDasOn = newValue;
+                AppSettings.Handling.DelayDasOn = oldValue | DelayDasOn.Rotation;
+            else
+                AppSettings.Handling.DelayDasOn = oldValue & ~DelayDasOn.Rotation;
         }
     }
 }

@@ -39,13 +39,20 @@ namespace Blockstacker.Gameplay
             _backgroundRenderer.color = _backgroundRenderer.color.WithAlpha(AppSettings.Gameplay.BoardVisibility);
 
             ChangeBoardZoom(AppSettings.Gameplay.BoardZoom);
-            
-            BackgroundVisibilityApplier.VisibilityChanged += newAlpha =>
-            {
-                _backgroundRenderer.color = _backgroundRenderer.color.WithAlpha(newAlpha);
-            };
 
+            BackgroundVisibilityApplier.VisibilityChanged += ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged += ChangeBoardZoom;
+        }
+
+        private void OnDestroy()
+        {
+            BackgroundVisibilityApplier.VisibilityChanged -= ChangeVisibility;
+            BoardZoomApplier.BoardZoomChanged -= ChangeBoardZoom;
+        }
+
+        private void ChangeVisibility(float newAlpha)
+        {
+            _backgroundRenderer.color = _backgroundRenderer.color.WithAlpha(newAlpha);
         }
 
         private void Update()

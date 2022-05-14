@@ -1,8 +1,9 @@
+using System.Globalization;
 using UnityEngine;
 
 namespace Blockstacker.GameSettings.Changers
 {
-    public class FloatChanger : GameSettingChangerBase<float>
+    public class GameSettingFloatChanger : GameSettingChangerWithField<float>
     {
         [Space]
         [SerializeField] private bool _clampValue;
@@ -18,10 +19,8 @@ namespace Blockstacker.GameSettings.Changers
         public void SetValue(string value)
         {
             if (!float.TryParse(value, out var floatValue)) return;
-            if (_clampValue)
-                SetValue(Mathf.Clamp(floatValue, _minValue, _maxValue));
-            else
-                SetValue(floatValue);
+            SetValue(_clampValue ? Mathf.Clamp(floatValue, _minValue, _maxValue) : floatValue);
+            _valueField.SetTextWithoutNotify(floatValue.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

@@ -29,10 +29,10 @@ namespace Blockstacker.GlobalSettings.Changers
         private void Start()
         {
             OnValidate();
-            var value = AppSettings.GetValue<float>(_controlPath);
-            _slider.SetRealValue(value);
+            var value = AppSettings.GetValue<double>(_controlPath);
+            _slider.SetRealValue((float)value);
             _valueField.SetTextWithoutNotify(FormatValue(value));
-            _valueChanged.Invoke(value);
+            _valueChanged.Invoke((float)value);
         }
 
         private new void OnValidate()
@@ -69,10 +69,10 @@ namespace Blockstacker.GlobalSettings.Changers
 
         public void OnSliderMoved()
         {
-            var value = _slider.GetRealValue();
+            var value = (double)_slider.GetRealValue();
             if (Math.Abs(value - _maxValue) < .1f && _maxIsInfinity)
             {
-                value = float.PositiveInfinity;
+                value = double.PositiveInfinity;
                 _valueField.SetTextWithoutNotify(_infinityString);
             }
             else
@@ -81,7 +81,7 @@ namespace Blockstacker.GlobalSettings.Changers
             }
 
             SetValue(value);
-            _valueChanged.Invoke(value);
+            _valueChanged.Invoke((float)value);
             OnSettingChanged();
         }
     }

@@ -39,19 +39,27 @@ namespace Blockstacker.Gameplay.Pieces
             }
 
             GhostPieceVisibilityApplier.VisibilityChanged += ChangeRendererAlphas;
-            ColorGhostPieceApplier.ColorGhostPieceChanged += colorThis =>
-            {
-                if (!colorThis) return;
-                foreach (var spriteRenderer in _blockRenderers)
-                {
-                    spriteRenderer.color = spriteRenderer.color.WithValue(Color.white);
-                }
-            };
+            ColorGhostPieceApplier.ColorGhostPieceChanged += ChangeColoring;
 
             if (_settings.Rules.Controls.ShowGhostPiece) return;
             foreach (var block in Blocks)
             {
                 block.gameObject.SetActive(false);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            GhostPieceVisibilityApplier.VisibilityChanged -= ChangeRendererAlphas;
+            ColorGhostPieceApplier.ColorGhostPieceChanged -= ChangeColoring;
+        }
+
+        private void ChangeColoring(bool colorThis)
+        {
+            if (!colorThis) return;
+            foreach (var spriteRenderer in _blockRenderers)
+            {
+                spriteRenderer.color = spriteRenderer.color.WithValue(Color.white);
             }
         }
 

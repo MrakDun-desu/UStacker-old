@@ -1,23 +1,23 @@
-using Blockstacker.GameSettings.Enums;
+﻿using Blockstacker.GameSettings.Enums;
 using TMPro;
 using UnityEngine;
 
 namespace Blockstacker.GameSettings.Changers
 {
-    public class MainStatChanger : GameSettingChangerBase<MainStat>
+    public class TopoutConditionChanger : GameSettingChangerBase<TopoutCondition>
     {
         [Space] [SerializeField] private TMP_Dropdown _dropdown;
         
-        private static MainStat[] Values => new[] {
-            MainStat.Time,
-            MainStat.LinesCleared,
-            MainStat.PiecesUsed
+        private static TopoutCondition[] Values => new[] {
+            TopoutCondition.PieceSpawn,
+            TopoutCondition.LethalHeightLoose,
+            TopoutCondition.LethalHeightStrict
         };
 
         private static string[] ShownValues => new[] {
-            "Time",
-            "Lines cleared",
-            "Pieces used"
+            "Piece spawn",
+            "Lethal height loose",
+            "Lethal height strict",
         };
 
         private void Start()
@@ -26,7 +26,7 @@ namespace Blockstacker.GameSettings.Changers
             for (var i = 0; i < Values.Length; i++) {
                 var value = Values[i];
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(ShownValues[i]));
-                if (value == _gameSettingsSO.Objective.MainStat) {
+                if (value == _gameSettingsSO.Rules.BoardDimensions.TopoutCondition) {
                     _dropdown.SetValueWithoutNotify(i);
                 }
             }

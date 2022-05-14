@@ -114,6 +114,11 @@ namespace Blockstacker.Gameplay
             if (_timer.CurrentTime > _settings.Objective.EndConditionCount) EndGame();
         }
 
+        private void OnDestroy()
+        {
+            _mediator.Clear();
+        }
+
         private void OnPiecePlaced(PiecePlacedMessage _)
         {
             switch (_settings.Objective.GameEndCondition)
