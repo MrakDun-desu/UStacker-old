@@ -9,12 +9,11 @@ namespace Blockstacker.GlobalSettings.Appliers
         [SerializeField] private string _propertyName;
         public override void OnSettingChanged()
         {
-            string[] path = new string[] {
+            var path = new[] {
                 "Sound",
                 _propertyName
             };
             if (!AppSettings.SettingExists<float>(path)) {
-                Debug.LogError("Setting could not be found!");
                 return;
             }
             var value = AppSettings.GetValue<float>(path);

@@ -1,12 +1,12 @@
 namespace Blockstacker.GameSettings.Enums
 {
-    public enum GameEndCondition
+    public enum GameEndCondition : byte
     {
         Score,
         Time,
         LinesCleared,
         CheeseLinesCleared,
-        PiecesUsed,
+        PiecesPlaced,
         None
     }
 }

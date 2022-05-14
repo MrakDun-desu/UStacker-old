@@ -8,7 +8,7 @@ namespace Blockstacker.GlobalSettings.Changers
     public class ResolutionChanger : MonoBehaviour, ISettingChanger
     {
         [SerializeField] private TMP_Dropdown _dropdown;
-        private Resolution[] _resolutions = new Resolution[0];
+        private Resolution[] _resolutions = Array.Empty<Resolution>();
 
         public event Action SettingChanged;
 
@@ -16,8 +16,8 @@ namespace Blockstacker.GlobalSettings.Changers
         {
             _resolutions = Screen.resolutions;
             _dropdown.ClearOptions();
-            for (int i = 0; i < _resolutions.Length; i++) {
-                Resolution resolution = _resolutions[i];
+            for (var i = 0; i < _resolutions.Length; i++) {
+                var resolution = _resolutions[i];
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(resolution.ToString()));
                 if (resolution.IsEqualTo(Screen.currentResolution)) {
                     _dropdown.SetValueWithoutNotify(i);

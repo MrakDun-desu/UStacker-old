@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using Blockstacker.Common.Extensions;
 using TMPro;
 using UnityEngine;
@@ -10,11 +11,14 @@ namespace Blockstacker.GlobalSettings.Changers
 {
     public class RebindChanger : MonoBehaviour
     {
-        [Header("Binding elements")]
-        [SerializeField] private InputActionAsset _actionAsset;
+        [Header("Binding elements")] [SerializeField]
+        private InputActionAsset _actionAsset;
+
         [SerializeField] private InputActionReference _action;
-        [Header("Interface elements")]
-        [SerializeField] private GameObject _rebindOverlay;
+
+        [Header("Interface elements")] [SerializeField]
+        private GameObject _rebindOverlay;
+
         [SerializeField] private TMP_Text _bindingName;
         [SerializeField] private TMP_Text[] _bindingTexts = new TMP_Text[3];
 
@@ -30,8 +34,9 @@ namespace Blockstacker.GlobalSettings.Changers
         {
             if (_action == null) return;
 
-            if (_bindingName != null) {
-                var slashIndex = _action.name.LastIndexOfAny(new char[] { '/', '\\' }) + 1;
+            if (_bindingName != null)
+            {
+                var slashIndex = _action.name.LastIndexOfAny(new[] {'/', '\\'}) + 1;
                 var nameString = _action.name[slashIndex..];
                 _bindingName.text = nameString.FormatCamelCase();
             }
@@ -43,6 +48,7 @@ namespace Blockstacker.GlobalSettings.Changers
         private void OnEnable()
         {
             InputPresetChanger.RebindsChanged += RefreshNames;
+            InputPresetChanger.RebindsChanged += CheckBindingOverlaps;
             RebindChanged += RefreshNames;
             RebindChanged += CheckBindingOverlaps;
         }
@@ -50,13 +56,15 @@ namespace Blockstacker.GlobalSettings.Changers
         private void OnDisable()
         {
             InputPresetChanger.RebindsChanged -= RefreshNames;
+            InputPresetChanger.RebindsChanged -= CheckBindingOverlaps;
             RebindChanged -= RefreshNames;
             RebindChanged -= CheckBindingOverlaps;
         }
 
         private void RefreshNames()
         {
-            for (var i = 0; i < _bindingTexts.Length; i++) {
+            for (var i = 0; i < _bindingTexts.Length; i++)
+            {
                 if (_bindingTexts[i] == null) continue;
                 var bindingName = _action.action.bindings[i]
                     .ToDisplayString(InputBinding.DisplayStringOptions.DontOmitDevice);
@@ -67,7 +75,8 @@ namespace Blockstacker.GlobalSettings.Changers
 
         private void CheckBindingOverlaps()
         {
-            for (var i = 0; i < _bindingTexts.Length; i++) {
+            for (var i = 0; i < _bindingTexts.Length; i++)
+            {
                 _bindingTexts[i].color = IsBindingUnique(i) ? Color.black : Color.red;
             }
         }
@@ -75,15 +84,11 @@ namespace Blockstacker.GlobalSettings.Changers
         private bool IsBindingUnique(int index)
         {
             var newBinding = _action.action.bindings[index];
-            foreach (var binding in _action.action.actionMap.bindings) {
-                if (binding.action == newBinding.action)
-                    continue;
+            var otherActions = _action.action.actionMap.bindings.Where(binding => binding.action != newBinding.action);
 
-                if (newBinding.effectivePath == binding.effectivePath &&
-                    !string.IsNullOrEmpty(newBinding.ToDisplayString()))
-                    return false;
-            }
-            return true;
+            return otherActions.All(
+                binding => newBinding.effectivePath != binding.effectivePath ||
+                           string.IsNullOrEmpty(newBinding.ToDisplayString()));
         }
 
         private void RebindCancelled(int index)
@@ -99,6 +104,7 @@ namespace Blockstacker.GlobalSettings.Changers
                 StartCoroutine(DeactivateOverlay());
             RefreshNames();
             RebindChanged?.Invoke();
+            _action.action.Enable();
             AppSettings.Rebinds = _actionAsset.SaveBindingOverridesAsJson();
         }
 
@@ -112,6 +118,8 @@ namespace Blockstacker.GlobalSettings.Changers
         {
             if (_rebindOverlay != null)
                 _rebindOverlay.SetActive(true);
+            
+            _action.action.Disable();
 
             _currentOperation = _action.action.PerformInteractiveRebinding(index)
                 .WithControlsExcluding("Mouse")

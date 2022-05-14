@@ -19,7 +19,7 @@ namespace Blockstacker.Loaders
         {
             if (!Directory.Exists(BackgroundPackPath)) yield break;
             foreach (var path in Directory.EnumerateDirectories(BackgroundPackPath)) {
-                var slashIndex = path.LastIndexOfAny(new char[] { '/', '\\' }) + 1;
+                var slashIndex = path.LastIndexOfAny(new[] { '/', '\\' }) + 1;
                 yield return path[slashIndex..];
             }
         }
@@ -36,12 +36,12 @@ namespace Blockstacker.Loaders
             List<Task> taskList = new();
 
             foreach (var dir in Directory.EnumerateDirectories(Path.Combine(CurrentBackgroundPack, path))) {
-                var slashIndex = dir.LastIndexOfAny(new char[] { '\\', '/' }) + 1;
+                var slashIndex = dir.LastIndexOfAny(new[] { '\\', '/' }) + 1;
                 taskList.Add(GetBackgroundsRecursivelyAsync(recursionLevel, path + '/' + dir[slashIndex..]));
             }
 
             foreach (var filePath in Directory.EnumerateFiles(Path.Combine(CurrentBackgroundPack, path))) {
-                var slashIndex = filePath.LastIndexOfAny(new char[] { '\\', '/' }) + 1;
+                var slashIndex = filePath.LastIndexOfAny(new[] { '\\', '/' }) + 1;
                 taskList.Add(HandleBackgroundLoadAsync(filePath[slashIndex..]));
             }
 

@@ -1,16 +1,17 @@
 using System;
+using Blockstacker.GlobalSettings.Enums;
 
 namespace Blockstacker.GlobalSettings.Groups
 {
     [Serializable]
     public class HandlingSettings
     {
-        public float DelayedAutoShift = .125f;
-        public float AutomaticRepeatRate = 0;
-        public float SoftDropFactor = float.PositiveInfinity;
-        public float DasCutDelay = 0;
-        public bool UseDasCancelling = true;
-        public bool UseDiagonalLock = false;
-
+        public double DelayedAutoShift = .125d;
+        public double AutomaticRepeatRate = .0d;
+        public double SoftDropFactor = double.PositiveInfinity;
+        public double DasCutDelay = 0;
+        public DelayDasOn DelayDasOn = DelayDasOn.Nothing;
+        public AntiDasBehavior AntiDasBehavior = AntiDasBehavior.CancelFirstDirection;
+        public DiagonalLockBehavior DiagonalLockBehavior = DiagonalLockBehavior.DontLock;
     }
 }

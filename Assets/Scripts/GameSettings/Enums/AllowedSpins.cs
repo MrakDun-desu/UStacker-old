@@ -1,6 +1,6 @@
 namespace Blockstacker.GameSettings.Enums
 {
-    public enum AllowedSpins
+    public enum AllowedSpins : byte
     {
         TSpins,
         All,

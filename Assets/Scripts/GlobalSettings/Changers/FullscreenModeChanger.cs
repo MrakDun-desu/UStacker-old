@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -9,25 +8,23 @@ namespace Blockstacker.GlobalSettings.Changers
         [Space]
         [SerializeField] private TMP_Dropdown _dropdown;
 
-        private static string[] Values => new string[] {
-            "ExclusiveFullScreen",
-            "FullScreenWindow",
-            "MaximizedWindow",
-            "Windowed"
+        private static string[] Values => new[] {
+            nameof(FullScreenMode.ExclusiveFullScreen),
+            nameof(FullScreenMode.FullScreenWindow),
+            nameof(FullScreenMode.Windowed)
         };
 
-        private static string[] ShownValues => new string[] {
+        private static string[] ShownValues => new[] {
             "Exclusive fullscreen",
             "Fullscreen window",
-            "Maximized window",
             "Windowed"
         };
 
         private void Start()
         {
             _dropdown.ClearOptions();
-            for (int i = 0; i < Values.Length; i++) {
-                string value = Values[i];
+            for (var i = 0; i < Values.Length; i++) {
+                var value = Values[i];
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(ShownValues[i]));
                 if (value.Equals(AppSettings.Video.FullscreenMode)) {
                     _dropdown.SetValueWithoutNotify(i);

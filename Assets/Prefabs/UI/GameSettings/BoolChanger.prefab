@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8174934064551543497}
+  - component: {fileID: 1524992798260344108}
   m_Layer: 5
   m_Name: BoolChanger
   m_TagString: Untagged
@@ -37,6 +38,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1524992798260344108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8174934064551543498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a442c1f60ca89aa45afb3f482ffe1296, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameSettingsSO: {fileID: 11400000, guid: 82a8dfd8c479a9746b991978530983d6, type: 2}
+  _controlPath: []
+  _title: {fileID: 8174934065331569716}
+  _autoformatName: 1
+  _toggle: {fileID: 8174934066182942281}
 --- !u!1 &8174934064828363803
 GameObject:
   m_ObjectHideFlags: 0
@@ -179,7 +197,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Label
+  m_text: Setting not found!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -410,5 +428,18 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1524992798260344108}
+        m_TargetAssemblyTypeName: Blockstacker.GameSettings.Changers.GameSettingChangerBase`1[[System.Boolean,
+          mscorlib
+        m_MethodName: SetValue
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 1

@@ -1,8 +1,8 @@
 using System;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 namespace Blockstacker.GlobalSettings.Changers
 {
@@ -13,12 +13,12 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private BetterSlider _slider;
         [Header("Slider settings")]
         [SerializeField] private float _range = 100;
-        [SerializeField] private float _minValue = 0;
+        [SerializeField] private float _minValue;
         [SerializeField] private float _maxValue = 100;
         [SerializeField] private float _multiplier = 1;
         [Header("Other settings")]
         [SerializeField] private bool _clampValue = true;
-        [SerializeField] private bool _maxIsInfinity = false;
+        [SerializeField] private bool _maxIsInfinity;
         [SerializeField] private string _infinityString = "INF";
         [SerializeField] private UnityEvent<float> _valueChanged;
 
@@ -42,8 +42,8 @@ namespace Blockstacker.GlobalSettings.Changers
 
         private string FormatValue(float value)
         {
-            if (value == float.PositiveInfinity) return _infinityString;
-            return Math.Round(value * _multiplier, 2).ToString().Replace('.', ',');
+            if (float.IsPositiveInfinity(value)) return _infinityString;
+            return Math.Round(value * _multiplier, 2).ToString(CultureInfo.InvariantCulture).Replace('.', ',');
         }
 
         public void OnValueRewritten(string value)
@@ -64,7 +64,7 @@ namespace Blockstacker.GlobalSettings.Changers
         public void OnSliderMoved()
         {
             var value = _slider.GetRealValue();
-            if (value == _maxValue && _maxIsInfinity) {
+            if (Mathf.Abs(value - _maxValue) < .1f && _maxIsInfinity) {
                 value = float.PositiveInfinity;
                 _valueField.SetTextWithoutNotify(_infinityString);
             }

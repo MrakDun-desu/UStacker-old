@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -27,7 +26,7 @@ namespace Blockstacker.GlobalSettings.Appliers
             }
         }
 
-        internal static class Muter
+        private static class Muter
         {
             public static AudioMixer mixer;
             public static string fieldName;

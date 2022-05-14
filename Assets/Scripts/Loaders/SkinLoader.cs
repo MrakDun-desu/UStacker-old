@@ -9,7 +9,7 @@ namespace Blockstacker.Loaders
 {
     public static class SkinLoader
     {
-        // TODO
+        // TODO add skin loading and names
         // private static readonly string _blockSkinName = "blockSkin";
         // private static readonly string[] _blockSpriteNames = new string[] {
         // };
@@ -18,14 +18,14 @@ namespace Blockstacker.Loaders
         private static string CurrentSkin => Path.Combine(SkinPath, AppSettings.Customization.SkinFolder);
         private static string SkinPath => Path.Combine(Application.persistentDataPath, "skins");
 
-        public static Dictionary<string, Sprite> Sprites = new();
+        public static readonly Dictionary<string, Sprite> Sprites = new();
         public static event Action SkinChanged;
 
         public static IEnumerable<string> EnumerateSkins()
         {
             if (!Directory.Exists(SkinPath)) yield break;
             foreach (var path in Directory.EnumerateDirectories(SkinPath)) {
-                var slashIndex = path.LastIndexOfAny(new char[] { '/', '\\' }) + 1;
+                var slashIndex = path.LastIndexOfAny(new[] { '/', '\\' }) + 1;
                 yield return path[slashIndex..];
             }
         }
@@ -42,12 +42,12 @@ namespace Blockstacker.Loaders
             List<Task> taskList = new();
 
             foreach (var dir in Directory.EnumerateDirectories(Path.Combine(CurrentSkin, path))) {
-                var slashIndex = dir.LastIndexOfAny(new char[] { '\\', '/' }) + 1;
+                var slashIndex = dir.LastIndexOfAny(new[] { '\\', '/' }) + 1;
                 taskList.Add(GetSkinsRecursivelyAsync(recursionLevel, path + '/' + dir[slashIndex..]));
             }
 
             foreach (var filePath in Directory.EnumerateFiles(Path.Combine(CurrentSkin, path))) {
-                var slashIndex = filePath.LastIndexOfAny(new char[] { '\\', '/' }) + 1;
+                var slashIndex = filePath.LastIndexOfAny(new[] { '\\', '/' }) + 1;
                 taskList.Add(HandleLoadSpriteAsync(filePath[slashIndex..]));
             }
 

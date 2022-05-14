@@ -34,8 +34,8 @@ namespace Blockstacker.GlobalSettings.Appliers
 
         private void OnVisibilityChanged(float newValue)
         {
-            var newColor = _backgroundImage.color;
-            _backgroundImage.color = new Color(newColor.r, newColor.g, newColor.b, newValue);
+            var formerColor = _backgroundImage.color;
+            _backgroundImage.color = new Color(formerColor.r, formerColor.g, formerColor.b, newValue);
         }
 
         private void OnBackgroundChanged()

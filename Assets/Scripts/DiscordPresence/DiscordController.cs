@@ -5,7 +5,7 @@ namespace Blockstacker.DiscordPresence
 {
     public class DiscordController : MonoSingleton
     {
-        private long ApplicationID => 953585016779202580;
+        private static long ApplicationID => 953585016779202580;
         private Discord.Discord discord;
 
 
@@ -24,14 +24,8 @@ namespace Blockstacker.DiscordPresence
                 State = "Still Testing",
                 Details = "Imagine you see me stacking blocks here"
             };
-            activityManager.UpdateActivity(activity, (res) =>
+            activityManager.UpdateActivity(activity, res =>
             {
-                if (res == Discord.Result.Ok) {
-                    Debug.Log("Connected to Discord!");
-                }
-                else {
-                    Debug.LogError("Discord couldn't be connected :(");
-                }
             });
         }
 

@@ -8,5 +8,6 @@ namespace Blockstacker.GlobalSettings.Groups
         public string SkinFolder;
         public string SoundPackFolder;
         public string BackgroundFolder;
+        public string UiFolder;
     }
 }
