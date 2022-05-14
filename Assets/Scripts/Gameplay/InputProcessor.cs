@@ -34,6 +34,7 @@ namespace Blockstacker.Gameplay
             get => _activePiece;
             set
             {
+                _usedHold = false;
                 _pieceIsNull = value is null;
                 _activePiece = value;
                 if (_pieceIsNull)
@@ -552,7 +553,6 @@ namespace Blockstacker.Gameplay
 
             _pieceSpawnTime = placementTime + spawnTime;
             ActivePiece = null;
-            _usedHold = false;
         }
 
         private void UpdatePiecePlacementVars(double updateTime)

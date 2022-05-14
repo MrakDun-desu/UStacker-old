@@ -21,13 +21,13 @@ MonoBehaviour:
         AllowedSpins: 0
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: 661792409
+        ActiveSeed: -605513898
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
         AllowHardDrop: 1
         AllowHold: 1
-        UnlimitedHold: 1
+        UnlimitedHold: 0
         RotationSystem: 0
         CustomRotationSystemName: 
         ActiveRotationSystem:
@@ -463,13 +463,13 @@ MonoBehaviour:
         BoardWidth: 10
         LethalHeight: 20
         PieceSpawnHeight: 21
-        TopoutCondition: 0
+        TopoutCondition: 2
         AllowClutchClears: 1
         BoardPadding: 5
     Objective:
       MainStat: 1
       GameEndCondition: 2
-      EndConditionCount: 5
+      EndConditionCount: 40
       ToppingOutIsOkay: 0
       GenerateCheese: 0
       CheeseGeneration: 1
@@ -478,7 +478,7 @@ MonoBehaviour:
       CustomCheeseScriptName: 
       CustomCheeseScript: 
     Presentation:
-      Title: Custom game
+      Title: Sprint 40L
       UseCountdown: 1
-      CountdownInterval: 0.2
+      CountdownInterval: 0.5
       CountdownCount: 3

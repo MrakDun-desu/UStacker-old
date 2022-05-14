@@ -19,7 +19,7 @@ namespace Gameplay.Stats
         private Lua _luaState;
         private Coroutine _updateStatCor;
         
-        private void Awake()
+        private void Start()
         {
             _luaState = new Lua();
             _luaState["stats"] = _counter.Stats;

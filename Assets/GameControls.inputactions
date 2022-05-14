@@ -111,7 +111,7 @@
                 {
                     "name": "",
                     "id": "20e39b47-2e44-4b42-8631-20d73d2b9e52",
-                    "path": "",
+                    "path": "<Gamepad>/dpad/left",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default",
@@ -144,7 +144,7 @@
                 {
                     "name": "",
                     "id": "ed8c83b9-fcb7-4cfb-91b6-5607ec6d593e",
-                    "path": "",
+                    "path": "<Gamepad>/dpad/right",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default",
@@ -177,7 +177,7 @@
                 {
                     "name": "",
                     "id": "d0ba80f1-ac3d-4403-ad06-c07eff1e5bc2",
-                    "path": "",
+                    "path": "<Gamepad>/dpad/down",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default",
@@ -210,7 +210,7 @@
                 {
                     "name": "",
                     "id": "1f4164f5-d2d5-474f-9a15-7d16d00e99f9",
-                    "path": "",
+                    "path": "<Gamepad>/dpad/up",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default",
@@ -243,7 +243,7 @@
                 {
                     "name": "",
                     "id": "8ba1e5b6-76c3-42b8-8557-36329634fe89",
-                    "path": "",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default",
@@ -265,7 +265,7 @@
                 {
                     "name": "",
                     "id": "f67a425d-0986-48e1-a5cc-82ae4b883a2c",
-                    "path": "<Keyboard>/c",
+                    "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default",
@@ -276,7 +276,7 @@
                 {
                     "name": "",
                     "id": "3001306f-8483-49df-a4c9-89b3488f0495",
-                    "path": "",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default",
@@ -309,7 +309,7 @@
                 {
                     "name": "",
                     "id": "30389393-6239-4f38-8606-3e958aea15b4",
-                    "path": "",
+                    "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default",
@@ -331,7 +331,7 @@
                 {
                     "name": "",
                     "id": "4acd7633-5ca4-473f-9467-54ef41c7d04f",
-                    "path": "<Keyboard>/upArrow",
+                    "path": "<Keyboard>/c",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default",
@@ -342,7 +342,7 @@
                 {
                     "name": "",
                     "id": "ae99a22a-675f-4bb9-b964-926389053611",
-                    "path": "",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default",
@@ -353,7 +353,7 @@
                 {
                     "name": "",
                     "id": "b47895d2-e234-4b97-835c-cf57e6dbe824",
-                    "path": "",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default",
