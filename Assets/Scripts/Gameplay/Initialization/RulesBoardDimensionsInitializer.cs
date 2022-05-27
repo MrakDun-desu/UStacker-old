@@ -41,6 +41,8 @@ namespace Blockstacker.Gameplay.Initialization
 
             var boardGrid = new GameObject("Grid");
             boardGrid.transform.SetParent(_board.transform);
+            boardGrid.transform.localPosition = Vector3.zero;
+            boardGrid.transform.localScale = Vector3.one;
 
             for (var y = 0; y < boardDimensions.BoardHeight; y++)
             {
@@ -56,10 +58,6 @@ namespace Blockstacker.Gameplay.Initialization
 
             _camera.orthographicSize =
                 boardDimensions.BoardHeight * .5f + _gameSettings.Rules.BoardDimensions.BoardPadding;
-            _camera.transform.position = new Vector3(
-                _gameSettings.Rules.BoardDimensions.BoardWidth * .5f,
-                _gameSettings.Rules.BoardDimensions.BoardHeight * .5f,
-                _camera.transform.position.z);
         }
     }
 }

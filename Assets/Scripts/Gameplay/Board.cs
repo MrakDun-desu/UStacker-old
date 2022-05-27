@@ -25,19 +25,47 @@ namespace Blockstacker.Gameplay
         [Range(0.00001f, 1)] [SerializeField] private float _minimumBoardScale = 0.1f;
         
         private readonly List<Block[]> Blocks = new();
-        public uint Width { get; set; }
-        public uint Height { get; set; }
+
+        public uint Width
+        {
+            get => _width;
+            set
+            {
+                _width = value;
+                var myTransform = transform;
+                var myPos = myTransform.position;
+                myTransform.position = new Vector3(-value * .5f * myTransform.localScale.x, myPos.y, myPos.z);
+            }
+        }
+
+        public uint Height
+        {
+            get => _height;
+            set
+            {
+                _height = value;
+                var myTransform = transform;
+                var myPos = myTransform.position;
+                myTransform.position = new Vector3(myPos.x, -value * .5f * myTransform.localScale.y, myPos.z);
+            }
+        }
+
         public uint LethalHeight { get; set; }
         private Vector3 Up => transform.up * transform.localScale.y;
         private Vector3 Right => transform.right * transform.localScale.x;
 
         private Vector3 _dragStartPosition;
         private Vector3 _dragStartTransformPosition;
+        private uint _width;
+        private uint _height;
 
         private void Awake()
         {
             _backgroundRenderer.color = _backgroundRenderer.color.WithAlpha(AppSettings.Gameplay.BoardVisibility);
+        }
 
+        private void Start()
+        {
             ChangeBoardZoom(AppSettings.Gameplay.BoardZoom);
 
             BackgroundVisibilityApplier.VisibilityChanged += ChangeVisibility;
@@ -65,13 +93,13 @@ namespace Blockstacker.Gameplay
         {
             if (!AppSettings.Gameplay.CtrlScrollToChangeBoardZoom) return;
 
-            var mouse = Mouse.current;
-
             if (!Keyboard.current.ctrlKey.isPressed) return;
 
-            var mouseScroll = mouse.scroll.ReadValue().y;
+            var mouseScroll = Mouse.current.scroll.ReadValue().y;
             var newScale = transform.localScale.x + mouseScroll / _boardZoomFactor;
-            ChangeBoardZoom(newScale < _minimumBoardScale ? _minimumBoardScale : newScale);
+            var newZoom = newScale < _minimumBoardScale ? _minimumBoardScale : newScale;
+            ChangeBoardZoom(newZoom);
+            AppSettings.Gameplay.BoardZoom = newZoom;
         }
 
         private void HandleBoardDrag()
@@ -94,12 +122,9 @@ namespace Blockstacker.Gameplay
 
         private void ChangeBoardZoom(float zoom)
         {
-            transform.localScale = new Vector3(zoom, zoom, 1);
-            var cameraTransform = _camera.transform;
-            cameraTransform.position = new Vector3(
-                Width * zoom * .5f,
-                Height * zoom * .5f,
-                cameraTransform.position.z);
+            var myTransform = transform;
+            myTransform.localScale = new Vector3(zoom, zoom, 1);
+            myTransform.position = new Vector3(-zoom * .5f * Width, -zoom * .5f * Height, 1);
         }
         
         private void ClearLine(int lineNumber)

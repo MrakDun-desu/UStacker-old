@@ -11,12 +11,14 @@ namespace Blockstacker.GlobalSettings.Changers
 {
     public class RebindChanger : MonoBehaviour
     {
-        [Header("Binding elements")] [SerializeField]
+        [Header("Binding elements")]
+        [SerializeField]
         private InputActionAsset _actionAsset;
 
         [SerializeField] private InputActionReference _action;
 
-        [Header("Interface elements")] [SerializeField]
+        [Header("Interface elements")]
+        [SerializeField]
         private GameObject _rebindOverlay;
 
         [SerializeField] private TMP_Text _bindingName;
@@ -34,9 +36,8 @@ namespace Blockstacker.GlobalSettings.Changers
         {
             if (_action == null) return;
 
-            if (_bindingName != null)
-            {
-                var slashIndex = _action.name.LastIndexOfAny(new[] {'/', '\\'}) + 1;
+            if (_bindingName != null) {
+                var slashIndex = _action.name.LastIndexOfAny(new[] { '/', '\\' }) + 1;
                 var nameString = _action.name[slashIndex..];
                 _bindingName.text = nameString.FormatCamelCase();
             }
@@ -63,8 +64,7 @@ namespace Blockstacker.GlobalSettings.Changers
 
         private void RefreshNames()
         {
-            for (var i = 0; i < _bindingTexts.Length; i++)
-            {
+            for (var i = 0; i < _bindingTexts.Length; i++) {
                 if (_bindingTexts[i] == null) continue;
                 var bindingName = _action.action.bindings[i]
                     .ToDisplayString(InputBinding.DisplayStringOptions.DontOmitDevice);
@@ -75,8 +75,7 @@ namespace Blockstacker.GlobalSettings.Changers
 
         private void CheckBindingOverlaps()
         {
-            for (var i = 0; i < _bindingTexts.Length; i++)
-            {
+            for (var i = 0; i < _bindingTexts.Length; i++) {
                 _bindingTexts[i].color = IsBindingUnique(i) ? Color.black : Color.red;
             }
         }
@@ -118,11 +117,12 @@ namespace Blockstacker.GlobalSettings.Changers
         {
             if (_rebindOverlay != null)
                 _rebindOverlay.SetActive(true);
-            
+
             _action.action.Disable();
 
             _currentOperation = _action.action.PerformInteractiveRebinding(index)
                 .WithControlsExcluding("Mouse")
+                .WithControlsExcluding("<Keyboard>/printScreen")
                 .WithCancelingThrough("<Mouse>/leftButton")
                 .OnMatchWaitForAnother(.1f)
                 .OnCancel(_ => RebindCancelled(index))
