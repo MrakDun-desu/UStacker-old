@@ -36,6 +36,7 @@ namespace Blockstacker.Gameplay.Presentation
 
         private void RestartCountdown()
         {
+            if (_currentCount == 0) return;
             StopCountdown();
             StartCountdown();
         }
