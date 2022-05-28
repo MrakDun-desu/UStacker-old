@@ -13,6 +13,7 @@ namespace Gameplay.Stats
         [SerializeField] private StatCounter _counter;
         [SerializeField] private TMP_Text _displayText;
         [SerializeField] private GameTimer _timer;
+        [SerializeField] private GameManager _manager;
         [TextArea(10, 50)] [SerializeField] private string _statCounterScript;
         [Range(0, 5)][SerializeField] private float _updateInterval = .1f;
 
@@ -24,14 +25,8 @@ namespace Gameplay.Stats
             _luaState = new Lua();
             _luaState["stats"] = _counter.Stats;
             _updateStatCor = StartCoroutine(UpdateStatCor());
-            GameManager.GameRestartedEvent += HandleGameRestarted;
-            GameManager.GameEndedEvent += HandleGameEnded;
-        }
-
-        private void OnDestroy()
-        {
-            GameManager.GameRestartedEvent -= HandleGameRestarted;
-            GameManager.GameEndedEvent -= HandleGameEnded;
+            _manager.GameRestartedEvent += HandleGameRestarted;
+            _manager.GameEndedEvent += HandleGameEnded;
         }
 
         private void HandleGameRestarted()

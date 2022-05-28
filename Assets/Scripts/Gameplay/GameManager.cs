@@ -26,15 +26,17 @@ namespace Blockstacker.Gameplay
         [SerializeField] private UnityEvent GameLost;
         [SerializeField] private UnityEvent GameEnded;
 
-        public static event Action GameRestartedEvent;
-        public static event Action GameEndedEvent;
+        public event Action GameRestartedEvent;
+        public event Action GamePausedEvent;
+        public event Action GameResumedEvent;
+        public event Action GameEndedEvent;
 
         private bool _gameRunning;
         private bool _gameEnded;
         public GameReplay Replay;
 
         #region Game event management
-        
+
         public void StartGame()
         {
             _gameRunning = true;
@@ -50,10 +52,12 @@ namespace Blockstacker.Gameplay
             if (_gameRunning)
             {
                 GamePaused.Invoke();
+                GamePausedEvent?.Invoke();
             }
             else
             {
                 GameResumed.Invoke();
+                GameResumedEvent?.Invoke();
             }
 
             _gameRunning = !_gameRunning;
@@ -117,6 +121,10 @@ namespace Blockstacker.Gameplay
         private void OnDestroy()
         {
             _mediator.Clear();
+            GameRestartedEvent = null;
+            GamePausedEvent = null;
+            GameResumedEvent = null;
+            GameEndedEvent = null;
         }
 
         private void OnPiecePlaced(PiecePlacedMessage _)

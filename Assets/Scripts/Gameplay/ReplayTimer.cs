@@ -2,10 +2,11 @@
 using System.Diagnostics;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay
+namespace Gameplay
 {
-    public class GameTimer : MonoBehaviour
+    public class ReplayTimer : MonoBehaviour
     {
+        
         private readonly Stopwatch _stopwatch = new();
         private TimeSpan _startOffset = TimeSpan.Zero;
 
@@ -51,12 +52,6 @@ namespace Blockstacker.Gameplay
             _stopwatch.Start();
         }
 
-        public void ResumeTiming()
-        {
-            if (_stopwatch.ElapsedTicks <= 0) return;
-            _stopwatch.Start();
-        }
-
         public void StopTiming()
         {
             _stopwatch.Stop();
@@ -66,6 +61,5 @@ namespace Blockstacker.Gameplay
         {
             _stopwatch.Reset();
         }
-
     }
 }

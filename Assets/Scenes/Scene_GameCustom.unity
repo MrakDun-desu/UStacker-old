@@ -6923,7 +6923,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 139450738}
         m_TargetAssemblyTypeName: Blockstacker.Gameplay.GameTimer, Assembly-CSharp
-        m_MethodName: StartTiming
+        m_MethodName: ResumeTiming
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8574,6 +8574,7 @@ MonoBehaviour:
   CountdownInterval: 0.1
   CountdownCount: 3
   _lastMessage: Start!
+  _manager: {fileID: 1579597091}
   CountdownFinished:
     m_PersistentCalls:
       m_Calls:
@@ -9274,6 +9275,10 @@ PrefabInstance:
       propertyPath: _counter
       value: 
       objectReference: {fileID: 557688171}
+    - target: {fileID: 2975312091342883532, guid: a58f1a9ed28c0c44388dfad416521619, type: 3}
+      propertyPath: _manager
+      value: 
+      objectReference: {fileID: 1579597091}
     - target: {fileID: 2975312091342883532, guid: a58f1a9ed28c0c44388dfad416521619, type: 3}
       propertyPath: _updateInterval
       value: 0
@@ -10920,6 +10925,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 557688171}
     - target: {fileID: 2975312091342883532, guid: a58f1a9ed28c0c44388dfad416521619, type: 3}
+      propertyPath: _manager
+      value: 
+      objectReference: {fileID: 1579597091}
+    - target: {fileID: 2975312091342883532, guid: a58f1a9ed28c0c44388dfad416521619, type: 3}
       propertyPath: _updateInterval
       value: 0
       objectReference: {fileID: 0}
@@ -11907,6 +11916,10 @@ PrefabInstance:
       propertyPath: _counter
       value: 
       objectReference: {fileID: 557688171}
+    - target: {fileID: 2975312091342883532, guid: a58f1a9ed28c0c44388dfad416521619, type: 3}
+      propertyPath: _manager
+      value: 
+      objectReference: {fileID: 1579597091}
     - target: {fileID: 2975312091342883532, guid: a58f1a9ed28c0c44388dfad416521619, type: 3}
       propertyPath: _statCounterScript
       value: 'return "Lines cleared: " .. stats.LinesCleared
