@@ -3533,7 +3533,7 @@ MonoBehaviour:
   _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   _backgroundRenderer: {fileID: 569528456}
   _camera: {fileID: 1617022711}
-  _boardZoomFactor: 1000
+  _boardZoomFactor: 0.1
   _minimumBoardScale: 0.1
 --- !u!4 &878271532
 Transform:

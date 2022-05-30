@@ -14,8 +14,11 @@ namespace Blockstacker.Gameplay
         private void Awake()
         {
             _renderer = GetComponent<SpriteRenderer>();
+        }
 
-            _renderer.color = _renderer.color.WithAlpha(AppSettings.Gameplay.GridVisibility);
+        private void Start()
+        {
+            ChangeVisibility(AppSettings.Gameplay.GridVisibility);
 
             GridVisibilityApplier.VisibilityChanged += ChangeVisibility;
         }

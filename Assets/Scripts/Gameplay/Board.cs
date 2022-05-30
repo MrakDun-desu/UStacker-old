@@ -21,7 +21,9 @@ namespace Blockstacker.Gameplay
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private SpriteRenderer _backgroundRenderer;
         [SerializeField] private Camera _camera;
-        [SerializeField] private float _boardZoomFactor = 1000;
+        [Tooltip("Zoom percentage change with one scroll unit")]
+        [Range(0, 1)]
+        [SerializeField] private float _boardZoomFactor = .05f;
         [Range(0.00001f, 1)] [SerializeField] private float _minimumBoardScale = 0.1f;
         
         private readonly List<Block[]> Blocks = new();
@@ -34,7 +36,7 @@ namespace Blockstacker.Gameplay
                 _width = value;
                 var myTransform = transform;
                 var myPos = myTransform.position;
-                myTransform.position = new Vector3(-value * .5f * myTransform.localScale.x, myPos.y, myPos.z);
+                myTransform.position = new Vector3(-value * .5f * myTransform.localScale.x + _offset.x, myPos.y, myPos.z);
             }
         }
 
@@ -46,7 +48,7 @@ namespace Blockstacker.Gameplay
                 _height = value;
                 var myTransform = transform;
                 var myPos = myTransform.position;
-                myTransform.position = new Vector3(myPos.x, -value * .5f * myTransform.localScale.y, myPos.z);
+                myTransform.position = new Vector3(myPos.x, -value * .5f * myTransform.localScale.y + _offset.y, myPos.z);
             }
         }
 
@@ -54,21 +56,27 @@ namespace Blockstacker.Gameplay
         private Vector3 Up => transform.up * transform.localScale.y;
         private Vector3 Right => transform.right * transform.localScale.x;
 
+        private Vector2 CurrentOffset => new(
+            transform.position.x + Width * .5f * transform.localScale.x,
+            transform.position.y + Height * .5f * transform.localScale.y
+        );
+        
         private Vector3 _dragStartPosition;
         private Vector3 _dragStartTransformPosition;
+        private Vector3 _offset;
         private uint _width;
         private uint _height;
 
-        private void Awake()
-        {
-            _backgroundRenderer.color = _backgroundRenderer.color.WithAlpha(AppSettings.Gameplay.BoardVisibility);
-        }
 
         private void Start()
         {
+            _offset = AppSettings.Gameplay.BoardOffset;
+            transform.position += _offset;
+            
             ChangeBoardZoom(AppSettings.Gameplay.BoardZoom);
+            ChangeVisibility(AppSettings.Gameplay.BoardVisibility);
 
-            BackgroundVisibilityApplier.VisibilityChanged += ChangeVisibility;
+            BoardVisibilityApplier.VisibilityChanged += ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged += ChangeBoardZoom;
         }
 
@@ -91,15 +99,18 @@ namespace Blockstacker.Gameplay
 
         private void HandleBoardZooming()
         {
+            const float ONE_SCROLL_UNIT = 1 / 120f;
+            
             if (!AppSettings.Gameplay.CtrlScrollToChangeBoardZoom) return;
 
             if (!Keyboard.current.ctrlKey.isPressed) return;
 
-            var mouseScroll = Mouse.current.scroll.ReadValue().y;
-            var newScale = transform.localScale.x + mouseScroll / _boardZoomFactor;
+            var mouseScroll = Mouse.current.scroll.ReadValue().y * ONE_SCROLL_UNIT;
+            var newScale = transform.localScale.x + mouseScroll * _boardZoomFactor;
             var newZoom = newScale < _minimumBoardScale ? _minimumBoardScale : newScale;
             ChangeBoardZoom(newZoom);
             AppSettings.Gameplay.BoardZoom = newZoom;
+            AppSettings.Gameplay.BoardOffset = CurrentOffset;
         }
 
         private void HandleBoardDrag()
@@ -117,11 +128,14 @@ namespace Blockstacker.Gameplay
                 var currentPosition = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
                 var positionDifference = currentPosition - _dragStartPosition;
                 transform.position = _dragStartTransformPosition + positionDifference;
+                AppSettings.Gameplay.BoardOffset = CurrentOffset;
+                _offset = CurrentOffset;
             }
         }
 
         private void ChangeBoardZoom(float zoom)
         {
+            if (Mathf.Abs(zoom - transform.localScale.x) < .01f) return;
             var myTransform = transform;
             myTransform.localScale = new Vector3(zoom, zoom, 1);
             myTransform.position = new Vector3(-zoom * .5f * Width, -zoom * .5f * Height, 1);

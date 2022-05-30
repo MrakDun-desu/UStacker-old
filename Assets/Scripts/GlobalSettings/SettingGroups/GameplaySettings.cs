@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Groups
 {
@@ -16,5 +17,6 @@ namespace Blockstacker.GlobalSettings.Groups
         public bool MatrixBounce = true;
         public bool ShowActionText = true;
         public bool ShowNotFocusedWarning = true;
+        public Vector2 BoardOffset = Vector2.zero;
     }
 }

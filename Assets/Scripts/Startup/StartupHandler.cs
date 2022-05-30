@@ -13,10 +13,16 @@ namespace Blockstacker.Startup
         public event Action SettingChanged;
         private void Start()
         {
+            AddSceneChangeMethods();
             AppSettings.TryLoad();
-            SceneManager.sceneLoaded += (_, _) => _actionAsset.LoadBindingOverridesFromJson(AppSettings.Rebinds);
             SettingChanged?.Invoke();
             SceneManager.LoadScene("Scene_Menu");
+        }
+
+        private void AddSceneChangeMethods()
+        {
+            SceneManager.sceneLoaded += (_, _) => _actionAsset.LoadBindingOverridesFromJson(AppSettings.Rebinds);
+            SceneManager.sceneLoaded += (_, _) => AppSettings.TrySave();
         }
     }
 }
