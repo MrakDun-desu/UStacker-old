@@ -7,11 +7,20 @@ namespace Blockstacker.GlobalSettings.Appliers
     {
         protected ISettingChanger _settingChanger;
 
-        protected virtual void Awake() => _settingChanger = GetComponent<ISettingChanger>();
+        protected virtual void Awake()
+        {
+            _settingChanger = GetComponent<ISettingChanger>();
+        }
 
-        protected void OnEnable() => _settingChanger.SettingChanged += OnSettingChanged;
+        protected void OnEnable()
+        {
+            _settingChanger.SettingChanged += OnSettingChanged;
+        }
 
-        protected void OnDisable() => _settingChanger.SettingChanged -= OnSettingChanged;
+        protected void OnDisable()
+        {
+            _settingChanger.SettingChanged -= OnSettingChanged;
+        }
 
         public abstract void OnSettingChanged();
     }

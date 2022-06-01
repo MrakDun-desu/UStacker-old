@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Blockstacker.Gameplay;
 using NLua;
 using NLua.Exceptions;
@@ -15,11 +14,11 @@ namespace Gameplay.Stats
         [SerializeField] private GameTimer _timer;
         [SerializeField] private GameManager _manager;
         [TextArea(10, 50)] [SerializeField] private string _statCounterScript;
-        [Range(0, 5)][SerializeField] private float _updateInterval = .1f;
+        [Range(0, 5)] [SerializeField] private float _updateInterval = .1f;
 
         private Lua _luaState;
         private Coroutine _updateStatCor;
-        
+
         private void Start()
         {
             _luaState = new Lua();
@@ -56,15 +55,13 @@ namespace Gameplay.Stats
                 {
                     displayString = ex.Message;
                 }
-                
+
                 if (string.IsNullOrEmpty(displayString))
                     displayString = "Script not returning string";
 
                 _displayText.text = displayString;
                 yield return new WaitForSeconds(_updateInterval);
             }
-
         }
-
     }
 }

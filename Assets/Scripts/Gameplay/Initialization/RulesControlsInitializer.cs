@@ -8,13 +8,9 @@ namespace Blockstacker.Gameplay.Initialization
 {
     public class RulesControlsInitializer : InitializerBase
     {
-        private readonly RotationSystem _srsRotationSystem;
-        private readonly RotationSystem _srsPlusRotationSystem;
         private readonly InputProcessor _inputProcessor;
-
-        private static string KickSystemsPath => Path.Combine(
-            Application.persistentDataPath, "ruleCustomization/rotationSystems"
-        );
+        private readonly RotationSystem _srsPlusRotationSystem;
+        private readonly RotationSystem _srsRotationSystem;
 
         public RulesControlsInitializer(
             StringBuilder errorBuilder,
@@ -29,18 +25,24 @@ namespace Blockstacker.Gameplay.Initialization
             _inputProcessor = inputProcessor;
         }
 
+        private static string KickSystemsPath => Path.Combine(
+            Application.persistentDataPath, "ruleCustomization/rotationSystems"
+        );
+
         public override void Execute()
         {
             RotationSystem customSystem = new();
             if (_gameSettings.Rules.Controls.RotationSystem ==
-                RotationSystemType.Custom) {
-
+                RotationSystemType.Custom)
+            {
                 var kickTablePath = Path.Combine(KickSystemsPath,
-                 _gameSettings.Rules.General.CustomRandomizerName);
-                if (!File.Exists(kickTablePath)) {
+                    _gameSettings.Rules.General.CustomRandomizerName);
+                if (!File.Exists(kickTablePath))
+                {
                     _errorBuilder.AppendLine("Custom rotation system not found.");
                     return;
                 }
+
                 JsonUtility.FromJsonOverwrite(File.ReadAllText(kickTablePath), customSystem);
             }
 
@@ -55,7 +57,6 @@ namespace Blockstacker.Gameplay.Initialization
                 };
 
             _inputProcessor.KickHandler = new KickHandler(_gameSettings.Rules.Controls.ActiveRotationSystem);
-
         }
     }
 }

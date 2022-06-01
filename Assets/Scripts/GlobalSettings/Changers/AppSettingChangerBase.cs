@@ -11,9 +11,6 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private TMP_Text _title;
         [SerializeField] private bool _autoformatName = true;
 
-        public event Action SettingChanged;
-        public static event Action<string> SettingChangedWithName;
-
         protected void OnValidate()
         {
             if (_title == null) return;
@@ -23,6 +20,9 @@ namespace Blockstacker.GlobalSettings.Changers
                 _title.text = _controlPath[^1].FormatCamelCase();
         }
 
+        public event Action SettingChanged;
+        public static event Action<string> SettingChangedWithName;
+
         protected void OnSettingChanged()
         {
             SettingChanged?.Invoke();
@@ -31,7 +31,8 @@ namespace Blockstacker.GlobalSettings.Changers
 
         public void SetValue(T value)
         {
-            if (AppSettings.TrySetValue(value, _controlPath)) {
+            if (AppSettings.TrySetValue(value, _controlPath))
+            {
                 SettingChanged?.Invoke();
                 SettingChangedWithName?.Invoke(string.Join("/", _controlPath));
             }

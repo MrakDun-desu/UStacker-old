@@ -10,15 +10,14 @@ namespace Blockstacker.Gameplay.Initialization
 {
     public class RulesGeneralInitializer : InitializerBase
     {
-        private static string RandomizersPath => Path.Combine(Application.persistentDataPath, "ruleCustomization/randomizers");
-        private readonly int _pieceCount;
-        private readonly PieceSpawner _spawner;
         private readonly Piece[] _availablePieces;
         private readonly Board _board;
-        private readonly PieceContainer _pieceContainerPrefab;
         private readonly InputProcessor _inputProcessor;
         private readonly bool _isRestarting;
-        
+        private readonly PieceContainer _pieceContainerPrefab;
+        private readonly int _pieceCount;
+        private readonly PieceSpawner _spawner;
+
         public RulesGeneralInitializer(
             StringBuilder problemBuilder,
             GameSettingsSO gameSettings,
@@ -39,6 +38,9 @@ namespace Blockstacker.Gameplay.Initialization
             _isRestarting = isRestarting;
         }
 
+        private static string RandomizersPath =>
+            Path.Combine(Application.persistentDataPath, "ruleCustomization/randomizers");
+
         public override void Execute()
         {
             InitializeSeed();
@@ -49,20 +51,25 @@ namespace Blockstacker.Gameplay.Initialization
 
         private void InitializeSeed()
         {
-            var newSeed = _gameSettings.Rules.General.UseRandomSeed ? 
-                Random.Range(int.MinValue, int.MaxValue) : _gameSettings.Rules.General.SpecificSeed;
+            var newSeed = _gameSettings.Rules.General.UseRandomSeed
+                ? Random.Range(int.MinValue, int.MaxValue)
+                : _gameSettings.Rules.General.SpecificSeed;
             _gameSettings.Rules.General.ActiveSeed = newSeed;
             Random.InitState(newSeed);
         }
 
         private void InitializeRandomizer()
         {
-            if (_gameSettings.Rules.General.RandomizerType == RandomizerType.Custom) {
-                var randomizerScriptPath = Path.Combine(RandomizersPath, _gameSettings.Rules.General.CustomRandomizerName);
-                if (!File.Exists(randomizerScriptPath)) {
+            if (_gameSettings.Rules.General.RandomizerType == RandomizerType.Custom)
+            {
+                var randomizerScriptPath =
+                    Path.Combine(RandomizersPath, _gameSettings.Rules.General.CustomRandomizerName);
+                if (!File.Exists(randomizerScriptPath))
+                {
                     _errorBuilder.AppendLine("Custom randomizer script not found.");
                     return;
                 }
+
                 _gameSettings.Rules.General.CustomRandomizerScript = File.ReadAllText(randomizerScriptPath);
             }
 
@@ -80,10 +87,11 @@ namespace Blockstacker.Gameplay.Initialization
                     _gameSettings.Rules.General.CustomRandomizerScript,
                     _gameSettings.Rules.General.ActiveSeed,
                     out isValid),
-                _ => new CountPerBagRandomizer(_pieceCount),
+                _ => new CountPerBagRandomizer(_pieceCount)
             };
 
-            if (!isValid) {
+            if (!isValid)
+            {
                 _errorBuilder.AppendLine("Custom random bag script is not valid.");
                 return;
             }
@@ -97,17 +105,17 @@ namespace Blockstacker.Gameplay.Initialization
             var pieceHolder = Object.Instantiate(_pieceContainerPrefab, _board.transform);
             pieceHolder.transform.localPosition = new Vector3(
                 -PieceContainer.Width,
-                (int)_board.Height - PieceContainer.Height
-                );
+                (int) _board.Height - PieceContainer.Height
+            );
 
             _inputProcessor.PieceHolder = pieceHolder;
-            
+
             for (var i = 0; i < _gameSettings.Rules.General.NextPieceCount; i++)
             {
                 var pieceContainer = Object.Instantiate(_pieceContainerPrefab, _board.transform);
                 pieceContainer.transform.localPosition = new Vector3(
-                    (int)_board.Width,
-                    (int)_board.Height - PieceContainer.Height * (i + 1)
+                    (int) _board.Width,
+                    (int) _board.Height - PieceContainer.Height * (i + 1)
                 );
                 _spawner.PreviewContainers.Add(pieceContainer);
             }

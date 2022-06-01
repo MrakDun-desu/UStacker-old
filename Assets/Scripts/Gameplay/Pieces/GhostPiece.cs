@@ -16,9 +16,10 @@ namespace Blockstacker.Gameplay.Pieces
         public List<Transform> Blocks = new();
         [SerializeField] private Board _board;
         [SerializeField] private GameSettingsSO _settings;
-        
-        [Header("Piece type colors")]
-        [SerializeField] private Color IPieceColor = CreateColor.From255Range(3, 250, 252);
+
+        [Header("Piece type colors")] [SerializeField]
+        private Color IPieceColor = CreateColor.From255Range(3, 250, 252);
+
         [SerializeField] private Color TPieceColor = CreateColor.From255Range(159, 3, 252);
         [SerializeField] private Color OPieceColor = CreateColor.From255Range(252, 254, 3);
         [SerializeField] private Color LPieceColor = CreateColor.From255Range(252, 149, 3);
@@ -42,10 +43,7 @@ namespace Blockstacker.Gameplay.Pieces
             ColorGhostPieceApplier.ColorGhostPieceChanged += ChangeColoring;
 
             if (_settings.Rules.Controls.ShowGhostPiece) return;
-            foreach (var block in Blocks)
-            {
-                block.gameObject.SetActive(false);
-            }
+            foreach (var block in Blocks) block.gameObject.SetActive(false);
         }
 
         private void OnDestroy()
@@ -58,19 +56,15 @@ namespace Blockstacker.Gameplay.Pieces
         {
             if (!colorThis) return;
             foreach (var spriteRenderer in _blockRenderers)
-            {
                 spriteRenderer.color = spriteRenderer.color.WithValue(Color.white);
-            }
         }
 
         private void ChangeRendererAlphas(float newAlpha)
         {
             foreach (var spriteRenderer in _blockRenderers)
-            {
                 spriteRenderer.color = spriteRenderer.color.WithAlpha(newAlpha);
-            } 
         }
-        
+
         private void ColorGhostPiece(PieceType pieceType)
         {
             var newColor = pieceType switch
@@ -86,15 +80,13 @@ namespace Blockstacker.Gameplay.Pieces
             };
 
             foreach (var spriteRenderer in _blockRenderers)
-            {
                 spriteRenderer.color = spriteRenderer.color.WithValue(newColor);
-            }
         }
-        
+
         public void SetActivePiece(Piece value)
         {
             if (!_settings.Rules.Controls.ShowGhostPiece) return;
-            
+
             _activePiece = value;
 
             if (!AppSettings.Gameplay.ColorGhostPiece) return;
@@ -105,16 +97,10 @@ namespace Blockstacker.Gameplay.Pieces
         {
             if (!_settings.Rules.Controls.ShowGhostPiece) return;
             transform.position = _activePiece.transform.position;
-            for (var i = 0; i < Blocks.Count; i++)
-            {
-                Blocks[i].position = _activePiece.Blocks[i].transform.position;
-            }
+            for (var i = 0; i < Blocks.Count; i++) Blocks[i].position = _activePiece.Blocks[i].transform.position;
 
             var moveVector = Vector2Int.down;
-            while (_board.CanPlace(Blocks, moveVector))
-            {
-                moveVector += Vector2Int.down;
-            }
+            while (_board.CanPlace(Blocks, moveVector)) moveVector += Vector2Int.down;
             moveVector -= Vector2Int.down;
 
             var pieceTransform = transform;

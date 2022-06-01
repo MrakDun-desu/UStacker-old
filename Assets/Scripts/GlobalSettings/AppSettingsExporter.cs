@@ -20,7 +20,8 @@ namespace Blockstacker.GlobalSettings
             var path = _pathField.text;
             _errorSignal.SetActive(false);
             _successSignal.SetActive(false);
-            if (AppSettings.TrySave(path)) {
+            if (AppSettings.TrySave(path))
+            {
                 _successSignal.SetActive(true);
                 _successText.text = "Successfully saved!";
                 return;
@@ -35,7 +36,8 @@ namespace Blockstacker.GlobalSettings
             var path = _pathField.text;
             _errorSignal.SetActive(false);
             _successSignal.SetActive(false);
-            if (AppSettings.TryLoad(path)) {
+            if (AppSettings.TryLoad(path))
+            {
                 _successSignal.SetActive(true);
                 _successText.text = "Successfully loaded settings!";
                 SettingChanged?.Invoke();
@@ -45,6 +47,5 @@ namespace Blockstacker.GlobalSettings
             _errorSignal.SetActive(true);
             _errorText.text = "Couldn't find specified file!";
         }
-
     }
 }

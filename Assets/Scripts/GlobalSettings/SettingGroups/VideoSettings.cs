@@ -11,6 +11,6 @@ namespace Blockstacker.GlobalSettings.Groups
         public int RefreshRate;
         public float BackgroundVisibility = 1;
         public float ParticleCount = 1;
-        public bool UseVsync = false;
+        public bool UseVsync;
     }
 }

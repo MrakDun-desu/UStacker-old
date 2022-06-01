@@ -18,16 +18,13 @@ namespace Blockstacker.GlobalSettings.Changers
             "Placement",
             "Rotation"
         };
-        
+
         private new void OnValidate()
         {
             base.OnValidate();
 
-            for (var i = 0; i < ShownValues.Length; i++)
-            {
-                _optionNames[i].text = ShownValues[i];
-            }
-            
+            for (var i = 0; i < ShownValues.Length; i++) _optionNames[i].text = ShownValues[i];
+
             _placementToggle.SetIsOnWithoutNotify(AppSettings.Handling.DelayDasOn.HasFlag(DelayDasOn.Placement));
             _rotationToggle.SetIsOnWithoutNotify(AppSettings.Handling.DelayDasOn.HasFlag(DelayDasOn.Rotation));
         }

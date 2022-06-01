@@ -15,9 +15,7 @@ namespace Blockstacker.Gameplay.Initialization
         public override void Execute()
         {
             if (!_gameSettings.Rules.Controls.OverrideHandling)
-            {
                 _gameSettings.Rules.Controls.Handling = AppSettings.Handling;
-            }
         }
     }
 }

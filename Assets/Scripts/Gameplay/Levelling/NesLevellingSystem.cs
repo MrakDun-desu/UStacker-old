@@ -5,14 +5,11 @@ namespace Blockstacker.Gameplay.Levelling
 {
     public class NesLevellingSystem
     {
-        private uint _currentLevel;
-        private uint _linesToNextLevel;
-        private readonly MediatorSO _mediator;
-
         // for simplicity - calculation is gravity multiplier divided by frames per row
         // multiplier = nes tetris framerate / reference frame rate = 60.0988 / 60
         // frames per row - taken from https://tetris.wiki/Tetris_(NES,_Nintendo)
-        private static readonly double[] _levelGravities = {
+        private static readonly double[] _levelGravities =
+        {
             1.0016466666666666 / 48,
             1.0016466666666666 / 43,
             1.0016466666666666 / 38,
@@ -47,7 +44,8 @@ namespace Blockstacker.Gameplay.Levelling
 
         // used only with the first set level, taken from https://listfist.com/list-of-tetris-levels-by-lines-nes
         // if level is more than 19, 10 is used
-        private static readonly uint[] _linesToLevelIncrease = {
+        private static readonly uint[] _linesToLevelIncrease =
+        {
             10,
             20,
             30,
@@ -70,9 +68,13 @@ namespace Blockstacker.Gameplay.Levelling
             140
         };
 
+        private readonly MediatorSO _mediator;
+        private uint _currentLevel;
+        private uint _linesToNextLevel;
+
         public NesLevellingSystem(uint startingLevel, MediatorSO mediator)
         {
-            _currentLevel = (uint)Mathf.Min(startingLevel, 29);
+            _currentLevel = (uint) Mathf.Min(startingLevel, 29);
             var linesToNextIndex = startingLevel > 19 ? 1 : startingLevel;
             _linesToNextLevel = _linesToLevelIncrease[linesToNextIndex];
             _mediator = mediator;
@@ -80,9 +82,9 @@ namespace Blockstacker.Gameplay.Levelling
             _mediator.Register<PiecePlacedMessage>(HandlePiecePlaced);
             _mediator.Register<LinesDroppedMessage>(HandleLinesDropped);
 
-            var newGravity = new GravityChangedMessage { Gravity = CalculateGravity() };
-            var newLevel = new LevelChangedMessage { Level = _currentLevel };
-            var newLockDelay = new LockDelayChangedMessage { LockDelay = 0 };
+            var newGravity = new GravityChangedMessage {Gravity = CalculateGravity()};
+            var newLevel = new LevelChangedMessage {Level = _currentLevel};
+            var newLockDelay = new LockDelayChangedMessage {LockDelay = 0};
             _mediator.Send(newGravity);
             _mediator.Send(newLevel);
             _mediator.Send(newLockDelay);
@@ -100,31 +102,31 @@ namespace Blockstacker.Gameplay.Levelling
             };
             scoreAddition *= _currentLevel + 1;
             _linesToNextLevel -= piecePlaced.LinesCleared;
-            if (_linesToNextLevel <= 0) {
+            if (_linesToNextLevel <= 0)
+            {
                 _linesToNextLevel += 10;
                 _currentLevel += 1;
 
-                var newGravity = new GravityChangedMessage { Gravity = CalculateGravity() };
-                var newLevel = new LevelChangedMessage { Level = _currentLevel };
+                var newGravity = new GravityChangedMessage {Gravity = CalculateGravity()};
+                var newLevel = new LevelChangedMessage {Level = _currentLevel};
                 _mediator.Send(newGravity);
                 _mediator.Send(newLevel);
             }
 
-            var newScore = new ScoreChangedMessage { Score = scoreAddition };
+            var newScore = new ScoreChangedMessage {Score = scoreAddition};
             _mediator.Send(newScore);
         }
 
         private void HandleLinesDropped(LinesDroppedMessage linesDropped)
         {
-            var newScore = new ScoreChangedMessage { Score = linesDropped.Count };
+            var newScore = new ScoreChangedMessage {Score = linesDropped.Count};
             _mediator.Send(newScore);
         }
 
         private float CalculateGravity()
         {
-            var effectiveLevel = Mathf.Min(29, (int)_currentLevel);
-            return (float)_levelGravities[effectiveLevel];
+            var effectiveLevel = Mathf.Min(29, (int) _currentLevel);
+            return (float) _levelGravities[effectiveLevel];
         }
-
     }
 }

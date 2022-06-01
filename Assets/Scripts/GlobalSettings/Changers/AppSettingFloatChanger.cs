@@ -8,16 +8,20 @@ namespace Blockstacker.GlobalSettings.Changers
 {
     public class AppSettingFloatChanger : AppSettingChangerBase<float>
     {
-        [Space]
-        [SerializeField] private TMP_InputField _valueField;
+        [Space] [SerializeField] private TMP_InputField _valueField;
+
         [SerializeField] private BetterSlider _slider;
-        [Header("Slider settings")]
-        [SerializeField] private float _range = 100;
+
+        [Header("Slider settings")] [SerializeField]
+        private float _range = 100;
+
         [SerializeField] private float _minValue;
         [SerializeField] private float _maxValue = 100;
         [SerializeField] private float _multiplier = 1;
-        [Header("Other settings")]
-        [SerializeField] private bool _clampValue = true;
+
+        [Header("Other settings")] [SerializeField]
+        private bool _clampValue = true;
+
         [SerializeField] private bool _maxIsInfinity;
         [SerializeField] private string _infinityString = "INF";
         [SerializeField] private UnityEvent<float> _valueChanged;
@@ -51,10 +55,12 @@ namespace Blockstacker.GlobalSettings.Changers
             if (string.IsNullOrEmpty(value)) value = "0";
             var newValue = float.Parse(value);
             newValue /= _multiplier;
-            if (_clampValue) {
+            if (_clampValue)
+            {
                 newValue = Mathf.Clamp(newValue, _minValue, _maxValue);
                 _valueField.SetTextWithoutNotify(FormatValue(newValue));
             }
+
             _slider.SetRealValue(newValue);
             SetValue(newValue);
             _valueChanged.Invoke(newValue);
@@ -64,17 +70,19 @@ namespace Blockstacker.GlobalSettings.Changers
         public void OnSliderMoved()
         {
             var value = _slider.GetRealValue();
-            if (Mathf.Abs(value - _maxValue) < .1f && _maxIsInfinity) {
+            if (Mathf.Abs(value - _maxValue) < .1f && _maxIsInfinity)
+            {
                 value = float.PositiveInfinity;
                 _valueField.SetTextWithoutNotify(_infinityString);
             }
-            else {
+            else
+            {
                 _valueField.SetTextWithoutNotify(FormatValue(value));
             }
+
             SetValue(value);
             _valueChanged.Invoke(value);
             OnSettingChanged();
         }
-
     }
 }

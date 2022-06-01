@@ -1,16 +1,12 @@
+using System;
 using NLua;
 
 namespace Blockstacker.Gameplay.Levelling
 {
     public class CustomLevellingSystem
     {
-        private Lua _luaState = new();
         private string _customScript;
-
-        private bool ValidateScript()
-        {
-            throw new System.NotImplementedException();
-        }
+        private Lua _luaState = new();
 
         public CustomLevellingSystem(string levellingSystemScript, out bool isValid)
         {
@@ -18,9 +14,14 @@ namespace Blockstacker.Gameplay.Levelling
             isValid = ValidateScript();
         }
 
+        private bool ValidateScript()
+        {
+            throw new NotImplementedException();
+        }
+
         private void DataUpdated()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

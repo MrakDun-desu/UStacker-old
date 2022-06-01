@@ -9,8 +9,17 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private float _minValue;
         [SerializeField] private float _maxValue = 100;
 
-        public float MinValue { set => _minValue = value; }
-        public float MaxValue { set => _maxValue = value; }
+        private Slider _slider;
+
+        public float MinValue
+        {
+            set => _minValue = value;
+        }
+
+        public float MaxValue
+        {
+            set => _maxValue = value;
+        }
 
         public float Range
         {
@@ -24,9 +33,8 @@ namespace Blockstacker.GlobalSettings.Changers
                 if (_slider != null) _slider.maxValue = value;
             }
         }
-        private float RealRange => _maxValue - _minValue;
 
-        private Slider _slider;
+        private float RealRange => _maxValue - _minValue;
 
         private void Awake()
         {

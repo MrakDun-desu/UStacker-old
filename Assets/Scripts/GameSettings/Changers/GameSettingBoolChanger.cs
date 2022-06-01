@@ -5,8 +5,7 @@ namespace Blockstacker.GameSettings.Changers
 {
     public class GameSettingBoolChanger : GameSettingChangerBase<bool>
     {
-        [Space]
-        [SerializeField] private Toggle _toggle;
+        [Space] [SerializeField] private Toggle _toggle;
 
         private void Start()
         {

@@ -4,6 +4,9 @@ namespace Blockstacker.GlobalSettings
 {
     public class SettingSaver : MonoBehaviour
     {
-        public void Save() => AppSettings.TrySave();
+        public void Save()
+        {
+            AppSettings.TrySave();
+        }
     }
 }

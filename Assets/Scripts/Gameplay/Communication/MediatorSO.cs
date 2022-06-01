@@ -13,9 +13,7 @@ namespace Blockstacker.Gameplay.Communication
             where TMessage : Message
         {
             var key = typeof(TMessage);
-            if (!_registeredActions.ContainsKey(key)) {
-                _registeredActions[key] = new();
-            }
+            if (!_registeredActions.ContainsKey(key)) _registeredActions[key] = new List<Delegate>();
             _registeredActions[key].Add(action);
         }
 
@@ -33,12 +31,11 @@ namespace Blockstacker.Gameplay.Communication
         {
             if (!_registeredActions.TryGetValue(message.GetType(), out var actions)) return;
 
-            foreach (var action in actions) {
-                action?.DynamicInvoke(message);
-            }
+            foreach (var action in actions) action?.DynamicInvoke(message);
         }
-        
-        public void Clear() {
+
+        public void Clear()
+        {
             _registeredActions.Clear();
         }
     }

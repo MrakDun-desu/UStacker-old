@@ -17,31 +17,30 @@ namespace Blockstacker.GlobalSettings.Appliers
 
         public override void OnSettingChanged()
         {
-
-            if (AppSettings.Sound.MuteWhenOutOfFocus) {
+            if (AppSettings.Sound.MuteWhenOutOfFocus)
                 Application.focusChanged += Muter.MuteAudio;
-            }
-            else {
+            else
                 Application.focusChanged -= Muter.MuteAudio;
-            }
         }
 
         private static class Muter
         {
             public static AudioMixer mixer;
             public static string fieldName;
+
             public static void MuteAudio(bool hasFocus)
             {
-                if (hasFocus) {
+                if (hasFocus)
+                {
                     var volume = AppSettings.Sound.MasterVolume;
                     if (volume <= 0) volume = 0.0001f;
                     mixer.SetFloat(fieldName, Mathf.Log10(volume) * 20);
                 }
-                else {
+                else
+                {
                     mixer.SetFloat(fieldName, -80f);
                 }
             }
         }
-
     }
 }

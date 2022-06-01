@@ -7,8 +7,8 @@ namespace Blockstacker.Common.Extensions
         public static bool IsEqualTo(this Resolution res1, Resolution res2)
         {
             return res1.width == res2.width &&
-                res1.height == res2.height &&
-                res1.refreshRate == res2.refreshRate;
+                   res1.height == res2.height &&
+                   res1.refreshRate == res2.refreshRate;
         }
     }
 }

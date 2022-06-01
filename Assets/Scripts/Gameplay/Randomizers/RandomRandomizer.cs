@@ -1,8 +1,11 @@
+using UnityEngine;
+
 namespace Blockstacker.Gameplay.Randomizers
 {
     public class RandomRandomizer : IRandomizer
     {
         private readonly int _range;
+
         public RandomRandomizer(int range)
         {
             _range = range;
@@ -10,7 +13,7 @@ namespace Blockstacker.Gameplay.Randomizers
 
         public int GetNextPiece()
         {
-            var nextValue = UnityEngine.Random.Range(0, _range);
+            var nextValue = Random.Range(0, _range);
             return nextValue;
         }
     }

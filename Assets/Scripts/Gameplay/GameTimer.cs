@@ -7,9 +7,9 @@ namespace Blockstacker.Gameplay
     public class GameTimer : MonoBehaviour
     {
         private readonly Stopwatch _stopwatch = new();
-        private TimeSpan _startOffset = TimeSpan.Zero;
 
         private double _scale = 1;
+        private TimeSpan _startOffset = TimeSpan.Zero;
 
         public double Scale
         {
@@ -21,12 +21,13 @@ namespace Blockstacker.Gameplay
                     _stopwatch.Stop();
                     return;
                 }
+
                 _startOffset = _stopwatch.Elapsed * _scale + _startOffset;
                 if (_stopwatch.IsRunning)
                     _stopwatch.Restart();
                 else
                     _stopwatch.Reset();
-                
+
                 _scale = value;
             }
         }
@@ -45,7 +46,7 @@ namespace Blockstacker.Gameplay
         }
 
         public TimeSpan CurrentTimeAsSpan => _stopwatch.Elapsed * _scale + _startOffset;
-        
+
         public void StartTiming()
         {
             _stopwatch.Start();
@@ -66,6 +67,5 @@ namespace Blockstacker.Gameplay
         {
             _stopwatch.Reset();
         }
-
     }
 }

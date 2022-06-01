@@ -6,8 +6,8 @@ namespace Blockstacker.GameSettings.Changers
 {
     public class GameSettingDoubleChanger : GameSettingChangerWithField<double>
     {
-        [Space]
-        [SerializeField] private bool _clampValue;
+        [Space] [SerializeField] private bool _clampValue;
+
         [SerializeField] private float _maxValue;
         [SerializeField] private float _minValue;
 

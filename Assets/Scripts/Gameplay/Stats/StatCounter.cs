@@ -7,8 +7,8 @@ namespace Gameplay.Stats
     public class StatCounter : MonoBehaviour
     {
         [SerializeField] private MediatorSO _mediator;
-        public readonly StatContainer Stats = new ();
-        
+        public readonly StatContainer Stats = new();
+
         private void Awake()
         {
             _mediator.Register<InputActionMessage>(OnInputAction);
@@ -17,10 +17,7 @@ namespace Gameplay.Stats
 
         private void OnInputAction(InputActionMessage message)
         {
-            if (message.KeyActionType == KeyActionType.KeyDown)
-            {
-                Stats.KeysPressed++;
-            }
+            if (message.KeyActionType == KeyActionType.KeyDown) Stats.KeysPressed++;
         }
 
         private void OnPiecePlaced(PiecePlacedMessage message)
@@ -49,6 +46,5 @@ namespace Gameplay.Stats
         {
             Stats.Reset();
         }
-        
     }
 }

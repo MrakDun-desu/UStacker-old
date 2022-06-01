@@ -10,7 +10,7 @@ namespace Blockstacker.Startup
     public class StartupHandler : MonoBehaviour, ISettingChanger
     {
         [SerializeField] private InputActionAsset _actionAsset;
-        public event Action SettingChanged;
+
         private void Start()
         {
             AddSceneChangeMethods();
@@ -18,6 +18,8 @@ namespace Blockstacker.Startup
             SettingChanged?.Invoke();
             SceneManager.LoadScene("Scene_Menu");
         }
+
+        public event Action SettingChanged;
 
         private void AddSceneChangeMethods()
         {

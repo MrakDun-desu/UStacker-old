@@ -17,7 +17,7 @@ namespace Gameplay.Stats
         [TextArea(10, 50)] [SerializeField] private string _statCounterScript;
 
         private Lua _luaState;
-        
+
         private void OnEnable()
         {
             _luaState = new Lua();
@@ -32,7 +32,7 @@ namespace Gameplay.Stats
                 _ => throw new ArgumentOutOfRangeException()
             };
             _luaState["gameEndTime"] = _manager.Replay.GameLength;
-            
+
             string displayString;
             try
             {
@@ -43,10 +43,7 @@ namespace Gameplay.Stats
                 displayString = $"Exception: {ex.Message}";
             }
 
-            if (string.IsNullOrEmpty(displayString))
-            {
-                displayString = "Error: Script not returning string";
-            }
+            if (string.IsNullOrEmpty(displayString)) displayString = "Error: Script not returning string";
 
             _displayText.text = displayString;
         }

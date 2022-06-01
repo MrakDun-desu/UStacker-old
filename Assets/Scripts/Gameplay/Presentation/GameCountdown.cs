@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -14,9 +12,9 @@ namespace Blockstacker.Gameplay.Presentation
         [SerializeField] private string _lastMessage = "Start!";
         [SerializeField] private GameManager _manager;
         [SerializeField] private UnityEvent CountdownFinished;
+        private bool _active;
 
         private TMP_Text _countdownText;
-        private bool _active;
         private uint _currentCount;
         private float _nextInterval;
 
@@ -27,27 +25,6 @@ namespace Blockstacker.Gameplay.Presentation
             _manager.GamePausedEvent += StopCountdown;
             _manager.GameResumedEvent += RestartCountdown;
             _manager.GameRestartedEvent += RestartCountdown;
-        }
-
-        private void StopCountdown()
-        {
-            _active = false;
-        }
-
-        private void RestartCountdown()
-        {
-            if (_currentCount == 0) return;
-            StopCountdown();
-            StartCountdown();
-        }
-
-        public void StartCountdown()
-        {
-            _countdownText.gameObject.SetActive(true);
-            _active = true;
-            _nextInterval = Time.realtimeSinceStartup + CountdownInterval;
-            _currentCount = CountdownCount + 1;
-            _countdownText.text = CountdownCount.ToString();
         }
 
         private void Update()
@@ -73,6 +50,27 @@ namespace Blockstacker.Gameplay.Presentation
                         break;
                 }
             }
+        }
+
+        private void StopCountdown()
+        {
+            _active = false;
+        }
+
+        private void RestartCountdown()
+        {
+            if (_currentCount == 0) return;
+            StopCountdown();
+            StartCountdown();
+        }
+
+        public void StartCountdown()
+        {
+            _countdownText.gameObject.SetActive(true);
+            _active = true;
+            _nextInterval = Time.realtimeSinceStartup + CountdownInterval;
+            _currentCount = CountdownCount + 1;
+            _countdownText.text = CountdownCount.ToString();
         }
     }
 }

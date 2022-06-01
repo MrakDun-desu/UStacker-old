@@ -17,7 +17,7 @@ namespace Blockstacker.GameSettings.Changers
             if (_title == null) return;
             if (_gameSettingsSO == null)
                 _title.text = "Choose a game settings SO!";
-            
+
             if (!_gameSettingsSO.SettingExists<T>(_controlPath))
                 _title.text = "Setting not found!";
             else if (_autoformatName)

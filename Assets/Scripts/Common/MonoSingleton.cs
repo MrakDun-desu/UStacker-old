@@ -9,13 +9,13 @@ namespace Blockstacker.Common
         protected virtual void Awake()
         {
             transform.parent = null;
-            if (_instance == null) {
+            if (_instance == null)
+            {
                 _instance = this;
                 DontDestroyOnLoad(gameObject);
             }
-            if (_instance != this) {
-                Destroy(gameObject);
-            }
+
+            if (_instance != this) Destroy(gameObject);
         }
     }
 }

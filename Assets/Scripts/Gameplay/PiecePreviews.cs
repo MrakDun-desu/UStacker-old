@@ -14,7 +14,7 @@ namespace Blockstacker.Gameplay
             _containers = containers;
             _containers.Sort((x, y) => x.transform.position.y > y.transform.position.y ? 1 : -1);
         }
-        
+
         public Piece AddPiece(Piece newPiece)
         {
             if (_containers.Count > 0)
@@ -24,5 +24,4 @@ namespace Blockstacker.Gameplay
             return temp;
         }
     }
-
 }

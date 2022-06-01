@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Presentation;
 using Blockstacker.GameSettings;
@@ -37,6 +36,20 @@ namespace Blockstacker.Gameplay.Initialization
         public UnityEvent GameReinitialized;
         public UnityEvent<string> GameFailedToInitialize;
 
+        private void Start()
+        {
+            _loadingOverlay.SetActive(true);
+            StringBuilder errorBuilder = new();
+            if (TryInitialize(errorBuilder))
+            {
+                GameInitialized.Invoke();
+                _loadingOverlay.SetActive(false);
+                return;
+            }
+
+            GameFailedToInitialize.Invoke("Game failed to initialize:\n" + errorBuilder);
+        }
+
         public void Restart()
         {
             _loadingOverlay.SetActive(true);
@@ -50,20 +63,6 @@ namespace Blockstacker.Gameplay.Initialization
             }
 
             GameFailedToInitialize.Invoke("Game failed to initialize: \n" + errorBuilder);
-        }
-
-        private void Start()
-        {
-            _loadingOverlay.SetActive(true);
-            StringBuilder errorBuilder = new();
-            if (TryInitialize(errorBuilder))
-            {
-                GameInitialized.Invoke();
-                _loadingOverlay.SetActive(false);
-                return;
-            }
-
-            GameFailedToInitialize.Invoke("Game failed to initialize:\n" + errorBuilder);
         }
 
         private bool TryInitialize(StringBuilder errorBuilder)
@@ -98,10 +97,7 @@ namespace Blockstacker.Gameplay.Initialization
                 )
             };
 
-            foreach (var initializer in initializers)
-            {
-                initializer.Execute();
-            }
+            foreach (var initializer in initializers) initializer.Execute();
 
             return errorBuilder.Length <= 0;
         }
@@ -132,10 +128,7 @@ namespace Blockstacker.Gameplay.Initialization
                 )
             };
 
-            foreach (var initializer in initializers)
-            {
-                initializer.Execute();
-            }
+            foreach (var initializer in initializers) initializer.Execute();
 
             return errorBuilder.Length <= 0;
         }

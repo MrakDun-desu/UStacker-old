@@ -17,9 +17,6 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private GameObject _newPresetBlocker;
         [SerializeField] private string _prompt = "Pick a preset...";
 
-        public event Action SettingChanged;
-        public static event Action RebindsChanged;
-
         private static string PresetPath => Path.Combine(Application.persistentDataPath, "inputPresets");
 
 
@@ -35,44 +32,44 @@ namespace Blockstacker.GlobalSettings.Changers
             _presetPickerDropdown.ClearOptions();
             _presetPickerDropdown.options.Add(new TMP_Dropdown.OptionData(_prompt));
             var optionNames = GetAvailablePresets();
-            foreach (var optionName in optionNames.Distinct()) {
+            foreach (var optionName in optionNames.Distinct())
                 _presetPickerDropdown.options.Add(new TMP_Dropdown.OptionData(optionName));
-            }
             _presetPickerDropdown.RefreshShownValue();
         }
+
+        public event Action SettingChanged;
+        public static event Action RebindsChanged;
 
         private IEnumerable<string> GetAvailablePresets()
         {
             var filenames = new List<string>();
             if (Directory.Exists(PresetPath))
                 filenames.AddRange(Directory.EnumerateFiles(PresetPath));
-            foreach (var filename in filenames) {
-                yield return ExtractOptionName(filename);
-            }
+            foreach (var filename in filenames) yield return ExtractOptionName(filename);
         }
 
         private static string ExtractOptionName(string filename)
         {
             var dotIndex = filename.LastIndexOf(".", StringComparison.Ordinal);
-            var slashIndex = filename.LastIndexOfAny(new[] { '\\', '/' }) + 1;
+            var slashIndex = filename.LastIndexOfAny(new[] {'\\', '/'}) + 1;
 
             return filename[slashIndex..dotIndex];
         }
 
-        private static string WrapOptionName(string optionName) => Path.Combine(PresetPath, $"{optionName}.json");
+        private static string WrapOptionName(string optionName)
+        {
+            return Path.Combine(PresetPath, $"{optionName}.json");
+        }
 
         private static bool IsNameValid(string presetName)
         {
             var isEmpty = string.IsNullOrEmpty(presetName) || presetName.Length <= 0;
             var validationPattern = new StringBuilder();
             validationPattern.Append("[");
-            foreach (var character in Path.GetInvalidFileNameChars()) {
-                validationPattern.Append(character);
-            }
+            foreach (var character in Path.GetInvalidFileNameChars()) validationPattern.Append(character);
             validationPattern.Append("\\\\]");
             var isInvalidFilename = Regex.IsMatch(presetName, validationPattern.ToString());
             return !isEmpty && !isInvalidFilename;
-
         }
 
         public void PresetPicked(int value)
@@ -87,7 +84,10 @@ namespace Blockstacker.GlobalSettings.Changers
             RebindsChanged?.Invoke();
         }
 
-        public void StartSavingPreset() => _newPresetBlocker.SetActive(true);
+        public void StartSavingPreset()
+        {
+            _newPresetBlocker.SetActive(true);
+        }
 
         public void SavePreset()
         {
@@ -112,6 +112,5 @@ namespace Blockstacker.GlobalSettings.Changers
             SettingChanged?.Invoke();
             RebindsChanged?.Invoke();
         }
-
     }
 }

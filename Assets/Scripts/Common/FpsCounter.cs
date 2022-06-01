@@ -11,9 +11,9 @@ namespace Blockstacker.Common
     public class FpsCounter : MonoBehaviour
     {
         [SerializeField] private float _interval = 1f;
-        private TMP_Text _text;
-        private Stopwatch _stopwatch;
         private double _offset;
+        private Stopwatch _stopwatch;
+        private TMP_Text _text;
 
         private DateTime _timeStarted;
 

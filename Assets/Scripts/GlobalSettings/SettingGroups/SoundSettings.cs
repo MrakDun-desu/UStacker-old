@@ -9,6 +9,6 @@ namespace Blockstacker.GlobalSettings.Groups
         public float MusicVolume = 1;
         public float EffectsVolume = 1;
         public float MenuSoundsVolume = 1;
-        public bool MuteWhenOutOfFocus = false;
+        public bool MuteWhenOutOfFocus;
     }
 }

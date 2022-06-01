@@ -17,10 +17,10 @@ namespace Blockstacker.Gameplay
         [SerializeField] private GameManager _manager;
 
         public Piece[] AvailablePieces;
-        public IRandomizer Randomizer;
         public List<PieceContainer> PreviewContainers = new();
 
         private PiecePreviews _previews;
+        public IRandomizer Randomizer;
 
         public void InitContainers()
         {
@@ -30,9 +30,7 @@ namespace Blockstacker.Gameplay
         public void PrespawnPieces()
         {
             foreach (var nextIndex in PreviewContainers.Select(_ => Randomizer.GetNextPiece()))
-            {
                 _previews.AddPiece(Instantiate(AvailablePieces[nextIndex]));
-            }
         }
 
         public void SpawnPiece()
@@ -73,16 +71,14 @@ namespace Blockstacker.Gameplay
             };
             pieceTransform.Rotate(Vector3.forward, (float) rotation);
 
-            if (!_board.CanPlace(piece)) 
+            if (!_board.CanPlace(piece))
                 _manager.LoseGame();
         }
-        
+
         public void EmptyAllContainers()
         {
-            foreach (var piece in PreviewContainers.Select(container => container.SwapPiece(null)).Where(piece => piece != null))
-            {
-                Destroy(piece.gameObject);
-            }
+            foreach (var piece in PreviewContainers.Select(container => container.SwapPiece(null))
+                         .Where(piece => piece != null)) Destroy(piece.gameObject);
         }
     }
 }

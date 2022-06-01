@@ -7,29 +7,31 @@ namespace Blockstacker.GameSettings.Changers
     public class TopoutConditionChanger : GameSettingChangerBase<TopoutCondition>
     {
         [Space] [SerializeField] private TMP_Dropdown _dropdown;
-        
-        private static TopoutCondition[] Values => new[] {
+
+        private static TopoutCondition[] Values => new[]
+        {
             TopoutCondition.PieceSpawn,
             TopoutCondition.LethalHeightLoose,
             TopoutCondition.LethalHeightStrict
         };
 
-        private static string[] ShownValues => new[] {
+        private static string[] ShownValues => new[]
+        {
             "Piece spawn",
             "Lethal height loose",
-            "Lethal height strict",
+            "Lethal height strict"
         };
 
         private void Start()
         {
             _dropdown.ClearOptions();
-            for (var i = 0; i < Values.Length; i++) {
+            for (var i = 0; i < Values.Length; i++)
+            {
                 var value = Values[i];
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(ShownValues[i]));
-                if (value == _gameSettingsSO.Rules.BoardDimensions.TopoutCondition) {
-                    _dropdown.SetValueWithoutNotify(i);
-                }
+                if (value == _gameSettingsSO.Rules.BoardDimensions.TopoutCondition) _dropdown.SetValueWithoutNotify(i);
             }
+
             _dropdown.RefreshShownValue();
         }
 

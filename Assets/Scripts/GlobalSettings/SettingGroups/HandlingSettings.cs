@@ -7,10 +7,10 @@ namespace Blockstacker.GlobalSettings.Groups
     public record HandlingSettings
     {
         public double DelayedAutoShift = .125d;
-        public double AutomaticRepeatRate = .0d;
+        public double AutomaticRepeatRate;
         public double SoftDropFactor = double.PositiveInfinity;
-        public double DasCutDelay = 0;
-        public double DoubleDropPreventionInterval = 0;
+        public double DasCutDelay;
+        public double DoubleDropPreventionInterval;
         public DelayDasOn DelayDasOn = DelayDasOn.Nothing;
         public AntiDasBehavior AntiDasBehavior = AntiDasBehavior.CancelFirstDirection;
         public DiagonalLockBehavior DiagonalLockBehavior = DiagonalLockBehavior.DontLock;

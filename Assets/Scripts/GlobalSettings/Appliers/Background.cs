@@ -41,12 +41,10 @@ namespace Blockstacker.GlobalSettings.Appliers
         private void OnBackgroundChanged()
         {
             if (string.IsNullOrEmpty(_backgroundName)) return;
-            if (BackgroundPackLoader.Backgrounds.TryGetValue(_backgroundName, out var newImage)) {
+            if (BackgroundPackLoader.Backgrounds.TryGetValue(_backgroundName, out var newImage))
                 _backgroundImage.texture = newImage;
-            }
-            else {
+            else
                 _backgroundImage.texture = _defaultTexture;
-            }
         }
     }
 }

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Blockstacker.Gameplay.Randomizers
 {
     public class PairsRandomizer : IRandomizer
@@ -15,7 +17,7 @@ namespace Blockstacker.Gameplay.Randomizers
         public int GetNextPiece()
         {
             if (_shouldChange)
-                _lastValue = UnityEngine.Random.Range(0, _range);
+                _lastValue = Random.Range(0, _range);
 
             _shouldChange = !_shouldChange;
             return _lastValue;

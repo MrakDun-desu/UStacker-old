@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Blockstacker.Gameplay.Randomizers
 {
     public class ClassicRandomizer : IRandomizer
@@ -13,10 +15,8 @@ namespace Blockstacker.Gameplay.Randomizers
 
         public int GetNextPiece()
         {
-            var nextValue = UnityEngine.Random.Range(0, _range);
-            if (nextValue == _lastValue) {
-                nextValue = UnityEngine.Random.Range(0, _range);
-            }
+            var nextValue = Random.Range(0, _range);
+            if (nextValue == _lastValue) nextValue = Random.Range(0, _range);
             _lastValue = nextValue;
             return nextValue;
         }

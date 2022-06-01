@@ -8,26 +8,29 @@ namespace Blockstacker.Gameplay.Initialization
 {
     public class RulesLevellingInitializer : InitializerBase
     {
-        private static string LevellingSystemsPath
-            => Path.Combine(Application.persistentDataPath, "levellingSystems");
         public RulesLevellingInitializer(
             StringBuilder problemBuilder,
             GameSettingsSO gameSettings
-            ) : base(problemBuilder, gameSettings)
+        ) : base(problemBuilder, gameSettings)
         {
         }
+
+        private static string LevellingSystemsPath
+            => Path.Combine(Application.persistentDataPath, "levellingSystems");
 
         public override void Execute()
         {
             // TODO add levelling systems
             if (_gameSettings.Rules.Levelling.LevellingSystem ==
-                LevellingSystem.Custom) {
+                LevellingSystem.Custom)
+            {
                 var levellingSystemPath = Path.Combine(
                     LevellingSystemsPath,
                     _gameSettings.Rules.Levelling.CustomLevellingScriptName
                 );
 
-                if (!File.Exists(levellingSystemPath)) {
+                if (!File.Exists(levellingSystemPath))
+                {
                     _errorBuilder.AppendLine("Custom levelling system not found.");
                     return;
                 }
@@ -35,7 +38,6 @@ namespace Blockstacker.Gameplay.Initialization
                 _gameSettings.Rules.Levelling.CustomLevellingScript =
                     File.ReadAllText(levellingSystemPath);
             }
-
         }
     }
 }

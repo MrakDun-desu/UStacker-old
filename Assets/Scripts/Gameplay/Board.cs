@@ -21,12 +21,19 @@ namespace Blockstacker.Gameplay
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private SpriteRenderer _backgroundRenderer;
         [SerializeField] private Camera _camera;
-        [Tooltip("Zoom percentage change with one scroll unit")]
-        [Range(0, 1)]
-        [SerializeField] private float _boardZoomFactor = .05f;
+
+        [Tooltip("Zoom percentage change with one scroll unit")] [Range(0, 1)] [SerializeField]
+        private float _boardZoomFactor = .05f;
+
         [Range(0.00001f, 1)] [SerializeField] private float _minimumBoardScale = 0.1f;
-        
+
         private readonly List<Block[]> Blocks = new();
+
+        private Vector3 _dragStartPosition;
+        private Vector3 _dragStartTransformPosition;
+        private uint _height;
+        private Vector3 _offset;
+        private uint _width;
 
         public uint Width
         {
@@ -36,7 +43,8 @@ namespace Blockstacker.Gameplay
                 _width = value;
                 var myTransform = transform;
                 var myPos = myTransform.position;
-                myTransform.position = new Vector3(-value * .5f * myTransform.localScale.x + _offset.x, myPos.y, myPos.z);
+                myTransform.position =
+                    new Vector3(-value * .5f * myTransform.localScale.x + _offset.x, myPos.y, myPos.z);
             }
         }
 
@@ -48,7 +56,8 @@ namespace Blockstacker.Gameplay
                 _height = value;
                 var myTransform = transform;
                 var myPos = myTransform.position;
-                myTransform.position = new Vector3(myPos.x, -value * .5f * myTransform.localScale.y + _offset.y, myPos.z);
+                myTransform.position =
+                    new Vector3(myPos.x, -value * .5f * myTransform.localScale.y + _offset.y, myPos.z);
             }
         }
 
@@ -60,24 +69,24 @@ namespace Blockstacker.Gameplay
             transform.position.x + Width * .5f * transform.localScale.x,
             transform.position.y + Height * .5f * transform.localScale.y
         );
-        
-        private Vector3 _dragStartPosition;
-        private Vector3 _dragStartTransformPosition;
-        private Vector3 _offset;
-        private uint _width;
-        private uint _height;
 
 
         private void Start()
         {
             _offset = AppSettings.Gameplay.BoardOffset;
             transform.position += _offset;
-            
+
             ChangeBoardZoom(AppSettings.Gameplay.BoardZoom);
             ChangeVisibility(AppSettings.Gameplay.BoardVisibility);
 
             BoardVisibilityApplier.VisibilityChanged += ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged += ChangeBoardZoom;
+        }
+
+        private void Update()
+        {
+            HandleBoardZooming();
+            HandleBoardDrag();
         }
 
         private void OnDestroy()
@@ -91,16 +100,10 @@ namespace Blockstacker.Gameplay
             _backgroundRenderer.color = _backgroundRenderer.color.WithAlpha(newAlpha);
         }
 
-        private void Update()
-        {
-            HandleBoardZooming();
-            HandleBoardDrag();
-        }
-
         private void HandleBoardZooming()
         {
             const float ONE_SCROLL_UNIT = 1 / 120f;
-            
+
             if (!AppSettings.Gameplay.CtrlScrollToChangeBoardZoom) return;
 
             if (!Keyboard.current.ctrlKey.isPressed) return;
@@ -123,7 +126,8 @@ namespace Blockstacker.Gameplay
             {
                 _dragStartPosition = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
                 _dragStartTransformPosition = transform.position;
-            } else if (middleButton.isPressed)
+            }
+            else if (middleButton.isPressed)
             {
                 var currentPosition = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
                 var positionDifference = currentPosition - _dragStartPosition;
@@ -140,7 +144,7 @@ namespace Blockstacker.Gameplay
             myTransform.localScale = new Vector3(zoom, zoom, 1);
             myTransform.position = new Vector3(-zoom * .5f * Width, -zoom * .5f * Height, 1);
         }
-        
+
         private void ClearLine(int lineNumber)
         {
             if (Blocks.Count <= lineNumber) return;
@@ -152,13 +156,11 @@ namespace Blockstacker.Gameplay
 
             Blocks.RemoveAt(lineNumber);
             for (var i = lineNumber; i < Blocks.Count; i++)
-            {
                 foreach (var block in Blocks[i])
                 {
                     if (block == null) continue;
                     block.transform.position -= Up;
                 }
-            }
         }
 
         private uint CheckAndClearLines()
@@ -185,18 +187,17 @@ namespace Blockstacker.Gameplay
                 Mathf.FloorToInt(localPosition.y));
         }
 
-        public Vector3 BoardPositionToWorldSpace(Vector2Int boardPos) =>
-            transform.position + boardPos.x * Right + boardPos.y * Up;
+        public Vector3 BoardPositionToWorldSpace(Vector2Int boardPos)
+        {
+            return transform.position + boardPos.x * Right + boardPos.y * Up;
+        }
 
         public bool CanPlace(Vector2Int blockPosition)
         {
             if (blockPosition.x < 0 || blockPosition.x >= Width ||
                 blockPosition.y < 0) return false;
 
-            if (Blocks.Count <= blockPosition.y)
-            {
-                return true;
-            }
+            if (Blocks.Count <= blockPosition.y) return true;
 
             return Blocks[blockPosition.y][blockPosition.x] is null;
         }
@@ -221,10 +222,7 @@ namespace Blockstacker.Gameplay
         {
             var blockPos = WorldSpaceToBoardPosition(block.transform.position);
             if (!CanPlace(blockPos)) return;
-            while (Blocks.Count <= blockPos.y)
-            {
-                Blocks.Add(new Block[Width]);
-            }
+            while (Blocks.Count <= blockPos.y) Blocks.Add(new Block[Width]);
 
             Blocks[blockPos.y][blockPos.x] = block;
         }

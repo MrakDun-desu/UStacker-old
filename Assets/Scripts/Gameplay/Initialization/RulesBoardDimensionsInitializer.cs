@@ -8,8 +8,8 @@ namespace Blockstacker.Gameplay.Initialization
     {
         private readonly Board _board;
         private readonly GameObject _boardBackground;
-        private readonly GameObject _gridPiece;
         private readonly Camera _camera;
+        private readonly GameObject _gridPiece;
 
         public RulesBoardDimensionsInitializer(
             StringBuilder errorBuilder,
@@ -45,15 +45,13 @@ namespace Blockstacker.Gameplay.Initialization
             boardGrid.transform.localScale = Vector3.one;
 
             for (var y = 0; y < boardDimensions.BoardHeight; y++)
+            for (var x = 0; x < boardDimensions.BoardWidth; x++)
             {
-                for (var x = 0; x < boardDimensions.BoardWidth; x++)
-                {
-                    var gridPiece = Object.Instantiate(_gridPiece,
-                        boardGrid.transform,
-                        false);
-                    gridPiece.transform.localPosition = new Vector3(
-                        x, y, gridPiece.transform.localPosition.z);
-                }
+                var gridPiece = Object.Instantiate(_gridPiece,
+                    boardGrid.transform,
+                    false);
+                gridPiece.transform.localPosition = new Vector3(
+                    x, y, gridPiece.transform.localPosition.z);
             }
 
             _camera.orthographicSize =

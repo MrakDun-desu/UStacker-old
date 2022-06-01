@@ -10,10 +10,10 @@ namespace Blockstacker.GlobalSettings.Groups
         public float GridVisibility = .6f;
         public float GhostPieceVisibility = .5f;
         public float BoardZoom = 1;
-        public bool CtrlScrollToChangeBoardZoom = false;
+        public bool CtrlScrollToChangeBoardZoom;
         public bool ScrollToChangeVolume = true;
-        public bool DragMiddleButtonToRepositionBoard = false;
-        public bool ColorGhostPiece = false;
+        public bool DragMiddleButtonToRepositionBoard;
+        public bool ColorGhostPiece;
         public bool MatrixBounce = true;
         public bool ShowActionText = true;
         public bool ShowNotFocusedWarning = true;

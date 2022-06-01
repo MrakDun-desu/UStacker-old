@@ -11,8 +11,8 @@ namespace Blockstacker.GameSettings.SettingGroups
         public string CustomRandomizerScript = "";
         public AllowedSpins AllowedSpins = AllowedSpins.TSpins;
         public bool UseRandomSeed = true;
-        public int SpecificSeed = 0;
-        public int ActiveSeed = 0;
+        public int SpecificSeed;
+        public int ActiveSeed;
         public uint NextPieceCount = 5;
     }
 }

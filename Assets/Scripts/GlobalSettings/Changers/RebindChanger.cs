@@ -11,39 +11,21 @@ namespace Blockstacker.GlobalSettings.Changers
 {
     public class RebindChanger : MonoBehaviour
     {
-        [Header("Binding elements")]
-        [SerializeField]
+        [Header("Binding elements")] [SerializeField]
         private InputActionAsset _actionAsset;
 
         [SerializeField] private InputActionReference _action;
 
-        [Header("Interface elements")]
-        [SerializeField]
+        [Header("Interface elements")] [SerializeField]
         private GameObject _rebindOverlay;
 
         [SerializeField] private TMP_Text _bindingName;
         [SerializeField] private TMP_Text[] _bindingTexts = new TMP_Text[3];
-
-        private static event Action RebindChanged;
         private RebindingOperation _currentOperation;
 
         private void Start()
         {
             OnValidate();
-        }
-
-        private void OnValidate()
-        {
-            if (_action == null) return;
-
-            if (_bindingName != null) {
-                var slashIndex = _action.name.LastIndexOfAny(new[] { '/', '\\' }) + 1;
-                var nameString = _action.name[slashIndex..];
-                _bindingName.text = nameString.FormatCamelCase();
-            }
-
-            RefreshNames();
-            CheckBindingOverlaps();
         }
 
         private void OnEnable()
@@ -62,9 +44,27 @@ namespace Blockstacker.GlobalSettings.Changers
             RebindChanged -= CheckBindingOverlaps;
         }
 
+        private void OnValidate()
+        {
+            if (_action == null) return;
+
+            if (_bindingName != null)
+            {
+                var slashIndex = _action.name.LastIndexOfAny(new[] {'/', '\\'}) + 1;
+                var nameString = _action.name[slashIndex..];
+                _bindingName.text = nameString.FormatCamelCase();
+            }
+
+            RefreshNames();
+            CheckBindingOverlaps();
+        }
+
+        private static event Action RebindChanged;
+
         private void RefreshNames()
         {
-            for (var i = 0; i < _bindingTexts.Length; i++) {
+            for (var i = 0; i < _bindingTexts.Length; i++)
+            {
                 if (_bindingTexts[i] == null) continue;
                 var bindingName = _action.action.bindings[i]
                     .ToDisplayString(InputBinding.DisplayStringOptions.DontOmitDevice);
@@ -75,9 +75,8 @@ namespace Blockstacker.GlobalSettings.Changers
 
         private void CheckBindingOverlaps()
         {
-            for (var i = 0; i < _bindingTexts.Length; i++) {
+            for (var i = 0; i < _bindingTexts.Length; i++)
                 _bindingTexts[i].color = IsBindingUnique(i) ? Color.black : Color.red;
-            }
         }
 
         private bool IsBindingUnique(int index)

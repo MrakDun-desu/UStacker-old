@@ -10,17 +10,20 @@ namespace Blockstacker.Loaders
 {
     public static class SoundPackLoader
     {
-        private static string CurrentSoundPack => Path.Combine(SoundPackPath, AppSettings.Customization.SoundPackFolder);
-        private static string SoundPackPath => Path.Combine(Application.persistentDataPath, "soundPacks");
-
         public static Dictionary<string, AudioClip> Sounds = new();
+
+        private static string CurrentSoundPack =>
+            Path.Combine(SoundPackPath, AppSettings.Customization.SoundPackFolder);
+
+        private static string SoundPackPath => Path.Combine(Application.persistentDataPath, "soundPacks");
         public static event Action SoundPackChanged;
 
         public static IEnumerable<string> EnumerateSoundPacks()
         {
             if (!Directory.Exists(SoundPackPath)) yield break;
-            foreach (var path in Directory.EnumerateDirectories(SoundPackPath)) {
-                var slashIndex = path.LastIndexOfAny(new char[] { '/', '\\' }) + 1;
+            foreach (var path in Directory.EnumerateDirectories(SoundPackPath))
+            {
+                var slashIndex = path.LastIndexOfAny(new[] {'/', '\\'}) + 1;
                 yield return path[slashIndex..];
             }
         }
@@ -35,13 +38,15 @@ namespace Blockstacker.Loaders
         {
             if (recursionLevel-- <= 0) return;
             List<Task> taskList = new();
-            foreach (var dir in Directory.EnumerateDirectories(Path.Combine(CurrentSoundPack, path))) {
-                var slashIndex = dir.LastIndexOfAny(new char[] { '\\', '/' }) + 1;
+            foreach (var dir in Directory.EnumerateDirectories(Path.Combine(CurrentSoundPack, path)))
+            {
+                var slashIndex = dir.LastIndexOfAny(new[] {'\\', '/'}) + 1;
                 taskList.Add(GetClipsRecursivelyAsync(recursionLevel, path + '/' + dir[slashIndex..]));
             }
 
-            foreach (var filePath in Directory.EnumerateFiles(Path.Combine(CurrentSoundPack, path))) {
-                var slashIndex = filePath.LastIndexOfAny(new char[] { '\\', '/' }) + 1;
+            foreach (var filePath in Directory.EnumerateFiles(Path.Combine(CurrentSoundPack, path)))
+            {
+                var slashIndex = filePath.LastIndexOfAny(new[] {'\\', '/'}) + 1;
                 taskList.Add(HandleAudioClipLoadAsync(filePath[slashIndex..]));
             }
 
@@ -76,22 +81,23 @@ namespace Blockstacker.Loaders
 
             using var request = UnityWebRequestMultimedia.GetAudioClip(
                 "file://" + Path.Combine(CurrentSoundPack, path),
-                (AudioType)audioType
-                );
+                (AudioType) audioType
+            );
 
             request.SendWebRequest();
 
             AudioClip clip = null;
 
-            try {
+            try
+            {
                 while (!request.isDone) await Task.Delay(10);
 
-                if (request.result != UnityWebRequest.Result.Success) {
+                if (request.result != UnityWebRequest.Result.Success)
                     Debug.Log(request.error);
-                }
                 else clip = DownloadHandlerAudioClip.GetContent(request);
             }
-            catch (Exception error) {
+            catch (Exception error)
+            {
                 Debug.Log($"{error.Message}\n{error.StackTrace}");
             }
 

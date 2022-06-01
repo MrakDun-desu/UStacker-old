@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Blockstacker.Gameplay.Enums;
 using Blockstacker.GameSettings.Enums;
@@ -18,7 +17,8 @@ namespace Blockstacker.Gameplay.Pieces
 
         private void Awake()
         {
-            foreach (var block in Blocks) {
+            foreach (var block in Blocks)
+            {
                 block.Cleared += OnBlockCleared;
                 block.PieceType = PieceType;
             }

@@ -1,5 +1,4 @@
-﻿using System;
-using Blockstacker.Common.Extensions;
+﻿using Blockstacker.Common.Extensions;
 using Blockstacker.GlobalSettings;
 using Blockstacker.GlobalSettings.Appliers;
 using UnityEngine;

@@ -5,8 +5,7 @@ namespace Blockstacker.GlobalSettings.Changers
 {
     public class AppSettingBoolChanger : AppSettingChangerBase<bool>
     {
-        [Space]
-        [SerializeField] private Toggle _toggle;
+        [Space] [SerializeField] private Toggle _toggle;
 
         private void Start()
         {

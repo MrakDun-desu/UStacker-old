@@ -8,18 +8,6 @@ namespace Blockstacker.GlobalSettings
 {
     public static class AppSettings
     {
-        [Serializable]
-        internal record SettingsContainer
-        {
-            public HandlingSettings Handling = new();
-            public SoundSettings Sound = new();
-            public GameplaySettings Gameplay = new();
-            public VideoSettings Video = new();
-            public CustomizationSettings Customization = new();
-            public OtherSettings Others = new();
-            public string Rebinds;
-        }
-
         private static readonly SettingsContainer Settings = new();
         public static HandlingSettings Handling => Settings.Handling;
         public static SoundSettings Sound => Settings.Sound;
@@ -27,14 +15,19 @@ namespace Blockstacker.GlobalSettings
         public static VideoSettings Video => Settings.Video;
         public static CustomizationSettings Customization => Settings.Customization;
         public static OtherSettings Other => Settings.Others;
-        public static string Rebinds { get => Settings.Rebinds; set => Settings.Rebinds = value; }
+
+        public static string Rebinds
+        {
+            get => Settings.Rebinds;
+            set => Settings.Rebinds = value;
+        }
 
         private static string SettingsPath => Path.Combine(Application.persistentDataPath, "appSettings.json");
 
         public static bool TrySave(string path = null)
         {
             path ??= SettingsPath;
-            var slashIndex = path.LastIndexOfAny(new[] { '/', '\\' });
+            var slashIndex = path.LastIndexOfAny(new[] {'/', '\\'});
             if (!Directory.Exists(path[..slashIndex]) || string.IsNullOrEmpty(path[..slashIndex])) return false;
             File.WriteAllText(path, JsonUtility.ToJson(Settings, true));
             return true;
@@ -57,7 +50,8 @@ namespace Blockstacker.GlobalSettings
             object oldObject = null;
             object obj = Settings;
             var type = obj.GetType();
-            foreach (var fieldName in path) {
+            foreach (var fieldName in path)
+            {
                 fieldInfo = type.GetField(fieldName);
                 if (fieldInfo == null) return false;
 
@@ -79,7 +73,8 @@ namespace Blockstacker.GlobalSettings
             if (path.Length == 0) return default;
             object obj = Settings;
             var type = obj.GetType();
-            foreach (var fieldName in path) {
+            foreach (var fieldName in path)
+            {
                 var fieldInfo = type.GetField(fieldName);
                 if (fieldInfo == null) return default;
 
@@ -88,9 +83,8 @@ namespace Blockstacker.GlobalSettings
 
                 type = obj.GetType();
             }
-            if (type == typeof(T)) {
-                return (T)obj;
-            }
+
+            if (type == typeof(T)) return (T) obj;
             return default;
         }
 
@@ -99,7 +93,8 @@ namespace Blockstacker.GlobalSettings
             if (path.Length == 0) return false;
             object obj = Settings;
             var type = obj.GetType();
-            foreach (var fieldName in path) {
+            foreach (var fieldName in path)
+            {
                 var fieldInfo = type.GetField(fieldName);
                 if (fieldInfo == null) return false;
 
@@ -111,6 +106,18 @@ namespace Blockstacker.GlobalSettings
 
             if (type != typeof(T)) return false;
             return true;
+        }
+
+        [Serializable]
+        internal record SettingsContainer
+        {
+            public HandlingSettings Handling = new();
+            public SoundSettings Sound = new();
+            public GameplaySettings Gameplay = new();
+            public VideoSettings Video = new();
+            public CustomizationSettings Customization = new();
+            public OtherSettings Others = new();
+            public string Rebinds;
         }
     }
 }

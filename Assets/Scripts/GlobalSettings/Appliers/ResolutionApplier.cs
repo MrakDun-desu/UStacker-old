@@ -21,7 +21,6 @@ namespace Blockstacker.GlobalSettings.Appliers
                 Screen.fullScreenMode,
                 newResolution.refreshRate
             );
-
         }
     }
 }
