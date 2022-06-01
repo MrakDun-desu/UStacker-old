@@ -67,6 +67,7 @@ namespace Blockstacker.Gameplay
         private double _holdingRightTimer;
         private double _holdingLeftTimer;
 
+        private double _dropDisabledUntil;
         private double _dasDelay;
         private double _arrTimer = double.PositiveInfinity;
         private bool _dasRightActive;
@@ -82,6 +83,8 @@ namespace Blockstacker.Gameplay
             _effectiveDropTime = _normalDropTime;
             _dropTimer = _normalDropTime;
             _handling = _settings.Rules.Controls.Handling;
+            _dropDisabledUntil = 0;
+            _dasDelay = 0;
         }
 
         public void DeleteActivePiece()
@@ -534,13 +537,16 @@ namespace Blockstacker.Gameplay
 
         private void HandlePiecePlacement(double placementTime)
         {
+            if (_dropDisabledUntil > placementTime) return;
+            
+            _dropDisabledUntil = placementTime + _handling.DoubleDropPreventionInterval;
             var movementVector = Vector2Int.down;
             while (_board.CanPlace(ActivePiece, movementVector))
             {
-                movementVector.y -= 1;
+                movementVector += Vector2Int.down;
             }
 
-            movementVector.y += 1;
+            movementVector -= Vector2Int.down;
             MovePiece(movementVector, false);
             
             _mediator.Send(new LinesDroppedMessage
