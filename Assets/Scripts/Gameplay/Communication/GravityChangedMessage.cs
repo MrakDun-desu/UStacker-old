@@ -1,6 +1,6 @@
 namespace Blockstacker.Gameplay.Communication
 {
-    public class GravityChangedMessage : Message
+    public record GravityChangedMessage : Message
     {
         public double Gravity;
     }

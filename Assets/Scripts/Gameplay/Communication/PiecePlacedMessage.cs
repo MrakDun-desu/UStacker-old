@@ -1,6 +1,6 @@
 namespace Blockstacker.Gameplay.Communication
 {
-    public class PiecePlacedMessage : Message
+    public record PiecePlacedMessage : Message
     {
         public uint LinesCleared;
         public bool WasAllClear;

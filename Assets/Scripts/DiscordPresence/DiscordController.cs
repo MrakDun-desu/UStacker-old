@@ -8,7 +8,6 @@ namespace Blockstacker.DiscordPresence
         private static long ApplicationID => 953585016779202580;
         private Discord.Discord discord;
 
-
         private void Update() => discord?.RunCallbacks();
 
         private void OnDisable() => DisconnectFromDiscord();

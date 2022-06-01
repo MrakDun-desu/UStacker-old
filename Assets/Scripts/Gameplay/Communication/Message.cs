@@ -1,6 +1,6 @@
 namespace Blockstacker.Gameplay.Communication
 {
-    public abstract class Message
+    public abstract record Message
     {
         public double Time;
     }

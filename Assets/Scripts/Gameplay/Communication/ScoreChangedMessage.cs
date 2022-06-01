@@ -1,6 +1,6 @@
 namespace Blockstacker.Gameplay.Communication
 {
-    public class ScoreChangedMessage : Message
+    public record ScoreChangedMessage : Message
     {
         public long Score;
     }

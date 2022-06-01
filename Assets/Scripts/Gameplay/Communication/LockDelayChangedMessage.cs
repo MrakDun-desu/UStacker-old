@@ -1,6 +1,6 @@
 namespace Blockstacker.Gameplay.Communication
 {
-    public class LockDelayChangedMessage : Message
+    public record LockDelayChangedMessage : Message
     {
         public double LockDelay;
     }
