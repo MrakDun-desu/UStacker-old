@@ -3,7 +3,7 @@ using System;
 namespace Blockstacker.GameSettings.SettingGroups
 {
     [Serializable]
-    public class RulesSettings
+    public record RulesSettings
     {
         public RulesSettingsGeneral General = new();
         public RulesSettingsControls Controls = new();

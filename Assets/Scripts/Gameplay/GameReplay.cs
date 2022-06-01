@@ -8,7 +8,7 @@ using Gameplay.Stats;
 namespace Blockstacker.Gameplay
 {
     [Serializable]
-    public class GameReplay
+    public record GameReplay
     {
         public List<InputActionMessage> ActionList;
         public GameSettingsSO.SettingsContainer GameSettings;

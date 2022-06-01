@@ -9,7 +9,7 @@ namespace Blockstacker.GameSettings
     public class GameSettingsSO : ScriptableObject
     {
         [Serializable]
-        public class SettingsContainer
+        public record SettingsContainer
         {
             public RulesSettings Rules = new();
             public ObjectiveSettings Objective = new();
@@ -23,28 +23,27 @@ namespace Blockstacker.GameSettings
 
         public void OverrideSettings(SettingsContainer settings) => Settings = settings;
 
-        public bool TrySetValue<T>(T value, string[] path)
+        public void SetValue<T>(T value, string[] path)
         {
-            if (path.Length == 0) return false;
+            if (path.Length == 0) return;
             FieldInfo fieldInfo = null;
             object oldObject = null;
             object obj = Settings;
             var type = obj.GetType();
             foreach (var fieldName in path) {
                 fieldInfo = type.GetField(fieldName);
-                if (fieldInfo == null) return false;
+                if (fieldInfo == null) return;
 
                 oldObject = obj;
                 obj = fieldInfo.GetValue(obj);
-                if (obj == null) return false;
+                if (obj == null) return;
 
                 type = obj.GetType();
             }
 
-            if (type != typeof(T)) return false;
+            if (type != typeof(T)) return;
 
             if (fieldInfo != null) fieldInfo.SetValue(oldObject, value);
-            return true;
         }
 
         public T GetValue<T>(string[] path)

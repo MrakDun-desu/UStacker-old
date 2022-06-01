@@ -3,7 +3,7 @@
 namespace Gameplay.Stats
 {
     [Serializable]
-    public class StatContainer
+    public record StatContainer
     {
         public uint LinesCleared;
         public uint PiecesPlaced;
@@ -12,5 +12,16 @@ namespace Gameplay.Stats
         public uint Doubles;
         public uint Triples;
         public uint Quads;
+
+        public void Reset()
+        {
+            LinesCleared = 0;
+            PiecesPlaced = 0;
+            KeysPressed = 0;
+            Singles = 0;
+            Doubles = 0;
+            Triples = 0;
+            Quads = 0;
+        }
     }
 }

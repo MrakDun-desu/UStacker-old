@@ -4,7 +4,7 @@ using Blockstacker.GameSettings.Enums;
 namespace Blockstacker.GameSettings.SettingGroups
 {
     [Serializable]
-    public class RulesSettingsBoardDimensions
+    public record RulesSettingsBoardDimensions
     {
         public uint BoardHeight = 22;
         public uint BoardWidth = 10;

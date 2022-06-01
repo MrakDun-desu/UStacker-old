@@ -4,7 +4,7 @@ using Blockstacker.GameSettings.Enums;
 namespace Blockstacker.GameSettings.SettingGroups
 {
     [Serializable]
-    public class RulesSettingsLevelling
+    public record RulesSettingsLevelling
     {
         public double Gravity = .02d;
         public double LockDelay = .5d;

@@ -40,8 +40,7 @@ namespace Blockstacker.Gameplay
         public void StartGame()
         {
             _gameRunning = true;
-            Replay.GameSettings =
-                JsonUtility.FromJson<GameSettingsSO.SettingsContainer>(JsonUtility.ToJson(_settings.Settings));
+            Replay.GameSettings = _settings.Settings with { };
             GameStarted.Invoke();
         }
 
@@ -84,7 +83,7 @@ namespace Blockstacker.Gameplay
             _gameEnded = true;
             Replay.ActionList = new List<InputActionMessage>();
             Replay.ActionList.AddRange(_gameRecorder.ActionList);
-            Replay.Stats = JsonUtility.FromJson<StatContainer>(JsonUtility.ToJson(_statCounter.Stats));
+            Replay.Stats = _statCounter.Stats with { };
             Replay.GameLength = _timer.CurrentTimeAsSpan;
             GameEnded.Invoke();
             GameEndedEvent?.Invoke();
@@ -136,13 +135,13 @@ namespace Blockstacker.Gameplay
                 case GameEndCondition.Time:
                     break;
                 case GameEndCondition.LinesCleared:
-                    if (_statCounter.LinesCleared >= _settings.Objective.EndConditionCount) 
+                    if (_statCounter.Stats.LinesCleared >= _settings.Objective.EndConditionCount) 
                         EndGame();
                     break;
                 case GameEndCondition.CheeseLinesCleared:
                     break;
                 case GameEndCondition.PiecesPlaced:
-                    if (_statCounter.PiecesPlaced >= _settings.Objective.EndConditionCount)
+                    if (_statCounter.Stats.PiecesPlaced >= _settings.Objective.EndConditionCount)
                         EndGame();
                     break;
                 case GameEndCondition.None:

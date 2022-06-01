@@ -112,7 +112,7 @@ namespace Blockstacker.Gameplay
                     RotationState.Zero => _rotationSystem.IKickTable.ZeroToThree,
                     RotationState.One => _rotationSystem.IKickTable.OneToZero,
                     RotationState.Two => _rotationSystem.IKickTable.TwoToOne,
-                    RotationState.Three => _rotationSystem.IKickTable.ThreeToZero,
+                    RotationState.Three => _rotationSystem.IKickTable.ThreeToTwo,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 PieceType.TPiece => piece.RotationState switch

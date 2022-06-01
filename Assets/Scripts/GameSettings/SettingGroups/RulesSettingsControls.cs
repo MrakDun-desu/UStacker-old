@@ -5,7 +5,7 @@ using Blockstacker.GlobalSettings.Groups;
 namespace Blockstacker.GameSettings.SettingGroups
 {
     [Serializable]
-    public class RulesSettingsControls
+    public record RulesSettingsControls
     {
         public bool Allow180Spins = true;
         public bool AllowHardDrop = true;

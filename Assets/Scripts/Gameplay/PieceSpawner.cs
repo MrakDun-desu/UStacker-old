@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockstacker.Gameplay.Enums;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Randomizers;
 using Blockstacker.GameSettings;
@@ -28,9 +29,8 @@ namespace Blockstacker.Gameplay
 
         public void PrespawnPieces()
         {
-            foreach (var _ in PreviewContainers)
+            foreach (var nextIndex in PreviewContainers.Select(_ => Randomizer.GetNextPiece()))
             {
-                var nextIndex = Randomizer.GetNextPiece();
                 _previews.AddPiece(Instantiate(AvailablePieces[nextIndex]));
             }
         }
@@ -58,6 +58,20 @@ namespace Blockstacker.Gameplay
             pieceTransform.localPosition = piecePos + new Vector3(piece.SpawnOffset.x, piece.SpawnOffset.y);
 
             _inputProcessor.ActivePiece = piece;
+
+            var rotationSystem = _settings.Rules.Controls.ActiveRotationSystem;
+            var rotation = piece.PieceType switch
+            {
+                PieceType.IPiece => rotationSystem.IKickTable.StartState,
+                PieceType.TPiece => rotationSystem.TKickTable.StartState,
+                PieceType.OPiece => rotationSystem.OKickTable.StartState,
+                PieceType.JPiece => rotationSystem.JKickTable.StartState,
+                PieceType.LPiece => rotationSystem.LKickTable.StartState,
+                PieceType.SPiece => rotationSystem.SKickTable.StartState,
+                PieceType.ZPiece => rotationSystem.ZKickTable.StartState,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            pieceTransform.Rotate(Vector3.forward, (float) rotation);
 
             if (!_board.CanPlace(piece)) 
                 _manager.LoseGame();

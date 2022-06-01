@@ -32,7 +32,6 @@ namespace Blockstacker.Gameplay.Initialization
         [Header("Others")] [SerializeField] private GameCountdown _countdown;
         [SerializeField] private TMP_Text _gameTitle;
         [SerializeField] private GameObject _loadingOverlay;
-        [SerializeField] private MediatorSO _mediator;
 
         [Header("Events")] public UnityEvent GameInitialized;
         public UnityEvent GameReinitialized;

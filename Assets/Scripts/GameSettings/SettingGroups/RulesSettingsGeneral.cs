@@ -4,7 +4,7 @@ using Blockstacker.GameSettings.Enums;
 namespace Blockstacker.GameSettings.SettingGroups
 {
     [Serializable]
-    public class RulesSettingsGeneral
+    public record RulesSettingsGeneral
     {
         public RandomizerType RandomizerType = RandomizerType.SevenBag;
         public string CustomRandomizerName = "";

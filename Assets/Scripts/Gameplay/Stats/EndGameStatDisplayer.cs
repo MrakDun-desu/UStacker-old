@@ -45,7 +45,7 @@ namespace Gameplay.Stats
 
             if (string.IsNullOrEmpty(displayString))
             {
-                displayString = "Script not returning string";
+                displayString = "Error: Script not returning string";
             }
 
             _displayText.text = displayString;

@@ -4,7 +4,7 @@ using Blockstacker.GlobalSettings.Enums;
 namespace Blockstacker.GlobalSettings.Groups
 {
     [Serializable]
-    public class HandlingSettings
+    public record HandlingSettings
     {
         public double DelayedAutoShift = .125d;
         public double AutomaticRepeatRate = .0d;

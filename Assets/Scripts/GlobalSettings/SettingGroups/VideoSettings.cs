@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Blockstacker.GlobalSettings.Groups
 {
     [Serializable]
-    public class VideoSettings
+    public record VideoSettings
     {
         public string FullscreenMode = "";
         public Vector2Int Resolution = new(1920, 1080);

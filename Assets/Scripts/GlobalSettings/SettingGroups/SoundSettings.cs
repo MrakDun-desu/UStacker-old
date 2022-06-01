@@ -3,7 +3,7 @@ using System;
 namespace Blockstacker.GlobalSettings.Groups
 {
     [Serializable]
-    public class SoundSettings
+    public record SoundSettings
     {
         public float MasterVolume = 1;
         public float MusicVolume = 1;

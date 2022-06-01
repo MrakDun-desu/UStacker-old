@@ -26,7 +26,7 @@ namespace Blockstacker.GameSettings.Changers
 
         public void SetValue(T value)
         {
-            _gameSettingsSO.TrySetValue(value, _controlPath);
+            _gameSettingsSO.SetValue(value, _controlPath);
         }
     }
 }

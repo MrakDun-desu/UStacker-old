@@ -9,7 +9,7 @@ namespace Blockstacker.GlobalSettings
     public static class AppSettings
     {
         [Serializable]
-        internal class SettingsContainer
+        internal record SettingsContainer
         {
             public HandlingSettings Handling = new();
             public SoundSettings Sound = new();

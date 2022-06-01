@@ -3,7 +3,7 @@ using System;
 namespace Blockstacker.GameSettings.SettingGroups
 {
     [Serializable]
-    public class PresentationSettings
+    public record PresentationSettings
     {
         public string Title = "Custom game";
         public bool UseCountdown = true;

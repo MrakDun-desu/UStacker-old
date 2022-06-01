@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Blockstacker.GlobalSettings.Groups
 {
     [Serializable]
-    public class GameplaySettings
+    public record GameplaySettings
     {
         public float BoardVisibility = .8f;
         public float GridVisibility = .6f;

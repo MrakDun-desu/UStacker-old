@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Blockstacker.GameSettings
 {
     [Serializable]
-    public class KickTable
+    public record KickTable
     {
         public RotationState StartState;
         public Vector2Int[] ZeroToThree = new Vector2Int[1];

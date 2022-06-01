@@ -4,7 +4,7 @@ using Blockstacker.GameSettings.Enums;
 namespace Blockstacker.GameSettings.SettingGroups
 {
     [Serializable]
-    public class ObjectiveSettings
+    public record ObjectiveSettings
     {
         public MainStat MainStat = MainStat.Time;
         public GameEndCondition GameEndCondition = GameEndCondition.LinesCleared;
