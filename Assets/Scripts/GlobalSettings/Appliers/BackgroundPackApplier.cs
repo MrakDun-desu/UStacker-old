@@ -6,7 +6,7 @@ namespace Blockstacker.GlobalSettings.Appliers
     {
         public override void OnSettingChanged()
         {
-            BackgroundPackLoader.Reload();
+            BackgroundPackLoader.Reload(AppSettings.Customization.BackgroundFolder);
         }
     }
 }

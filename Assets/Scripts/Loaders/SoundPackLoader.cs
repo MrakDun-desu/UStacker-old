@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Blockstacker.GlobalSettings;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -11,9 +10,6 @@ namespace Blockstacker.Loaders
     public static class SoundPackLoader
     {
         public static Dictionary<string, AudioClip> Sounds = new();
-
-        private static string CurrentSoundPack =>
-            Path.Combine(SoundPackPath, AppSettings.Customization.SoundPackFolder);
 
         private static string SoundPackPath => Path.Combine(Application.persistentDataPath, "soundPacks");
         public static event Action SoundPackChanged;
@@ -28,26 +24,25 @@ namespace Blockstacker.Loaders
             }
         }
 
-        public static void Reload()
+        public static void Reload(string path)
         {
             Sounds.Clear();
-            _ = GetClipsRecursivelyAsync(1);
+            _ = GetClipsRecursivelyAsync(1, path);
         }
 
-        private static async Task GetClipsRecursivelyAsync(int recursionLevel, string path = "")
+        private static async Task GetClipsRecursivelyAsync(int recursionLevel, string rootPath, string path = "")
         {
             if (recursionLevel-- <= 0) return;
             List<Task> taskList = new();
-            foreach (var dir in Directory.EnumerateDirectories(Path.Combine(CurrentSoundPack, path)))
+            foreach (var dir in Directory.EnumerateDirectories(Path.Combine(rootPath, path)))
             {
                 var slashIndex = dir.LastIndexOfAny(new[] {'\\', '/'}) + 1;
                 taskList.Add(GetClipsRecursivelyAsync(recursionLevel, path + '/' + dir[slashIndex..]));
             }
 
-            foreach (var filePath in Directory.EnumerateFiles(Path.Combine(CurrentSoundPack, path)))
+            foreach (var filePath in Directory.EnumerateFiles(Path.Combine(rootPath, path)))
             {
-                var slashIndex = filePath.LastIndexOfAny(new[] {'\\', '/'}) + 1;
-                taskList.Add(HandleAudioClipLoadAsync(filePath[slashIndex..]));
+                taskList.Add(HandleAudioClipLoadAsync(filePath));
             }
 
             await Task.WhenAll(taskList);
@@ -80,7 +75,7 @@ namespace Blockstacker.Loaders
             if (audioType == null) return null;
 
             using var request = UnityWebRequestMultimedia.GetAudioClip(
-                "file://" + Path.Combine(CurrentSoundPack, path),
+                "file://" + path,
                 (AudioType) audioType
             );
 

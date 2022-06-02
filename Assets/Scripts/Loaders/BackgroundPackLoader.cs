@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Blockstacker.GlobalSettings;
 using UnityEngine;
 
 namespace Blockstacker.Loaders
@@ -10,9 +9,6 @@ namespace Blockstacker.Loaders
     public static class BackgroundPackLoader
     {
         public static Dictionary<string, Texture2D> Backgrounds = new();
-
-        private static string CurrentBackgroundPack =>
-            Path.Combine(BackgroundPackPath, AppSettings.Customization.BackgroundFolder);
 
         private static string BackgroundPackPath => Path.Combine(Application.persistentDataPath, "backgroundPacks");
         public static event Action BackgroundPackChanged;
@@ -27,27 +23,26 @@ namespace Blockstacker.Loaders
             }
         }
 
-        public static void Reload()
+        public static void Reload(string backgroundPath)
         {
             Backgrounds.Clear();
-            _ = GetBackgroundsRecursivelyAsync(1);
+            _ = GetBackgroundsRecursivelyAsync(1, backgroundPath);
         }
 
-        private static async Task GetBackgroundsRecursivelyAsync(int recursionLevel, string path = "")
+        private static async Task GetBackgroundsRecursivelyAsync(int recursionLevel, string rootPath, string path = "")
         {
             if (recursionLevel-- <= 0) return;
             List<Task> taskList = new();
 
-            foreach (var dir in Directory.EnumerateDirectories(Path.Combine(CurrentBackgroundPack, path)))
+            foreach (var dir in Directory.EnumerateDirectories(Path.Combine(rootPath, path)))
             {
                 var slashIndex = dir.LastIndexOfAny(new[] {'\\', '/'}) + 1;
                 taskList.Add(GetBackgroundsRecursivelyAsync(recursionLevel, path + '/' + dir[slashIndex..]));
             }
 
-            foreach (var filePath in Directory.EnumerateFiles(Path.Combine(CurrentBackgroundPack, path)))
+            foreach (var filePath in Directory.EnumerateFiles(Path.Combine(rootPath, path)))
             {
-                var slashIndex = filePath.LastIndexOfAny(new[] {'\\', '/'}) + 1;
-                taskList.Add(HandleBackgroundLoadAsync(filePath[slashIndex..]));
+                taskList.Add(HandleBackgroundLoadAsync(filePath));
             }
 
             await Task.WhenAll(taskList);
@@ -63,10 +58,9 @@ namespace Blockstacker.Loaders
 
         private static async Task<Texture2D> GetBackgroundAsync(string path)
         {
-            var textureData = await File.ReadAllBytesAsync(Path.Combine(CurrentBackgroundPack, path));
+            var textureData = await File.ReadAllBytesAsync(path);
             Texture2D texture = new(1, 1);
-            if (!texture.LoadImage(textureData, false)) return null;
-            return texture;
+            return texture.LoadImage(textureData, false) ? texture : null;
         }
     }
 }

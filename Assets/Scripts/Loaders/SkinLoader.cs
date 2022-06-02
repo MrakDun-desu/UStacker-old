@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Blockstacker.GlobalSettings;
 using UnityEngine;
 
 namespace Blockstacker.Loaders
@@ -16,7 +15,6 @@ namespace Blockstacker.Loaders
         // };
 
         // private static readonly float _defaultPixelsPerUnit = 64;
-        private static string CurrentSkin => Path.Combine(SkinPath, AppSettings.Customization.SkinFolder);
         private static string SkinPath => Path.Combine(Application.persistentDataPath, "skins");
         public static event Action SkinChanged;
 
@@ -30,27 +28,26 @@ namespace Blockstacker.Loaders
             }
         }
 
-        public static void Reload()
+        public static void Reload(string path)
         {
             Sprites.Clear();
-            _ = GetSkinsRecursivelyAsync(1);
+            _ = GetSkinsRecursivelyAsync(1, path);
         }
 
-        private static async Task GetSkinsRecursivelyAsync(int recursionLevel, string path = "")
+        private static async Task GetSkinsRecursivelyAsync(int recursionLevel, string rootPath, string path = "")
         {
             if (recursionLevel-- <= 0) return;
             List<Task> taskList = new();
 
-            foreach (var dir in Directory.EnumerateDirectories(Path.Combine(CurrentSkin, path)))
+            foreach (var dir in Directory.EnumerateDirectories(Path.Combine(rootPath, path)))
             {
                 var slashIndex = dir.LastIndexOfAny(new[] {'\\', '/'}) + 1;
                 taskList.Add(GetSkinsRecursivelyAsync(recursionLevel, path + '/' + dir[slashIndex..]));
             }
 
-            foreach (var filePath in Directory.EnumerateFiles(Path.Combine(CurrentSkin, path)))
+            foreach (var filePath in Directory.EnumerateFiles(Path.Combine(rootPath, path)))
             {
-                var slashIndex = filePath.LastIndexOfAny(new[] {'\\', '/'}) + 1;
-                taskList.Add(HandleLoadSpriteAsync(filePath[slashIndex..]));
+                taskList.Add(HandleLoadSpriteAsync(filePath));
             }
 
             await Task.WhenAll(taskList);
@@ -74,7 +71,7 @@ namespace Blockstacker.Loaders
 
         private static async Task<Texture2D> GetTextureAsync(string path)
         {
-            var textureData = await File.ReadAllBytesAsync(Path.Combine(CurrentSkin, path));
+            var textureData = await File.ReadAllBytesAsync(path);
             Texture2D texture = new(1, 1);
             if (!texture.LoadImage(textureData, false)) return null;
             return texture;

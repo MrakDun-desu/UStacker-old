@@ -6,7 +6,7 @@ namespace Blockstacker.GlobalSettings.Appliers
     {
         public override void OnSettingChanged()
         {
-            SoundPackLoader.Reload();
+            SoundPackLoader.Reload(AppSettings.Customization.SoundPackFolder);
         }
     }
 }
