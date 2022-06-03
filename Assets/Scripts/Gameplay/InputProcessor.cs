@@ -55,6 +55,8 @@ namespace Blockstacker.Gameplay
         private double _pieceSpawnTime = double.PositiveInfinity;
         private bool _usedHold;
 
+        private double _currentGravity;
+
         public KickHandler KickHandler;
 
         public Piece ActivePiece
@@ -80,6 +82,7 @@ namespace Blockstacker.Gameplay
         private void Awake()
         {
             _normalDropTime = 1 / 60d / _settings.Rules.Levelling.Gravity;
+            _currentGravity = _settings.Rules.Levelling.Gravity;
             _effectiveDropTime = _normalDropTime;
             _dropTimer = _normalDropTime;
             _handling = _settings.Rules.Controls.Handling;
@@ -120,6 +123,7 @@ namespace Blockstacker.Gameplay
         private void HandlePiecePlacement(double placementTime)
         {
             if (_dropDisabledUntil > placementTime) return;
+            if (_pieceIsNull) return;
 
             _dropDisabledUntil = placementTime + _handling.DoubleDropPreventionInterval;
             var movementVector = Vector2Int.down;
@@ -246,7 +250,17 @@ namespace Blockstacker.Gameplay
                 if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeHorizontal &&
                     (_holdingLeftStart < actionTime ||
                      _holdingRightStart < actionTime)) return;
-                _effectiveDropTime = _normalDropTime / _handling.SoftDropFactor;
+
+                if (_currentGravity <= 0d)
+                {
+                    const double normalDropTimeWithZeroGravity = 1d / 60d / .02d;
+                    _effectiveDropTime = normalDropTimeWithZeroGravity / _handling.SoftDropFactor;
+                }
+                else
+                {
+                    _effectiveDropTime = _normalDropTime / _handling.SoftDropFactor;
+                }
+
                 _dropTimer = actionTime;
             }
             else if (ctx.canceled)
@@ -500,7 +514,7 @@ namespace Blockstacker.Gameplay
             {
                 _mediator.Send(new LinesDroppedMessage
                     {Count = 1, WasHardDrop = false, Time = _dropTimer});
-                
+
                 _dropTimer += _effectiveDropTime;
 
                 if (_board.CanPlace(ActivePiece, movementVector))
