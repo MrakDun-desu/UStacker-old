@@ -9,7 +9,7 @@ namespace Blockstacker.Gameplay
     [Serializable]
     public record GameReplay
     {
-        public List<InputActionMessage> ActionList;
+        public List<Message> ActionList;
         public GameSettingsSO.SettingsContainer GameSettings;
         public StatContainer Stats;
         public TimeSpan GameLength;

@@ -44,5 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e23339201a49054e89773a506a7dae8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PieceType: 0
   Blocks: []
+  PieceType: 0
+  SpawnOffset: {x: 0, y: 0}
+  ContainerOffset: {x: 0, y: 0}
+  RotationState: 0
+  SpinDetectors: []
+  FullSpinDetectors: []
+  PieceCleared:
+    m_PersistentCalls:
+      m_Calls: []

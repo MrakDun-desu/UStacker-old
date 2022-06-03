@@ -1,5 +1,5 @@
 using System;
-using Blockstacker.Gameplay.Enums;
+using Blockstacker.Common.Enums;
 using UnityEngine;
 using UnityEngine.Events;
 

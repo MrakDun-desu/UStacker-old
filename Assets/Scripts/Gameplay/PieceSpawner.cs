@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Gameplay.Enums;
+using Blockstacker.Common.Enums;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Randomizers;
 using Blockstacker.GameSettings;
@@ -58,17 +58,7 @@ namespace Blockstacker.Gameplay
             _inputProcessor.ActivePiece = piece;
 
             var rotationSystem = _settings.Rules.Controls.ActiveRotationSystem;
-            var rotation = piece.PieceType switch
-            {
-                PieceType.IPiece => rotationSystem.IKickTable.StartState,
-                PieceType.TPiece => rotationSystem.TKickTable.StartState,
-                PieceType.OPiece => rotationSystem.OKickTable.StartState,
-                PieceType.JPiece => rotationSystem.JKickTable.StartState,
-                PieceType.LPiece => rotationSystem.LKickTable.StartState,
-                PieceType.SPiece => rotationSystem.SKickTable.StartState,
-                PieceType.ZPiece => rotationSystem.ZKickTable.StartState,
-                _ => throw new ArgumentOutOfRangeException()
-            };
+            var rotation = rotationSystem.GetKickTable(piece.PieceType).StartState;
             pieceTransform.Rotate(Vector3.forward, (float) rotation);
 
             if (!_board.CanPlace(piece))

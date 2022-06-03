@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Blockstacker.Gameplay.Communication;
+using Blockstacker.Gameplay.Spins;
 using UnityEngine;
 
 namespace Blockstacker.Gameplay
@@ -8,14 +9,15 @@ namespace Blockstacker.Gameplay
     {
         [SerializeField] private MediatorSO _mediator;
 
-        public List<InputActionMessage> ActionList = new();
+        [SerializeReference] public List<Message> ActionList = new();
 
         private void Awake()
         {
-            _mediator.Register<InputActionMessage>(AddActionToList);
+            _mediator.Register<InputActionMessage>(AddMessageToList);
+            _mediator.Register<SpinSuccessfullMessage>(AddMessageToList);
         }
 
-        private void AddActionToList(InputActionMessage message)
+        private void AddMessageToList(Message message)
         {
             ActionList.Add(message);
             ActionList.Sort((a, b) => a.Time > b.Time ? 1 : -1);

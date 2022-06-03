@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50c46225bf708ce46bddb2402e4cfb1f, type: 3}
   m_Name: SRS
   m_EditorClassIdentifier: 
-  _rotationSystem:
+  RotationSystem:
     IKickTable:
       StartState: 0
+      FullSpinKicks: []
       ZeroToThree:
       - {x: 0, y: 0}
       - {x: -1, y: 0}
@@ -73,6 +74,9 @@ MonoBehaviour:
       - {x: 0, y: 0}
     TKickTable:
       StartState: 0
+      FullSpinKicks:
+      - {x: 1, y: -2}
+      - {x: -1, y: -2}
       ZeroToThree:
       - {x: 0, y: 0}
       - {x: 1, y: 0}
@@ -131,6 +135,7 @@ MonoBehaviour:
       - {x: 0, y: 0}
     OKickTable:
       StartState: 0
+      FullSpinKicks: []
       ZeroToThree:
       - {x: 0, y: 0}
       - {x: 1, y: 0}
@@ -189,6 +194,9 @@ MonoBehaviour:
       - {x: 0, y: 0}
     JKickTable:
       StartState: 0
+      FullSpinKicks:
+      - {x: 1, y: -2}
+      - {x: -1, y: -2}
       ZeroToThree:
       - {x: 0, y: 0}
       - {x: 1, y: 0}
@@ -247,6 +255,9 @@ MonoBehaviour:
       - {x: 0, y: 0}
     LKickTable:
       StartState: 0
+      FullSpinKicks:
+      - {x: 1, y: -2}
+      - {x: -1, y: -2}
       ZeroToThree:
       - {x: 0, y: 0}
       - {x: 1, y: 0}
@@ -305,6 +316,9 @@ MonoBehaviour:
       - {x: 0, y: 0}
     SKickTable:
       StartState: 0
+      FullSpinKicks:
+      - {x: 1, y: -2}
+      - {x: -1, y: -2}
       ZeroToThree:
       - {x: 0, y: 0}
       - {x: 1, y: 0}
@@ -363,6 +377,9 @@ MonoBehaviour:
       - {x: 0, y: 0}
     ZKickTable:
       StartState: 0
+      FullSpinKicks:
+      - {x: 1, y: -2}
+      - {x: -1, y: -2}
       ZeroToThree:
       - {x: 0, y: 0}
       - {x: 1, y: 0}

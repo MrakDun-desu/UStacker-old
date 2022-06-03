@@ -6,6 +6,7 @@ using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
 using Blockstacker.GlobalSettings.Enums;
 using Blockstacker.GlobalSettings.Groups;
+using Blockstacker.Gameplay.Spins;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -57,7 +58,7 @@ namespace Blockstacker.Gameplay
 
         private double _currentGravity;
 
-        public KickHandler KickHandler;
+        public SpinHandler SpinHandler;
 
         public Piece ActivePiece
         {
@@ -301,17 +302,20 @@ namespace Blockstacker.Gameplay
                 {ActionType = ActionType.RotateCCW, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
 
             ActivePiece.transform.Rotate(Vector3.forward, rotationAngle);
-            if (!KickHandler.TryKick(
+            if (!SpinHandler.TryKick(
                     ActivePiece,
                     _board,
                     RotateDirection.Counterclockwise,
-                    out var resultVector))
+                    out var result))
             {
                 ActivePiece.transform.Rotate(Vector3.forward, -rotationAngle);
                 return;
             }
 
-            MovePiece(resultVector);
+            MovePiece(result.Kick);
+            
+            _mediator.Send(new SpinSuccessfullMessage{SpinResult = result, Time = actionTime});
+            
             ActivePiece.RotationState = ChangeRotationState(ActivePiece.RotationState, rotationAngle);
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Rotation))
                 _dasDelay = actionTime + _handling.DasCutDelay;
@@ -331,17 +335,20 @@ namespace Blockstacker.Gameplay
                 {ActionType = ActionType.RotateCW, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
 
             ActivePiece.transform.Rotate(Vector3.forward, rotationAngle);
-            if (!KickHandler.TryKick(
+            if (!SpinHandler.TryKick(
                     ActivePiece,
                     _board,
                     RotateDirection.Clockwise,
-                    out var resultVector))
+                    out var result))
             {
                 ActivePiece.transform.Rotate(Vector3.forward, -rotationAngle);
                 return;
             }
 
-            MovePiece(resultVector);
+            MovePiece(result.Kick);
+            
+            _mediator.Send(new SpinSuccessfullMessage{SpinResult = result, Time = actionTime});
+            
             ActivePiece.RotationState = ChangeRotationState(ActivePiece.RotationState, rotationAngle);
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Rotation))
                 _dasDelay = actionTime + _handling.DasCutDelay;
@@ -362,17 +369,20 @@ namespace Blockstacker.Gameplay
                 {ActionType = ActionType.Rotate180, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
 
             ActivePiece.transform.Rotate(Vector3.forward, rotationAngle);
-            if (!KickHandler.TryKick(
+            if (!SpinHandler.TryKick(
                     ActivePiece,
                     _board,
                     RotateDirection.OneEighty,
-                    out var resultVector))
+                    out var result))
             {
                 ActivePiece.transform.Rotate(Vector3.forward, -rotationAngle);
                 return;
             }
 
-            MovePiece(resultVector);
+            MovePiece(result.Kick);
+            
+            _mediator.Send(new SpinSuccessfullMessage{SpinResult = result, Time = actionTime});
+            
             ActivePiece.RotationState = ChangeRotationState(ActivePiece.RotationState, rotationAngle);
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Rotation))
                 _dasDelay = actionTime + _handling.DasCutDelay;

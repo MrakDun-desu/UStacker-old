@@ -2067,14 +2067,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
-  _statContainer:
-    LinesCleared: 0
-    PiecesPlaced: 0
-    KeysPressed: 0
-    Singles: 0
-    Doubles: 0
-    Triples: 0
-    Quads: 0
 --- !u!4 &557688172
 Transform:
   m_ObjectHideFlags: 0
@@ -2121,6 +2113,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   ActionList: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!4 &564900344
 Transform:
   m_ObjectHideFlags: 0
@@ -3530,6 +3525,7 @@ MonoBehaviour:
   _settings: {fileID: 11400000, guid: 82a8dfd8c479a9746b991978530983d6, type: 2}
   _helperTransform: {fileID: 1252429938}
   _manager: {fileID: 1579597091}
+  _recorder: {fileID: 564900343}
   _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   _backgroundRenderer: {fileID: 569528456}
   _camera: {fileID: 1617022711}
@@ -7244,7 +7240,6 @@ MonoBehaviour:
           m_BoolArgument: 1
         m_CallState: 2
   Replay:
-    ActionList: []
     GameSettings:
       Rules:
         General:
@@ -7263,189 +7258,6 @@ MonoBehaviour:
           UnlimitedHold: 0
           RotationSystem: 0
           CustomRotationSystemName: 
-          ActiveRotationSystem:
-            IKickTable:
-              StartState: 0
-              ZeroToThree:
-              - {x: 0, y: 0}
-              ZeroToOne:
-              - {x: 0, y: 0}
-              OneToZero:
-              - {x: 0, y: 0}
-              OneToTwo:
-              - {x: 0, y: 0}
-              TwoToOne:
-              - {x: 0, y: 0}
-              TwoToThree:
-              - {x: 0, y: 0}
-              ThreeToTwo:
-              - {x: 0, y: 0}
-              ThreeToZero:
-              - {x: 0, y: 0}
-              ZeroToTwo:
-              - {x: 0, y: 0}
-              TwoToZero:
-              - {x: 0, y: 0}
-              OneToThree:
-              - {x: 0, y: 0}
-              ThreeToOne:
-              - {x: 0, y: 0}
-            TKickTable:
-              StartState: 0
-              ZeroToThree:
-              - {x: 0, y: 0}
-              ZeroToOne:
-              - {x: 0, y: 0}
-              OneToZero:
-              - {x: 0, y: 0}
-              OneToTwo:
-              - {x: 0, y: 0}
-              TwoToOne:
-              - {x: 0, y: 0}
-              TwoToThree:
-              - {x: 0, y: 0}
-              ThreeToTwo:
-              - {x: 0, y: 0}
-              ThreeToZero:
-              - {x: 0, y: 0}
-              ZeroToTwo:
-              - {x: 0, y: 0}
-              TwoToZero:
-              - {x: 0, y: 0}
-              OneToThree:
-              - {x: 0, y: 0}
-              ThreeToOne:
-              - {x: 0, y: 0}
-            OKickTable:
-              StartState: 0
-              ZeroToThree:
-              - {x: 0, y: 0}
-              ZeroToOne:
-              - {x: 0, y: 0}
-              OneToZero:
-              - {x: 0, y: 0}
-              OneToTwo:
-              - {x: 0, y: 0}
-              TwoToOne:
-              - {x: 0, y: 0}
-              TwoToThree:
-              - {x: 0, y: 0}
-              ThreeToTwo:
-              - {x: 0, y: 0}
-              ThreeToZero:
-              - {x: 0, y: 0}
-              ZeroToTwo:
-              - {x: 0, y: 0}
-              TwoToZero:
-              - {x: 0, y: 0}
-              OneToThree:
-              - {x: 0, y: 0}
-              ThreeToOne:
-              - {x: 0, y: 0}
-            JKickTable:
-              StartState: 0
-              ZeroToThree:
-              - {x: 0, y: 0}
-              ZeroToOne:
-              - {x: 0, y: 0}
-              OneToZero:
-              - {x: 0, y: 0}
-              OneToTwo:
-              - {x: 0, y: 0}
-              TwoToOne:
-              - {x: 0, y: 0}
-              TwoToThree:
-              - {x: 0, y: 0}
-              ThreeToTwo:
-              - {x: 0, y: 0}
-              ThreeToZero:
-              - {x: 0, y: 0}
-              ZeroToTwo:
-              - {x: 0, y: 0}
-              TwoToZero:
-              - {x: 0, y: 0}
-              OneToThree:
-              - {x: 0, y: 0}
-              ThreeToOne:
-              - {x: 0, y: 0}
-            LKickTable:
-              StartState: 0
-              ZeroToThree:
-              - {x: 0, y: 0}
-              ZeroToOne:
-              - {x: 0, y: 0}
-              OneToZero:
-              - {x: 0, y: 0}
-              OneToTwo:
-              - {x: 0, y: 0}
-              TwoToOne:
-              - {x: 0, y: 0}
-              TwoToThree:
-              - {x: 0, y: 0}
-              ThreeToTwo:
-              - {x: 0, y: 0}
-              ThreeToZero:
-              - {x: 0, y: 0}
-              ZeroToTwo:
-              - {x: 0, y: 0}
-              TwoToZero:
-              - {x: 0, y: 0}
-              OneToThree:
-              - {x: 0, y: 0}
-              ThreeToOne:
-              - {x: 0, y: 0}
-            SKickTable:
-              StartState: 0
-              ZeroToThree:
-              - {x: 0, y: 0}
-              ZeroToOne:
-              - {x: 0, y: 0}
-              OneToZero:
-              - {x: 0, y: 0}
-              OneToTwo:
-              - {x: 0, y: 0}
-              TwoToOne:
-              - {x: 0, y: 0}
-              TwoToThree:
-              - {x: 0, y: 0}
-              ThreeToTwo:
-              - {x: 0, y: 0}
-              ThreeToZero:
-              - {x: 0, y: 0}
-              ZeroToTwo:
-              - {x: 0, y: 0}
-              TwoToZero:
-              - {x: 0, y: 0}
-              OneToThree:
-              - {x: 0, y: 0}
-              ThreeToOne:
-              - {x: 0, y: 0}
-            ZKickTable:
-              StartState: 0
-              ZeroToThree:
-              - {x: 0, y: 0}
-              ZeroToOne:
-              - {x: 0, y: 0}
-              OneToZero:
-              - {x: 0, y: 0}
-              OneToTwo:
-              - {x: 0, y: 0}
-              TwoToOne:
-              - {x: 0, y: 0}
-              TwoToThree:
-              - {x: 0, y: 0}
-              ThreeToTwo:
-              - {x: 0, y: 0}
-              ThreeToZero:
-              - {x: 0, y: 0}
-              ZeroToTwo:
-              - {x: 0, y: 0}
-              TwoToZero:
-              - {x: 0, y: 0}
-              OneToThree:
-              - {x: 0, y: 0}
-              ThreeToOne:
-              - {x: 0, y: 0}
           PiecePlacedDelay: 0
           LineClearDelay: 0
           OnTouchGround: 0
@@ -7457,6 +7269,7 @@ MonoBehaviour:
             AutomaticRepeatRate: 0
             SoftDropFactor: Infinity
             DasCutDelay: 0
+            DoubleDropPreventionInterval: 0
             DelayDasOn: 0
             AntiDasBehavior: 1
             DiagonalLockBehavior: 0
@@ -10528,7 +10341,6 @@ MonoBehaviour:
   _countdown: {fileID: 1815941597}
   _gameTitle: {fileID: 1879527632}
   _loadingOverlay: {fileID: 645985881}
-  _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   GameInitialized:
     m_PersistentCalls:
       m_Calls:

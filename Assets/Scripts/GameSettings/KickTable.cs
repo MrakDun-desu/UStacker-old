@@ -8,6 +8,7 @@ namespace Blockstacker.GameSettings
     public record KickTable
     {
         public RotationState StartState;
+        public Vector2Int[] FullSpinKicks = Array.Empty<Vector2Int>();
         public Vector2Int[] ZeroToThree = new Vector2Int[1];
         public Vector2Int[] ZeroToOne = new Vector2Int[1];
         public Vector2Int[] OneToZero = new Vector2Int[1];

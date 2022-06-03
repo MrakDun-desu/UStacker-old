@@ -18,6 +18,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private Transform _helperTransform;
         [SerializeField] private GameManager _manager;
+        [SerializeField] private GameRecorder _recorder;
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private SpriteRenderer _backgroundRenderer;
         [SerializeField] private Camera _camera;
@@ -192,7 +193,7 @@ namespace Blockstacker.Gameplay
             return transform.position + boardPos.x * Right + boardPos.y * Up;
         }
 
-        public bool CanPlace(Vector2Int blockPosition)
+        public bool IsEmpty(Vector2Int blockPosition)
         {
             if (blockPosition.x < 0 || blockPosition.x >= Width ||
                 blockPosition.y < 0) return false;
@@ -202,26 +203,26 @@ namespace Blockstacker.Gameplay
             return Blocks[blockPosition.y][blockPosition.x] is null;
         }
 
-        private bool CanPlace(Vector3 realPosition, Vector2Int offset = new())
+        public bool IsEmpty(Vector3 realPosition, Vector2Int offset = new())
         {
             var boardPosition = WorldSpaceToBoardPosition(realPosition);
-            return CanPlace(boardPosition + offset);
+            return IsEmpty(boardPosition + offset);
         }
 
         public bool CanPlace(Piece piece, Vector2Int offset = new())
         {
-            return piece.Blocks.All(block => CanPlace(block.transform.position, offset));
+            return piece.Blocks.All(block => IsEmpty(block.transform.position, offset));
         }
 
         public bool CanPlace(IEnumerable<Transform> transforms, Vector2Int offset = new())
         {
-            return transforms.All(tf => CanPlace(tf.position, offset));
+            return transforms.All(tf => IsEmpty(tf.position, offset));
         }
 
         public void Place(Block block)
         {
             var blockPos = WorldSpaceToBoardPosition(block.transform.position);
-            if (!CanPlace(blockPos)) return;
+            if (!IsEmpty(blockPos)) return;
             while (Blocks.Count <= blockPos.y) Blocks.Add(new Block[Width]);
 
             Blocks[blockPos.y][blockPos.x] = block;
@@ -246,6 +247,17 @@ namespace Blockstacker.Gameplay
 
             var linesWereCleared = linesCleared > 0;
             var wasAllClear = Blocks.Count == 0;
+
+            switch (_recorder.ActionList[^1])
+            {
+                case SpinSuccessfullMessage spin:
+                    _mediator.Send(new PiecePlacedMessage
+                    {
+                        LinesCleared = linesCleared, WasAllClear = wasAllClear, Time = placementTime,
+                        WasSpin = spin.SpinResult.WasSpin, WasSpinMini = spin.SpinResult.WasSpinMini
+                    });
+                    break;
+            }
 
             _mediator.Send(new PiecePlacedMessage
                 {LinesCleared = linesCleared, WasAllClear = wasAllClear, Time = placementTime});

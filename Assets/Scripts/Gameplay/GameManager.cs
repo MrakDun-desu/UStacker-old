@@ -27,7 +27,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private UnityEvent GameEnded;
         public GameReplay Replay;
         private bool _gameEnded;
-
+        private bool _gameStarted;
         private bool _gameRunning;
 
         public event Action GameRestartedEvent;
@@ -40,13 +40,14 @@ namespace Blockstacker.Gameplay
         public void StartGame()
         {
             _gameRunning = true;
+            _gameStarted = true;
             Replay.GameSettings = _settings.Settings with { };
             GameStarted.Invoke();
         }
 
         public void TogglePause()
         {
-            if (_gameEnded) return;
+            if (_gameEnded && !_gameStarted) return;
 
             if (_gameRunning)
             {
@@ -81,7 +82,7 @@ namespace Blockstacker.Gameplay
         public void EndGame()
         {
             _gameEnded = true;
-            Replay.ActionList = new List<InputActionMessage>();
+            Replay.ActionList = new List<Message>();
             Replay.ActionList.AddRange(_gameRecorder.ActionList);
             Replay.Stats = _statCounter.Stats with { };
             Replay.GameLength = _timer.CurrentTimeAsSpan;

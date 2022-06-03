@@ -21,7 +21,7 @@ MonoBehaviour:
         AllowedSpins: 0
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: -210638986
+        ActiveSeed: 2027429085
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
@@ -33,6 +33,7 @@ MonoBehaviour:
         ActiveRotationSystem:
           IKickTable:
             StartState: 0
+            FullSpinKicks: []
             ZeroToThree:
             - {x: 0, y: 0}
             - {x: -1, y: 0}
@@ -91,6 +92,7 @@ MonoBehaviour:
             - {x: 0, y: 0}
           TKickTable:
             StartState: 0
+            FullSpinKicks: []
             ZeroToThree:
             - {x: 0, y: 0}
             - {x: 1, y: 0}
@@ -149,6 +151,7 @@ MonoBehaviour:
             - {x: 0, y: 0}
           OKickTable:
             StartState: 0
+            FullSpinKicks: []
             ZeroToThree:
             - {x: 0, y: 0}
             - {x: 1, y: 0}
@@ -207,6 +210,7 @@ MonoBehaviour:
             - {x: 0, y: 0}
           JKickTable:
             StartState: 0
+            FullSpinKicks: []
             ZeroToThree:
             - {x: 0, y: 0}
             - {x: 1, y: 0}
@@ -265,6 +269,7 @@ MonoBehaviour:
             - {x: 0, y: 0}
           LKickTable:
             StartState: 0
+            FullSpinKicks: []
             ZeroToThree:
             - {x: 0, y: 0}
             - {x: 1, y: 0}
@@ -323,6 +328,7 @@ MonoBehaviour:
             - {x: 0, y: 0}
           SKickTable:
             StartState: 0
+            FullSpinKicks: []
             ZeroToThree:
             - {x: 0, y: 0}
             - {x: 1, y: 0}
@@ -381,6 +387,7 @@ MonoBehaviour:
             - {x: 0, y: 0}
           ZKickTable:
             StartState: 0
+            FullSpinKicks: []
             ZeroToThree:
             - {x: 0, y: 0}
             - {x: 1, y: 0}
@@ -447,7 +454,7 @@ MonoBehaviour:
           DelayedAutoShift: 0.0833333358168602
           AutomaticRepeatRate: 0
           SoftDropFactor: Infinity
-          DasCutDelay: 0
+          DasCutDelay: 0.01666666753590107
           DoubleDropPreventionInterval: 0
           DelayDasOn: 1
           AntiDasBehavior: 2

@@ -1,5 +1,6 @@
+using System;
 using System.Collections.Generic;
-using Blockstacker.Gameplay.Enums;
+using Blockstacker.Common.Enums;
 using Blockstacker.GameSettings.Enums;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,6 +14,9 @@ namespace Blockstacker.Gameplay.Pieces
         public Vector2 SpawnOffset;
         public Vector2 ContainerOffset;
         public RotationState RotationState;
+        public uint MinimumSpinDetectors = 3;
+        public Transform[] SpinDetectors = Array.Empty<Transform>();
+        public Transform[] FullSpinDetectors = Array.Empty<Transform>();
         public UnityEvent PieceCleared;
 
         private void Awake()

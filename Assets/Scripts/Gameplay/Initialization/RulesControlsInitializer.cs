@@ -2,6 +2,7 @@ using System.IO;
 using System.Text;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
+using Blockstacker.Gameplay.Spins;
 using UnityEngine;
 
 namespace Blockstacker.Gameplay.Initialization
@@ -56,7 +57,7 @@ namespace Blockstacker.Gameplay.Initialization
                     _ => new RotationSystem()
                 };
 
-            _inputProcessor.KickHandler = new KickHandler(_gameSettings.Rules.Controls.ActiveRotationSystem);
+            _inputProcessor.SpinHandler = new SpinHandler(_gameSettings.Rules.Controls.ActiveRotationSystem);
         }
     }
 }

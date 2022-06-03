@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Common;
 using Blockstacker.Common.Extensions;
-using Blockstacker.Gameplay.Enums;
+using Blockstacker.Common.Enums;
 using Blockstacker.GameSettings;
 using Blockstacker.GlobalSettings;
 using Blockstacker.GlobalSettings.Appliers;
