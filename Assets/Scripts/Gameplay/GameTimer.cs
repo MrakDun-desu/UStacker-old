@@ -6,66 +6,49 @@ namespace Blockstacker.Gameplay
 {
     public class GameTimer : MonoBehaviour
     {
-        private readonly Stopwatch _stopwatch = new();
-
-        private double _scale = 1;
-        private TimeSpan _startOffset = TimeSpan.Zero;
-
-        public double Scale
+        private bool _isRunning;
+        private double _startTime;
+        private double _pauseStartTime;
+        private double _pausedTime;
+        
+        public double EffectiveStartTime
         {
-            get => _scale;
-            set
+            get
             {
-                if (value == 0)
-                {
-                    _stopwatch.Stop();
-                    return;
-                }
-
-                _startOffset = _stopwatch.Elapsed * _scale + _startOffset;
-                if (_stopwatch.IsRunning)
-                    _stopwatch.Restart();
-                else
-                    _stopwatch.Reset();
-
-                _scale = value;
+                if (_isRunning)
+                    return _startTime + _pausedTime;
+                return _startTime + _pausedTime + Time.realtimeSinceStartupAsDouble - _pauseStartTime;
             }
         }
 
-        public double CurrentTime
-        {
-            get => (_stopwatch.Elapsed * _scale + _startOffset).TotalSeconds;
-            set
-            {
-                _startOffset = TimeSpan.FromSeconds(value);
-                if (_stopwatch.IsRunning)
-                    _stopwatch.Restart();
-                else
-                    _stopwatch.Reset();
-            }
-        }
+        public double CurrentTime => Time.realtimeSinceStartupAsDouble - EffectiveStartTime;
 
-        public TimeSpan CurrentTimeAsSpan => _stopwatch.Elapsed * _scale + _startOffset;
+        public TimeSpan CurrentTimeAsSpan => TimeSpan.FromSeconds(CurrentTime);
 
         public void StartTiming()
         {
-            _stopwatch.Start();
+            _startTime = Time.realtimeSinceStartupAsDouble;
+            _isRunning = true;
         }
 
         public void ResumeTiming()
         {
-            if (_stopwatch.ElapsedTicks <= 0) return;
-            _stopwatch.Start();
+            if (_isRunning) return;
+            _pausedTime += Time.realtimeSinceStartupAsDouble - _pauseStartTime;
+            _isRunning = true;
         }
 
         public void StopTiming()
         {
-            _stopwatch.Stop();
+            _pauseStartTime = Time.realtimeSinceStartupAsDouble;
+            _isRunning = false;
         }
 
         public void ResetTiming()
         {
-            _stopwatch.Reset();
+            _pausedTime = 0d;
+            _startTime = Time.realtimeSinceStartupAsDouble;
+            StopTiming();
         }
     }
 }

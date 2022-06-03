@@ -144,8 +144,9 @@ namespace Blockstacker.Gameplay
         {
             if (!_pieceLocking) return;
             _lockTime = updateTime + _settings.Rules.Levelling.LockDelay;
-            if (_settings.Rules.Controls.OnTouchGround == OnTouchGround.LimitedMoves)
-                _hardLockAmount -= 1;
+            if (_settings.Rules.Controls.OnTouchGround != OnTouchGround.LimitedMoves) return;
+            _hardLockAmount -= 1;
+            if (_hardLockAmount <= 0) HandlePiecePlacement(updateTime);
         }
 
         private static RotationState ChangeRotationState(RotationState state, int value)
@@ -163,7 +164,7 @@ namespace Blockstacker.Gameplay
         public void OnMovePieceLeft(InputAction.CallbackContext ctx)
         {
             if (!enabled) return;
-            var actionTime = _timer.CurrentTime;
+            var actionTime = ctx.time - _timer.EffectiveStartTime;
             if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeVertical &&
                 _effectiveDropTime < _normalDropTime)
                 return;
@@ -199,7 +200,7 @@ namespace Blockstacker.Gameplay
         public void OnMovePieceRight(InputAction.CallbackContext ctx)
         {
             if (!enabled) return;
-            var actionTime = _timer.CurrentTime;
+            var actionTime = ctx.time - _timer.EffectiveStartTime;
             if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeVertical &&
                 _effectiveDropTime < _normalDropTime)
                 return;
@@ -236,7 +237,7 @@ namespace Blockstacker.Gameplay
         public void OnSoftDrop(InputAction.CallbackContext ctx)
         {
             if (!enabled) return;
-            var actionTime = _timer.CurrentTime;
+            var actionTime = ctx.time - _timer.EffectiveStartTime;
             if (ctx.performed)
             {
                 _mediator.Send(new InputActionMessage
@@ -277,7 +278,7 @@ namespace Blockstacker.Gameplay
         public void OnRotateCounterclockwise(InputAction.CallbackContext ctx)
         {
             if (!enabled) return;
-            var actionTime = _timer.CurrentTime;
+            var actionTime = ctx.time - _timer.EffectiveStartTime;
             if (_pieceIsNull) return;
             if (!ctx.performed) return;
             const int rotationAngle = 90;
@@ -307,7 +308,7 @@ namespace Blockstacker.Gameplay
         public void OnRotateClockwise(InputAction.CallbackContext ctx)
         {
             if (!enabled) return;
-            var actionTime = _timer.CurrentTime;
+            var actionTime = ctx.time - _timer.EffectiveStartTime;
             if (_pieceIsNull) return;
             if (!ctx.performed) return;
             const int rotationAngle = -90;
@@ -337,7 +338,7 @@ namespace Blockstacker.Gameplay
         public void OnRotate180(InputAction.CallbackContext ctx)
         {
             if (!enabled) return;
-            var actionTime = _timer.CurrentTime;
+            var actionTime = ctx.time - _timer.EffectiveStartTime;
             if (_pieceIsNull) return;
             if (!ctx.performed) return;
             if (!_settings.Rules.Controls.Allow180Spins) return;
@@ -368,7 +369,7 @@ namespace Blockstacker.Gameplay
         public void OnSwapHoldPiece(InputAction.CallbackContext ctx)
         {
             if (!enabled) return;
-            var actionTime = _timer.CurrentTime;
+            var actionTime = ctx.time - _timer.EffectiveStartTime;
             if (_pieceIsNull) return;
             if (!ctx.performed) return;
             if (!_settings.Rules.Controls.AllowHold) return;
@@ -497,6 +498,9 @@ namespace Blockstacker.Gameplay
 
             while (_dropTimer < functionStartTime)
             {
+                _mediator.Send(new LinesDroppedMessage
+                    {Count = 1, WasHardDrop = false, Time = _dropTimer});
+                
                 _dropTimer += _effectiveDropTime;
 
                 if (_board.CanPlace(ActivePiece, movementVector))
@@ -505,13 +509,15 @@ namespace Blockstacker.Gameplay
                     continue;
                 }
 
+                var touchGroundTime = _dropTimer - _effectiveDropTime;
+
                 if (!_pieceLocking)
                 {
-                    _lockTime = functionStartTime + _settings.Rules.Levelling.LockDelay;
+                    _lockTime = touchGroundTime + _settings.Rules.Levelling.LockDelay;
                     switch (_settings.Rules.Controls.OnTouchGround)
                     {
                         case OnTouchGround.LimitedTime:
-                            _hardLockAmount = functionStartTime + _settings.Rules.Controls.OnTouchGroundAmount;
+                            _hardLockAmount = touchGroundTime + _settings.Rules.Controls.OnTouchGroundAmount;
                             break;
                         case OnTouchGround.LimitedMoves:
                             _hardLockAmount = Math.Floor(_settings.Rules.Controls.OnTouchGroundAmount);
@@ -525,29 +531,26 @@ namespace Blockstacker.Gameplay
                     _pieceLocking = true;
                 }
 
-                _dropTimer = _effectiveDropTime + functionStartTime;
+                _dropTimer = functionStartTime;
                 break;
             }
+
+            var lastDropTime = _dropTimer - _effectiveDropTime;
 
             movementVector.y += 1;
             MovePiece(movementVector, false);
 
-            _mediator.Send(new LinesDroppedMessage
-                {Count = (uint) -movementVector.y, WasHardDrop = false, Time = functionStartTime});
-
-            if (_lockTime < functionStartTime &&
+            if (_lockTime < lastDropTime &&
                 _settings.Rules.Controls.OnTouchGround != OnTouchGround.InfiniteMovement)
-                HandlePiecePlacement(functionStartTime);
+                HandlePiecePlacement(lastDropTime);
 
             switch (_settings.Rules.Controls.OnTouchGround)
             {
                 case OnTouchGround.LimitedTime:
-                    if (_hardLockAmount < functionStartTime)
-                        HandlePiecePlacement(functionStartTime);
+                    if (_hardLockAmount < lastDropTime)
+                        HandlePiecePlacement(lastDropTime);
                     break;
                 case OnTouchGround.LimitedMoves:
-                    if (_hardLockAmount <= 0)
-                        HandlePiecePlacement(functionStartTime);
                     break;
                 case OnTouchGround.InfiniteMovement:
                     break;
