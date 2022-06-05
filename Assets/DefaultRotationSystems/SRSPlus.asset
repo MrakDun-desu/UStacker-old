@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50c46225bf708ce46bddb2402e4cfb1f, type: 3}
   m_Name: SRSPlus
   m_EditorClassIdentifier: 
-  _rotationSystem:
-    IKickTable:
+  _entries:
+  - Key: 0
+    Value:
       StartState: 0
+      FullSpinKicks: []
       ZeroToThree:
       - {x: 0, y: 0}
       - {x: -1, y: 0}
@@ -71,8 +73,12 @@ MonoBehaviour:
       - {x: 0, y: 0}
       ThreeToOne:
       - {x: 0, y: 0}
-    TKickTable:
+  - Key: 1
+    Value:
       StartState: 0
+      FullSpinKicks:
+      - {x: -1, y: -2}
+      - {x: 1, y: -2}
       ZeroToThree:
       - {x: 0, y: 0}
       - {x: 1, y: 0}
@@ -129,8 +135,12 @@ MonoBehaviour:
       - {x: 0, y: 0}
       ThreeToOne:
       - {x: 0, y: 0}
-    OKickTable:
+  - Key: 2
+    Value:
       StartState: 0
+      FullSpinKicks:
+      - {x: -1, y: -2}
+      - {x: 1, y: -2}
       ZeroToThree:
       - {x: 0, y: 0}
       - {x: 1, y: 0}
@@ -187,8 +197,12 @@ MonoBehaviour:
       - {x: 0, y: 0}
       ThreeToOne:
       - {x: 0, y: 0}
-    JKickTable:
+  - Key: 4
+    Value:
       StartState: 0
+      FullSpinKicks:
+      - {x: -1, y: -2}
+      - {x: 1, y: -2}
       ZeroToThree:
       - {x: 0, y: 0}
       - {x: 1, y: 0}
@@ -245,8 +259,12 @@ MonoBehaviour:
       - {x: 0, y: 0}
       ThreeToOne:
       - {x: 0, y: 0}
-    LKickTable:
+  - Key: 3
+    Value:
       StartState: 0
+      FullSpinKicks:
+      - {x: -1, y: -2}
+      - {x: 1, y: -2}
       ZeroToThree:
       - {x: 0, y: 0}
       - {x: 1, y: 0}
@@ -303,8 +321,12 @@ MonoBehaviour:
       - {x: 0, y: 0}
       ThreeToOne:
       - {x: 0, y: 0}
-    SKickTable:
+  - Key: 5
+    Value:
       StartState: 0
+      FullSpinKicks:
+      - {x: -1, y: -2}
+      - {x: 1, y: -2}
       ZeroToThree:
       - {x: 0, y: 0}
       - {x: 1, y: 0}
@@ -361,8 +383,12 @@ MonoBehaviour:
       - {x: 0, y: 0}
       ThreeToOne:
       - {x: 0, y: 0}
-    ZKickTable:
+  - Key: 6
+    Value:
       StartState: 0
+      FullSpinKicks:
+      - {x: -1, y: -2}
+      - {x: 1, y: -2}
       ZeroToThree:
       - {x: 0, y: 0}
       - {x: 1, y: 0}
@@ -419,3 +445,4 @@ MonoBehaviour:
       - {x: 0, y: 0}
       ThreeToOne:
       - {x: 0, y: 0}
+  _duplicateEntries: []

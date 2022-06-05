@@ -4,10 +4,9 @@ using Blockstacker.Common.Enums;
 
 namespace Blockstacker.GameSettings
 {
-    [Serializable]
-    public record RotationSystem
+    public class RotationSystem
     {
-        public Dictionary<PieceType, KickTable> KickTables = new()
+        public readonly Dictionary<PieceType, KickTable> KickTables = new()
         {
             {PieceType.IPiece, new KickTable()},
             {PieceType.TPiece, new KickTable()},
@@ -17,7 +16,7 @@ namespace Blockstacker.GameSettings
             {PieceType.SPiece, new KickTable()},
             {PieceType.ZPiece, new KickTable()}
         };
-
+        
         public KickTable GetKickTable(PieceType pieceType)
         {
             return KickTables.ContainsKey(pieceType) ? KickTables[pieceType] : new KickTable();

@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockstacker.Common.Enums;
 using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Pieces;
+using Blockstacker.Gameplay.Spins;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
 using Blockstacker.GlobalSettings;
@@ -180,6 +182,35 @@ namespace Blockstacker.Gameplay
             return linesCleared;
         }
 
+        private void CheckForSpin(PieceType pieceType, out SpinResult result)
+        {
+            result = new SpinResult {Kick = Vector2Int.zero};
+            if (_recorder.ActionList[^1] is not SpinSuccessfullMessage message) return;
+
+            result = message.SpinResult;
+            switch (_settings.Rules.General.AllowedSpins)
+            {
+                case AllowedSpins.Stupid:
+                    result.WasSpin = true;
+                    result.WasSpinMini = false;
+                    return;
+                case AllowedSpins.TSpins:
+                    if (pieceType == PieceType.TPiece) return;
+                    result.WasSpin = false;
+                    result.WasSpinMini = false;
+
+                    return;
+                case AllowedSpins.All:
+                    return;
+                case AllowedSpins.None:
+                    result.WasSpin = false;
+                    result.WasSpinMini = false;
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         private Vector2Int WorldSpaceToBoardPosition(Vector3 worldSpacePos)
         {
             _helperTransform.position = worldSpacePos;
@@ -248,19 +279,13 @@ namespace Blockstacker.Gameplay
             var linesWereCleared = linesCleared > 0;
             var wasAllClear = Blocks.Count == 0;
 
-            switch (_recorder.ActionList[^1])
-            {
-                case SpinSuccessfullMessage spin:
-                    _mediator.Send(new PiecePlacedMessage
-                    {
-                        LinesCleared = linesCleared, WasAllClear = wasAllClear, Time = placementTime,
-                        WasSpin = spin.SpinResult.WasSpin, WasSpinMini = spin.SpinResult.WasSpinMini
-                    });
-                    break;
-            }
+            CheckForSpin(piece.PieceType, out var spinResult);
 
             _mediator.Send(new PiecePlacedMessage
-                {LinesCleared = linesCleared, WasAllClear = wasAllClear, Time = placementTime});
+            {
+                LinesCleared = linesCleared, WasAllClear = wasAllClear, Time = placementTime,
+                WasSpin = spinResult.WasSpin, WasSpinMini = spinResult.WasSpinMini, PieceType = piece.PieceType
+            });
 
             if (_settings.Rules.BoardDimensions.AllowClutchClears && linesWereCleared) return true;
 

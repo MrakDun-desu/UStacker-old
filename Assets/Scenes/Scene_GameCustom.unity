@@ -10336,8 +10336,8 @@ MonoBehaviour:
   _gridPiece: {fileID: 6261951319669865305, guid: 3a1507dd0a82931498ca6bec7335d02b, type: 3}
   _pieceContainerPrefab: {fileID: 8930354990229623398, guid: 1155493e35a2ad54faf7c922250b2086, type: 3}
   _inputProcessor: {fileID: 465133845}
-  _srsRotationSystemSo: {fileID: 11400000, guid: 00844c25eff47324598e9db5f5db0fd4, type: 2}
-  _srsPlusRotationSystemSo: {fileID: 11400000, guid: 275efdfb48a023546b9353c2657953a1, type: 2}
+  _srsRotationSystemSo: {fileID: 11400000, guid: b743b260e26929048b5fc66f1375029b, type: 2}
+  _srsPlusRotationSystemSo: {fileID: 11400000, guid: a8fb02e35ee83f24f82981756a71a81c, type: 2}
   _countdown: {fileID: 1815941597}
   _gameTitle: {fileID: 1879527632}
   _loadingOverlay: {fileID: 645985881}

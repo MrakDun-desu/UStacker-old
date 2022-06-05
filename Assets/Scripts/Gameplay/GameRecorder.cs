@@ -20,7 +20,6 @@ namespace Blockstacker.Gameplay
         private void AddMessageToList(Message message)
         {
             ActionList.Add(message);
-            ActionList.Sort((a, b) => a.Time > b.Time ? 1 : -1);
         }
 
         public void ClearActionList()

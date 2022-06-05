@@ -28,11 +28,11 @@ namespace Blockstacker.Gameplay.Spins
                 if (!board.CanPlace(piece, kick)) continue;
 
                 result.Kick = kick;
-                if (piece.SpinDetectors.Count(spinDetector => !board.IsEmpty(spinDetector.position)) <
+                if (piece.SpinDetectors.Count(spinDetector => !board.IsEmpty(spinDetector.position, kick)) <
                     piece.MinimumSpinDetectors)
                     return true;
 
-                if (piece.FullSpinDetectors.All(spinDetector => !board.IsEmpty(spinDetector.position)) ||
+                if (piece.FullSpinDetectors.All(spinDetector => !board.IsEmpty(spinDetector.position, kick)) ||
                     _rotationSystem.GetKickTable(piece.PieceType).FullSpinKicks.Contains(kick))
                     result.WasSpin = true;
                 else

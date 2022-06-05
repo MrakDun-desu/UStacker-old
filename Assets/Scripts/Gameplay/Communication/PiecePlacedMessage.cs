@@ -1,4 +1,5 @@
 using System;
+using Blockstacker.Common.Enums;
 
 namespace Blockstacker.Gameplay.Communication
 {
@@ -6,6 +7,7 @@ namespace Blockstacker.Gameplay.Communication
     public record PiecePlacedMessage : Message
     {
         public uint LinesCleared;
+        public PieceType PieceType;
         public bool WasAllClear;
         public bool WasSpin;
         public bool WasSpinMini;
