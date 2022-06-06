@@ -47,7 +47,7 @@ namespace Blockstacker.Gameplay
 
         public void TogglePause()
         {
-            if (_gameEnded && !_gameStarted) return;
+            if (_gameEnded|| !_gameStarted) return;
 
             if (_gameRunning)
             {
