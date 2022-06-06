@@ -4,6 +4,7 @@ using System.Linq;
 using Blockstacker.Common.Enums;
 using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
+using Blockstacker.Gameplay.Enums;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Spins;
 using Blockstacker.GameSettings;
@@ -37,6 +38,8 @@ namespace Blockstacker.Gameplay
         private uint _height;
         private Vector3 _offset;
         private uint _width;
+
+        private Vector2Int _lastPieceMovement;
 
         public uint Width
         {
@@ -182,30 +185,20 @@ namespace Blockstacker.Gameplay
             return linesCleared;
         }
 
-        private void CheckForSpin(PieceType pieceType, out SpinResult result)
+        private SpinResult CheckSpinValid(PieceType pieceType, SpinResult formerResult)
         {
-            result = new SpinResult {Kick = Vector2Int.zero};
-            if (_recorder.ActionList[^1] is not SpinSuccessfullMessage message) return;
-
-            result = message.SpinResult;
             switch (_settings.Rules.General.AllowedSpins)
             {
                 case AllowedSpins.Stupid:
-                    result.WasSpin = true;
-                    result.WasSpinMini = false;
-                    return;
+                    formerResult.WasSpin = true;
+                    formerResult.WasSpinMini = false;
+                    return formerResult;
                 case AllowedSpins.TSpins:
-                    if (pieceType == PieceType.TPiece) return;
-                    result.WasSpin = false;
-                    result.WasSpinMini = false;
-
-                    return;
+                    return pieceType == PieceType.TPiece ? formerResult : new SpinResult();
                 case AllowedSpins.All:
-                    return;
+                    return formerResult;
                 case AllowedSpins.None:
-                    result.WasSpin = false;
-                    result.WasSpinMini = false;
-                    return;
+                    return new SpinResult();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -259,7 +252,7 @@ namespace Blockstacker.Gameplay
             Blocks[blockPos.y][blockPos.x] = block;
         }
 
-        public bool Place(Piece piece, double placementTime)
+        public bool Place(Piece piece, double placementTime, bool lastSpin, SpinResult lastSpinResult)
         {
             if (!CanPlace(piece)) return false;
 
@@ -279,14 +272,16 @@ namespace Blockstacker.Gameplay
             var linesWereCleared = linesCleared > 0;
             var wasAllClear = Blocks.Count == 0;
 
-            CheckForSpin(piece.PieceType, out var spinResult);
+            var actualSpinResult = lastSpin ? CheckSpinValid(piece.PieceType, lastSpinResult) : new SpinResult();
 
-            _mediator.Send(new PiecePlacedMessage
+            var piecePlacedMsg = 
+                new PiecePlacedMessage
             {
                 LinesCleared = linesCleared, WasAllClear = wasAllClear, Time = placementTime,
-                WasSpin = spinResult.WasSpin, WasSpinMini = spinResult.WasSpinMini, PieceType = piece.PieceType
-            });
-
+                WasSpin = actualSpinResult.WasSpin, WasSpinMini = actualSpinResult.WasSpinMini, PieceType = piece.PieceType
+            };
+            _mediator.Send(piecePlacedMsg);
+            
             if (_settings.Rules.BoardDimensions.AllowClutchClears && linesWereCleared) return true;
 
             switch (_settings.Rules.BoardDimensions.TopoutCondition)

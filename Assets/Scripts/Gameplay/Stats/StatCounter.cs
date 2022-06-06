@@ -7,7 +7,7 @@ namespace Gameplay.Stats
     public class StatCounter : MonoBehaviour
     {
         [SerializeField] private MediatorSO _mediator;
-        public readonly StatContainer Stats = new();
+        [SerializeField] public StatContainer Stats = new();
 
         private void Awake()
         {
@@ -27,19 +27,46 @@ namespace Gameplay.Stats
 
             switch (message.LinesCleared)
             {
+                case 0:
+                    if (message.WasSpin)
+                        Stats.Spins++;
+                    else if (message.WasSpinMini)
+                        Stats.MiniSpins++;
+                    break;
                 case 1:
-                    Stats.Singles++;
+                    if (message.WasSpin)
+                        Stats.SpinSingles++;
+                    else if (message.WasSpinMini)
+                        Stats.MiniSpinSingles++;
+                    else
+                        Stats.Singles++;
                     break;
                 case 2:
-                    Stats.Doubles++;
+                    if (message.WasSpin)
+                        Stats.SpinDoubles++;
+                    else if (message.WasSpinMini)
+                        Stats.MiniSpinDoubles++;
+                    else
+                        Stats.Doubles++;
                     break;
                 case 3:
-                    Stats.Triples++;
+                    if (message.WasSpin)
+                        Stats.SpinTriples++;
+                    else if (message.WasSpinMini)
+                        Stats.MiniSpinTriples++;
+                    else
+                        Stats.MiniSpinTriples++;
                     break;
                 case 4:
-                    Stats.Quads++;
+                    if (message.WasSpin)
+                        Stats.SpinQuads++;
+                    else if (message.WasSpinMini)
+                        Stats.MiniSpinQuads++;
+                    else
+                        Stats.Quads++;
                     break;
             }
+
         }
 
         public void ResetStats()

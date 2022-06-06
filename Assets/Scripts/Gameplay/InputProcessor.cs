@@ -58,6 +58,9 @@ namespace Blockstacker.Gameplay
 
         private double _currentGravity;
 
+        private bool _lastWasSpin;
+        private SpinResult _lastSpinResult;
+
         public SpinHandler SpinHandler;
 
         public Piece ActivePiece
@@ -110,6 +113,13 @@ namespace Blockstacker.Gameplay
 
         private void MovePiece(Vector2Int moveVector, bool renderGhost = true)
         {
+            if (moveVector == Vector2Int.zero)
+            {
+                if (renderGhost)
+                    _ghostPiece.Render();
+                return;
+            }
+            _lastWasSpin = false;
             var pieceTransform = ActivePiece.transform;
             var piecePosition = pieceTransform.localPosition;
             piecePosition = new Vector3(
@@ -133,10 +143,13 @@ namespace Blockstacker.Gameplay
             movementVector -= Vector2Int.down;
             MovePiece(movementVector, false);
 
-            _mediator.Send(new LinesDroppedMessage
-                {Count = (uint) -movementVector.y, WasHardDrop = true, Time = placementTime});
+            if (-movementVector.y > 0)
+            {
+                _mediator.Send(new LinesDroppedMessage
+                    {Count = (uint) -movementVector.y, WasHardDrop = true, Time = placementTime});
+            }
 
-            var linesCleared = _board.Place(ActivePiece, placementTime);
+            var linesCleared = _board.Place(ActivePiece, placementTime, _lastWasSpin, _lastSpinResult);
             var spawnTime = _settings.Rules.Controls.PiecePlacedDelay;
             if (linesCleared)
                 spawnTime += _settings.Rules.Controls.LineClearDelay;
@@ -306,16 +319,15 @@ namespace Blockstacker.Gameplay
                     ActivePiece,
                     _board,
                     RotateDirection.Counterclockwise,
-                    out var result))
+                    out _lastSpinResult))
             {
                 ActivePiece.transform.Rotate(Vector3.forward, -rotationAngle);
                 return;
             }
 
-            MovePiece(result.Kick);
-            
-            _mediator.Send(new SpinSuccessfullMessage{SpinResult = result, Time = actionTime});
-            
+            MovePiece(_lastSpinResult.Kick);
+            _lastWasSpin = true;
+
             ActivePiece.RotationState = ChangeRotationState(ActivePiece.RotationState, rotationAngle);
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Rotation))
                 _dasDelay = actionTime + _handling.DasCutDelay;
@@ -339,15 +351,14 @@ namespace Blockstacker.Gameplay
                     ActivePiece,
                     _board,
                     RotateDirection.Clockwise,
-                    out var result))
+                    out _lastSpinResult))
             {
                 ActivePiece.transform.Rotate(Vector3.forward, -rotationAngle);
                 return;
             }
 
-            MovePiece(result.Kick);
-            
-            _mediator.Send(new SpinSuccessfullMessage{SpinResult = result, Time = actionTime});
+            MovePiece(_lastSpinResult.Kick);
+            _lastWasSpin = true;
             
             ActivePiece.RotationState = ChangeRotationState(ActivePiece.RotationState, rotationAngle);
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Rotation))
@@ -373,15 +384,14 @@ namespace Blockstacker.Gameplay
                     ActivePiece,
                     _board,
                     RotateDirection.OneEighty,
-                    out var result))
+                    out _lastSpinResult))
             {
                 ActivePiece.transform.Rotate(Vector3.forward, -rotationAngle);
                 return;
             }
 
-            MovePiece(result.Kick);
-            
-            _mediator.Send(new SpinSuccessfullMessage{SpinResult = result, Time = actionTime});
+            MovePiece(_lastSpinResult.Kick);
+            _lastWasSpin = true;
             
             ActivePiece.RotationState = ChangeRotationState(ActivePiece.RotationState, rotationAngle);
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Rotation))

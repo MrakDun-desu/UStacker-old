@@ -26,6 +26,8 @@ namespace Blockstacker.Gameplay.Pieces
                 block.Cleared += OnBlockCleared;
                 block.PieceType = PieceType;
             }
+            
+            PieceCleared.AddListener(() => Destroy(gameObject));
         }
 
         private void OnBlockCleared(Block sender)

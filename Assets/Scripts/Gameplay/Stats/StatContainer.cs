@@ -12,16 +12,28 @@ namespace Gameplay.Stats
         public uint Doubles;
         public uint Triples;
         public uint Quads;
+        public uint Spins;
+        public uint MiniSpins;
+        public uint SpinSingles;
+        public uint SpinDoubles;
+        public uint SpinTriples;
+        public uint SpinQuads;
+        public uint MiniSpinSingles;
+        public uint MiniSpinDoubles;
+        public uint MiniSpinTriples;
+        public uint MiniSpinQuads;
+
+        public uint LongestCombo;
+        public uint LongestBackToBack;
+        public uint AllClears;
+        public uint Holds;
 
         public void Reset()
         {
-            LinesCleared = 0;
-            PiecesPlaced = 0;
-            KeysPressed = 0;
-            Singles = 0;
-            Doubles = 0;
-            Triples = 0;
-            Quads = 0;
+            foreach (var fieldInfo in GetType().GetFields())
+            {
+                fieldInfo.SetValue(this, default);
+            }
         }
     }
 }
