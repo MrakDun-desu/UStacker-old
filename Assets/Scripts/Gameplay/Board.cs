@@ -21,7 +21,6 @@ namespace Blockstacker.Gameplay
         [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private Transform _helperTransform;
         [SerializeField] private GameManager _manager;
-        [SerializeField] private GameRecorder _recorder;
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private SpriteRenderer _backgroundRenderer;
         [SerializeField] private Camera _camera;
@@ -39,7 +38,10 @@ namespace Blockstacker.Gameplay
         private Vector3 _offset;
         private uint _width;
 
-        private Vector2Int _lastPieceMovement;
+        private uint _currentCombo;
+        private uint _currentBackToBack;
+        private bool _comboActive;
+        private bool _backToBackActive;
 
         public uint Width
         {
@@ -185,6 +187,38 @@ namespace Blockstacker.Gameplay
             return linesCleared;
         }
 
+        private void SendPlacementMessage(PiecePlacedMessage message)
+        {
+            if (message.LinesCleared > 0)
+            {
+                if (message.WasSpin || message.WasSpinMini || message.LinesCleared >= 4)
+                {
+                    if (_backToBackActive)
+                        _currentBackToBack++;
+                    else _backToBackActive = true;
+                }
+                else
+                {
+                    _backToBackActive = false;
+                    _currentBackToBack = 0;
+                }
+                
+                if (_comboActive)
+                    _currentCombo++;
+                else _comboActive = true;
+            }
+            else
+            {
+                _currentCombo = 0;
+                _comboActive = false;
+            }
+
+            message.CurrentCombo = _currentCombo;
+            message.CurrentBackToBack = _currentBackToBack;
+
+            _mediator.Send(message);
+        }
+
         private SpinResult CheckSpinValid(PieceType pieceType, SpinResult formerResult)
         {
             switch (_settings.Rules.General.AllowedSpins)
@@ -280,7 +314,8 @@ namespace Blockstacker.Gameplay
                 LinesCleared = linesCleared, WasAllClear = wasAllClear, Time = placementTime,
                 WasSpin = actualSpinResult.WasSpin, WasSpinMini = actualSpinResult.WasSpinMini, PieceType = piece.PieceType
             };
-            _mediator.Send(piecePlacedMsg);
+
+            SendPlacementMessage(piecePlacedMsg);
             
             if (_settings.Rules.BoardDimensions.AllowClutchClears && linesWereCleared) return true;
 

@@ -1,4 +1,5 @@
-﻿using Blockstacker.Gameplay.Communication;
+﻿using System;
+using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Enums;
 using UnityEngine;
 
@@ -15,6 +16,12 @@ namespace Gameplay.Stats
             _mediator.Register<PiecePlacedMessage>(OnPiecePlaced);
         }
 
+        private void OnDestroy()
+        {
+            _mediator.Unregister<InputActionMessage>(OnInputAction);
+            _mediator.Unregister<PiecePlacedMessage>(OnPiecePlaced);
+        }
+
         private void OnInputAction(InputActionMessage message)
         {
             if (message.KeyActionType == KeyActionType.KeyDown) Stats.KeysPressed++;
@@ -24,6 +31,11 @@ namespace Gameplay.Stats
         {
             Stats.PiecesPlaced++;
             Stats.LinesCleared += message.LinesCleared;
+
+            if (message.WasAllClear) Stats.AllClears++;
+            if (message.CurrentCombo > Stats.LongestCombo) Stats.LongestCombo = message.CurrentCombo;
+            if (message.CurrentBackToBack > Stats.LongestBackToBack)
+                Stats.LongestBackToBack = message.CurrentBackToBack;
 
             switch (message.LinesCleared)
             {
