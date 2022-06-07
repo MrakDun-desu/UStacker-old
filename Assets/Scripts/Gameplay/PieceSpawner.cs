@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Common.Enums;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Randomizers;
 using Blockstacker.GameSettings;
@@ -45,7 +43,7 @@ namespace Blockstacker.Gameplay
         {
             var boardTransform = _board.transform;
             var piecePos = new Vector3(
-                (int) _settings.Rules.BoardDimensions.BoardWidth / 2,
+                (int) (_settings.Rules.BoardDimensions.BoardWidth / 2u),
                 (int) _settings.Rules.BoardDimensions.PieceSpawnHeight,
                 boardTransform.position.z
             );

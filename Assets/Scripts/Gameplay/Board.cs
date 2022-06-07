@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Common.Enums;
 using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
-using Blockstacker.Gameplay.Enums;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Spins;
 using Blockstacker.GameSettings;
@@ -219,7 +217,7 @@ namespace Blockstacker.Gameplay
             _mediator.Send(message);
         }
 
-        private SpinResult CheckSpinValid(PieceType pieceType, SpinResult formerResult)
+        private SpinResult CheckSpinValid(string pieceType, SpinResult formerResult)
         {
             switch (_settings.Rules.General.AllowedSpins)
             {
@@ -228,7 +226,7 @@ namespace Blockstacker.Gameplay
                     formerResult.WasSpinMini = false;
                     return formerResult;
                 case AllowedSpins.TSpins:
-                    return pieceType == PieceType.TPiece ? formerResult : new SpinResult();
+                    return pieceType == "TPiece" ? formerResult : new SpinResult();
                 case AllowedSpins.All:
                     return formerResult;
                 case AllowedSpins.None:

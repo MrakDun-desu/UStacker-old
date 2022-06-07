@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Blockstacker.Common.Enums;
 using Blockstacker.GameSettings.Enums;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,7 +9,8 @@ namespace Blockstacker.Gameplay.Pieces
     public class Piece : MonoBehaviour
     {
         public List<Block> Blocks = new();
-        public PieceType PieceType;
+        public string PieceType;
+        public Color GhostPieceColor;
         public Vector2 SpawnOffset;
         public Vector2 ContainerOffset;
         public RotationState RotationState;
@@ -24,7 +24,6 @@ namespace Blockstacker.Gameplay.Pieces
             foreach (var block in Blocks)
             {
                 block.Cleared += OnBlockCleared;
-                block.PieceType = PieceType;
             }
             
             PieceCleared.AddListener(() => Destroy(gameObject));

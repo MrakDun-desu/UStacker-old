@@ -446,3 +446,126 @@ MonoBehaviour:
       ThreeToOne:
       - {x: 0, y: 0}
   _duplicateEntries: []
+  _kickTables:
+  - Key: IPiece
+    Value:
+      StartState: 0
+      FullSpinKicks: []
+      ZeroToThree:
+      - {x: 0, y: 0}
+      - {x: -1, y: 0}
+      - {x: 2, y: 0}
+      - {x: -1, y: 2}
+      - {x: 2, y: -1}
+      ZeroToOne:
+      - {x: 0, y: 0}
+      - {x: 1, y: 0}
+      - {x: -2, y: 0}
+      - {x: -2, y: -1}
+      - {x: 1, y: 2}
+      OneToZero:
+      - {x: 0, y: 0}
+      - {x: -1, y: 0}
+      - {x: 2, y: 0}
+      - {x: -1, y: -2}
+      - {x: 2, y: 1}
+      OneToTwo:
+      - {x: 0, y: 0}
+      - {x: -1, y: 0}
+      - {x: 2, y: 0}
+      - {x: -1, y: 2}
+      - {x: 2, y: -1}
+      TwoToOne:
+      - {x: 0, y: 0}
+      - {x: -2, y: 0}
+      - {x: 1, y: 0}
+      - {x: -2, y: 1}
+      - {x: 1, y: -2}
+      TwoToThree:
+      - {x: 0, y: 0}
+      - {x: 2, y: 0}
+      - {x: -1, y: 0}
+      - {x: 2, y: 1}
+      - {x: -1, y: -2}
+      ThreeToTwo:
+      - {x: 0, y: 0}
+      - {x: -2, y: 0}
+      - {x: 1, y: 0}
+      - {x: -2, y: 1}
+      - {x: 1, y: -2}
+      ThreeToZero:
+      - {x: 0, y: 0}
+      - {x: 1, y: 0}
+      - {x: -2, y: 0}
+      - {x: 1, y: -2}
+      - {x: -2, y: 1}
+      ZeroToTwo:
+      - {x: 0, y: 0}
+      TwoToZero:
+      - {x: 0, y: 0}
+      OneToThree:
+      - {x: 0, y: 0}
+      ThreeToOne:
+      - {x: 0, y: 0}
+  _duplicateTables: []
+  DefaultKickTable:
+    StartState: 0
+    FullSpinKicks:
+    - {x: -1, y: -2}
+    - {x: 1, y: -2}
+    ZeroToThree:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 1, y: 1}
+    - {x: 0, y: -2}
+    - {x: 1, y: -2}
+    ZeroToOne:
+    - {x: 0, y: 0}
+    - {x: -1, y: 0}
+    - {x: -1, y: 1}
+    - {x: 0, y: -2}
+    - {x: -1, y: -2}
+    OneToZero:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 1, y: -1}
+    - {x: 0, y: 2}
+    - {x: 1, y: 2}
+    OneToTwo:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 1, y: -1}
+    - {x: 0, y: 2}
+    - {x: 1, y: 2}
+    TwoToOne:
+    - {x: 0, y: 0}
+    - {x: -1, y: 0}
+    - {x: -1, y: 1}
+    - {x: 0, y: -2}
+    - {x: -1, y: -2}
+    TwoToThree:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 1, y: 1}
+    - {x: 0, y: -2}
+    - {x: 1, y: -2}
+    ThreeToTwo:
+    - {x: 0, y: 0}
+    - {x: -1, y: 0}
+    - {x: -1, y: -1}
+    - {x: 0, y: 2}
+    - {x: -1, y: 2}
+    ThreeToZero:
+    - {x: 0, y: 0}
+    - {x: -1, y: 0}
+    - {x: -1, y: -1}
+    - {x: 0, y: 2}
+    - {x: -1, y: 2}
+    ZeroToTwo:
+    - {x: 0, y: 0}
+    TwoToZero:
+    - {x: 0, y: 0}
+    OneToThree:
+    - {x: 0, y: 0}
+    ThreeToOne:
+    - {x: 0, y: 0}

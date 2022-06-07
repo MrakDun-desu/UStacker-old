@@ -1,5 +1,4 @@
 using System;
-using Blockstacker.Common.Enums;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,7 +8,6 @@ namespace Blockstacker.Gameplay.Pieces
     {
         [SerializeField] private UnityEvent _onCleared;
         [SerializeField] private Vector2 _initialPosition;
-        public PieceType PieceType;
 
         public void Reset()
         {

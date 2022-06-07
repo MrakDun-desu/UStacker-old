@@ -1,5 +1,4 @@
 using System;
-using Blockstacker.Common.Enums;
 
 namespace Blockstacker.Gameplay.Communication
 {
@@ -9,7 +8,7 @@ namespace Blockstacker.Gameplay.Communication
         public uint LinesCleared;
         public uint CurrentCombo;
         public uint CurrentBackToBack;
-        public PieceType PieceType;
+        public string PieceType;
         public bool WasAllClear;
         public bool WasSpin;
         public bool WasSpinMini;

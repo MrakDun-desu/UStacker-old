@@ -1,25 +1,27 @@
-using System;
 using System.Collections.Generic;
-using Blockstacker.Common.Enums;
 
 namespace Blockstacker.GameSettings
 {
     public class RotationSystem
     {
-        public readonly Dictionary<PieceType, KickTable> KickTables = new()
+        public readonly Dictionary<string, KickTable> StringKickTables = new()
         {
-            {PieceType.IPiece, new KickTable()},
-            {PieceType.TPiece, new KickTable()},
-            {PieceType.OPiece, new KickTable()},
-            {PieceType.JPiece, new KickTable()},
-            {PieceType.LPiece, new KickTable()},
-            {PieceType.SPiece, new KickTable()},
-            {PieceType.ZPiece, new KickTable()}
+            {"IPiece", new KickTable()},
+            {"TPiece", new KickTable()},
+            {"OPiece", new KickTable()},
+            {"JPiece", new KickTable()},
+            {"LPiece", new KickTable()},
+            {"SPiece", new KickTable()},
+            {"ZPiece", new KickTable()},
         };
-        
-        public KickTable GetKickTable(PieceType pieceType)
+
+        public KickTable DefaultTable = new();
+
+        public KickTable GetKickTable(string pieceType)
         {
-            return KickTables.ContainsKey(pieceType) ? KickTables[pieceType] : new KickTable();
+            return StringKickTables.ContainsKey(pieceType) ? StringKickTables[pieceType] : DefaultTable;
         }
+        
+        
     }
 }
