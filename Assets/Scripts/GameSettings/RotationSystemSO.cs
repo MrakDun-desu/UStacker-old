@@ -19,7 +19,7 @@ namespace Blockstacker.GameSettings
         {
             DefaultKickTable = RotationSystem.DefaultTable;
             _kickTables.Clear();
-            foreach (var keyValuePair in RotationSystem.StringKickTables)
+            foreach (var keyValuePair in RotationSystem.KickTables)
             {
                 _kickTables.Add(new KeyValuePair(keyValuePair.Key, keyValuePair.Value));
             }
@@ -28,23 +28,23 @@ namespace Blockstacker.GameSettings
         public void OnAfterDeserialize()
         {
             RotationSystem.DefaultTable = DefaultKickTable;
-            RotationSystem.StringKickTables.Clear();
+            RotationSystem.KickTables.Clear();
             
             foreach (var keyValuePair in _kickTables)
             {
-                if (RotationSystem.StringKickTables.ContainsKey(keyValuePair.Key))
+                if (RotationSystem.KickTables.ContainsKey(keyValuePair.Key))
                 {
                     _duplicateTables.Add(keyValuePair);
                     _kickTables.Remove(keyValuePair);
                 }
                 else
-                    RotationSystem.StringKickTables.Add(keyValuePair.Key, keyValuePair.Value);
+                    RotationSystem.KickTables.Add(keyValuePair.Key, keyValuePair.Value);
             }
 
-            foreach (var keyValuePair in _duplicateTables.Where(keyValuePair => !RotationSystem.StringKickTables.ContainsKey(keyValuePair.Key)))
+            foreach (var keyValuePair in _duplicateTables.Where(keyValuePair => !RotationSystem.KickTables.ContainsKey(keyValuePair.Key)))
             {
                 _duplicateTables.Remove(keyValuePair);
-                RotationSystem.StringKickTables.Add(keyValuePair.Key, keyValuePair.Value);
+                RotationSystem.KickTables.Add(keyValuePair.Key, keyValuePair.Value);
             }
         }
         

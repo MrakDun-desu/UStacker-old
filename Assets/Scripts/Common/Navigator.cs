@@ -7,22 +7,22 @@ namespace Blockstacker.Common
     {
         public void LoadMenu()
         {
-            SceneManager.LoadScene("Scene_Menu");
+            SceneManager.LoadScene("Scene_Menu_Main");
         }
 
         public void LoadSettings()
         {
-            SceneManager.LoadScene("Scene_GlobalSettings");
+            SceneManager.LoadScene("Scene_Menu_GlobalSettings");
         }
 
         public void LoadGameSettings()
         {
-            SceneManager.LoadScene("Scene_GameSettings");
+            SceneManager.LoadScene("Scene_Menu_GameSettings");
         }
 
         public void LoadGame()
         {
-            SceneManager.LoadScene("Scene_GameCustom");
+            SceneManager.LoadScene("Scene_Game_Custom");
         }
 
         public void EndGame()

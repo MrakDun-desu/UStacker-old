@@ -2,16 +2,16 @@ using UnityEngine;
 
 namespace Blockstacker.Common
 {
-    public class MonoSingleton : MonoBehaviour
+    public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
     {
-        private static MonoSingleton _instance;
+        private static T _instance;
 
         protected virtual void Awake()
         {
             transform.parent = null;
             if (_instance == null)
             {
-                _instance = this;
+                _instance = (T)this;
                 DontDestroyOnLoad(gameObject);
             }
 

@@ -3,7 +3,8 @@ guid: 550c16d38db400d44858b05a49314ba1
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - _soundPackLoader: {fileID: 11400000, guid: 43a682696b59e694f8e674bf79fb5630, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

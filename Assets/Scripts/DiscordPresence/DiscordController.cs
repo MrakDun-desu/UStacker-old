@@ -3,7 +3,7 @@ using Discord;
 
 namespace Blockstacker.DiscordPresence
 {
-    public class DiscordController : MonoSingleton
+    public class DiscordController : MonoSingleton<DiscordController>
     {
         private Discord.Discord discord;
         private static long ApplicationID => 953585016779202580;
@@ -32,7 +32,7 @@ namespace Blockstacker.DiscordPresence
                 State = "Still Testing",
                 Details = "Imagine you see me stacking blocks here"
             };
-            activityManager.UpdateActivity(activity, res => { });
+            activityManager.UpdateActivity(activity, _ => { });
         }
 
         public void DisconnectFromDiscord()

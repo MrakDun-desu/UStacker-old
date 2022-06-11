@@ -1,12 +1,15 @@
-using Blockstacker.Loaders;
+using Blockstacker.Music;
+using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Appliers
 {
     public class SoundPackApplier : SettingApplierBase
     {
+        [SerializeField] private SoundPackLoader _soundPackLoader;
+        
         public override void OnSettingChanged()
         {
-            SoundPackLoader.Reload(AppSettings.Customization.SoundPackFolder);
+            _  = _soundPackLoader.Reload(AppSettings.Customization.SoundPackFolder);
         }
     }
 }
