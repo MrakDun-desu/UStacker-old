@@ -1,20 +1,23 @@
 using Blockstacker.Loaders;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 namespace Blockstacker.GlobalSettings.Appliers
 {
-    [RequireComponent(typeof(RawImage))]
+    [RequireComponent(typeof(RawImage), typeof(VideoPlayer))]
     public class Background : MonoBehaviour
     {
         [SerializeField] private string _backgroundName;
 
         private RawImage _backgroundImage;
+        private VideoPlayer _videoPlayer;
         private Texture _defaultTexture;
 
         private void Awake()
         {
             _backgroundImage = GetComponent<RawImage>();
+            _videoPlayer = GetComponent<VideoPlayer>();
             _defaultTexture = _backgroundImage.texture;
         }
 
@@ -41,8 +44,14 @@ namespace Blockstacker.GlobalSettings.Appliers
         private void OnBackgroundChanged()
         {
             if (string.IsNullOrEmpty(_backgroundName)) return;
-            if (BackgroundPackLoader.Backgrounds.TryGetValue(_backgroundName, out var newImage))
+            if (BackgroundPackLoader.BackgroundImages.TryGetValue(_backgroundName, out var newImage))
                 _backgroundImage.texture = newImage;
+            else if (BackgroundPackLoader.BackgroundVideos.TryGetValue(_backgroundName, out var videoPath))
+            {
+                _backgroundImage.texture = _videoPlayer.targetTexture;
+                _videoPlayer.url = "file://" + videoPath;
+                _videoPlayer.Play();
+            }
             else
                 _backgroundImage.texture = _defaultTexture;
         }

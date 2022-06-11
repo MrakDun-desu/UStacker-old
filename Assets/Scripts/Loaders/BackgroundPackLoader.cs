@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ namespace Blockstacker.Loaders
 {
     public static class BackgroundPackLoader
     {
-        public static Dictionary<string, Texture2D> Backgrounds = new();
+        public static Dictionary<string, Texture2D> BackgroundImages = new();
+        public static Dictionary<string, string> BackgroundVideos = new();
 
         private static string BackgroundPackPath => Path.Combine(Application.persistentDataPath, "backgroundPacks");
         public static event Action BackgroundPackChanged;
@@ -23,27 +25,15 @@ namespace Blockstacker.Loaders
             }
         }
 
-        public static void Reload(string backgroundPath)
+        public static async Task Reload(string path)
         {
-            Backgrounds.Clear();
-            _ = GetBackgroundsRecursivelyAsync(1, backgroundPath);
-        }
-
-        private static async Task GetBackgroundsRecursivelyAsync(int recursionLevel, string rootPath, string path = "")
-        {
-            if (recursionLevel-- <= 0) return;
-            List<Task> taskList = new();
-
-            foreach (var dir in Directory.EnumerateDirectories(Path.Combine(rootPath, path)))
-            {
-                var slashIndex = dir.LastIndexOfAny(new[] {'\\', '/'}) + 1;
-                taskList.Add(GetBackgroundsRecursivelyAsync(recursionLevel, path + '/' + dir[slashIndex..]));
-            }
-
-            foreach (var filePath in Directory.EnumerateFiles(Path.Combine(rootPath, path)))
-            {
-                taskList.Add(HandleBackgroundLoadAsync(filePath));
-            }
+            if (Directory.Exists(path)) return;
+            
+            BackgroundImages.Clear();
+            BackgroundVideos.Clear();
+            
+            var taskList = Directory.EnumerateFiles(path)
+                .Select(HandleBackgroundLoadAsync);
 
             await Task.WhenAll(taskList);
             BackgroundPackChanged?.Invoke();
@@ -51,16 +41,51 @@ namespace Blockstacker.Loaders
 
         private static async Task HandleBackgroundLoadAsync(string path)
         {
-            var newBackground = await GetBackgroundAsync(path);
-            var dotIndex = path.LastIndexOf('.');
-            Backgrounds.TryAdd(path[..dotIndex], newBackground);
+            var extension = Path.GetExtension(path).ToLower();
+            var backgroundName = Path.GetFileNameWithoutExtension(path);
+
+            var type = extension switch
+            {
+                "jpg" => BackgroundType.Image,
+                "png" => BackgroundType.Image,
+                "avi" => BackgroundType.Video,
+                "dv" => BackgroundType.Video,
+                "m4v" => BackgroundType.Video,
+                "mov" => BackgroundType.Video,
+                "mp4" => BackgroundType.Video,
+                "mpg" => BackgroundType.Video,
+                "mpeg" => BackgroundType.Video,
+                "ogv" => BackgroundType.Video,
+                "vp8" => BackgroundType.Video,
+                "webm" => BackgroundType.Video,
+                "wmv" => BackgroundType.Video,
+                _ => BackgroundType.Invalid
+            };
+
+            switch (type)
+            {
+                case BackgroundType.Image:
+                    var textureData = await File.ReadAllBytesAsync(path);
+                    Texture2D texture = new(1, 1);
+                    var newBackground = texture.LoadImage(textureData, false) ? texture : null;
+                    BackgroundImages[backgroundName] = newBackground;
+                    break;
+                case BackgroundType.Video:
+                    BackgroundVideos[backgroundName] = path;
+                    break;
+                case BackgroundType.Invalid:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
-        private static async Task<Texture2D> GetBackgroundAsync(string path)
+        private enum BackgroundType
         {
-            var textureData = await File.ReadAllBytesAsync(path);
-            Texture2D texture = new(1, 1);
-            return texture.LoadImage(textureData, false) ? texture : null;
+            Image,
+            Video,
+            Invalid
         }
+
     }
 }
