@@ -9,8 +9,8 @@ namespace Blockstacker.Loaders
 {
     public static class BackgroundPackLoader
     {
-        public static Dictionary<string, Texture2D> BackgroundImages = new();
-        public static Dictionary<string, string> BackgroundVideos = new();
+        public static readonly Dictionary<string, Texture2D> BackgroundImages = new();
+        public static readonly Dictionary<string, string> BackgroundVideos = new();
 
         private static string BackgroundPackPath => Path.Combine(Application.persistentDataPath, "backgroundPacks");
         public static event Action BackgroundPackChanged;
@@ -27,10 +27,9 @@ namespace Blockstacker.Loaders
 
         public static async Task Reload(string path)
         {
-            if (Directory.Exists(path)) return;
-            
             BackgroundImages.Clear();
             BackgroundVideos.Clear();
+            if (!Directory.Exists(path)) return;
             
             var taskList = Directory.EnumerateFiles(path)
                 .Select(HandleBackgroundLoadAsync);
@@ -41,7 +40,7 @@ namespace Blockstacker.Loaders
 
         private static async Task HandleBackgroundLoadAsync(string path)
         {
-            var extension = Path.GetExtension(path).ToLower();
+            var extension = Path.GetExtension(path).ToLower().Remove(0, 1);
             var backgroundName = Path.GetFileNameWithoutExtension(path);
 
             var type = extension switch
@@ -52,12 +51,11 @@ namespace Blockstacker.Loaders
                 "dv" => BackgroundType.Video,
                 "m4v" => BackgroundType.Video,
                 "mov" => BackgroundType.Video,
-                "mp4" => BackgroundType.Video,
+                "mp4" => BackgroundType.Video, // definitely works
                 "mpg" => BackgroundType.Video,
                 "mpeg" => BackgroundType.Video,
                 "ogv" => BackgroundType.Video,
                 "vp8" => BackgroundType.Video,
-                "webm" => BackgroundType.Video,
                 "wmv" => BackgroundType.Video,
                 _ => BackgroundType.Invalid
             };

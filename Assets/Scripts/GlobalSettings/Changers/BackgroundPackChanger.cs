@@ -10,7 +10,7 @@ namespace Blockstacker.GlobalSettings.Changers
         [Space] [SerializeField] private TMP_Dropdown _dropdown;
 
         [SerializeField] private string _emptyPrompt = "No background pack available";
-        [SerializeField] private string _prompt = "Pick a background pack...";
+        [SerializeField] private string _default = "Default";
 
         private void Start()
         {
@@ -23,13 +23,16 @@ namespace Blockstacker.GlobalSettings.Changers
         public void RefreshNames()
         {
             _dropdown.ClearOptions();
-            _dropdown.options.Add(new TMP_Dropdown.OptionData(_prompt));
+            _dropdown.options.Add(new TMP_Dropdown.OptionData(_default));
             var i = 0;
             foreach (var path in BackgroundPackLoader.EnumerateBackgroundPacks())
             {
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(path));
-                if (path.Equals(AppSettings.Customization.BackgroundFolder)) _dropdown.SetValueWithoutNotify(i);
+                
+                Debug.Log($"{path}, {AppSettings.Customization.BackgroundFolder}");
+                
                 i++;
+                if (path.Equals(AppSettings.Customization.BackgroundFolder)) _dropdown.SetValueWithoutNotify(i);
             }
 
             if (i == 0)
@@ -44,8 +47,11 @@ namespace Blockstacker.GlobalSettings.Changers
         public void OptionPicked(int value)
         {
             var newBackgroundFolder = _dropdown.options[value].text;
-            if (newBackgroundFolder.Equals(_emptyPrompt) ||
-                newBackgroundFolder.Equals(_prompt)) return;
+            if (newBackgroundFolder.Equals(_emptyPrompt)) return;
+
+            if (newBackgroundFolder.Equals(_default))
+                newBackgroundFolder = "";
+            
             AppSettings.Customization.BackgroundFolder = newBackgroundFolder;
             SettingChanged?.Invoke();
         }

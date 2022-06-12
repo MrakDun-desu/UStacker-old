@@ -1076,6 +1076,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Background
       objectReference: {fileID: 0}
+    - target: {fileID: 1626040697081668205, guid: 1d529d5c22e6b9f45be37609b276dec9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3029180447029622579, guid: 1d529d5c22e6b9f45be37609b276dec9, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

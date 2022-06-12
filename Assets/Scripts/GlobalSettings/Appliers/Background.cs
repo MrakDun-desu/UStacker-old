@@ -1,3 +1,4 @@
+using Blockstacker.Common.Extensions;
 using Blockstacker.Loaders;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,8 +38,7 @@ namespace Blockstacker.GlobalSettings.Appliers
 
         private void OnVisibilityChanged(float newValue)
         {
-            var formerColor = _backgroundImage.color;
-            _backgroundImage.color = new Color(formerColor.r, formerColor.g, formerColor.b, newValue);
+            _backgroundImage.color = _backgroundImage.color.WithAlpha(newValue);
         }
 
         private void OnBackgroundChanged()

@@ -3905,7 +3905,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7469086765382621599
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3923,10 +3923,10 @@ RectTransform:
   m_Father: {fileID: 5319552543429033890}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 100}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 945.12445, y: -200}
+  m_SizeDelta: {x: 1890.2489, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1494136912
 MonoBehaviour:
@@ -4032,7 +4032,7 @@ GameObject:
   - component: {fileID: 996057916}
   - component: {fileID: 7469086766962819820}
   m_Layer: 5
-  m_Name: ChangerBackground
+  m_Name: ChangerBackgroundPack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5449,11 +5449,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7742643563894403970, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
       propertyPath: m_Size
-      value: 0.99989736
+      value: 0.9999811
       objectReference: {fileID: 0}
     - target: {fileID: 7742643563894403970, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
       propertyPath: m_Value
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8157086686339900590, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
       propertyPath: m_Pivot.x
