@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Blockstacker.Common;
 using UnityEngine;
 
-namespace Blockstacker.Loaders
+namespace Blockstacker.GlobalSettings.Loaders
 {
     public static class BackgroundPackLoader
     {
         public static readonly Dictionary<string, Texture2D> BackgroundImages = new();
         public static readonly Dictionary<string, string> BackgroundVideos = new();
 
-        private static string BackgroundPackPath => Path.Combine(Application.persistentDataPath, "backgroundPacks");
         public static event Action BackgroundPackChanged;
 
         public static IEnumerable<string> EnumerateBackgroundPacks()
         {
-            if (!Directory.Exists(BackgroundPackPath)) yield break;
-            foreach (var path in Directory.EnumerateDirectories(BackgroundPackPath))
+            if (!Directory.Exists(CustomizationPaths.BackgroundPacks)) yield break;
+            foreach (var path in Directory.EnumerateDirectories(CustomizationPaths.BackgroundPacks))
             {
                 var slashIndex = path.LastIndexOfAny(new[] {'/', '\\'}) + 1;
                 yield return path[slashIndex..];

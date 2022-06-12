@@ -1,5 +1,5 @@
 using System.IO;
-using Blockstacker.Loaders;
+using Blockstacker.GlobalSettings.Loaders;
 using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Appliers

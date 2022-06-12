@@ -1,4 +1,4 @@
-using Blockstacker.Loaders;
+using Blockstacker.GlobalSettings.Loaders;
 
 namespace Blockstacker.GlobalSettings.Appliers
 {

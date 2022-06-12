@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Blockstacker.Common;
 using UnityEngine;
 
-namespace Blockstacker.Loaders
+namespace Blockstacker.GlobalSettings.Loaders
 {
     public static class SkinLoader
     {
@@ -15,13 +16,12 @@ namespace Blockstacker.Loaders
         // };
 
         // private static readonly float _defaultPixelsPerUnit = 64;
-        private static string SkinPath => Path.Combine(Application.persistentDataPath, "skins");
         public static event Action SkinChanged;
 
         public static IEnumerable<string> EnumerateSkins()
         {
-            if (!Directory.Exists(SkinPath)) yield break;
-            foreach (var path in Directory.EnumerateDirectories(SkinPath))
+            if (!Directory.Exists(CustomizationPaths.Skins)) yield break;
+            foreach (var path in Directory.EnumerateDirectories(CustomizationPaths.Skins))
             {
                 var slashIndex = path.LastIndexOfAny(new[] {'/', '\\'}) + 1;
                 yield return path[slashIndex..];

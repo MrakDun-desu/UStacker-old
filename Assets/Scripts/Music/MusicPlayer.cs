@@ -48,6 +48,12 @@ namespace Blockstacker.Music
             PlayImmediate(trackName);
         }
 
+        public void StopPlaying()
+        {
+            _audioSource.Stop();
+            _nextSongStartTime = float.PositiveInfinity;
+        }
+
         private void ResumeNormalPlaying()
         {
             _audioSource.Play();
@@ -83,7 +89,7 @@ namespace Blockstacker.Music
             ResumeNormalPlaying();
         }
 
-        private IEnumerator MuteSourceOverTime()
+        public IEnumerator MuteSourceOverTime()
         {
             _timeUntilQuiet = _quietenTime;
             while (_timeUntilQuiet > 0)
@@ -107,7 +113,7 @@ namespace Blockstacker.Music
                 _currentSceneType = MENU_STRING;
             } else if (newScene.name.StartsWith(GAME_STRING))
             {
-                PickAndPlayNewTrack(_gameMusic);
+                // game scenes handle music playing by themselves
                 _currentSceneType = GAME_STRING;
             }
         }

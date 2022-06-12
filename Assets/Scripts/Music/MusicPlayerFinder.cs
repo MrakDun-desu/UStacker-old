@@ -31,5 +31,17 @@ namespace Blockstacker.Music
             FindMusicPlayer();
             _musicPlayer.PlayGameTrackImmediate();
         }
+
+        public void StopPlaying()
+        {
+            FindMusicPlayer();
+            _musicPlayer.StopPlaying();
+        }
+
+        public void Quieten()
+        {
+            FindMusicPlayer();
+            _musicPlayer.StartCoroutine(_musicPlayer.MuteSourceOverTime());
+        }
     }
 }

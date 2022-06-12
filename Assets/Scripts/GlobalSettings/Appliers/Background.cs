@@ -1,5 +1,5 @@
 using Blockstacker.Common.Extensions;
-using Blockstacker.Loaders;
+using Blockstacker.GlobalSettings.Loaders;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
