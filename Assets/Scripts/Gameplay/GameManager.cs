@@ -18,8 +18,9 @@ namespace Blockstacker.Gameplay
         [SerializeField] private StatCounter _statCounter;
         [SerializeField] private GameRecorder _gameRecorder;
 
-        [Space] [SerializeField] private UnityEvent GameStarted;
-
+        [Space] [SerializeField] private UnityEvent GameStartedFirstTime;
+        [SerializeField] private UnityEvent GameRestartedAfterEnd;
+        [SerializeField] private UnityEvent GameStarted;
         [SerializeField] private UnityEvent GamePaused;
         [SerializeField] private UnityEvent GameResumed;
         [SerializeField] private UnityEvent GameRestarted;
@@ -27,6 +28,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private UnityEvent GameEnded;
         public GameReplay Replay;
         private bool _gameEnded;
+        private bool _gameLost;
         private bool _gameStarted;
         private bool _gameRunning;
 
@@ -39,15 +41,31 @@ namespace Blockstacker.Gameplay
 
         public void StartGame()
         {
+            if (!_gameStarted)
+                FirstTimeGameStart();
+            if (_gameLost || _gameEnded)
+                GameRestartAfterEnd();
             _gameRunning = true;
+            GameStarted.Invoke();
+        }
+
+        private void FirstTimeGameStart()
+        {
             _gameStarted = true;
             Replay.GameSettings = _settings.Settings with { };
-            GameStarted.Invoke();
+            GameStartedFirstTime.Invoke();
+        }
+
+        private void GameRestartAfterEnd()
+        {
+            _gameLost = false;
+            _gameEnded = false;
+            GameRestartedAfterEnd.Invoke();
         }
 
         public void TogglePause()
         {
-            if (_gameEnded|| !_gameStarted) return;
+            if (_gameEnded || !_gameStarted) return;
 
             if (_gameRunning)
             {
@@ -65,7 +83,6 @@ namespace Blockstacker.Gameplay
 
         public void Restart()
         {
-            _gameEnded = false;
             GameRestarted.Invoke();
             GameRestartedEvent?.Invoke();
         }
@@ -76,7 +93,10 @@ namespace Blockstacker.Gameplay
             if (_settings.Objective.ToppingOutIsOkay)
                 EndGame();
             else
+            {
+                _gameLost = true;
                 GameLost.Invoke();
+            }
         }
 
         public void EndGame()
@@ -113,9 +133,9 @@ namespace Blockstacker.Gameplay
 
         private void Update()
         {
-            if (_settings.Objective.GameEndCondition != GameEndCondition.Time) return;
-
-            if (_timer.CurrentTime > _settings.Objective.EndConditionCount) EndGame();
+            if (_settings.Objective.GameEndCondition == GameEndCondition.Time &&
+                _timer.CurrentTime > _settings.Objective.EndConditionCount)
+                EndGame();
         }
 
         private void OnDestroy()

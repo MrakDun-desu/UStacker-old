@@ -16,7 +16,7 @@ namespace Blockstacker.Startup
             AddSceneChangeMethods();
             AppSettings.TryLoad();
             SettingChanged?.Invoke();
-            SceneManager.LoadScene("Scene_Menu");
+            SceneManager.LoadScene("Scene_Menu_Main");
         }
 
         public event Action SettingChanged;

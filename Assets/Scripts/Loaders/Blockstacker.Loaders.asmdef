@@ -2,7 +2,8 @@
     "name": "Blockstacker.Loaders",
     "rootNamespace": "Blockstacker.Loaders",
     "references": [
-        ""
+        "",
+        "Blockstacker.Common"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

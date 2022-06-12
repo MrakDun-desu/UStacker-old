@@ -4,7 +4,7 @@ namespace Blockstacker.GameSettings
 {
     public class RotationSystem
     {
-        public readonly Dictionary<string, KickTable> StringKickTables = new()
+        public readonly Dictionary<string, KickTable> KickTables = new()
         {
             {"IPiece", new KickTable()},
             {"TPiece", new KickTable()},
@@ -19,7 +19,7 @@ namespace Blockstacker.GameSettings
 
         public KickTable GetKickTable(string pieceType)
         {
-            return StringKickTables.ContainsKey(pieceType) ? StringKickTables[pieceType] : DefaultTable;
+            return KickTables.ContainsKey(pieceType) ? KickTables[pieceType] : DefaultTable;
         }
         
         
