@@ -17,12 +17,9 @@ namespace Blockstacker.GlobalSettings.Loaders
 
         public static IEnumerable<string> EnumerateBackgroundPacks()
         {
-            if (!Directory.Exists(CustomizationPaths.BackgroundPacks)) yield break;
-            foreach (var path in Directory.EnumerateDirectories(CustomizationPaths.BackgroundPacks))
-            {
-                var slashIndex = path.LastIndexOfAny(new[] {'/', '\\'}) + 1;
-                yield return path[slashIndex..];
-            }
+            return Directory.Exists(CustomizationPaths.BackgroundPacks)
+                ? Directory.EnumerateDirectories(CustomizationPaths.BackgroundPacks).Select(Path.GetFileName)
+                : Array.Empty<string>();
         }
 
         public static async Task Reload(string path)

@@ -1,4 +1,5 @@
 using System;
+using Blockstacker.GlobalSettings.Enums;
 
 namespace Blockstacker.GlobalSettings.Groups
 {
