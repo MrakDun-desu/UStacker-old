@@ -67,44 +67,11 @@ namespace Blockstacker.Music
 
         private static async Task GetAudioClipAsync(string path, AudioClipCollection target)
         {
-            var extension = Path.GetExtension(path);
             var clipName = Path.GetFileNameWithoutExtension(path);
-            AudioType? audioType = extension switch
-            {
-                "mp3" => AudioType.MPEG,
-                "ogg" => AudioType.OGGVORBIS,
-                "wav" => AudioType.WAV,
-                "aiff" or "aif" => AudioType.AIFF,
-                "mod" => AudioType.MOD,
-                "it" => AudioType.IT,
-                "s3m" => AudioType.S3M,
-                "xm" => AudioType.XM,
-                _ => null
-            };
+            var clip = await FileLoading.LoadAudioClipFromFile(path);
+            if (clip is null) return;
 
-            if (audioType == null) return;
-
-            using var request = UnityWebRequestMultimedia.GetAudioClip(
-                "file://" + path,
-                (AudioType) audioType
-            );
-
-            request.SendWebRequest();
-
-            try
-            {
-                while (!request.isDone) await Task.Delay(10);
-
-                if (request.result != UnityWebRequest.Result.Success)
-                    Debug.Log(request.error);
-                else target.Content[clipName] = DownloadHandlerAudioClip.GetContent(request);
-            }
-            catch (Exception error)
-            {
-                Debug.Log($"{error.Message}\n{error.StackTrace}");
-            }
-
-            
+            target.Content[clipName] = clip;
         }
     }
 }

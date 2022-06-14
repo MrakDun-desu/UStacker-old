@@ -4,14 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockstacker.Common;
-using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Loaders
 {
     public static class BackgroundPackLoader
     {
-        public static readonly Dictionary<string, Texture2D> BackgroundImages = new();
-        public static readonly Dictionary<string, string> BackgroundVideos = new();
+        public static readonly Dictionary<string, List<BackgroundRecord>> Backgrounds = new();
 
         public static event Action BackgroundPackChanged;
 
@@ -24,12 +22,13 @@ namespace Blockstacker.GlobalSettings.Loaders
 
         public static async Task Reload(string path)
         {
-            BackgroundImages.Clear();
-            BackgroundVideos.Clear();
+            Backgrounds.Clear();
             if (!Directory.Exists(path)) return;
-            
+
             var taskList = Directory.EnumerateFiles(path)
-                .Select(HandleBackgroundLoadAsync);
+                .Select(HandleBackgroundLoadAsync).ToList();
+
+            taskList.AddRange(Directory.EnumerateDirectories(path).Select(HandleBackgroundFolderLoadAsync));
 
             await Task.WhenAll(taskList);
             BackgroundPackChanged?.Invoke();
@@ -37,50 +36,45 @@ namespace Blockstacker.GlobalSettings.Loaders
 
         private static async Task HandleBackgroundLoadAsync(string path)
         {
-            var extension = Path.GetExtension(path).ToLower().Remove(0, 1);
             var backgroundName = Path.GetFileNameWithoutExtension(path);
 
-            var type = extension switch
-            {
-                "jpg" => BackgroundType.Image,
-                "png" => BackgroundType.Image,
-                "avi" => BackgroundType.Video,
-                "dv" => BackgroundType.Video,
-                "m4v" => BackgroundType.Video,
-                "mov" => BackgroundType.Video,
-                "mp4" => BackgroundType.Video, // definitely works
-                "mpg" => BackgroundType.Video,
-                "mpeg" => BackgroundType.Video,
-                "ogv" => BackgroundType.Video,
-                "vp8" => BackgroundType.Video,
-                "wmv" => BackgroundType.Video,
-                _ => BackgroundType.Invalid
-            };
+            var newBackground = await LoadBackgroundRecordAsync(path);
+            if (newBackground is null) return; 
+            Backgrounds[backgroundName] = new List<BackgroundRecord> {newBackground};
+        }
 
+        private static async Task HandleBackgroundFolderLoadAsync(string path)
+        {
+            var backgroundName = Path.GetFileNameWithoutExtension(path);
+
+            Backgrounds[backgroundName] = new List<BackgroundRecord>();
+            foreach (var file in Directory.EnumerateFiles(path))
+            {
+                var newBackground = await LoadBackgroundRecordAsync(file);
+                if (newBackground is null) continue;
+                Backgrounds[backgroundName].Add(newBackground);
+            }
+
+            if (Backgrounds[backgroundName].Count == 0)
+                Backgrounds.Remove(backgroundName);
+        }
+
+        private static async Task<BackgroundRecord> LoadBackgroundRecordAsync(string path)
+        {
+            var type = FileLoading.GetFileType(path);
             switch (type)
             {
-                case BackgroundType.Image:
-                    var textureData = await File.ReadAllBytesAsync(path);
-                    Texture2D texture = new(1, 1);
-                    var newBackground = texture.LoadImage(textureData, false) ? texture : null;
-                    BackgroundImages[backgroundName] = newBackground;
-                    break;
-                case BackgroundType.Video:
-                    BackgroundVideos[backgroundName] = path;
-                    break;
-                case BackgroundType.Invalid:
-                    break;
+                case FileType.Texture:
+                    var newBackground = await FileLoading.LoadTextureFromFile(path);
+                    return new BackgroundRecord(newBackground);
+                case FileType.Video:
+                    return new BackgroundRecord(path);
+                case FileType.AudioClip:
+                case FileType.Invalid:
+                    return null;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
-
-        private enum BackgroundType
-        {
-            Image,
-            Video,
-            Invalid
-        }
-
     }
 }

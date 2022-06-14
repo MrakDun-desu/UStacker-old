@@ -1,8 +1,11 @@
+using System;
+using System.Collections.Generic;
 using Blockstacker.Common.Extensions;
 using Blockstacker.GlobalSettings.Loaders;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using Random = UnityEngine.Random;
 
 namespace Blockstacker.GlobalSettings.Appliers
 {
@@ -44,16 +47,30 @@ namespace Blockstacker.GlobalSettings.Appliers
         private void OnBackgroundChanged()
         {
             if (string.IsNullOrEmpty(_backgroundName)) return;
-            if (BackgroundPackLoader.BackgroundImages.TryGetValue(_backgroundName, out var newImage))
-                _backgroundImage.texture = newImage;
-            else if (BackgroundPackLoader.BackgroundVideos.TryGetValue(_backgroundName, out var videoPath))
+            if (!BackgroundPackLoader.Backgrounds.TryGetValue(_backgroundName, out var newBackgrounds))
             {
-                _backgroundImage.texture = _videoPlayer.targetTexture;
-                _videoPlayer.url = "file://" + videoPath;
-                _videoPlayer.Play();
+                if (!BackgroundPackLoader.Backgrounds.TryGetValue("default", out newBackgrounds))
+                {
+                    _backgroundImage.texture = _defaultTexture;
+                    return;
+                }
             }
-            else
-                _backgroundImage.texture = _defaultTexture;
+
+            var index = Random.Range(0, newBackgrounds.Count);
+            var newBackground = newBackgrounds[index];
+            switch (newBackground.Type)
+            {
+                case BackgroundRecord.BackgroundType.Video:
+                    _videoPlayer.url = $"file://{newBackground.VideoPath}";
+                    _backgroundImage.texture = _videoPlayer.targetTexture;
+                    _videoPlayer.Play();
+                    break;
+                case BackgroundRecord.BackgroundType.Texture:
+                    _backgroundImage.texture = newBackground.Texture;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }
