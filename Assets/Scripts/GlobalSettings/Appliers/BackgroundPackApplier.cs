@@ -1,6 +1,6 @@
 using System.IO;
+using Blockstacker.Common;
 using Blockstacker.GlobalSettings.Loaders;
-using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Appliers
 {
@@ -8,7 +8,7 @@ namespace Blockstacker.GlobalSettings.Appliers
     {
         public override void OnSettingChanged()
         {
-            var backgroundFolder = Path.Combine(Application.persistentDataPath, "backgroundPacks",
+            var backgroundFolder = Path.Combine(CustomizationPaths.BackgroundPacks,
                 AppSettings.Customization.BackgroundFolder);
             _ = BackgroundPackLoader.Reload(backgroundFolder);
         }

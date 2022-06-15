@@ -266,7 +266,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: backgroundPacks
+          m_StringArgument: styleCustomization/backgroundPacks
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &742877266
@@ -748,7 +748,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: skins
+          m_StringArgument: styleCustomization/skins
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &1579736540
@@ -1152,7 +1152,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: soundPacks
+          m_StringArgument: styleCustomization/soundPacks
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &306967169232907738
@@ -3954,6 +3954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 550c16d38db400d44858b05a49314ba1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _soundPackLoader: {fileID: 0}
 --- !u!1 &4465938217747315119
 GameObject:
   m_ObjectHideFlags: 0
@@ -4074,7 +4075,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dropdown: {fileID: 9124476651014140343}
   _emptyPrompt: No background pack available
-  _prompt: Pick a background pack...
+  _default: Default
 --- !u!114 &7469086766962819820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5449,7 +5450,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7742643563894403970, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
       propertyPath: m_Size
-      value: 0.9999811
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7742643563894403970, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
       propertyPath: m_Value

@@ -29,8 +29,6 @@ namespace Blockstacker.GlobalSettings.Changers
             {
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(path));
                 
-                Debug.Log($"{path}, {AppSettings.Customization.BackgroundFolder}");
-                
                 i++;
                 if (path.Equals(AppSettings.Customization.BackgroundFolder)) _dropdown.SetValueWithoutNotify(i);
             }

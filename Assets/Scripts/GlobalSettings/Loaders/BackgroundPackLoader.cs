@@ -10,9 +10,19 @@ namespace Blockstacker.GlobalSettings.Loaders
     public static class BackgroundPackLoader
     {
         public static readonly Dictionary<string, List<BackgroundRecord>> Backgrounds = new();
-
+        
         public static event Action BackgroundPackChanged;
 
+        // needs to be manually updated every time a new background is added
+        private static readonly string[] SupportedBackgroundNames =
+        {
+            "default",
+            "mainMenu",
+            "globalSettings",
+            "gameSettings",
+            "gameCustom"
+        };
+        
         public static IEnumerable<string> EnumerateBackgroundPacks()
         {
             return Directory.Exists(CustomizationPaths.BackgroundPacks)
@@ -37,6 +47,7 @@ namespace Blockstacker.GlobalSettings.Loaders
         private static async Task HandleBackgroundLoadAsync(string path)
         {
             var backgroundName = Path.GetFileNameWithoutExtension(path);
+            if (!SupportedBackgroundNames.Contains(backgroundName)) return;
 
             var newBackground = await LoadBackgroundRecordAsync(path);
             if (newBackground is null) return; 
@@ -46,6 +57,7 @@ namespace Blockstacker.GlobalSettings.Loaders
         private static async Task HandleBackgroundFolderLoadAsync(string path)
         {
             var backgroundName = Path.GetFileNameWithoutExtension(path);
+            if (!SupportedBackgroundNames.Contains(backgroundName)) return;
 
             Backgrounds[backgroundName] = new List<BackgroundRecord>();
             foreach (var file in Directory.EnumerateFiles(path))
