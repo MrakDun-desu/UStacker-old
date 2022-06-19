@@ -26,10 +26,22 @@ namespace Blockstacker.Music
             _musicPlayer.PlayImmediateWithoutLoop(trackName);
         }
 
-        public void PlayRandomGameTrack()
+        public void PlayGameTrack()
         {
             FindMusicPlayer();
             _musicPlayer.PlayGameTrackImmediate();
+        }
+
+        public void PlayVictoryTrack()
+        {
+            FindMusicPlayer();
+            _musicPlayer.PlayVictoryTrackImmediate();
+        }
+
+        public void PlayLossTrack()
+        {
+            FindMusicPlayer();
+            _musicPlayer.PlayLossMusicImmediate();
         }
 
         public void StopPlaying()

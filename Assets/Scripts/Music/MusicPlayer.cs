@@ -2,24 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Common;
+using Blockstacker.Common.Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Random = UnityEngine.Random;
 
 namespace Blockstacker.Music
 {
     [RequireComponent(typeof(AudioSource))]
     public class MusicPlayer : MonoSingleton<MusicPlayer>
     {
-        [SerializeField] private List<MusicEntry> _menuMusic;
-        [SerializeField] private List<MusicEntry> _gameMusic;
+        [SerializeField] private MusicConfiguration _musicConfiguration;
         [Range(0, 10)] [SerializeField] private float _switchInterval;
         [Range(0, 10)] [SerializeField] private float _quietenTime = 1f;
         [Range(0, 0.1f)] [SerializeField] private float _quietenInterval = .01f;
-        [SerializeField] private SoundPackLoader _soundPackLoader;
+        [SerializeField] private AudioClipCollection _defaultMusic = new();
+
+        public static MusicConfiguration Configuration { get; private set; }
 
         private AudioSource _audioSource;
-
         private const string MENU_STRING = "Scene_Menu";
         private const string GAME_STRING = "Scene_Game";
         private string _currentSceneType = MENU_STRING;
@@ -37,17 +37,44 @@ namespace Blockstacker.Music
             _nextSongStartTime = float.PositiveInfinity;
             _timeUntilQuiet = 0;
             _audioSource.Stop();
-            _audioSource.clip = _soundPackLoader.Music.Content[trackName];
+            if (SoundPackLoader.Music.ContainsKey(trackName)) 
+                _audioSource.clip = SoundPackLoader.Music[trackName];
+            else if (_defaultMusic.ContainsKey(trackName))
+                _audioSource.clip = _defaultMusic[trackName];
+            else return;
             _audioSource.volume = 1;
             ResumeNormalPlaying();
         }
 
         public void PlayGameTrackImmediate()
         {
-            var trackName = GetRandomMusicEntry(_gameMusic);
-            PlayImmediate(trackName);
+            if (Configuration.GameMusic.TryGetRandomElement(out var trackName))
+                PlayImmediate(trackName);
         }
 
+        public void PlayVictoryTrackImmediate()
+        {
+            if (Configuration.VictoryMusic.TryGetRandomElement(out var trackName))
+                PlayImmediateWithoutLoop(trackName);
+        }
+        
+        public void PlayLossMusicImmediate()
+        {
+            if (Configuration.LossMusic.TryGetRandomElement(out var trackName))
+                PlayImmediateWithoutLoop(trackName);
+        }
+
+        public void PlayFromGroup(string groupName)
+        {
+            if (Configuration.GameMusicGroups[groupName].TryGetRandomElement(out var trackName))
+                PlayImmediate(trackName);
+        }
+
+        public List<string> ListAvailableGroups()
+        {
+            return Configuration.GameMusicGroups.Keys.ToList();
+        }
+        
         public void StopPlaying()
         {
             _audioSource.Stop();
@@ -64,18 +91,27 @@ namespace Blockstacker.Music
         {
             base.Awake();
             _audioSource = GetComponent<AudioSource>();
+            Configuration = _musicConfiguration;
 
-            PickAndPlayNewTrack(_menuMusic);
-            
             SceneManager.sceneLoaded += OnSceneChanged;
         }
 
-        private void PickAndPlayNewTrack(IReadOnlyList<MusicEntry> entries)
+        public void Start()
+        {
+            if (Configuration.MenuMusic.TryGetRandomElement(out var nextTrack))
+                PlayNextTrack(nextTrack);
+        }
+
+        private void PlayNextTrack(string trackName)
         {
             _nextSongStartTime = Time.time + _switchInterval;
-            var trackName = GetRandomMusicEntry(entries);
-            var nextSong = _soundPackLoader.Music.Content[trackName];
+            AudioClip nextSong = null;
 
+            if (SoundPackLoader.Music.ContainsKey(trackName))
+                nextSong = SoundPackLoader.Music[trackName];
+            else if (_defaultMusic.ContainsKey(trackName))
+                nextSong = _defaultMusic[trackName];
+            
             StartCoroutine(PlayNextTrackCor(nextSong));
         }
 
@@ -109,7 +145,8 @@ namespace Blockstacker.Music
             
             if (newScene.name.StartsWith(MENU_STRING))
             {
-                PickAndPlayNewTrack(_menuMusic);
+                if (Configuration.MenuMusic.TryGetRandomElement(out var nextTrack))
+                    PlayNextTrack(nextTrack);
                 _currentSceneType = MENU_STRING;
             } else if (newScene.name.StartsWith(GAME_STRING))
             {
@@ -118,23 +155,5 @@ namespace Blockstacker.Music
             }
         }
 
-        private static string GetRandomMusicEntry(IReadOnlyList<MusicEntry> entries)
-        {
-            var effectiveCount = entries.Aggregate(0, (current, entry) => current + (int) entry.TrackFrequency);
-            var picked = Random.Range(0, effectiveCount);
-            var pickedCache = picked;
-
-            for (var i = 0; i <= pickedCache; i++)
-            {
-                var currentEntry = entries[i];
-                picked -= (int) currentEntry.TrackFrequency;
-                if (picked < 0)
-                {
-                    return currentEntry.TrackName;
-                }
-            }
-
-            return entries[0].TrackName;
-        }
     }
 }

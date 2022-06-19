@@ -7072,46 +7072,10 @@ MonoBehaviour:
   _gameRecorder: {fileID: 564900343}
   GameStartedFirstTime:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 297083102}
-        m_TargetAssemblyTypeName: Blockstacker.Music.MusicPlayerFinder, Blockstacker.Music
-        m_MethodName: PlayRandomGameTrack
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   GameRestartedAfterEnd:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 297083102}
-        m_TargetAssemblyTypeName: Blockstacker.Music.MusicPlayerFinder, Blockstacker.Music
-        m_MethodName: PlayRandomGameTrack
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 297083102}
-        m_TargetAssemblyTypeName: Blockstacker.Music.MusicPlayerFinder, Blockstacker.Music
-        m_MethodName: Quieten
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   GameStarted:
     m_PersistentCalls:
       m_Calls:
@@ -7142,6 +7106,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1685487601}
         m_TargetAssemblyTypeName: Blockstacker.Gameplay.PieceSpawner, Assembly-CSharp
         m_MethodName: SpawnPiece
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 297083102}
+        m_TargetAssemblyTypeName: Blockstacker.Music.MusicPlayerFinder, Blockstacker.Music
+        m_MethodName: PlayGameTrack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7401,6 +7377,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 297083102}
+        m_TargetAssemblyTypeName: Blockstacker.Music.MusicPlayerFinder, Blockstacker.Music
+        m_MethodName: Quieten
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   GameLost:
     m_PersistentCalls:
       m_Calls:
@@ -7478,8 +7466,8 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 297083102}
         m_TargetAssemblyTypeName: Blockstacker.Music.MusicPlayerFinder, Blockstacker.Music
-        m_MethodName: Play
-        m_Mode: 5
+        m_MethodName: PlayLossTrack
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -7565,8 +7553,8 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 297083102}
         m_TargetAssemblyTypeName: Blockstacker.Music.MusicPlayerFinder, Blockstacker.Music
-        m_MethodName: Play
-        m_Mode: 5
+        m_MethodName: PlayVictoryTrack
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

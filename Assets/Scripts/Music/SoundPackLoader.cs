@@ -5,20 +5,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blockstacker.Common;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace Blockstacker.Music
 {
-    [CreateAssetMenu(fileName = "SoundPackLoader", menuName = "Blockstacker/Loaders/Sound pack loader")]
-    public class SoundPackLoader : ScriptableObject
+    public static class SoundPackLoader
     {
-        public AudioClipCollection Music = new();
-        public AudioClipCollection SoundEffects = new();
-        public AudioClipCollection MenuSounds = new();
+        public static Dictionary<string, AudioClip> Music = new();
+        public static Dictionary<string, AudioClip> SoundEffects = new();
 
-        public string SoundEffectsScript;
+        public static string SoundEffectsScript;
 
-        public event Action SoundPackChanged;
+        public static event Action SoundPackChanged;
 
         public static IEnumerable<string> EnumerateSoundPacks()
         {
@@ -31,16 +28,13 @@ namespace Blockstacker.Music
         /// Reloads music, sound effects, menu sounds and sound effects script.
         /// </summary>
         /// <param name="path">Name of the soundpack directory to load from</param>
-        public async Task Reload(string path)
+        public static async Task Reload(string path)
         {
-            path = Path.Combine(CustomizationPaths.SoundPacks, path);
             if (!Directory.Exists(path)) return;
             var taskList = new List<Task>
             {
-                LoadClipsFromDirectoryAsync(Path.Combine(path, CustomizationPaths.Music), Music),
-                LoadClipsFromDirectoryAsync(Path.Combine(path, CustomizationPaths.SoundEffects), SoundEffects),
-                LoadClipsFromDirectoryAsync(Path.Combine(path, CustomizationPaths.MenuSounds), MenuSounds),
-                LoadSoundEffectsScriptAsync(Path.Combine(path, CustomizationPaths.SoundEffectScript))
+                LoadSoundEffectsAsync(Path.Combine(path, CustomizationPaths.SoundEffects)),
+                LoadMusicAsync(Path.Combine(path, CustomizationPaths.Music))
             };
 
             await Task.WhenAll(taskList);
@@ -48,13 +42,35 @@ namespace Blockstacker.Music
             SoundPackChanged?.Invoke();
         }
 
-        private async Task LoadSoundEffectsScriptAsync(string path)
+        private static async Task LoadSoundEffectsAsync(string path)
         {
-            if (!File.Exists(path)) return;
-            SoundEffectsScript = await File.ReadAllTextAsync(path);
+            await LoadClipsFromDirectoryAsync(path, SoundEffects);
+
+            var scriptPath = Path.Combine(path, CustomizationPaths.SoundEffectScript);
+            if (!File.Exists(scriptPath))
+                return;
+            
+            // TODO add script validation here
+            SoundEffectsScript = await File.ReadAllTextAsync(scriptPath);
         }
-        
-        private static async Task LoadClipsFromDirectoryAsync(string path, AudioClipCollection target)
+
+        private static async Task LoadMusicAsync(string path)
+        {
+            await LoadClipsFromDirectoryAsync(path, Music);
+            
+            var confPath = Path.Combine(path, CustomizationPaths.MusicConfFile);
+            if (!File.Exists(confPath))
+                return;
+            
+            var musicConfStr = await File.ReadAllTextAsync(confPath);
+            var musicConf = JsonUtility.FromJson<MusicConfiguration>(musicConfStr);
+            
+            MusicPlayer.Configuration.Rewrite(musicConf);
+
+
+        }
+
+        private static async Task LoadClipsFromDirectoryAsync(string path, IDictionary<string, AudioClip> target)
         {
             if (!Directory.Exists(path)) return;
 
@@ -64,14 +80,13 @@ namespace Blockstacker.Music
             await Task.WhenAll(taskList);
         }
 
-
-        private static async Task GetAudioClipAsync(string path, AudioClipCollection target)
+        private static async Task GetAudioClipAsync(string path, IDictionary<string, AudioClip> target)
         {
             var clipName = Path.GetFileNameWithoutExtension(path);
             var clip = await FileLoading.LoadAudioClipFromFile(path);
             if (clip is null) return;
 
-            target.Content[clipName] = clip;
+            target[clipName] = clip;
         }
     }
 }

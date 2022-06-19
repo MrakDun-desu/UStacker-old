@@ -1,15 +1,27 @@
+using System.IO;
+using System.Threading.Tasks;
+using Blockstacker.Common;
 using Blockstacker.Music;
-using UnityEngine;
+using UnityEngine.Events;
 
 namespace Blockstacker.GlobalSettings.Appliers
 {
     public class SoundPackApplier : SettingApplierBase
     {
-        [SerializeField] private SoundPackLoader _soundPackLoader;
-        
+        public UnityEvent LoadingStarted;
+        public UnityEvent LoadingFinished;
+
         public override void OnSettingChanged()
         {
-            _  = _soundPackLoader.Reload(AppSettings.Customization.SoundPackFolder);
+            LoadingStarted.Invoke();
+            _ = ReloadAndInvoke();
+        }
+
+        private async Task ReloadAndInvoke()
+        {
+            await SoundPackLoader.Reload(Path.Combine(CustomizationPaths.SoundPacks,
+                AppSettings.Customization.SoundPackFolder));
+            LoadingFinished.Invoke();
         }
     }
 }

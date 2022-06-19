@@ -6,7 +6,7 @@ namespace Blockstacker.GlobalSettings.Appliers
     {
         public override void OnSettingChanged()
         {
-            SkinLoader.Reload(AppSettings.Customization.SkinFolder);
+            _ = SkinLoader.Reload(AppSettings.Customization.SkinFolder);
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Blockstacker.Common
         public static string Music => "music";
         public static string MenuSounds => "menuSounds";
         public static string SoundEffects => "soundEffects";
-        public static string SoundEffectScript => "soundEffectsScript.lua";
+        public static string SoundEffectScript => "soundEffects.lua";
+        public static string MusicConfFile => "musicConf.json";
     }
 }

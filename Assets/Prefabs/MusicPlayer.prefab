@@ -141,17 +141,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1865c3bf6df74c7d8724397276162253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _menuMusic:
-  - TrackName: MenuMusic1
-    TrackFrequency: 1
-  - TrackName: MenuMusic2
-    TrackFrequency: 1
-  _gameMusic:
-  - TrackName: GameMusic1
-    TrackFrequency: 1
-  - TrackName: GameMusic2
-    TrackFrequency: 1
+  _musicConf:
+    GameMusic: []
+    MenuMusic: []
+    VictoryMusic: []
+    LossMusic: []
   _switchInterval: 1
-  _quietenTime: 1
+  _quietenTime: 0.5
   _quietenInterval: 0.01
-  _soundPackLoader: {fileID: 11400000, guid: 43a682696b59e694f8e674bf79fb5630, type: 2}
+  _defaultMusic:
+    _entries: []
+    _duplicateEntries: []
