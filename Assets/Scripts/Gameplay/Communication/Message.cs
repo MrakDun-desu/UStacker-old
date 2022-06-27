@@ -1,10 +1,4 @@
-using System;
-
-namespace Blockstacker.Gameplay.Communication
+﻿namespace Blockstacker.Gameplay.Communication
 {
-    [Serializable]
-    public abstract record Message
-    {
-        public double Time;
-    }
+    public abstract record Message;
 }

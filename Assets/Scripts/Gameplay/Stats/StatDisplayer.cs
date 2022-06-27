@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Blockstacker.Gameplay;
+using Blockstacker.Gameplay.Communication;
 using NLua;
 using NLua.Exceptions;
 using TMPro;
@@ -12,7 +13,7 @@ namespace Gameplay.Stats
         [SerializeField] private StatCounter _counter;
         [SerializeField] private TMP_Text _displayText;
         [SerializeField] private GameTimer _timer;
-        [SerializeField] private GameManager _manager;
+        [SerializeField] private MediatorSO _mediator;
         [TextArea(10, 50)] [SerializeField] private string _statCounterScript;
         [Range(0, 5)] [SerializeField] private float _updateInterval = .1f;
 
@@ -24,8 +25,8 @@ namespace Gameplay.Stats
             _luaState = new Lua();
             _luaState["stats"] = _counter.Stats;
             _updateStatCor = StartCoroutine(UpdateStatCor());
-            _manager.GameRestartedEvent += HandleGameRestarted;
-            _manager.GameEndedEvent += HandleGameEnded;
+            _mediator.Register<GameRestartedMessage>(_ => HandleGameRestarted());
+            _mediator.Register<GameEndedMessage>(_ => HandleGameEnded());
         }
 
         private void HandleGameRestarted()

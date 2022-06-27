@@ -1,3 +1,4 @@
+using Blockstacker.Gameplay.Communication;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,7 +11,7 @@ namespace Blockstacker.Gameplay.Presentation
         public float CountdownInterval = .1f;
         public uint CountdownCount = 3;
         [SerializeField] private string _lastMessage = "Start!";
-        [SerializeField] private GameManager _manager;
+        [SerializeField] private MediatorSO _mediator;
         [SerializeField] private UnityEvent CountdownFinished;
         private bool _active;
 
@@ -21,10 +22,10 @@ namespace Blockstacker.Gameplay.Presentation
         private void Awake()
         {
             _countdownText = GetComponent<TMP_Text>();
-            _manager.GameEndedEvent += StopCountdown;
-            _manager.GamePausedEvent += StopCountdown;
-            _manager.GameResumedEvent += RestartCountdown;
-            _manager.GameRestartedEvent += RestartCountdown;
+            _mediator.Register<GameEndedMessage>(_ => StopCountdown());
+            _mediator.Register<GamePausedMessage>(_ => StopCountdown());
+            _mediator.Register<GameResumedMessage>(_ => RestartCountdown());
+            _mediator.Register<GameRestartedMessage>(_ => RestartCountdown());
         }
 
         private void Update()
@@ -49,6 +50,8 @@ namespace Blockstacker.Gameplay.Presentation
                         CountdownFinished.Invoke();
                         break;
                 }
+
+                _mediator.Send(new CountdownTickedMessage {RemainingTicks = _currentCount});
             }
         }
 

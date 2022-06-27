@@ -3,8 +3,8 @@ using System;
 namespace Blockstacker.Gameplay.Communication
 {
     [Serializable]
-    public record ScoreChangedMessage : Message
+    public abstract record MidgameMessage : Message
     {
-        public long Score;
+        public double Time;
     }
 }

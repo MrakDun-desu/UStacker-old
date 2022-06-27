@@ -3,7 +3,7 @@ using System;
 namespace Blockstacker.Gameplay.Communication
 {
     [Serializable]
-    public record GravityChangedMessage : Message
+    public record GravityChangedMessage : MidgameMessage
     {
         public double Gravity;
     }

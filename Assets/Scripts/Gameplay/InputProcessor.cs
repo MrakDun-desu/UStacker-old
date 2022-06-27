@@ -111,7 +111,12 @@ namespace Blockstacker.Gameplay
             enabled = true;
         }
 
-        private void MovePiece(Vector2Int moveVector, bool renderGhost = true)
+        private void MovePiece(
+            Vector2Int moveVector,
+            bool sendMessage,
+            double time,
+            bool renderGhost = true,
+            bool wasHardDrop = false)
         {
             if (moveVector == Vector2Int.zero)
             {
@@ -119,6 +124,21 @@ namespace Blockstacker.Gameplay
                     _ghostPiece.Render();
                 return;
             }
+
+            if (sendMessage)
+            {
+                var wasSoftDrop = !wasHardDrop && _effectiveDropTime < _normalDropTime;
+
+                var hitWall = !_board.CanPlace(ActivePiece, Vector2Int.left) ||
+                              !_board.CanPlace(ActivePiece, Vector2Int.right);
+
+                _mediator.Send(new PieceMovedMessage
+                {
+                    Time = time, X = moveVector.x, Y = moveVector.y, WasHardDrop = wasHardDrop,
+                    WasSoftDrop = wasSoftDrop, HitWall = hitWall
+                });
+            }
+
             _lastWasSpin = false;
             var pieceTransform = ActivePiece.transform;
             var piecePosition = pieceTransform.localPosition;
@@ -131,6 +151,27 @@ namespace Blockstacker.Gameplay
                 _ghostPiece.Render();
         }
 
+        private SpinResult CheckSpinResult(SpinResult formerResult)
+        {
+            switch (_settings.Rules.General.AllowedSpins)
+            {
+                case AllowedSpins.Stupid:
+                    formerResult.WasSpin = true;
+                    formerResult.WasSpinMini = false;
+                    return formerResult;
+                case AllowedSpins.TSpins:
+                    return ActivePiece.PieceType == "TPiece"
+                        ? formerResult
+                        : formerResult with {WasSpin = false, WasSpinMini = false};
+                case AllowedSpins.All:
+                    return formerResult;
+                case AllowedSpins.None:
+                    return formerResult with {WasSpin = false, WasSpinMini = false};
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         private void HandlePiecePlacement(double placementTime)
         {
             if (_dropDisabledUntil > placementTime) return;
@@ -141,15 +182,12 @@ namespace Blockstacker.Gameplay
             while (_board.CanPlace(ActivePiece, movementVector)) movementVector += Vector2Int.down;
 
             movementVector -= Vector2Int.down;
-            MovePiece(movementVector, false);
+            MovePiece(movementVector, true, placementTime, false);
 
-            if (-movementVector.y > 0)
-            {
-                _mediator.Send(new LinesDroppedMessage
-                    {Count = (uint) -movementVector.y, WasHardDrop = true, Time = placementTime});
-            }
+            var linesCleared = _lastWasSpin
+                ? _board.Place(ActivePiece, placementTime, _lastSpinResult)
+                : _board.Place(ActivePiece, placementTime);
 
-            var linesCleared = _board.Place(ActivePiece, placementTime, _lastWasSpin, _lastSpinResult);
             var spawnTime = _settings.Rules.Controls.PiecePlacedDelay;
             if (linesCleared)
                 spawnTime += _settings.Rules.Controls.LineClearDelay;
@@ -182,15 +220,17 @@ namespace Blockstacker.Gameplay
         public void OnMovePieceLeft(InputAction.CallbackContext ctx)
         {
             if (!enabled) return;
-            var actionTime = ctx.time - _timer.EffectiveStartTime;
             if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeVertical &&
                 _effectiveDropTime < _normalDropTime)
                 return;
 
+            Update();
+            var actionTime = ctx.time - _timer.EffectiveStartTime;
+            var inputMessage = new InputActionMessage {ActionType = ActionType.MoveLeft, Time = actionTime};
+
             if (ctx.performed)
             {
-                _mediator.Send(new InputActionMessage
-                    {ActionType = ActionType.MoveLeft, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
+                _mediator.Send(inputMessage with {KeyActionType = KeyActionType.KeyDown});
                 _holdingLeftStart = actionTime;
                 _dasLeftStart = actionTime;
                 if (_handling.AntiDasBehavior != AntiDasBehavior.DontCancel)
@@ -201,7 +241,7 @@ namespace Blockstacker.Gameplay
 
                 if (_pieceIsNull) return;
                 if (!_board.CanPlace(ActivePiece, Vector2Int.left)) return;
-                MovePiece(Vector2Int.left);
+                MovePiece(Vector2Int.left, true, actionTime);
                 UpdatePiecePlacementVars(actionTime);
             }
             else if (ctx.canceled)
@@ -210,23 +250,24 @@ namespace Blockstacker.Gameplay
                 _dasLeftStart = double.PositiveInfinity;
                 _dasLeftActive = false;
 
-                _mediator.Send(new InputActionMessage
-                    {ActionType = ActionType.MoveLeft, KeyActionType = KeyActionType.KeyUp, Time = actionTime});
+                _mediator.Send(inputMessage with {KeyActionType = KeyActionType.KeyUp});
             }
         }
 
         public void OnMovePieceRight(InputAction.CallbackContext ctx)
         {
             if (!enabled) return;
-            var actionTime = ctx.time - _timer.EffectiveStartTime;
             if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeVertical &&
                 _effectiveDropTime < _normalDropTime)
                 return;
 
+            Update();
+            var actionTime = ctx.time - _timer.EffectiveStartTime;
+            var inputMessage = new InputActionMessage {ActionType = ActionType.MoveRight, Time = actionTime};
+
             if (ctx.performed)
             {
-                _mediator.Send(new InputActionMessage
-                    {ActionType = ActionType.MoveRight, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
+                _mediator.Send(inputMessage with {KeyActionType = KeyActionType.KeyDown});
 
                 _holdingRightStart = actionTime;
                 _dasRightStart = actionTime;
@@ -238,7 +279,7 @@ namespace Blockstacker.Gameplay
 
                 if (_pieceIsNull) return;
                 if (!_board.CanPlace(ActivePiece, Vector2Int.right)) return;
-                MovePiece(Vector2Int.right);
+                MovePiece(Vector2Int.right, true, actionTime);
                 UpdatePiecePlacementVars(actionTime);
             }
             else if (ctx.canceled)
@@ -247,8 +288,7 @@ namespace Blockstacker.Gameplay
                 _dasRightStart = double.PositiveInfinity;
                 _dasRightActive = false;
 
-                _mediator.Send(new InputActionMessage
-                    {ActionType = ActionType.MoveRight, KeyActionType = KeyActionType.KeyUp, Time = actionTime});
+                _mediator.Send(inputMessage with {KeyActionType = KeyActionType.KeyUp});
             }
         }
 
@@ -256,10 +296,14 @@ namespace Blockstacker.Gameplay
         {
             if (!enabled) return;
             var actionTime = ctx.time - _timer.EffectiveStartTime;
+            Update();
+
+            var inputMessage = new InputActionMessage
+                {ActionType = ActionType.Softdrop, Time = actionTime};
+
             if (ctx.performed)
             {
-                _mediator.Send(new InputActionMessage
-                    {ActionType = ActionType.Softdrop, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
+                _mediator.Send(inputMessage with {KeyActionType = KeyActionType.KeyDown});
 
                 if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeHorizontal &&
                     (_holdingLeftStart < actionTime ||
@@ -280,21 +324,25 @@ namespace Blockstacker.Gameplay
             else if (ctx.canceled)
             {
                 _effectiveDropTime = _normalDropTime;
-                _mediator.Send(new InputActionMessage
-                    {ActionType = ActionType.Softdrop, KeyActionType = KeyActionType.KeyUp, Time = actionTime});
+                _mediator.Send(inputMessage with {KeyActionType = KeyActionType.KeyUp});
             }
         }
 
         public void OnHardDrop(InputAction.CallbackContext ctx)
         {
             if (!enabled) return;
-            var actionTime = _timer.CurrentTime;
             if (_pieceIsNull) return;
-            if (!ctx.performed) return;
             if (!_settings.Rules.Controls.AllowHardDrop) return;
 
-            _mediator.Send(new InputActionMessage
-                {ActionType = ActionType.Harddrop, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
+            Update();
+            var actionTime = ctx.time - _timer.EffectiveStartTime;
+            var inputMessage = new InputActionMessage {ActionType = ActionType.Harddrop, Time = actionTime};
+            if (ctx.canceled)
+                _mediator.Send(inputMessage with {KeyActionType = KeyActionType.KeyUp});
+
+            if (!ctx.performed) return;
+
+            _mediator.Send(inputMessage with {KeyActionType = KeyActionType.KeyDown});
 
             if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeHorizontal &&
                 (_holdingLeftStart < actionTime ||
@@ -303,113 +351,85 @@ namespace Blockstacker.Gameplay
             HandlePiecePlacement(actionTime);
         }
 
-        public void OnRotateCounterclockwise(InputAction.CallbackContext ctx)
+        private void HandlePieceRotation(InputAction.CallbackContext ctx, int rotationAngle, RotateDirection direction)
         {
             if (!enabled) return;
-            var actionTime = ctx.time - _timer.EffectiveStartTime;
             if (_pieceIsNull) return;
-            if (!ctx.performed) return;
-            const int rotationAngle = 90;
+            if (direction == RotateDirection.OneEighty && !_settings.Rules.Controls.Allow180Spins) return;
 
-            _mediator.Send(new InputActionMessage
-                {ActionType = ActionType.RotateCCW, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
+            var actionType = direction switch
+            {
+                RotateDirection.Clockwise => ActionType.RotateCW,
+                RotateDirection.Counterclockwise => ActionType.RotateCCW,
+                RotateDirection.OneEighty => ActionType.Rotate180,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            var actionTime = ctx.time - _timer.EffectiveStartTime;
+            var inputMessage = new InputActionMessage {ActionType = actionType, Time = actionTime};
+            if (ctx.canceled)
+                _mediator.Send(inputMessage with {KeyActionType = KeyActionType.KeyUp});
+            Update();
+
+            if (!ctx.performed) return;
+
+            _mediator.Send(inputMessage with {KeyActionType = KeyActionType.KeyDown});
 
             ActivePiece.transform.Rotate(Vector3.forward, rotationAngle);
             if (!SpinHandler.TryKick(
                     ActivePiece,
                     _board,
-                    RotateDirection.Counterclockwise,
+                    direction,
                     out _lastSpinResult))
             {
                 ActivePiece.transform.Rotate(Vector3.forward, -rotationAngle);
                 return;
             }
 
-            MovePiece(_lastSpinResult.Kick);
+            _lastSpinResult = CheckSpinResult(_lastSpinResult);
+
+            MovePiece(_lastSpinResult.Kick, false, actionTime);
             _lastWasSpin = true;
 
+            var previousRotation = ActivePiece.RotationState;
             ActivePiece.RotationState = ChangeRotationState(ActivePiece.RotationState, rotationAngle);
-            if (_handling.DelayDasOn.HasFlag(DelayDasOn.Rotation))
-                _dasDelay = actionTime + _handling.DasCutDelay;
 
-            UpdatePiecePlacementVars(actionTime);
-        }
-
-        public void OnRotateClockwise(InputAction.CallbackContext ctx)
-        {
-            if (!enabled) return;
-            var actionTime = ctx.time - _timer.EffectiveStartTime;
-            if (_pieceIsNull) return;
-            if (!ctx.performed) return;
-            const int rotationAngle = -90;
-
-            _mediator.Send(new InputActionMessage
-                {ActionType = ActionType.RotateCW, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
-
-            ActivePiece.transform.Rotate(Vector3.forward, rotationAngle);
-            if (!SpinHandler.TryKick(
-                    ActivePiece,
-                    _board,
-                    RotateDirection.Clockwise,
-                    out _lastSpinResult))
+            _mediator.Send(new PieceRotatedMessage
             {
-                ActivePiece.transform.Rotate(Vector3.forward, -rotationAngle);
-                return;
-            }
+                PieceType = ActivePiece.PieceType, EndRotation = ActivePiece.RotationState,
+                StartRotation = previousRotation, Time = actionTime, WasSpin = _lastSpinResult.WasSpin,
+                WasSpinMini = _lastSpinResult.WasSpinMini
+            });
 
-            MovePiece(_lastSpinResult.Kick);
-            _lastWasSpin = true;
-            
-            ActivePiece.RotationState = ChangeRotationState(ActivePiece.RotationState, rotationAngle);
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Rotation))
                 _dasDelay = actionTime + _handling.DasCutDelay;
 
             UpdatePiecePlacementVars(actionTime);
         }
 
-        public void OnRotate180(InputAction.CallbackContext ctx)
-        {
-            if (!enabled) return;
-            var actionTime = ctx.time - _timer.EffectiveStartTime;
-            if (_pieceIsNull) return;
-            if (!ctx.performed) return;
-            if (!_settings.Rules.Controls.Allow180Spins) return;
-            const int rotationAngle = 180;
+        public void OnRotateCounterclockwise(InputAction.CallbackContext ctx) =>
+            HandlePieceRotation(ctx, 90, RotateDirection.Counterclockwise);
 
-            _mediator.Send(new InputActionMessage
-                {ActionType = ActionType.Rotate180, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
+        public void OnRotateClockwise(InputAction.CallbackContext ctx) =>
+            HandlePieceRotation(ctx, -90, RotateDirection.Clockwise);
 
-            ActivePiece.transform.Rotate(Vector3.forward, rotationAngle);
-            if (!SpinHandler.TryKick(
-                    ActivePiece,
-                    _board,
-                    RotateDirection.OneEighty,
-                    out _lastSpinResult))
-            {
-                ActivePiece.transform.Rotate(Vector3.forward, -rotationAngle);
-                return;
-            }
-
-            MovePiece(_lastSpinResult.Kick);
-            _lastWasSpin = true;
-            
-            ActivePiece.RotationState = ChangeRotationState(ActivePiece.RotationState, rotationAngle);
-            if (_handling.DelayDasOn.HasFlag(DelayDasOn.Rotation))
-                _dasDelay = actionTime + _handling.DasCutDelay;
-
-            UpdatePiecePlacementVars(actionTime);
-        }
+        public void OnRotate180(InputAction.CallbackContext ctx) =>
+            HandlePieceRotation(ctx, 180, RotateDirection.OneEighty);
 
         public void OnSwapHoldPiece(InputAction.CallbackContext ctx)
         {
             if (!enabled) return;
-            var actionTime = ctx.time - _timer.EffectiveStartTime;
             if (_pieceIsNull) return;
+
+            var actionTime = ctx.time - _timer.EffectiveStartTime;
+            var inputMessage = new InputActionMessage {ActionType = ActionType.Hold, Time = actionTime};
+            if (ctx.canceled)
+                _mediator.Send(inputMessage with {KeyActionType = KeyActionType.KeyUp});
+            Update();
+
             if (!ctx.performed) return;
             if (!_settings.Rules.Controls.AllowHold) return;
 
-            _mediator.Send(new InputActionMessage
-                {ActionType = ActionType.Hold, KeyActionType = KeyActionType.KeyDown, Time = actionTime});
+            _mediator.Send(inputMessage with {KeyActionType = KeyActionType.KeyDown});
 
             if (_usedHold && !_settings.Rules.Controls.UnlimitedHold) return;
 
@@ -493,12 +513,14 @@ namespace Blockstacker.Gameplay
             }
 
             if (_dasRightActive)
+            {
+                var movementVector = Vector2Int.zero;
                 while (_arrTimer < functionStartTime)
                 {
                     _arrTimer += _handling.AutomaticRepeatRate;
-                    if (_board.CanPlace(ActivePiece, Vector2Int.right))
+                    if (_board.CanPlace(ActivePiece, movementVector + Vector2Int.right))
                     {
-                        MovePiece(Vector2Int.right);
+                        movementVector += Vector2Int.right;
                     }
                     else
                     {
@@ -507,19 +529,29 @@ namespace Blockstacker.Gameplay
                     }
                 }
 
-            if (!_dasLeftActive) return;
-            while (_arrTimer < functionStartTime)
+                if (movementVector != Vector2Int.zero)
+                    MovePiece(movementVector, true, _arrTimer - _handling.AutomaticRepeatRate);
+            }
+
+            if (_dasLeftActive)
             {
-                _arrTimer += _handling.AutomaticRepeatRate;
-                if (_board.CanPlace(ActivePiece, Vector2Int.left))
+                var movementVector = Vector2Int.zero;
+                while (_arrTimer < functionStartTime)
                 {
-                    MovePiece(Vector2Int.left);
+                    _arrTimer += _handling.AutomaticRepeatRate;
+                    if (_board.CanPlace(ActivePiece, movementVector + Vector2Int.left))
+                    {
+                        movementVector += Vector2Int.left;
+                    }
+                    else
+                    {
+                        _arrTimer = functionStartTime + _handling.AutomaticRepeatRate;
+                        break;
+                    }
                 }
-                else
-                {
-                    _arrTimer = functionStartTime + _handling.AutomaticRepeatRate;
-                    break;
-                }
+
+                if (movementVector != Vector2Int.zero)
+                    MovePiece(movementVector, true, _arrTimer - _handling.AutomaticRepeatRate);
             }
         }
 
@@ -528,18 +560,15 @@ namespace Blockstacker.Gameplay
             var functionStartTime = _timer.CurrentTime;
             if (_pieceIsNull) return;
 
-            var movementVector = Vector2Int.down;
+            var movementVector = Vector2Int.zero;
 
             while (_dropTimer < functionStartTime)
             {
-                _mediator.Send(new LinesDroppedMessage
-                    {Count = 1, WasHardDrop = false, Time = _dropTimer});
-
                 _dropTimer += _effectiveDropTime;
 
-                if (_board.CanPlace(ActivePiece, movementVector))
+                if (_board.CanPlace(ActivePiece, movementVector + Vector2Int.down))
                 {
-                    movementVector.y -= 1;
+                    movementVector += Vector2Int.down;
                     continue;
                 }
 
@@ -571,8 +600,8 @@ namespace Blockstacker.Gameplay
 
             var lastDropTime = _dropTimer - _effectiveDropTime;
 
-            movementVector.y += 1;
-            MovePiece(movementVector, false);
+            if (movementVector != Vector2Int.zero)
+                MovePiece(movementVector, true, lastDropTime, false);
 
             if (_lockTime < lastDropTime &&
                 _settings.Rules.Controls.OnTouchGround != OnTouchGround.InfiniteMovement)
@@ -585,7 +614,6 @@ namespace Blockstacker.Gameplay
                         HandlePiecePlacement(lastDropTime);
                     break;
                 case OnTouchGround.LimitedMoves:
-                    break;
                 case OnTouchGround.InfiniteMovement:
                     break;
                 default:

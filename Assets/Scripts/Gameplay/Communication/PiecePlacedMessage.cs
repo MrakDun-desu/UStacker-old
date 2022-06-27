@@ -3,7 +3,7 @@ using System;
 namespace Blockstacker.Gameplay.Communication
 {
     [Serializable]
-    public record PiecePlacedMessage : Message
+    public record PiecePlacedMessage : MidgameMessage
     {
         public uint LinesCleared;
         public uint CurrentCombo;

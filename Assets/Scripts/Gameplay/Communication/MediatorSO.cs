@@ -17,6 +17,14 @@ namespace Blockstacker.Gameplay.Communication
             _registeredActions[key].Add(action);
         }
 
+        public void Register(object action, Type type)
+        {
+            if (!typeof(Message).IsAssignableFrom(type)) return;
+            if (!_registeredActions.ContainsKey(type)) _registeredActions[type] = new List<Delegate>();
+            
+            _registeredActions[type].Add(action as Delegate);
+        }
+
         public void Unregister<TMessage>(Action<TMessage> action)
             where TMessage : Message
         {

@@ -15,9 +15,9 @@ namespace Blockstacker.Gameplay
             _mediator.Register<InputActionMessage>(AddMessageToList);
         }
 
-        private void AddMessageToList(InputActionMessage message)
+        private void AddMessageToList(InputActionMessage midgameMessage)
         {
-            ActionList.Add(message);
+            ActionList.Add(midgameMessage);
         }
 
         public void ClearActionList()

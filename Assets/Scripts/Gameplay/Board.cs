@@ -185,11 +185,11 @@ namespace Blockstacker.Gameplay
             return linesCleared;
         }
 
-        private void SendPlacementMessage(PiecePlacedMessage message)
+        private void SendPlacementMessage(PiecePlacedMessage midgameMessage)
         {
-            if (message.LinesCleared > 0)
+            if (midgameMessage.LinesCleared > 0)
             {
-                if (message.WasSpin || message.WasSpinMini || message.LinesCleared >= 4)
+                if (midgameMessage.WasSpin || midgameMessage.WasSpinMini || midgameMessage.LinesCleared >= 4)
                 {
                     if (_backToBackActive)
                         _currentBackToBack++;
@@ -211,29 +211,10 @@ namespace Blockstacker.Gameplay
                 _comboActive = false;
             }
 
-            message.CurrentCombo = _currentCombo;
-            message.CurrentBackToBack = _currentBackToBack;
+            midgameMessage.CurrentCombo = _currentCombo;
+            midgameMessage.CurrentBackToBack = _currentBackToBack;
 
-            _mediator.Send(message);
-        }
-
-        private SpinResult CheckSpinValid(string pieceType, SpinResult formerResult)
-        {
-            switch (_settings.Rules.General.AllowedSpins)
-            {
-                case AllowedSpins.Stupid:
-                    formerResult.WasSpin = true;
-                    formerResult.WasSpinMini = false;
-                    return formerResult;
-                case AllowedSpins.TSpins:
-                    return pieceType == "TPiece" ? formerResult : new SpinResult();
-                case AllowedSpins.All:
-                    return formerResult;
-                case AllowedSpins.None:
-                    return new SpinResult();
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            _mediator.Send(midgameMessage);
         }
 
         private Vector2Int WorldSpaceToBoardPosition(Vector3 worldSpacePos)
@@ -284,9 +265,10 @@ namespace Blockstacker.Gameplay
             Blocks[blockPos.y][blockPos.x] = block;
         }
 
-        public bool Place(Piece piece, double placementTime, bool lastSpin, SpinResult lastSpinResult)
+        public bool Place(Piece piece, double placementTime, SpinResult lastSpinResult = null)
         {
             if (!CanPlace(piece)) return false;
+            lastSpinResult ??= new SpinResult();
 
             var isPartlyBelowLethal = false;
             var isCompletelyBelowLethal = true;
@@ -304,13 +286,11 @@ namespace Blockstacker.Gameplay
             var linesWereCleared = linesCleared > 0;
             var wasAllClear = Blocks.Count == 0;
 
-            var actualSpinResult = lastSpin ? CheckSpinValid(piece.PieceType, lastSpinResult) : new SpinResult();
-
             var piecePlacedMsg = 
                 new PiecePlacedMessage
             {
                 LinesCleared = linesCleared, WasAllClear = wasAllClear, Time = placementTime,
-                WasSpin = actualSpinResult.WasSpin, WasSpinMini = actualSpinResult.WasSpinMini, PieceType = piece.PieceType
+                WasSpin = lastSpinResult.WasSpin, WasSpinMini = lastSpinResult.WasSpinMini, PieceType = piece.PieceType
             };
 
             SendPlacementMessage(piecePlacedMsg);

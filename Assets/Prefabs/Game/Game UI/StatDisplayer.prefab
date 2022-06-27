@@ -52,6 +52,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _counter: {fileID: 0}
   _displayText: {fileID: 2975312091520619436}
+  _timer: {fileID: 0}
+  _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   _statCounterScript: 
   _updateInterval: 0.1
 --- !u!1 &2975312091520619434

@@ -22,57 +22,57 @@ namespace Gameplay.Stats
             _mediator.Unregister<PiecePlacedMessage>(OnPiecePlaced);
         }
 
-        private void OnInputAction(InputActionMessage message)
+        private void OnInputAction(InputActionMessage midgameMessage)
         {
-            if (message.KeyActionType == KeyActionType.KeyDown) Stats.KeysPressed++;
+            if (midgameMessage.KeyActionType == KeyActionType.KeyDown) Stats.KeysPressed++;
         }
 
-        private void OnPiecePlaced(PiecePlacedMessage message)
+        private void OnPiecePlaced(PiecePlacedMessage midgameMessage)
         {
             Stats.PiecesPlaced++;
-            Stats.LinesCleared += message.LinesCleared;
+            Stats.LinesCleared += midgameMessage.LinesCleared;
 
-            if (message.WasAllClear) Stats.AllClears++;
-            if (message.CurrentCombo > Stats.LongestCombo) Stats.LongestCombo = message.CurrentCombo;
-            if (message.CurrentBackToBack > Stats.LongestBackToBack)
-                Stats.LongestBackToBack = message.CurrentBackToBack;
+            if (midgameMessage.WasAllClear) Stats.AllClears++;
+            if (midgameMessage.CurrentCombo > Stats.LongestCombo) Stats.LongestCombo = midgameMessage.CurrentCombo;
+            if (midgameMessage.CurrentBackToBack > Stats.LongestBackToBack)
+                Stats.LongestBackToBack = midgameMessage.CurrentBackToBack;
 
-            switch (message.LinesCleared)
+            switch (midgameMessage.LinesCleared)
             {
                 case 0:
-                    if (message.WasSpin)
+                    if (midgameMessage.WasSpin)
                         Stats.Spins++;
-                    else if (message.WasSpinMini)
+                    else if (midgameMessage.WasSpinMini)
                         Stats.MiniSpins++;
                     break;
                 case 1:
-                    if (message.WasSpin)
+                    if (midgameMessage.WasSpin)
                         Stats.SpinSingles++;
-                    else if (message.WasSpinMini)
+                    else if (midgameMessage.WasSpinMini)
                         Stats.MiniSpinSingles++;
                     else
                         Stats.Singles++;
                     break;
                 case 2:
-                    if (message.WasSpin)
+                    if (midgameMessage.WasSpin)
                         Stats.SpinDoubles++;
-                    else if (message.WasSpinMini)
+                    else if (midgameMessage.WasSpinMini)
                         Stats.MiniSpinDoubles++;
                     else
                         Stats.Doubles++;
                     break;
                 case 3:
-                    if (message.WasSpin)
+                    if (midgameMessage.WasSpin)
                         Stats.SpinTriples++;
-                    else if (message.WasSpinMini)
+                    else if (midgameMessage.WasSpinMini)
                         Stats.MiniSpinTriples++;
                     else
                         Stats.MiniSpinTriples++;
                     break;
                 case 4:
-                    if (message.WasSpin)
+                    if (midgameMessage.WasSpin)
                         Stats.SpinQuads++;
-                    else if (message.WasSpinMini)
+                    else if (midgameMessage.WasSpinMini)
                         Stats.MiniSpinQuads++;
                     else
                         Stats.Quads++;

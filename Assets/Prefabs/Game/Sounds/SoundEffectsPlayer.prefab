@@ -1,0 +1,233 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8524916289635684595
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8524916289635684598}
+  - component: {fileID: 8524916289635684597}
+  - component: {fileID: 8524916289635684596}
+  m_Layer: 0
+  m_Name: SoundEffectsPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8524916289635684598
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8524916289635684595}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &8524916289635684597
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8524916289635684595}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 1243779893083779327, guid: 23c16a5d4563fe1469b4393b170162b7, type: 2}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &8524916289635684596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8524916289635684595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e780b1238a348afb67aab91b939d2a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _defaultEffects:
+    _entries:
+    - Key: spin
+      Value: {fileID: 8300000, guid: be5336bbcd018e54e9f7386b83d71418, type: 3}
+    - Key: rotate
+      Value: {fileID: 8300000, guid: 50afada4502180441b9eb3ad5650dc4a, type: 3}
+    - Key: move
+      Value: {fileID: 8300000, guid: d6bdf1b5bc54d2644b1412d869d79c5d, type: 3}
+    - Key: softdrop
+      Value: {fileID: 8300000, guid: 1747d51e894f6b14d89f2372c2fee1de, type: 3}
+    - Key: combo_1
+      Value: {fileID: 8300000, guid: c4e856207aba0a247bfadfb8fd9008c2, type: 3}
+    - Key: combo_1_power
+      Value: {fileID: 8300000, guid: 002f13b1dec9f504a9503ddf2e24bf58, type: 3}
+    - Key: combo_2
+      Value: {fileID: 8300000, guid: de061c6e06b9e4a4faaf18dccbdfc35f, type: 3}
+    - Key: combo_2_power
+      Value: {fileID: 8300000, guid: 5044c6487a188b1459f25333694d589b, type: 3}
+    - Key: combo_3
+      Value: {fileID: 8300000, guid: ccaf616dd05039d4885191cc86698cac, type: 3}
+    - Key: combo_3_power
+      Value: {fileID: 8300000, guid: 50557afec6440b642949a435fa7b3c35, type: 3}
+    - Key: combo_4
+      Value: {fileID: 8300000, guid: 8c707ad5855ff8c46bf40dccbdd0dbf4, type: 3}
+    - Key: combo_4_power
+      Value: {fileID: 8300000, guid: 8c707ad5855ff8c46bf40dccbdd0dbf4, type: 3}
+    - Key: combo_5
+      Value: {fileID: 8300000, guid: fd8ec1df076ef8740b2b838982210f4c, type: 3}
+    - Key: combo_5_power
+      Value: {fileID: 8300000, guid: b905ba2c1fc02ff4e893b8ca8f453210, type: 3}
+    - Key: combo_6
+      Value: {fileID: 8300000, guid: 83b7432001a34464e99d455246621e74, type: 3}
+    - Key: combo_6_power
+      Value: {fileID: 8300000, guid: 79a181f2662991e4bb8703968552ed87, type: 3}
+    - Key: combo_7
+      Value: {fileID: 8300000, guid: 674387141261d9648b50abf1cce6090f, type: 3}
+    - Key: combo_7_power
+      Value: {fileID: 8300000, guid: 674387141261d9648b50abf1cce6090f, type: 3}
+    - Key: combo_8
+      Value: {fileID: 8300000, guid: 9cfacfcb7a7864042a04d59e33d7503e, type: 3}
+    - Key: combo_8_power
+      Value: {fileID: 8300000, guid: 73a0431c1f707fe419694f64cad08e9e, type: 3}
+    - Key: combo_9
+      Value: {fileID: 8300000, guid: a9600a0fbf962d04ebfc6168887587db, type: 3}
+    - Key: combo_9_power
+      Value: {fileID: 8300000, guid: dee694e5d75ca7040b2c9903bc2574cf, type: 3}
+    - Key: combo_10
+      Value: {fileID: 8300000, guid: 601187775fa9d1c41bd7c00eb23de055, type: 3}
+    - Key: combo_10_power
+      Value: {fileID: 8300000, guid: 272c8d2089e199242b7d1e5c744e7bc0, type: 3}
+    - Key: combo_11
+      Value: {fileID: 8300000, guid: 980499dc2bbcba04a8d6737031c8e989, type: 3}
+    - Key: combo_11_power
+      Value: {fileID: 8300000, guid: 32d06178861c55542b0127ea5a2e0950, type: 3}
+    - Key: combo_12
+      Value: {fileID: 8300000, guid: 7454a86a40e8da247b0a20d95c59e97e, type: 3}
+    - Key: combo_12_power
+      Value: {fileID: 8300000, guid: 5a1069442616be1428e915568f00b1f7, type: 3}
+    - Key: combo_13
+      Value: {fileID: 8300000, guid: b1aa9eac140c3364eb2e4dc5050d3696, type: 3}
+    - Key: combo_13_power
+      Value: {fileID: 8300000, guid: 3293003e4c96cc345b57587359257fc0, type: 3}
+    - Key: combo_14
+      Value: {fileID: 8300000, guid: b2405af90a19e0b488a75215b1ce35ee, type: 3}
+    - Key: combo_14_power
+      Value: {fileID: 8300000, guid: ee05395d9a0e73143a0b38b433b2578f, type: 3}
+    - Key: combo_15
+      Value: {fileID: 8300000, guid: 863135cfbd6f7cc44bc977f1c409e0b8, type: 3}
+    - Key: combo_15_power
+      Value: {fileID: 0}
+    - Key: combo_16
+      Value: {fileID: 8300000, guid: b26d905fd63a09748963da4f17ef2a48, type: 3}
+    - Key: combo_16_power
+      Value: {fileID: 8300000, guid: 19e6bd37cb40349478698ad8a0d45a87, type: 3}
+    - Key: allclear
+      Value: {fileID: 8300000, guid: a337e47eabcced8428a986fd58ccfab0, type: 3}
+    - Key: combobreak
+      Value: {fileID: 8300000, guid: 1f95088baef75dc4fba6141fb3c338f5, type: 3}
+    - Key: floor
+      Value: {fileID: 8300000, guid: 66b46c16076cb3a44a23f56566d1729f, type: 3}
+    - Key: clearspin
+      Value: {fileID: 8300000, guid: 4190693385c31534ab20181c8b3f2dad, type: 3}
+    - Key: btb_break
+      Value: {fileID: 8300000, guid: 905b270441c8d8b408edf4297f9409e8, type: 3}
+    - Key: clearline
+      Value: {fileID: 8300000, guid: f1e5b71a6606abb47903757a7a98f833, type: 3}
+    - Key: clearquad
+      Value: {fileID: 8300000, guid: 083f6c413055b1a4199e0d8241de83cd, type: 3}
+    _duplicateEntries: []
+  _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}

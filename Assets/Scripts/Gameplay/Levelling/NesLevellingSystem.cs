@@ -80,7 +80,7 @@ namespace Blockstacker.Gameplay.Levelling
             _mediator = mediator;
 
             _mediator.Register<PiecePlacedMessage>(HandlePiecePlaced);
-            _mediator.Register<LinesDroppedMessage>(HandleLinesDropped);
+            _mediator.Register<PieceMovedMessage>(HandlePieceMoved);
 
             var newGravity = new GravityChangedMessage {Gravity = CalculateGravity()};
             var newLevel = new LevelChangedMessage {Level = _currentLevel};
@@ -107,19 +107,21 @@ namespace Blockstacker.Gameplay.Levelling
                 _linesToNextLevel += 10;
                 _currentLevel += 1;
 
-                var newGravity = new GravityChangedMessage {Gravity = CalculateGravity()};
-                var newLevel = new LevelChangedMessage {Level = _currentLevel};
+                var newGravity = new GravityChangedMessage {Gravity = CalculateGravity(), Time = piecePlaced.Time};
+                var newLevel = new LevelChangedMessage {Level = _currentLevel, Time = piecePlaced.Time};
                 _mediator.Send(newGravity);
                 _mediator.Send(newLevel);
             }
 
-            var newScore = new ScoreChangedMessage {Score = scoreAddition};
+            var newScore = new ScoreAddedMessage {Score = scoreAddition, Time = piecePlaced.Time};
             _mediator.Send(newScore);
         }
 
-        private void HandleLinesDropped(LinesDroppedMessage linesDropped)
+        private void HandlePieceMoved(PieceMovedMessage pieceMoved)
         {
-            var newScore = new ScoreChangedMessage {Score = linesDropped.Count};
+            if (!pieceMoved.WasSoftDrop) return;
+            
+            var newScore = new ScoreAddedMessage {Score = -(long)pieceMoved.Y, Time = pieceMoved.Time};
             _mediator.Send(newScore);
         }
 

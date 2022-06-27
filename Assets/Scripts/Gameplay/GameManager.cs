@@ -32,11 +32,6 @@ namespace Blockstacker.Gameplay
         private bool _gameStarted;
         private bool _gameRunning;
 
-        public event Action GameRestartedEvent;
-        public event Action GamePausedEvent;
-        public event Action GameResumedEvent;
-        public event Action GameEndedEvent;
-
         #region Game event management
 
         public void StartGame()
@@ -70,12 +65,12 @@ namespace Blockstacker.Gameplay
             if (_gameRunning)
             {
                 GamePaused.Invoke();
-                GamePausedEvent?.Invoke();
+                _mediator.Send(new GamePausedMessage());
             }
             else
             {
                 GameResumed.Invoke();
-                GameResumedEvent?.Invoke();
+                _mediator.Send(new GameResumedMessage());
             }
 
             _gameRunning = !_gameRunning;
@@ -84,7 +79,7 @@ namespace Blockstacker.Gameplay
         public void Restart()
         {
             GameRestarted.Invoke();
-            GameRestartedEvent?.Invoke();
+            _mediator.Send(new GameRestartedMessage());
         }
 
         public void LoseGame()
@@ -102,12 +97,12 @@ namespace Blockstacker.Gameplay
         public void EndGame()
         {
             _gameEnded = true;
-            Replay.ActionList = new List<Message>();
+            Replay.ActionList = new List<InputActionMessage>();
             Replay.ActionList.AddRange(_gameRecorder.ActionList);
             Replay.Stats = _statCounter.Stats with { };
             Replay.GameLength = _timer.CurrentTimeAsSpan;
             GameEnded.Invoke();
-            GameEndedEvent?.Invoke();
+            _mediator.Send(new GameEndedMessage());
         }
 
         public void TogglePause(InputAction.CallbackContext ctx)
@@ -141,10 +136,6 @@ namespace Blockstacker.Gameplay
         private void OnDestroy()
         {
             _mediator.Clear();
-            GameRestartedEvent = null;
-            GamePausedEvent = null;
-            GameResumedEvent = null;
-            GameEndedEvent = null;
         }
 
         private void OnPiecePlaced(PiecePlacedMessage _)
