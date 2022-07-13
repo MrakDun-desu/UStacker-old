@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Blockstacker.Common.Extensions;
-using Blockstacker.GlobalSettings.Loaders;
+using Blockstacker.GlobalSettings.Backgrounds;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;

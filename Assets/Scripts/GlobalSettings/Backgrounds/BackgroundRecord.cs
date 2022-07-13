@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Loaders
+namespace Blockstacker.GlobalSettings.Backgrounds
 {
     public record BackgroundRecord
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blockstacker.Common;
 
-namespace Blockstacker.GlobalSettings.Loaders
+namespace Blockstacker.GlobalSettings.Backgrounds
 {
     public static class BackgroundPackLoader
     {

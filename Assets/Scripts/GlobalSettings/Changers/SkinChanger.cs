@@ -1,5 +1,5 @@
 using System;
-using Blockstacker.GlobalSettings.Loaders;
+using Blockstacker.GlobalSettings.BlockSkins;
 using TMPro;
 using UnityEngine;
 

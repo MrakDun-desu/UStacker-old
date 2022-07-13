@@ -7,7 +7,7 @@ using Blockstacker.Common;
 using Blockstacker.GlobalSettings.Enums;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Loaders
+namespace Blockstacker.GlobalSettings.BlockSkins
 {
     public static class SkinLoader
     {

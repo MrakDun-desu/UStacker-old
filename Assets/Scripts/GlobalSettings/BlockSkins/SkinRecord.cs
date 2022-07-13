@@ -1,6 +1,6 @@
 ﻿using Blockstacker.GlobalSettings.Enums;
 
-namespace Blockstacker.GlobalSettings.Loaders
+namespace Blockstacker.GlobalSettings.BlockSkins
 {
     public record SkinRecord
     {
