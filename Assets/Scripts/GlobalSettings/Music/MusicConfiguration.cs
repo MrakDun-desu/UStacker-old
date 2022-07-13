@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
-namespace Blockstacker.Music
+namespace Blockstacker.GlobalSettings.Music
 {
     [Serializable]
     public class MusicConfiguration
@@ -11,13 +10,10 @@ namespace Blockstacker.Music
         public List<string> MenuMusic = new();
         public List<string> VictoryMusic = new();
         public List<string> LossMusic = new();
-        public Dictionary<string, List<string>> GameMusicGroups = new();
-
-        public Collection<string> Test = new();
+        public MusicGroupDictionary GameMusicGroups = new();
 
         public void Rewrite(MusicConfiguration other)
         {
-            
             // rewrite game music and music groups if they are defined
             if (other.GameMusic.Count != 0)
                 GameMusic = other.GameMusic;

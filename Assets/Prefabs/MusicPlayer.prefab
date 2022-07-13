@@ -141,14 +141,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1865c3bf6df74c7d8724397276162253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _musicConf:
-    GameMusic: []
-    MenuMusic: []
+  _musicConfiguration:
+    GameMusic:
+    - Skydiving
+    - Rain
+    - Classic 1
+    MenuMusic:
+    - Rust
     VictoryMusic: []
     LossMusic: []
+    GameMusicGroups:
+      _entries:
+      - Key: Chill Music
+        Value:
+        - Rain
+      - Key: Fast Music
+        Value:
+        - Skydiving
+        - Classic 1
+      _duplicateEntries: []
+    CustomGameMusic:
+      OptionType: 1
+      Name: Chill Music
   _switchInterval: 1
   _quietenTime: 0.5
   _quietenInterval: 0.01
   _defaultMusic:
-    _entries: []
+    _entries:
+    - Key: Classic 1
+      Value: {fileID: 8300000, guid: 7b1b6edcf11c62041bce3a51c2d79523, type: 3}
+    - Key: Rust
+      Value: {fileID: 8300000, guid: 3ef29d94a8573114cbb878ec222a142f, type: 3}
+    - Key: Rain
+      Value: {fileID: 8300000, guid: 4268e3eeb1a92304b81135ab28ae9ce1, type: 3}
+    - Key: Skydiving
+      Value: {fileID: 8300000, guid: 8df5ec465ff46814ab2d60d73efbe26e, type: 3}
     _duplicateEntries: []

@@ -197,6 +197,8 @@ namespace Blockstacker.Gameplay
                 }
                 else
                 {
+                    if (_currentBackToBack > 0)
+                        midgameMessage.BrokenBackToBack = true;
                     _backToBackActive = false;
                     _currentBackToBack = 0;
                 }
@@ -207,6 +209,8 @@ namespace Blockstacker.Gameplay
             }
             else
             {
+                if (_currentCombo > 0)
+                    midgameMessage.BrokenCombo = true;
                 _currentCombo = 0;
                 _comboActive = false;
             }
@@ -290,7 +294,9 @@ namespace Blockstacker.Gameplay
                 new PiecePlacedMessage
             {
                 LinesCleared = linesCleared, WasAllClear = wasAllClear, Time = placementTime,
-                WasSpin = lastSpinResult.WasSpin, WasSpinMini = lastSpinResult.WasSpinMini, PieceType = piece.PieceType
+                WasSpin = lastSpinResult.WasSpin, WasSpinMini = lastSpinResult.WasSpinMini,
+                WasSpinRaw = lastSpinResult.WasSpinRaw, WasSpinMiniRaw = lastSpinResult.WasSpinMiniRaw,
+                PieceType = piece.PieceType
             };
 
             SendPlacementMessage(piecePlacedMsg);

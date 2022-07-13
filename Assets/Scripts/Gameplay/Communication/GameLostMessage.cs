@@ -1,4 +1,4 @@
 ﻿namespace Blockstacker.Gameplay.Communication
 {
-    public record GameWonMessage : Message;
+    public record GameLostMessage : Message;
 }

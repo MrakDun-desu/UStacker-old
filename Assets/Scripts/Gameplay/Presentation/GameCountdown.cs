@@ -22,7 +22,7 @@ namespace Blockstacker.Gameplay.Presentation
         private void Awake()
         {
             _countdownText = GetComponent<TMP_Text>();
-            _mediator.Register<GameEndedMessage>(_ => StopCountdown());
+            _mediator.Register<GameLostMessage>(_ => StopCountdown());
             _mediator.Register<GamePausedMessage>(_ => StopCountdown());
             _mediator.Register<GameResumedMessage>(_ => RestartCountdown());
             _mediator.Register<GameRestartedMessage>(_ => RestartCountdown());
@@ -51,7 +51,8 @@ namespace Blockstacker.Gameplay.Presentation
                         break;
                 }
 
-                _mediator.Send(new CountdownTickedMessage {RemainingTicks = _currentCount});
+                if (_active)
+                    _mediator.Send(new CountdownTickedMessage {RemainingTicks = _currentCount});
             }
         }
 
@@ -74,6 +75,7 @@ namespace Blockstacker.Gameplay.Presentation
             _nextInterval = Time.realtimeSinceStartup + CountdownInterval;
             _currentCount = CountdownCount + 1;
             _countdownText.text = CountdownCount.ToString();
+            _mediator.Send(new CountdownTickedMessage{RemainingTicks = _currentCount});
         }
     }
 }

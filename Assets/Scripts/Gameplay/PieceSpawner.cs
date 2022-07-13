@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Randomizers;
 using Blockstacker.GameSettings;
+using Blockstacker.GlobalSettings;
 using UnityEngine;
 
 namespace Blockstacker.Gameplay
@@ -13,6 +15,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private Board _board;
         [SerializeField] private InputProcessor _inputProcessor;
         [SerializeField] private GameManager _manager;
+        [SerializeField] private MediatorSO _mediator;
 
         public Piece[] AvailablePieces;
         public List<PieceContainer> PreviewContainers = new();
@@ -31,15 +34,17 @@ namespace Blockstacker.Gameplay
                 _previews.AddPiece(Instantiate(AvailablePieces[nextIndex]));
         }
 
-        public void SpawnPiece()
+        public void SpawnPiece() => SpawnPiece(0d);
+
+        public void SpawnPiece(double spawnTime)
         {
             var nextIndex = Randomizer.GetNextPiece();
             var nextPiece = _previews.AddPiece(Instantiate(AvailablePieces[nextIndex]));
 
-            SpawnPiece(nextPiece);
+            SpawnPiece(nextPiece, spawnTime);
         }
 
-        public void SpawnPiece(Piece piece)
+        public void SpawnPiece(Piece piece, double spawnTime)
         {
             var boardTransform = _board.transform;
             var piecePos = new Vector3(
@@ -48,9 +53,8 @@ namespace Blockstacker.Gameplay
                 boardTransform.position.z
             );
             var pieceTransform = piece.transform;
-            pieceTransform.SetParent(null);
-            pieceTransform.localScale = boardTransform.localScale;
             pieceTransform.SetParent(boardTransform);
+            pieceTransform.localScale = Vector3.one;
             pieceTransform.localPosition = piecePos + new Vector3(piece.SpawnOffset.x, piece.SpawnOffset.y);
 
             _inputProcessor.ActivePiece = piece;
@@ -58,6 +62,15 @@ namespace Blockstacker.Gameplay
             var rotationSystem = _settings.Rules.Controls.ActiveRotationSystem;
             var rotation = rotationSystem.GetKickTable(piece.PieceType).StartState;
             pieceTransform.Rotate(Vector3.forward, (float) rotation);
+
+            var nextPiece = "";
+            if (AppSettings.Sound.HearNextPieces)
+                nextPiece = _previews.GetFirstPieceType();
+            
+            _mediator.Send(new PieceSpawnedMessage
+            {
+                SpawnedPiece = piece.PieceType, NextPiece = nextPiece, Time = spawnTime
+            });
 
             if (!_board.CanPlace(piece))
                 _manager.LoseGame();

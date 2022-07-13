@@ -25,14 +25,20 @@ namespace Blockstacker.DiscordPresence
 
         public void ConnectToDiscord()
         {
-            discord = new Discord.Discord(ApplicationID, (ulong) CreateFlags.Default);
-            var activityManager = discord.GetActivityManager();
-            var activity = new Activity
+            try
             {
-                State = "Still Testing",
-                Details = "Imagine you see me stacking blocks here"
-            };
-            activityManager.UpdateActivity(activity, _ => { });
+                discord = new Discord.Discord(ApplicationID, (ulong) CreateFlags.NoRequireDiscord);
+                var activityManager = discord.GetActivityManager();
+                var activity = new Activity
+                {
+                    State = "Still Testing", Details = "Imagine you see me stacking blocks here"
+                };
+                activityManager.UpdateActivity(activity, _ => { });
+            }
+            catch (ResultException)
+            {
+                discord = null;
+            }
         }
 
         public void DisconnectFromDiscord()

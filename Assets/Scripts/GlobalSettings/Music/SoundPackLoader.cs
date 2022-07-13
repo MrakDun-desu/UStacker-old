@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Blockstacker.Common;
 using UnityEngine;
 
-namespace Blockstacker.Music
+namespace Blockstacker.GlobalSettings.Music
 {
     public static class SoundPackLoader
     {

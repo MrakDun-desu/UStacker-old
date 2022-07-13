@@ -96,16 +96,15 @@ namespace Blockstacker.GlobalSettings
             foreach (var fieldName in path)
             {
                 var fieldInfo = type.GetField(fieldName);
-                if (fieldInfo == null) return false;
+                if (fieldInfo is null) return false;
 
                 obj = fieldInfo.GetValue(obj);
-                if (obj == null) return false;
+                if (obj is null) return false;
 
                 type = obj.GetType();
             }
 
-            if (type != typeof(T)) return false;
-            return true;
+            return type == typeof(T);
         }
 
         [Serializable]

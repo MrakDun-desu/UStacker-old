@@ -12,5 +12,9 @@ namespace Blockstacker.Gameplay.Communication
         public bool WasAllClear;
         public bool WasSpin;
         public bool WasSpinMini;
+        public bool WasSpinRaw;
+        public bool WasSpinMiniRaw;
+        public bool BrokenCombo;
+        public bool BrokenBackToBack;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blockstacker.Gameplay.Communication;
-using Blockstacker.Music;
+using Blockstacker.GlobalSettings.Music;
 using NLua;
 using NLua.Exceptions;
 using UnityEngine;
@@ -20,17 +20,41 @@ namespace Blockstacker.Gameplay.SoundEffects
         private readonly Dictionary<string, Type> RegisterableEvents = new()
         {
             {
+                "PieceSpawned", typeof(PieceSpawnedMessage)
+            },
+            {
+                "CountdownTicked", typeof(CountdownTickedMessage)
+            },
+            {
                 "PiecePlaced", typeof(PiecePlacedMessage)
             },
             {
                 "PieceMoved", typeof(PieceMovedMessage)
             },
             {
+                "HoldUsed", typeof(HoldUsedMessage)
+            },
+            {
                 "InputAction", typeof(InputActionMessage)
             },
             {
                 "PieceRotated", typeof(PieceRotatedMessage)
-            }
+            },
+            {
+                "GameLost", typeof(GameLostMessage)
+            },
+            {
+                "GameEnded", typeof(GameEndedMessage)
+            },
+            {
+                "GamePaused", typeof(GamePausedMessage)
+            },
+            {
+                "GameResumed", typeof(GameResumedMessage)
+            },
+            {
+                "GameStarted", typeof(GameResumedMessage)
+            },
         };
 
         private void Awake()

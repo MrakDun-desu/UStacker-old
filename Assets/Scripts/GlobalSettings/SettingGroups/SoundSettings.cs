@@ -1,4 +1,5 @@
 using System;
+using Blockstacker.GlobalSettings.Music;
 
 namespace Blockstacker.GlobalSettings.Groups
 {
@@ -10,5 +11,9 @@ namespace Blockstacker.GlobalSettings.Groups
         public float EffectsVolume = 1;
         public float MenuSoundsVolume = 1;
         public bool MuteWhenOutOfFocus;
+        public bool HearNextPieces;
+        
+        // not viewed in global settings UI
+        public MusicOption CustomGameMusic = new MusicOption(OptionType.Random, "");
     }
 }

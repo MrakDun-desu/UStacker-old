@@ -26,7 +26,7 @@ namespace Gameplay.Stats
             _luaState["stats"] = _counter.Stats;
             _updateStatCor = StartCoroutine(UpdateStatCor());
             _mediator.Register<GameRestartedMessage>(_ => HandleGameRestarted());
-            _mediator.Register<GameEndedMessage>(_ => HandleGameEnded());
+            _mediator.Register<GameLostMessage>(_ => HandleGameEnded());
         }
 
         private void HandleGameRestarted()

@@ -9,5 +9,7 @@ namespace Blockstacker.Gameplay.Communication
         public RotationState EndRotation;
         public bool WasSpin;
         public bool WasSpinMini;
+        public bool WasSpinRaw;
+        public bool WasSpinMiniRaw;
     }
 }

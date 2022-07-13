@@ -24,5 +24,10 @@ namespace Blockstacker.Gameplay
             pieceTransform.rotation = transform.rotation;
             return temp;
         }
+
+        public string GetPieceType()
+        {
+            return _piece.PieceType;
+        } 
     }
 }

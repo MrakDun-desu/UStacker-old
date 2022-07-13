@@ -1,5 +1,5 @@
 using System;
-using Blockstacker.Music;
+using Blockstacker.GlobalSettings.Music;
 using TMPro;
 using UnityEngine;
 

@@ -90,6 +90,7 @@ namespace Blockstacker.Gameplay
             else
             {
                 _gameLost = true;
+                _mediator.Send(new GameLostMessage());
                 GameLost.Invoke();
             }
         }

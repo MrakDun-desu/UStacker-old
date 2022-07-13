@@ -151,6 +151,8 @@ MonoBehaviour:
       Value: {fileID: 8300000, guid: d6bdf1b5bc54d2644b1412d869d79c5d, type: 3}
     - Key: softdrop
       Value: {fileID: 8300000, guid: 1747d51e894f6b14d89f2372c2fee1de, type: 3}
+    - Key: hold
+      Value: {fileID: 8300000, guid: 2ce3193c2894c2b4dab1c21d93b79d52, type: 3}
     - Key: combo_1
       Value: {fileID: 8300000, guid: c4e856207aba0a247bfadfb8fd9008c2, type: 3}
     - Key: combo_1_power
@@ -229,5 +231,33 @@ MonoBehaviour:
       Value: {fileID: 8300000, guid: f1e5b71a6606abb47903757a7a98f833, type: 3}
     - Key: clearquad
       Value: {fileID: 8300000, guid: 083f6c413055b1a4199e0d8241de83cd, type: 3}
+    - Key: finish
+      Value: {fileID: 8300000, guid: 30a5a96b4509d3e4584faa732a7c0f80, type: 3}
+    - Key: death
+      Value: {fileID: 8300000, guid: d617b68266df224468252065fbf90470, type: 3}
+    - Key: i
+      Value: {fileID: 8300000, guid: cc93a7cb1b9529b4dbfb3b31f46be9bb, type: 3}
+    - Key: j
+      Value: {fileID: 8300000, guid: 3c1b1d8ff58625048b087a43abd3a120, type: 3}
+    - Key: l
+      Value: {fileID: 8300000, guid: 75658ef73129da14e8d5b3a00b1322dd, type: 3}
+    - Key: o
+      Value: {fileID: 8300000, guid: f1f5c7ec342f55f46a61429b358de294, type: 3}
+    - Key: s
+      Value: {fileID: 8300000, guid: f71a5bc18da89944f83146cc97b454b6, type: 3}
+    - Key: t
+      Value: {fileID: 8300000, guid: fae1fb997c1d734448cca937c84df58b, type: 3}
+    - Key: z
+      Value: {fileID: 8300000, guid: 5d2e7613a8de9694eb50af8bc865056d, type: 3}
+    - Key: countdown1
+      Value: {fileID: 8300000, guid: 8b8faea2af0da694c8535f80c0569fae, type: 3}
+    - Key: countdown2
+      Value: {fileID: 8300000, guid: 42122240b29dedb409823a90257f9acd, type: 3}
+    - Key: countdown3
+      Value: {fileID: 8300000, guid: 031a3f4943ea8ca4795e4e11910cbe75, type: 3}
+    - Key: countdown4
+      Value: {fileID: 8300000, guid: a0a8726680eb24f448b8a9cab814561d, type: 3}
+    - Key: countdown5
+      Value: {fileID: 8300000, guid: 2a96f5c03d7a32d499a0ef9ea6a5e883, type: 3}
     _duplicateEntries: []
   _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}

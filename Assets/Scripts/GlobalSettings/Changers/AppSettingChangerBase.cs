@@ -7,7 +7,7 @@ namespace Blockstacker.GlobalSettings.Changers
 {
     public abstract class AppSettingChangerBase<T> : MonoBehaviour, ISettingChanger
     {
-        [SerializeField] protected string[] _controlPath = new string[0];
+        [SerializeField] protected string[] _controlPath = Array.Empty<string>();
         [SerializeField] private TMP_Text _title;
         [SerializeField] private bool _autoformatName = true;
 
@@ -21,12 +21,10 @@ namespace Blockstacker.GlobalSettings.Changers
         }
 
         public event Action SettingChanged;
-        public static event Action<string> SettingChangedWithName;
 
         protected void OnSettingChanged()
         {
             SettingChanged?.Invoke();
-            SettingChangedWithName?.Invoke(string.Join("/", _controlPath));
         }
 
         public void SetValue(T value)
@@ -34,7 +32,6 @@ namespace Blockstacker.GlobalSettings.Changers
             if (AppSettings.TrySetValue(value, _controlPath))
             {
                 SettingChanged?.Invoke();
-                SettingChangedWithName?.Invoke(string.Join("/", _controlPath));
             }
         }
     }

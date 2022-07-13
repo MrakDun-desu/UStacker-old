@@ -11,10 +11,12 @@ namespace Blockstacker.Gameplay.Spins
     public class SpinHandler
     {
         private readonly RotationSystem _rotationSystem;
+        private readonly AllowedSpins _allowedSpins;
 
-        public SpinHandler(RotationSystem rotationSystem)
+        public SpinHandler(RotationSystem rotationSystem, AllowedSpins allowedSpins)
         {
             _rotationSystem = rotationSystem;
+            _allowedSpins = allowedSpins;
         }
 
         public bool TryKick(Piece piece, Board board, RotateDirection direction, out SpinResult result)
@@ -34,14 +36,47 @@ namespace Blockstacker.Gameplay.Spins
 
                 if (piece.FullSpinDetectors.All(spinDetector => !board.IsEmpty(spinDetector.position, kick)) ||
                     _rotationSystem.GetKickTable(piece.PieceType).FullSpinKicks.Contains(kick))
-                    result.WasSpin = true;
+                    result.WasSpinRaw = true;
                 else
-                    result.WasSpinMini = true;
+                    result.WasSpinMiniRaw = true;
+
+                result = CheckSpinResult(result, piece.PieceType);
 
                 return true;
             }
 
             return false;
+        }
+        
+        private SpinResult CheckSpinResult(SpinResult formerResult, string pieceType)
+        {
+            switch (_allowedSpins)
+            {
+                case AllowedSpins.Stupid:
+                    formerResult.WasSpin = true;
+                    formerResult.WasSpinMini = false;
+                    return formerResult;
+                case AllowedSpins.TSpins:
+                    if (pieceType == "TPiece")
+                    {
+                        formerResult.WasSpin = formerResult.WasSpinRaw;
+                        formerResult.WasSpinMini = formerResult.WasSpinMiniRaw;
+                    }
+                    else
+                    {
+                        formerResult.WasSpin = false;
+                        formerResult.WasSpinMini = false;
+                    }
+                    return formerResult;
+                case AllowedSpins.All:
+                    return formerResult;
+                case AllowedSpins.None:
+                    formerResult.WasSpin = false;
+                    formerResult.WasSpinMini = false;
+                    return formerResult;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private IEnumerable<Vector2Int> GetKickList(Piece piece, RotateDirection direction)

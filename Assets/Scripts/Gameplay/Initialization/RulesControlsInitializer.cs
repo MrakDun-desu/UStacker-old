@@ -57,7 +57,7 @@ namespace Blockstacker.Gameplay.Initialization
                     _ => new RotationSystem()
                 };
 
-            _inputProcessor.SpinHandler = new SpinHandler(_gameSettings.Rules.Controls.ActiveRotationSystem);
+            _inputProcessor.SpinHandler = new SpinHandler(_gameSettings.Rules.Controls.ActiveRotationSystem, _gameSettings.Rules.General.AllowedSpins);
         }
     }
 }

@@ -7103,9 +7103,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1685487601}
-        m_TargetAssemblyTypeName: Blockstacker.Gameplay.PieceSpawner, Assembly-CSharp
-        m_MethodName: SpawnPiece
+      - m_Target: {fileID: 297083102}
+        m_TargetAssemblyTypeName: Blockstacker.Music.MusicPlayerFinder, Blockstacker.Music
+        m_MethodName: PlayCustomGameTrack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7115,9 +7115,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 297083102}
-        m_TargetAssemblyTypeName: Blockstacker.Music.MusicPlayerFinder, Blockstacker.Music
-        m_MethodName: PlayGameTrack
+      - m_Target: {fileID: 1685487601}
+        m_TargetAssemblyTypeName: Blockstacker.Gameplay.PieceSpawner, Blockstacker.Gameplay
+        m_MethodName: SpawnPiece
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7466,6 +7466,18 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 297083102}
         m_TargetAssemblyTypeName: Blockstacker.Music.MusicPlayerFinder, Blockstacker.Music
+        m_MethodName: StopPlaying
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 297083102}
+        m_TargetAssemblyTypeName: Blockstacker.Music.MusicPlayerFinder, Blockstacker.Music
         m_MethodName: PlayLossTrack
         m_Mode: 1
         m_Arguments:
@@ -7473,7 +7485,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: GameLost
+          m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
   GameEnded:
@@ -7561,6 +7573,30 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: GameFinished
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 297083102}
+        m_TargetAssemblyTypeName: Blockstacker.Music.MusicPlayerFinder, Blockstacker.Music
+        m_MethodName: StopPlaying
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 297083102}
+        m_TargetAssemblyTypeName: Blockstacker.Music.MusicPlayerFinder, Blockstacker.Music
+        m_MethodName: PlayVictoryTrack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
   Replay:
@@ -7979,6 +8015,7 @@ MonoBehaviour:
   _board: {fileID: 878271531}
   _inputProcessor: {fileID: 465133845}
   _manager: {fileID: 1579597091}
+  _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   AvailablePieces: []
   PreviewContainers: []
 --- !u!4 &1685487602
@@ -12136,6 +12173,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SoundEffectsPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 8524916289635684596, guid: 91ec43de18723474a858a6c331cbf576, type: 3}
+      propertyPath: _timer
+      value: 
+      objectReference: {fileID: 139450738}
     - target: {fileID: 8524916289635684598, guid: 91ec43de18723474a858a6c331cbf576, type: 3}
       propertyPath: m_RootOrder
       value: 22

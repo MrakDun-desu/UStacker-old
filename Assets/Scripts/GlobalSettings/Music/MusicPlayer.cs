@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Common;
@@ -6,7 +7,7 @@ using Blockstacker.Common.Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Blockstacker.Music
+namespace Blockstacker.GlobalSettings.Music
 {
     [RequireComponent(typeof(AudioSource))]
     public class MusicPlayer : MonoSingleton<MusicPlayer>
@@ -26,18 +27,27 @@ namespace Blockstacker.Music
         private float _nextSongStartTime;
         private float _timeUntilQuiet;
 
+        public static List<MusicOption> ListAvailableOptions()
+        {
+            var outList =
+                Configuration.GameMusicGroups.Keys.Select(groupName => new MusicOption(OptionType.Group, groupName)).ToList();
+            outList.AddRange(Configuration.GameMusic.Select(trackName => new MusicOption(OptionType.Track, trackName)));
+
+            return outList;
+        }
+
         public void PlayImmediateWithoutLoop(string trackName)
         {
             PlayImmediate(trackName);
             _audioSource.loop = false;
         }
-        
+
         public void PlayImmediate(string trackName)
         {
             _nextSongStartTime = float.PositiveInfinity;
             _timeUntilQuiet = 0;
             _audioSource.Stop();
-            if (SoundPackLoader.Music.ContainsKey(trackName)) 
+            if (SoundPackLoader.Music.ContainsKey(trackName))
                 _audioSource.clip = SoundPackLoader.Music[trackName];
             else if (_defaultMusic.ContainsKey(trackName))
                 _audioSource.clip = _defaultMusic[trackName];
@@ -46,35 +56,52 @@ namespace Blockstacker.Music
             ResumeNormalPlaying();
         }
 
-        public void PlayGameTrackImmediate()
+        public void PlayCustomGameTrackImmediate()
         {
-            if (Configuration.GameMusic.TryGetRandomElement(out var trackName))
-                PlayImmediate(trackName);
+            var customGameMusic = AppSettings.Sound.CustomGameMusic;
+            if (customGameMusic is null || string.IsNullOrEmpty(customGameMusic.Name))
+            {
+                if (Configuration.GameMusic.TryGetRandomElement(out var trackName))
+                    PlayImmediate(trackName);
+
+                return;
+            }
+
+            switch (customGameMusic.OptionType)
+            {
+                case OptionType.Track:
+                    PlayImmediate(customGameMusic.Name);
+                    break;
+                case OptionType.Group:
+                    PlayFromGroupImmediate(customGameMusic.Name);
+                    break;
+                case OptionType.Random:
+                    if (Configuration.GameMusic.TryGetRandomElement(out var trackName))
+                        PlayImmediate(trackName);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
-        public void PlayVictoryTrackImmediate()
+        public void PlayVictoryTrack()
         {
             if (Configuration.VictoryMusic.TryGetRandomElement(out var trackName))
-                PlayImmediateWithoutLoop(trackName);
-        }
-        
-        public void PlayLossMusicImmediate()
-        {
-            if (Configuration.LossMusic.TryGetRandomElement(out var trackName))
-                PlayImmediateWithoutLoop(trackName);
+                PlayNextTrack(trackName);
         }
 
-        public void PlayFromGroup(string groupName)
+        public void PlayLossTrack()
+        {
+            if (Configuration.LossMusic.TryGetRandomElement(out var trackName))
+                PlayNextTrack(trackName);
+        }
+
+        public void PlayFromGroupImmediate(string groupName)
         {
             if (Configuration.GameMusicGroups[groupName].TryGetRandomElement(out var trackName))
                 PlayImmediate(trackName);
         }
 
-        public List<string> ListAvailableGroups()
-        {
-            return Configuration.GameMusicGroups.Keys.ToList();
-        }
-        
         public void StopPlaying()
         {
             _audioSource.Stop();
@@ -86,7 +113,7 @@ namespace Blockstacker.Music
             _audioSource.Play();
             _audioSource.loop = true;
         }
-        
+
         protected override void Awake()
         {
             base.Awake();
@@ -111,16 +138,16 @@ namespace Blockstacker.Music
                 nextSong = SoundPackLoader.Music[trackName];
             else if (_defaultMusic.ContainsKey(trackName))
                 nextSong = _defaultMusic[trackName];
-            
+
             StartCoroutine(PlayNextTrackCor(nextSong));
         }
 
-        private IEnumerator PlayNextTrackCor(AudioClip nextSong)
+        private IEnumerator PlayNextTrackCor(AudioClip nextTrack)
         {
-            yield return new WaitForSeconds(_switchInterval + .1f);
+            yield return new WaitForSeconds(_switchInterval + .01f);
             if (Time.time <= _nextSongStartTime) yield break;
-            
-            _audioSource.clip = nextSong;
+
+            _audioSource.clip = nextTrack;
             _audioSource.volume = 1;
             ResumeNormalPlaying();
         }
@@ -142,13 +169,14 @@ namespace Blockstacker.Music
             if (newScene.name.StartsWith(_currentSceneType)) return;
 
             StartCoroutine(MuteSourceOverTime());
-            
+
             if (newScene.name.StartsWith(MENU_STRING))
             {
                 if (Configuration.MenuMusic.TryGetRandomElement(out var nextTrack))
                     PlayNextTrack(nextTrack);
                 _currentSceneType = MENU_STRING;
-            } else if (newScene.name.StartsWith(GAME_STRING))
+            }
+            else if (newScene.name.StartsWith(GAME_STRING))
             {
                 // game scenes handle music playing by themselves
                 _currentSceneType = GAME_STRING;

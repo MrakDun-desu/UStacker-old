@@ -1,7 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Blockstacker.Common;
-using Blockstacker.Music;
+using Blockstacker.GlobalSettings.Music;
 using UnityEngine.Events;
 
 namespace Blockstacker.GlobalSettings.Appliers

@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-namespace Blockstacker.Music
+namespace Blockstacker.GlobalSettings.Music
 {
     public class MusicPlayerFinder : MonoBehaviour
     {
@@ -14,34 +15,22 @@ namespace Blockstacker.Music
                 _musicPlayer = FindObjectOfType<MusicPlayer>();
         }
 
-        public void PlayRepeating(string trackName)
+        public void PlayCustomGameTrack()
         {
             FindMusicPlayer();
-            _musicPlayer.PlayImmediate(trackName);
-        }
-
-        public void Play(string trackName)
-        {
-            FindMusicPlayer();
-            _musicPlayer.PlayImmediateWithoutLoop(trackName);
-        }
-
-        public void PlayGameTrack()
-        {
-            FindMusicPlayer();
-            _musicPlayer.PlayGameTrackImmediate();
+            _musicPlayer.PlayCustomGameTrackImmediate();
         }
 
         public void PlayVictoryTrack()
         {
             FindMusicPlayer();
-            _musicPlayer.PlayVictoryTrackImmediate();
+            _musicPlayer.PlayVictoryTrack();
         }
 
         public void PlayLossTrack()
         {
             FindMusicPlayer();
-            _musicPlayer.PlayLossMusicImmediate();
+            _musicPlayer.PlayLossTrack();
         }
 
         public void StopPlaying()

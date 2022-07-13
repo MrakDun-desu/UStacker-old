@@ -1,5 +1,5 @@
 ﻿using Blockstacker.Gameplay.Communication;
-using Blockstacker.Music;
+using Blockstacker.GlobalSettings.Music;
 using UnityEngine;
 
 namespace Blockstacker.Gameplay.SoundEffects
@@ -11,8 +11,6 @@ namespace Blockstacker.Gameplay.SoundEffects
         [SerializeField] private MediatorSO _mediator;
 
         private AudioSource _audioSource;
-        private bool _wasCombo;
-        private bool _wasBtb;
 
         private void Awake()
         {
@@ -24,81 +22,63 @@ namespace Blockstacker.Gameplay.SoundEffects
             _mediator.Register<PiecePlacedMessage>(HandlePiecePlaced);
             _mediator.Register<PieceRotatedMessage>(HandlePieceRotated);
             _mediator.Register<PieceMovedMessage>(HandlePieceMoved);
-            _mediator.Register<GameRestartedMessage>(_ =>
-            {
-                _wasBtb = false;
-                _wasCombo = false;
-            });
+            _mediator.Register<HoldUsedMessage>(HandleHoldUsed);
+            _mediator.Register<PieceSpawnedMessage>(HandlePieceSpawned);
+            _mediator.Register<CountdownTickedMessage>(HandleCountdownTicked);
+            _mediator.Register<GameLostMessage>(_ => TryPlayClip("death"));
+            _mediator.Register<GameEndedMessage>(_ => TryPlayClip("finish"));
         }
 
-        private void HandlePiecePlaced(PiecePlacedMessage midgameMessage)
+        private void HandleHoldUsed(HoldUsedMessage obj)
         {
-            if (midgameMessage.WasAllClear)
+            if (obj.WasSuccessful)
+                TryPlayClip("hold");
+        }
+
+        private void HandleCountdownTicked(CountdownTickedMessage message)
+        {
+            switch (message.RemainingTicks)
+            {
+                case < 4:
+                    TryPlayClip($"countdown{message.RemainingTicks + 1}");
+                    break;
+                case >= 4:
+                    TryPlayClip("countdown5");
+                    break;
+            }
+        }
+
+        private void HandlePieceSpawned(PieceSpawnedMessage message)
+        {
+            if (message.NextPiece.EndsWith("Piece") && message.NextPiece.Length == 6)
+                TryPlayClip(message.NextPiece[0].ToString().ToLower());
+        }
+
+        private void HandlePiecePlaced(PiecePlacedMessage message)
+        {
+            if (message.WasAllClear)
                 TryPlayClip("allclear");
 
-            switch (midgameMessage.LinesCleared)
+            switch (message.LinesCleared)
             {
                 case 0:
-                    if (_wasCombo)
+                    if (message.BrokenCombo)
                     {
                         TryPlayClip("combobreak");
-                        _wasCombo = false;
                     }
 
                     TryPlayClip("floor");
                     break;
                 case > 0 and < 4:
-                    if (midgameMessage.WasSpin || midgameMessage.WasSpinMini)
+                    if (message.WasSpin || message.WasSpinMini)
                     {
-                        switch (midgameMessage.CurrentCombo)
+                        switch (message.CurrentCombo)
                         {
                             case 0:
                                 TryPlayClip("clearspin");
                                 break;
-                            case 1:
-                                TryPlayClip("combo_1_power");
-                                break;
-                            case 2:
-                                TryPlayClip("combo_2_power");
-                                break;
-                            case 3:
-                                TryPlayClip("combo_3_power");
-                                break;
-                            case 4:
-                                TryPlayClip("combo_4_power");
-                                break;
-                            case 5:
-                                TryPlayClip("combo_5_power");
-                                break;
-                            case 6:
-                                TryPlayClip("combo_6_power");
-                                break;
-                            case 7:
-                                TryPlayClip("combo_7_power");
-                                break;
-                            case 8:
-                                TryPlayClip("combo_8_power");
-                                break;
-                            case 9:
-                                TryPlayClip("combo_9_power");
-                                break;
-                            case 10:
-                                TryPlayClip("combo_10_power");
-                                break;
-                            case 11:
-                                TryPlayClip("combo_11_power");
-                                break;
-                            case 12:
-                                TryPlayClip("combo_12_power");
-                                break;
-                            case 13:
-                                TryPlayClip("combo_13_power");
-                                break;
-                            case 14:
-                                TryPlayClip("combo_14_power");
-                                break;
-                            case 15:
-                                TryPlayClip("combo_15_power");
+                            case < 16:
+                                TryPlayClip($"combo_{message.CurrentCombo}_power");
                                 break;
                             case >= 16:
                                 TryPlayClip("combo_16_power");
@@ -107,61 +87,16 @@ namespace Blockstacker.Gameplay.SoundEffects
                     }
                     else
                     {
-                        if (_wasBtb)
-                        {
+                        if (message.BrokenBackToBack)
                             TryPlayClip("btb_break");
-                            _wasBtb = false;
-                        }
 
-                        switch (midgameMessage.CurrentCombo)
+                        switch (message.CurrentCombo)
                         {
                             case 0:
                                 TryPlayClip("clearline");
                                 break;
-                            case 1:
-                                TryPlayClip("combo_1");
-                                break;
-                            case 2:
-                                TryPlayClip("combo_2");
-                                break;
-                            case 3:
-                                TryPlayClip("combo_3");
-                                break;
-                            case 4:
-                                TryPlayClip("combo_4");
-                                break;
-                            case 5:
-                                TryPlayClip("combo_5");
-                                break;
-                            case 6:
-                                TryPlayClip("combo_6");
-                                break;
-                            case 7:
-                                TryPlayClip("combo_7");
-                                break;
-                            case 8:
-                                TryPlayClip("combo_8");
-                                break;
-                            case 9:
-                                TryPlayClip("combo_9");
-                                break;
-                            case 10:
-                                TryPlayClip("combo_10");
-                                break;
-                            case 11:
-                                TryPlayClip("combo_11");
-                                break;
-                            case 12:
-                                TryPlayClip("combo_12");
-                                break;
-                            case 13:
-                                TryPlayClip("combo_13");
-                                break;
-                            case 14:
-                                TryPlayClip("combo_14");
-                                break;
-                            case 15:
-                                TryPlayClip("combo_15");
+                            case < 16:
+                                TryPlayClip($"combo_{message.CurrentCombo}");
                                 break;
                             case >= 16:
                                 TryPlayClip("combo_16");
@@ -171,55 +106,13 @@ namespace Blockstacker.Gameplay.SoundEffects
 
                     break;
                 case 4:
-                    switch (midgameMessage.CurrentCombo)
+                    switch (message.CurrentCombo)
                     {
                         case 0:
                             TryPlayClip("clearquad");
                             break;
-                        case 1:
-                            TryPlayClip("combo_1_power");
-                            break;
-                        case 2:
-                            TryPlayClip("combo_2_power");
-                            break;
-                        case 3:
-                            TryPlayClip("combo_3_power");
-                            break;
-                        case 4:
-                            TryPlayClip("combo_4_power");
-                            break;
-                        case 5:
-                            TryPlayClip("combo_5_power");
-                            break;
-                        case 6:
-                            TryPlayClip("combo_6_power");
-                            break;
-                        case 7:
-                            TryPlayClip("combo_7_power");
-                            break;
-                        case 8:
-                            TryPlayClip("combo_8_power");
-                            break;
-                        case 9:
-                            TryPlayClip("combo_9_power");
-                            break;
-                        case 10:
-                            TryPlayClip("combo_10_power");
-                            break;
-                        case 11:
-                            TryPlayClip("combo_11_power");
-                            break;
-                        case 12:
-                            TryPlayClip("combo_12_power");
-                            break;
-                        case 13:
-                            TryPlayClip("combo_13_power");
-                            break;
-                        case 14:
-                            TryPlayClip("combo_14_power");
-                            break;
-                        case 15:
-                            TryPlayClip("combo_15_power");
+                        case < 16:
+                            TryPlayClip($"combo_{message.CurrentCombo}_power");
                             break;
                         case >= 16:
                             TryPlayClip("combo_16_power");
@@ -228,26 +121,23 @@ namespace Blockstacker.Gameplay.SoundEffects
 
                     break;
             }
-
-            if (midgameMessage.CurrentCombo > 0) _wasCombo = true;
-            if (midgameMessage.CurrentBackToBack > 0) _wasBtb = true;
         }
 
-        private void HandlePieceRotated(PieceRotatedMessage midgameMessage)
+        private void HandlePieceRotated(PieceRotatedMessage message)
         {
-            if (midgameMessage.WasSpin || midgameMessage.WasSpinMini)
+            if (message.WasSpin || message.WasSpinMini)
                 TryPlayClip("spin");
             else
                 TryPlayClip("rotate");
         }
 
-        private void HandlePieceMoved(PieceMovedMessage midgameMessage)
+        private void HandlePieceMoved(PieceMovedMessage message)
         {
-            if (midgameMessage.X != 0)
+            if (message.X != 0)
                 TryPlayClip("move");
-            else if (midgameMessage.Y != 0 && midgameMessage.WasSoftDrop)
+            else if (message.Y != 0 && message.WasSoftDrop)
                 TryPlayClip("softdrop");
-            else if (midgameMessage.Y != 0 && midgameMessage.WasHardDrop)
+            else if (message.Y != 0 && message.WasHardDrop)
                 TryPlayClip("harddrop");
         }
 
@@ -258,7 +148,7 @@ namespace Blockstacker.Gameplay.SoundEffects
             else if (_defaultEffects.TryGetValue(clipName, out clip))
                 _audioSource.PlayOneShot(clip);
             else
-                Debug.Log("Clip not found!");
+                Debug.Log($"Clip {clipName} not found!");
         }
     }
 }
