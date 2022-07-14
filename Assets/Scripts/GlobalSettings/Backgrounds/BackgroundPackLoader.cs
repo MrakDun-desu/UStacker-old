@@ -77,7 +77,7 @@ namespace Blockstacker.GlobalSettings.Backgrounds
             switch (type)
             {
                 case FileType.Texture:
-                    var newBackground = await FileLoading.LoadTextureFromFile(path);
+                    var newBackground = await FileLoading.LoadTextureFromUrl(path);
                     return new BackgroundRecord(newBackground);
                 case FileType.Video:
                     return new BackgroundRecord(path);

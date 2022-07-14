@@ -34,10 +34,7 @@ namespace Blockstacker.GlobalSettings.Changers
             }
 
             if (i == 0)
-            {
-                _dropdown.ClearOptions();
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(_emptyPrompt));
-            }
 
             _dropdown.RefreshShownValue();
         }

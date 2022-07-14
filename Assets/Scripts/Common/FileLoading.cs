@@ -47,26 +47,46 @@ namespace Blockstacker.Common
 
         #endregion
 
-        public static async Task<Texture2D> LoadTextureFromFile(string path)
+        public static async Task<Texture2D> LoadTextureFromUrl(string path, bool isFile = true)
         {
             if (GetFileType(path) != FileType.Texture) return null;
 
-            var textureData = await File.ReadAllBytesAsync(path);
-            var texture = new Texture2D(1, 1);
-            return texture.LoadImage(textureData) ? texture : null;
+            var requestUrl = isFile ? $"file://{path}" : path;
+
+            using var request = UnityWebRequestTexture.GetTexture(requestUrl);
+            request.SendWebRequest();
+
+            Texture2D texture = null;
+            try
+            {
+                while (!request.isDone) await Task.Delay(10);
+
+                if (request.result != UnityWebRequest.Result.Success)
+                    Debug.Log(request.error);
+                else texture = DownloadHandlerTexture.GetContent(request);
+            }
+            catch (Exception error)
+            {
+                Debug.Log($"{error.Message}\n{error.StackTrace}");
+            }
+
+            return texture;
+                
         }
 
-        public static async Task<AudioClip> LoadAudioClipFromFile(string path)
+        public static async Task<AudioClip> LoadAudioClipFromUrl(string path, bool isFile = true)
         {
             if (GetFileType(path) != FileType.AudioClip) return null;
             
             var extension = Path.GetExtension(path).Remove(0,1);
             var audioType = GetAudioType(extension);
 
-            if (audioType == null) return null;
+            if (audioType is null) return null;
 
+            var requestUrl = isFile ? $"file://{path}" : path;
+            
             using var request = UnityWebRequestMultimedia.GetAudioClip(
-                "file://" + path,
+                requestUrl,
                 (AudioType) audioType
             );
 

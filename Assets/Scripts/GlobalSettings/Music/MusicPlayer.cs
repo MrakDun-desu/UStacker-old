@@ -147,6 +147,7 @@ namespace Blockstacker.GlobalSettings.Music
             yield return new WaitForSeconds(_switchInterval + .01f);
             if (Time.time <= _nextSongStartTime) yield break;
 
+            _timeUntilQuiet = 0;
             _audioSource.clip = nextTrack;
             _audioSource.volume = 1;
             ResumeNormalPlaying();
@@ -157,9 +158,9 @@ namespace Blockstacker.GlobalSettings.Music
             _timeUntilQuiet = _quietenTime;
             while (_timeUntilQuiet > 0)
             {
-                yield return new WaitForSeconds(_quietenInterval);
                 _timeUntilQuiet -= _quietenInterval;
                 _audioSource.volume = _timeUntilQuiet / _quietenTime;
+                yield return new WaitForSeconds(_quietenInterval);
             }
         }
 

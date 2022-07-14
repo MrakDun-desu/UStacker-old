@@ -4,18 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockstacker.Common;
-using Blockstacker.GlobalSettings.Enums;
+using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.BlockSkins
 {
     public static class SkinLoader
     {
-        public static readonly Dictionary<SkinRecord, Sprite> Sprites = new();
+        public static readonly List<SkinRecord> SkinRecords = new();
 
         public static event Action SkinChanged;
-        public static bool IsSkinAnimated;
-        public static SkinType CurrentSkinType;
 
         public static IEnumerable<string> EnumerateSkins()
         {
@@ -26,7 +24,7 @@ namespace Blockstacker.GlobalSettings.BlockSkins
 
         public static async Task Reload(string path)
         {
-            Sprites.Clear();
+            SkinRecords.Clear();
             if (!Directory.Exists(path)) return;
 
             await GetSkinAsync(path);
@@ -36,90 +34,23 @@ namespace Blockstacker.GlobalSettings.BlockSkins
 
         private static async Task GetSkinAsync(string path)
         {
-            var skinName = Path.GetFileName(path);
-            var skinFileNames = Directory.EnumerateFiles(path).Select(Path.GetFileName);
-
-            var fileNames = skinFileNames as string[] ?? skinFileNames.ToArray();
-            var firstFileName = fileNames.FirstOrDefault(filename => filename.StartsWith(skinName)) ??
-                                fileNames.FirstOrDefault(filename => filename.StartsWith("skin"));
-            
-            if (firstFileName == default)
-                return;
-
-            var firstFilePath = Path.Combine(path, firstFileName);
-
-            if (!Path.GetExtension(firstFilePath).Equals(".png") || !Path.GetExtension(firstFilePath).Equals(".jpg"))
-                return;
-
-            var skinTexture = await GetTextureAsync(firstFilePath);
-
-            SkinType? newSkinType;
-            var isGhost = false;
-            switch (skinTexture)
-            {
-                case {height: 128, width: 128}: 
-                    isGhost = true;
-                    newSkinType = SkinType.Tetrio610;
-                    break;
-                case {height: 256, width: 256}:
-                    newSkinType = SkinType.Tetrio610;
-                    break;
-                case {height: 512, width: 512}:
-                    isGhost = true;
-                    newSkinType = SkinType.Tetrio610Connected;
-                    break;
-                case {height: 1024, width: 1024}:
-                    newSkinType = SkinType.Tetrio610Connected;
-                    break;
-                case {height: 576, width: 1280}:
-                    newSkinType = SkinType.JstrisConnected;
-                    break;
-                case {height: var x, width: var y}:
-                    const int jstrisSkinRatio = 9;
-                    const int tetrioSkinRatio = 12;
-                    const int tetrioPixelGap = 30;
-                    if (x * jstrisSkinRatio == y)
-                        newSkinType = SkinType.JstrisClassic;
-                    else
+            SkinRecords.Add(
+                new SkinRecord
+                {
+                    File = "file.jpg",
+                    PieceType = "IPiece",
+                    ConnectedSprites = Array.Empty<ConnectedSprite>(),
+                    SpriteRecord = new SpriteRecord
                     {
-                        
-                        var gap = x / tetrioPixelGap * tetrioSkinRatio;
-                        if (x * tetrioPixelGap == y - gap)
-                            newSkinType = SkinType.TetrioClassic;
-                        else
-                            newSkinType = null;
+                        PixelsPerUnit = 64, 
+                        PivotPoint = new Vector2Int(32, 32), 
+                        SpriteSize = new Vector2Int(64, 64), 
+                        SpriteStart = new Vector2Int(0, 0),
                     }
-                    break;
-                default:
-                    newSkinType = null;
-                    break;
-            }
+                });
 
-            switch (newSkinType)
-            {
-                case SkinType.Tetrio610:
-                    break;
-                case SkinType.Tetrio610Connected:
-                    break;
-                case SkinType.TetrioClassic:
-                    break;
-                case SkinType.JstrisClassic:
-                    break;
-                case SkinType.JstrisConnected:
-                    break;
-                case null:
-                    return;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
+            await File.WriteAllTextAsync(Path.Combine(path, "output.json"), JsonConvert.SerializeObject(SkinRecords, StaticSettings.JsonSerializerSettings));
         }
 
-        private static async Task<Texture2D> GetTextureAsync(string path)
-        {
-            var textureData = await File.ReadAllBytesAsync(path);
-            Texture2D texture = new(1, 1);
-            return !texture.LoadImage(textureData) ? null : texture;
-        }
     }
 }

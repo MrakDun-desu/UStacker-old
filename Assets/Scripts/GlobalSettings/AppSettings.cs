@@ -1,14 +1,15 @@
 using System;
 using System.IO;
 using System.Reflection;
+using Blockstacker.Common;
 using Blockstacker.GlobalSettings.Groups;
-using UnityEngine;
+using Unity.Plastic.Newtonsoft.Json;
 
 namespace Blockstacker.GlobalSettings
 {
     public static class AppSettings
     {
-        private static readonly SettingsContainer Settings = new();
+        private static SettingsContainer Settings = new();
         public static HandlingSettings Handling => Settings.Handling;
         public static SoundSettings Sound => Settings.Sound;
         public static GameplaySettings Gameplay => Settings.Gameplay;
@@ -16,30 +17,33 @@ namespace Blockstacker.GlobalSettings
         public static CustomizationSettings Customization => Settings.Customization;
         public static OtherSettings Other => Settings.Others;
 
+        public static Action SettingsReloaded;
+
         public static string Rebinds
         {
             get => Settings.Rebinds;
             set => Settings.Rebinds = value;
         }
 
-        private static string SettingsPath => Path.Combine(Application.persistentDataPath, "appSettings.json");
 
         public static bool TrySave(string path = null)
         {
-            path ??= SettingsPath;
-            var slashIndex = path.LastIndexOfAny(new[] {'/', '\\'});
-            if (!Directory.Exists(path[..slashIndex]) || string.IsNullOrEmpty(path[..slashIndex])) return false;
-            File.WriteAllText(path, JsonUtility.ToJson(Settings, true));
+            path ??= CustomizationPaths.GlobalSettings;
+            
+            if (!Directory.Exists(Path.GetDirectoryName(path))) return false;
+            File.WriteAllText(path, JsonConvert.SerializeObject(Settings, StaticSettings.JsonSerializerSettings));
             return true;
         }
 
         public static bool TryLoad(string path = null)
         {
-            path ??= SettingsPath;
+            path ??= CustomizationPaths.GlobalSettings;
             if (!File.Exists(path))
                 return false;
 
-            JsonUtility.FromJsonOverwrite(File.ReadAllText(path), Settings);
+            Settings = JsonConvert.DeserializeObject<SettingsContainer>(File.ReadAllText(path), StaticSettings.JsonSerializerSettings);
+            Settings ??= new SettingsContainer();
+            SettingsReloaded?.Invoke();
             return true;
         }
 

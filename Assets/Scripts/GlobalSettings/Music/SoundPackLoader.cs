@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockstacker.Common;
+using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Music
@@ -63,7 +64,7 @@ namespace Blockstacker.GlobalSettings.Music
                 return;
             
             var musicConfStr = await File.ReadAllTextAsync(confPath);
-            var musicConf = JsonUtility.FromJson<MusicConfiguration>(musicConfStr);
+            var musicConf = JsonConvert.DeserializeObject<MusicConfiguration>(musicConfStr, StaticSettings.JsonSerializerSettings);
             
             MusicPlayer.Configuration.Rewrite(musicConf);
 
@@ -83,7 +84,7 @@ namespace Blockstacker.GlobalSettings.Music
         private static async Task GetAudioClipAsync(string path, IDictionary<string, AudioClip> target)
         {
             var clipName = Path.GetFileNameWithoutExtension(path);
-            var clip = await FileLoading.LoadAudioClipFromFile(path);
+            var clip = await FileLoading.LoadAudioClipFromUrl(path);
             if (clip is null) return;
 
             target[clipName] = clip;

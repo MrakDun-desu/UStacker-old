@@ -1,8 +1,10 @@
 using System.IO;
 using System.Text;
+using Blockstacker.Common;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
 using Blockstacker.Gameplay.Spins;
+using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 
 namespace Blockstacker.Gameplay.Initialization
@@ -44,7 +46,7 @@ namespace Blockstacker.Gameplay.Initialization
                     return;
                 }
 
-                JsonUtility.FromJsonOverwrite(File.ReadAllText(kickTablePath), customSystem);
+                customSystem = JsonConvert.DeserializeObject<RotationSystem>(File.ReadAllText(kickTablePath), StaticSettings.JsonSerializerSettings);
             }
 
             _gameSettings.Rules.Controls.ActiveRotationSystem =
