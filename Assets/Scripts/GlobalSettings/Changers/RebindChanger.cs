@@ -22,6 +22,8 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private TMP_Text _bindingName;
         [SerializeField] private TMP_Text[] _bindingTexts = new TMP_Text[3];
         private RebindingOperation _currentOperation;
+        
+        private static event Action RebindChanged;
 
         private void Start()
         {
@@ -58,8 +60,6 @@ namespace Blockstacker.GlobalSettings.Changers
             RefreshNames();
             CheckBindingOverlaps();
         }
-
-        private static event Action RebindChanged;
 
         private void RefreshNames()
         {

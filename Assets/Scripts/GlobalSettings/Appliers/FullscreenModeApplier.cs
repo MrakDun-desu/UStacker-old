@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Appliers
@@ -7,9 +6,8 @@ namespace Blockstacker.GlobalSettings.Appliers
     {
         public override void OnSettingChanged()
         {
-            if (!Enum.TryParse(AppSettings.Video.FullscreenMode, out FullScreenMode newMode))
-                return;
-
+            var newMode = AppSettings.Video.FullscreenMode;
+            
             if (Screen.fullScreenMode == newMode) return;
             Screen.fullScreenMode = newMode;
         }

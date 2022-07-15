@@ -17,7 +17,7 @@ namespace Blockstacker.GlobalSettings
         public static CustomizationSettings Customization => Settings.Customization;
         public static OtherSettings Other => Settings.Others;
 
-        public static Action SettingsReloaded;
+        public static event Action SettingsReloaded;
 
         public static string Rebinds
         {

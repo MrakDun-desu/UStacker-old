@@ -9,7 +9,10 @@ namespace Blockstacker.GlobalSettings.Changers
 
         private void Start()
         {
-            _toggle.isOn = AppSettings.GetValue<bool>(_controlPath);
+            RefreshValue();
+            AppSettings.SettingsReloaded += RefreshValue;
         }
+        
+        private void RefreshValue() => _toggle.isOn = AppSettings.GetValue<bool>(_controlPath);
     }
 }

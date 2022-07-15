@@ -1,11 +1,10 @@
-using System;
 using Blockstacker.GlobalSettings.BlockSkins;
 using TMPro;
 using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Changers
 {
-    public class SkinChanger : MonoBehaviour, ISettingChanger
+    public class SkinChanger : AppSettingChangerBase<string>
     {
         [Space] [SerializeField] private TMP_Dropdown _dropdown;
 
@@ -15,9 +14,10 @@ namespace Blockstacker.GlobalSettings.Changers
         private void Start()
         {
             RefreshNames();
-        }
 
-        public event Action SettingChanged;
+            RefreshValue();
+            AppSettings.SettingsReloaded += RefreshValue;
+        }
 
         public void OptionPicked(int value)
         {
@@ -27,24 +27,30 @@ namespace Blockstacker.GlobalSettings.Changers
             if (newSkin.Equals(_default))
                 newSkin = "";
             
-            AppSettings.Customization.SkinFolder = newSkin;
-            SettingChanged?.Invoke();
+            SetValue(newSkin);
         }
 
         public void RefreshNames()
         {
             _dropdown.ClearOptions();
             _dropdown.options.Add(new TMP_Dropdown.OptionData(_default));
-            var i = 0;
             foreach (var path in SkinLoader.EnumerateSkins())
-            {
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(path));
-                if (path.Equals(AppSettings.Customization.SkinFolder)) _dropdown.SetValueWithoutNotify(i);
-                i++;
-            }
 
-            if (i == 0) _dropdown.options.Add(new TMP_Dropdown.OptionData(_emptyPrompt));
-            _dropdown.RefreshShownValue();
+            if (_dropdown.options.Count <= 1) 
+                _dropdown.options.Add(new TMP_Dropdown.OptionData(_emptyPrompt));
+        }
+
+        private void RefreshValue()
+        {
+            for (var i = 0; i < _dropdown.options.Count; i++)
+            {
+                if (!_dropdown.options[i].text.Equals(AppSettings.GetValue<string>(_controlPath))) continue;
+                
+                _dropdown.SetValueWithoutNotify(i);
+                _dropdown.RefreshShownValue();
+                return;
+            }
         }
     }
 }

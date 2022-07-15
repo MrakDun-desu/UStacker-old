@@ -34,19 +34,14 @@ namespace Blockstacker.GlobalSettings.Changers
                 }
             }
 
-            var currentOption = AppSettings.GetValue<MusicOption>(_controlPath);
-            
             _typeDropdown.ClearOptions();
-            for (var i = 0; i < Enum.GetNames(typeof(OptionType)).Length; i++)
+            foreach (var optionName in Enum.GetNames(typeof(OptionType)))
             {
-                var optionType = Enum.GetNames(typeof(OptionType))[i];
-                _typeDropdown.options.Add(new TMP_Dropdown.OptionData(optionType));
-                if (string.Equals(Enum.GetName(typeof(OptionType), currentOption.OptionType), optionType))
-                    _typeDropdown.SetValueWithoutNotify(i);
+                _typeDropdown.options.Add(new TMP_Dropdown.OptionData(optionName));
             }
-            _typeDropdown.RefreshShownValue();
-            
-            RefreshNameOptions(currentOption);
+
+            RefreshValue();
+            AppSettings.SettingsReloaded += RefreshValue;
         }
 
         private void RefreshNameOptions(MusicOption currentOption)
@@ -83,16 +78,34 @@ namespace Blockstacker.GlobalSettings.Changers
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
+        }
+
+        private void RefreshValue()
+        {
+            var currentOption = AppSettings.GetValue<MusicOption>(_controlPath);
+            for (var i = 0; i < _typeDropdown.options.Count; i++)
+            {
+                if (!string.Equals(currentOption.OptionType.ToString(), _typeDropdown.options[i].text)) continue;
+                
+                _typeDropdown.SetValueWithoutNotify(i);
+                _typeDropdown.RefreshShownValue();
+                break;
+            }
+
+            RefreshNameOptions(currentOption);
         }
 
         public void OnTypeSelected(int index)
         {
             if (!Enum.TryParse<OptionType>(_typeDropdown.options[index].text, out var newType))
                 return;
-            
-            RefreshNameOptions(AppSettings.Sound.CustomGameMusic with {OptionType = newType});
-            
+
+            RefreshNameOptions(AppSettings.Sound.CustomGameMusic with
+            {
+                OptionType = newType
+            });
+
             SetValue(new MusicOption(newType, _nameDropdown.options[0].text));
             AppSettings.TrySave();
         }
@@ -100,7 +113,10 @@ namespace Blockstacker.GlobalSettings.Changers
         public void OnNameSelected(int index)
         {
             var newName = _nameDropdown.options[index].text;
-            SetValue(AppSettings.GetValue<MusicOption>(_controlPath) with {Name = newName});
+            SetValue(AppSettings.GetValue<MusicOption>(_controlPath) with
+            {
+                Name = newName
+            });
             AppSettings.TrySave();
         }
 

@@ -2,25 +2,37 @@
 using TMPro;
 using UnityEngine;
 
-namespace Blockstacker.GameSettings.Changers
+namespace Blockstacker.GlobalSettings.Changers
 {
-    public class GameSettingEnumChanger<TEnum> : GameSettingChangerBase<TEnum> where TEnum : Enum
+    public class AppSettingEnumChanger<TEnum> : AppSettingChangerBase<TEnum> where TEnum : Enum
     {
-        [Space] [SerializeField] private TMP_Dropdown _dropdown;
+        [Space]
+        [SerializeField]
+        private TMP_Dropdown _dropdown;
 
         [SerializeField] private EnumWithName[] _values;
-
-        private void Start()
+        
+        protected virtual void Start()
         {
             _dropdown.ClearOptions();
-            for (var i = 0; i < _values.Length; i++)
+            foreach (var value in _values)
             {
-                var value = _values[i].Value;
-                _dropdown.options.Add(new TMP_Dropdown.OptionData(_values[i].Name));
-                if (Convert.ToInt64(value) == Convert.ToInt64(_gameSettingsSO.GetValue<TEnum>(_controlPath)))
-                    _dropdown.SetValueWithoutNotify(i);
+                _dropdown.options.Add(new TMP_Dropdown.OptionData(value.Name));
             }
 
+            RefreshDropdownValue();
+            AppSettings.SettingsReloaded += RefreshDropdownValue;
+        }
+
+        private void RefreshDropdownValue()
+        {
+            for (var i = 0; i < _values.Length; i++)
+            {
+                var value = _values[i];
+                if (Convert.ToInt64(value.Value) == Convert.ToInt64(AppSettings.GetValue<TEnum>(_controlPath)))
+                    _dropdown.SetValueWithoutNotify(i);
+            }
+            
             _dropdown.RefreshShownValue();
         }
 
@@ -41,5 +53,6 @@ namespace Blockstacker.GameSettings.Changers
                 Name = name;
             }
         }
+
     }
 }

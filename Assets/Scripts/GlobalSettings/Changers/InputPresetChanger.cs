@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Blockstacker.Common;
 using TMPro;
 using UnityEngine;
 
@@ -16,8 +17,6 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private GameObject _invalidNameSignal;
         [SerializeField] private GameObject _newPresetBlocker;
         [SerializeField] private string _prompt = "Pick a preset...";
-
-        private static string PresetPath => Path.Combine(Application.persistentDataPath, "inputPresets");
 
 
         private void Start()
@@ -40,25 +39,18 @@ namespace Blockstacker.GlobalSettings.Changers
         public event Action SettingChanged;
         public static event Action RebindsChanged;
 
-        private IEnumerable<string> GetAvailablePresets()
+        private static IEnumerable<string> GetAvailablePresets()
         {
             var filenames = new List<string>();
-            if (Directory.Exists(PresetPath))
-                filenames.AddRange(Directory.EnumerateFiles(PresetPath));
-            foreach (var filename in filenames) yield return ExtractOptionName(filename);
-        }
-
-        private static string ExtractOptionName(string filename)
-        {
-            var dotIndex = filename.LastIndexOf(".", StringComparison.Ordinal);
-            var slashIndex = filename.LastIndexOfAny(new[] {'\\', '/'}) + 1;
-
-            return filename[slashIndex..dotIndex];
+            if (Directory.Exists(CustomizationPaths.InputPresets))
+                filenames.AddRange(Directory.EnumerateFiles(CustomizationPaths.InputPresets));
+            
+            foreach (var filename in filenames) yield return Path.GetFileNameWithoutExtension(filename);
         }
 
         private static string WrapOptionName(string optionName)
         {
-            return Path.Combine(PresetPath, $"{optionName}.json");
+            return Path.Combine(CustomizationPaths.InputPresets, $"{optionName}.json");
         }
 
         private static bool IsNameValid(string presetName)
@@ -92,10 +84,10 @@ namespace Blockstacker.GlobalSettings.Changers
         public void SavePreset()
         {
             if (!IsNameValid(_newPresetNameField.text)) return;
-            if (!Directory.Exists(PresetPath))
-                Directory.CreateDirectory(PresetPath);
+            if (!Directory.Exists(CustomizationPaths.InputPresets))
+                Directory.CreateDirectory(CustomizationPaths.InputPresets);
 
-            var newFile = Path.Combine(PresetPath, $"{_newPresetNameField.text}.json");
+            var newFile = Path.Combine(CustomizationPaths.InputPresets, $"{_newPresetNameField.text}.json");
             File.WriteAllText(newFile, AppSettings.Rebinds);
             OnValidate();
             _newPresetBlocker.SetActive(false);

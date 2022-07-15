@@ -2764,7 +2764,7 @@ RectTransform:
   - {fileID: 5964315564491099162}
   - {fileID: 1131108504848779168}
   m_Father: {fileID: 6661395322332450764}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -2829,6 +2829,13 @@ MonoBehaviour:
   _title: {fileID: 5431605183774410944}
   _autoformatName: 1
   _dropdown: {fileID: 9124476651253043636}
+  _values:
+  - Name: Windowed
+    Value: 3
+  - Name: Fullscreen Window
+    Value: 1
+  - Name: Exclusive Fullscreen
+    Value: 0
 --- !u!114 &7469086766790632169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2893,6 +2900,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bf79be4e052b34db2f299b3ce445fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _controlPath:
+  - Video
+  - Resolution
+  _title: {fileID: 5431605184631169202}
+  _autoformatName: 1
   _dropdown: {fileID: 9124476650365368774}
 --- !u!114 &7469086766574029468
 MonoBehaviour:
@@ -4226,6 +4238,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2730135703713002561, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -464.99997
+      objectReference: {fileID: 0}
     - target: {fileID: 2994506421734062918, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
       propertyPath: m_Name
       value: VideoPage
@@ -4410,7 +4426,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8174934064551543497, guid: 374f3f31b33a02743baa06ddfe26c385, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8174934064551543497, guid: 374f3f31b33a02743baa06ddfe26c385, type: 3}
       propertyPath: m_AnchorMax.x
@@ -4564,7 +4580,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5272668286066716934, guid: a3aa81cea608de34ba748cad5eac5513, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5272668286066716934, guid: a3aa81cea608de34ba748cad5eac5513, type: 3}
       propertyPath: m_AnchorMax.x
@@ -4710,7 +4726,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5272668286066716934, guid: a3aa81cea608de34ba748cad5eac5513, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5272668286066716934, guid: a3aa81cea608de34ba748cad5eac5513, type: 3}
       propertyPath: m_AnchorMax.x

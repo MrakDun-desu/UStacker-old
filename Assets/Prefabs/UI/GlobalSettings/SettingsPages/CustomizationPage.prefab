@@ -2293,7 +2293,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Background pack
+  m_text: Background Pack
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2320,7 +2320,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 51.45
+  m_fontSize: 50.8
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2428,7 +2428,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Sound pack
+  m_text: Sound Pack
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3742,8 +3742,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 399bcdb1958e356448ddff3737429279, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _controlPath:
+  - Customization
+  - SoundPackFolder
+  _title: {fileID: 5431605185855681463}
+  _autoformatName: 0
   _dropdown: {fileID: 9124476651589806787}
   _emptyPrompt: No sound pack available
+  _default: Default
 --- !u!114 &7469086765382621600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3814,8 +3820,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30217adafec8533438ccb69c31081eea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _controlPath: []
+  _title: {fileID: 0}
+  _autoformatName: 1
   _dropdown: {fileID: 9124476651014140343}
   _emptyPrompt: No skin available
+  _default: Default
 --- !u!114 &7469086766841941395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3828,6 +3838,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9488fe584466764f851e7d78864e78e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LoadingStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  LoadingFinished:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4465938218170709718
 GameObject:
   m_ObjectHideFlags: 0
@@ -3880,6 +3896,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f02f3519652329c45a112d8987ee06cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _controlPath:
+  - Customization
+  - BackgroundFolder
+  _title: {fileID: 5431605184214657219}
+  _autoformatName: 0
   _dropdown: {fileID: 6602769507557494973}
   _emptyPrompt: No background pack available
   _default: Default
@@ -5461,7 +5482,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7742643563894403970, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
       propertyPath: m_Size
-      value: 0.99999994
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7742643563894403970, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
       propertyPath: m_Value

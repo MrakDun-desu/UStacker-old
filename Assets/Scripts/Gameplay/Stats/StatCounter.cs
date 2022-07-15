@@ -1,5 +1,4 @@
-﻿using System;
-using Blockstacker.Gameplay.Communication;
+﻿using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Enums;
 using UnityEngine;
 

@@ -1,11 +1,10 @@
-using System;
 using Blockstacker.GlobalSettings.Backgrounds;
 using TMPro;
 using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Changers
 {
-    public class BackgroundPackChanger : MonoBehaviour, ISettingChanger
+    public class BackgroundPackChanger : AppSettingChangerBase<string>
     {
         [Space] [SerializeField] private TMP_Dropdown _dropdown;
 
@@ -15,28 +14,32 @@ namespace Blockstacker.GlobalSettings.Changers
         private void Start()
         {
             RefreshNames();
+            
+            RefreshValue();
+            AppSettings.SettingsReloaded += RefreshValue;
         }
-
-
-        public event Action SettingChanged;
 
         public void RefreshNames()
         {
             _dropdown.ClearOptions();
             _dropdown.options.Add(new TMP_Dropdown.OptionData(_default));
-            var i = 0;
             foreach (var path in BackgroundPackLoader.EnumerateBackgroundPacks())
-            {
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(path));
-                
-                i++;
-                if (path.Equals(AppSettings.Customization.BackgroundFolder)) _dropdown.SetValueWithoutNotify(i);
-            }
 
-            if (i == 0)
+            if (_dropdown.options.Count <= 1)
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(_emptyPrompt));
+        }
 
-            _dropdown.RefreshShownValue();
+        private void RefreshValue()
+        {
+            for (var i = 0; i < _dropdown.options.Count; i++)
+            {
+                if (!_dropdown.options[i].text.Equals(AppSettings.GetValue<string>(_controlPath))) continue;
+                
+                _dropdown.SetValueWithoutNotify(i);
+                _dropdown.RefreshShownValue();
+                return;
+            }
         }
 
         public void OptionPicked(int value)
@@ -47,8 +50,7 @@ namespace Blockstacker.GlobalSettings.Changers
             if (newBackgroundFolder.Equals(_default))
                 newBackgroundFolder = "";
             
-            AppSettings.Customization.BackgroundFolder = newBackgroundFolder;
-            SettingChanged?.Invoke();
+            SetValue(newBackgroundFolder);
         }
     }
 }

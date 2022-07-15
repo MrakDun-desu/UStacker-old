@@ -30,6 +30,13 @@ namespace Blockstacker.GlobalSettings.Changers
         private void Start()
         {
             OnValidate();
+            
+            RefreshValue();
+            AppSettings.SettingsReloaded += RefreshValue;
+        }
+
+        private void RefreshValue()
+        {
             var value = AppSettings.GetValue<float>(_controlPath);
             _slider.SetRealValue(value);
             _valueField.SetTextWithoutNotify(FormatValue(value));

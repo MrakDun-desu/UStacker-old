@@ -1,45 +1,56 @@
-using System;
 using Blockstacker.GlobalSettings.Music;
 using TMPro;
 using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Changers
 {
-    public class SoundPackChanger : MonoBehaviour, ISettingChanger
+    public class SoundPackChanger : AppSettingChangerBase<string>
     {
         [Space] [SerializeField] private TMP_Dropdown _dropdown;
 
         [SerializeField] private string _emptyPrompt = "No sound pack available";
+        [SerializeField] private string _default = "Default";
 
         private void Start()
         {
             RefreshNames();
+            
+            RefreshValue();
+            AppSettings.SettingsReloaded += RefreshValue;
         }
-
-
-        public event Action SettingChanged;
 
         public void RefreshNames()
         {
             _dropdown.ClearOptions();
-            var i = 0;
+            _dropdown.options.Add(new TMP_Dropdown.OptionData(_default));
             foreach (var path in SoundPackLoader.EnumerateSoundPacks())
-            {
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(path));
-                if (path.Equals(AppSettings.Customization.SoundPackFolder)) _dropdown.SetValueWithoutNotify(i);
-                i++;
-            }
 
-            if (i == 0) _dropdown.options.Add(new TMP_Dropdown.OptionData(_emptyPrompt));
-            _dropdown.RefreshShownValue();
+            if (_dropdown.options.Count <= 1) 
+                _dropdown.options.Add(new TMP_Dropdown.OptionData(_emptyPrompt));
+        }
+
+        private void RefreshValue()
+        {
+            for (var i = 0; i < _dropdown.options.Count; i++)
+            {
+                if (!_dropdown.options[i].text.Equals(AppSettings.GetValue<string>(_controlPath))) continue;
+                
+                _dropdown.SetValueWithoutNotify(i);
+                _dropdown.RefreshShownValue();
+                return;
+            }
         }
 
         public void OptionPicked(int value)
         {
             var newSoundPack = _dropdown.options[value].text;
             if (newSoundPack.Equals(_emptyPrompt)) return;
-            AppSettings.Customization.SoundPackFolder = newSoundPack;
-            SettingChanged?.Invoke();
+
+            if (newSoundPack.Equals(_default))
+                newSoundPack = "";
+                
+            SetValue(newSoundPack);
         }
     }
 }

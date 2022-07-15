@@ -7,12 +7,7 @@ namespace Blockstacker.GlobalSettings.Appliers
     {
         public override void OnSettingChanged()
         {
-            var newResolution = new Resolution
-            {
-                width = AppSettings.Video.Resolution.x,
-                height = AppSettings.Video.Resolution.y,
-                refreshRate = AppSettings.Video.RefreshRate
-            };
+            var newResolution = AppSettings.Video.Resolution;
             if (newResolution.IsEqualTo(Screen.currentResolution)) return;
 
             Screen.SetResolution(
