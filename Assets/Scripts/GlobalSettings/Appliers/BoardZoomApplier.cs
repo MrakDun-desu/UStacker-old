@@ -6,7 +6,7 @@ namespace Blockstacker.GlobalSettings.Appliers
     {
         public static event Action<float> BoardZoomChanged;
 
-        public override void OnSettingChanged()
+        protected override void OnSettingChanged()
         {
             BoardZoomChanged?.Invoke(AppSettings.Gameplay.BoardZoom);
         }

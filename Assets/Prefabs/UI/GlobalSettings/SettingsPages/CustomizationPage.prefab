@@ -403,6 +403,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 538061891}
+        m_TargetAssemblyTypeName: Blockstacker.GlobalSettings.Changers.SkinChanger,
+          Blockstacker.GlobalSettings
+        m_MethodName: RefreshValue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 1494136912}
         m_TargetAssemblyTypeName: Blockstacker.Settings.Changers.SoundPackChanger,
           Assembly-CSharp
@@ -416,10 +429,36 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1494136912}
+        m_TargetAssemblyTypeName: Blockstacker.GlobalSettings.Changers.SoundPackChanger,
+          Blockstacker.GlobalSettings
+        m_MethodName: RefreshValue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 996057916}
         m_TargetAssemblyTypeName: Blockstacker.Settings.Changers.BackgroundPackChanger,
           Assembly-CSharp
         m_MethodName: RefreshNames
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 996057916}
+        m_TargetAssemblyTypeName: Blockstacker.GlobalSettings.Changers.BackgroundPackChanger,
+          Blockstacker.GlobalSettings
+        m_MethodName: RefreshValue
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -635,7 +674,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1362107869
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2158,7 +2197,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Skin
+  m_text: Block Skin
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3785,7 +3824,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7469086766841941394
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3820,9 +3859,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30217adafec8533438ccb69c31081eea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _controlPath: []
-  _title: {fileID: 0}
-  _autoformatName: 1
+  _controlPath:
+  - Customization
+  - SkinFolder
+  _title: {fileID: 5431605183824291770}
+  _autoformatName: 0
   _dropdown: {fileID: 9124476651014140343}
   _emptyPrompt: No skin available
   _default: Default
@@ -5486,7 +5527,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7742643563894403970, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8157086686339900590, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
       propertyPath: m_Pivot.x

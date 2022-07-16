@@ -4,7 +4,7 @@ namespace Blockstacker.GlobalSettings.Appliers
 {
     public class VSyncApplier : SettingApplierBase
     {
-        public override void OnSettingChanged()
+        protected override void OnSettingChanged()
         {
             QualitySettings.vSyncCount = AppSettings.Video.UseVsync ? 1 : 0;
         }

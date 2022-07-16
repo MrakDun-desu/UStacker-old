@@ -11,7 +11,7 @@ namespace Blockstacker.GlobalSettings.Appliers
         public UnityEvent LoadingStarted;
         public UnityEvent LoadingFinished;
 
-        public override void OnSettingChanged()
+        protected override void OnSettingChanged()
         {
             LoadingStarted.Invoke();
             _ = ReloadAndInvoke();

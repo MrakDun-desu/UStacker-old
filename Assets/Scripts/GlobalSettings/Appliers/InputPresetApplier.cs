@@ -7,7 +7,7 @@ namespace Blockstacker.GlobalSettings.Appliers
     {
         [SerializeField] private InputActionAsset _actionAsset;
 
-        public override void OnSettingChanged()
+        protected override void OnSettingChanged()
         {
             _actionAsset.LoadBindingOverridesFromJson(AppSettings.Rebinds);
         }

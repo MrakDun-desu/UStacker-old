@@ -1,19 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.BlockSkins
 {
     [Serializable]
     public record SkinRecord
     {
-        public string File;
         public string PieceType;
-        public uint BlockNumber;
-        public bool IsConnected;
-        public ConnectedSprite[] ConnectedSprites;
+        public uint[] BlockNumbers =
+        {
+            0u,
+            1u,
+            2u,
+            3u
+        };
+        public List<ConnectedSprite> ConnectedSprites;
         public uint Layer;
+        public bool IsConnected;
         public bool ShouldRotate;
-        public uint AnimationFrame;
-        public bool IsAnimated;
-        public SpriteRecord SpriteRecord;
+        public List<SpriteRecord> Sprites;
     }
 }

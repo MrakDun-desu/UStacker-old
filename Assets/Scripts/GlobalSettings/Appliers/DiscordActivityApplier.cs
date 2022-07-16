@@ -12,7 +12,7 @@ namespace Blockstacker.GlobalSettings.Appliers
             _dcController = FindObjectOfType<DiscordController>();
         }
 
-        public override void OnSettingChanged()
+        protected override void OnSettingChanged()
         {
             if (_dcController == null) return;
 

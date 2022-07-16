@@ -3,7 +3,7 @@
 namespace Blockstacker.GlobalSettings.Enums
 {
     [Flags]
-    public enum SkinPart
+    public enum ConnectedEdges : byte
     {
         None =        0b00000000,
         Top =         0b00000001,

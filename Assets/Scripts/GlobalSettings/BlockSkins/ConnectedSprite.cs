@@ -1,10 +1,13 @@
-﻿using Blockstacker.GlobalSettings.Enums;
+﻿using System;
+using System.Collections.Generic;
+using Blockstacker.GlobalSettings.Enums;
 
 namespace Blockstacker.GlobalSettings.BlockSkins
 {
+    [Serializable]
     public record ConnectedSprite
     {
-        public SpriteRecord SpriteRecord;
-        public SkinPart SkinPart;
+        public ConnectedEdges ConnectedEdges;
+        public List<SpriteRecord> Sprites;
     }
 }

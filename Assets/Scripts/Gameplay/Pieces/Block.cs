@@ -1,6 +1,9 @@
 using System;
+using System.Linq;
+using Blockstacker.GlobalSettings.BlockSkins;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.PlayerLoop;
 
 namespace Blockstacker.Gameplay.Pieces
 {
@@ -8,6 +11,13 @@ namespace Blockstacker.Gameplay.Pieces
     {
         [SerializeField] private UnityEvent _onCleared;
         [SerializeField] private Vector2 _initialPosition;
+        [SerializeField] private uint _blockNumber;
+        [SerializeField] private GameObject _blockSkinPrefab;
+        [SerializeField] private GameObject _skinsParent;
+
+        private string _pieceType;
+
+        public event Action<Block> Cleared;
 
         public void Reset()
         {
@@ -23,7 +33,31 @@ namespace Blockstacker.Gameplay.Pieces
             Reset();
         }
 
-        public event Action<Block> Cleared;
+        private void Start()
+        {
+            _pieceType = GetComponentInParent<Piece>().PieceType;
+            UpdateBlockSkin();
+            SkinLoader.SkinChanged += UpdateBlockSkin;
+        }
+
+        private void UpdateBlockSkin()
+        {
+            var blockSkins = 
+                SkinLoader.SkinRecords.Where(record => record.PieceType == _pieceType && record.BlockNumbers.Contains(_blockNumber)).ToArray();
+
+            if (blockSkins.Length == 0)
+                return;
+
+            foreach (Transform blockSkin in _skinsParent.transform)
+            {
+                Destroy(blockSkin.gameObject);
+            }
+            foreach (var skinRecord in blockSkins)
+            {
+                var newSkin = Instantiate(_blockSkinPrefab.gameObject, _skinsParent.transform).GetComponent<BlockSkin>();
+                newSkin.SkinRecord = skinRecord;
+            }
+        }
 
         public void Clear()
         {
@@ -31,4 +65,5 @@ namespace Blockstacker.Gameplay.Pieces
             Cleared?.Invoke(this);
         }
     }
+
 }

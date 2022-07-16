@@ -5,7 +5,7 @@ namespace Blockstacker.GlobalSettings.Appliers
 {
     public abstract class SettingApplierBase : MonoBehaviour
     {
-        protected ISettingChanger _settingChanger;
+        private ISettingChanger _settingChanger;
 
         protected virtual void Awake()
         {
@@ -22,6 +22,6 @@ namespace Blockstacker.GlobalSettings.Appliers
             _settingChanger.SettingChanged -= OnSettingChanged;
         }
 
-        public abstract void OnSettingChanged();
+        protected abstract void OnSettingChanged();
     }
 }

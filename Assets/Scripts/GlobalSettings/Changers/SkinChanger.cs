@@ -41,7 +41,7 @@ namespace Blockstacker.GlobalSettings.Changers
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(_emptyPrompt));
         }
 
-        private void RefreshValue()
+        public void RefreshValue()
         {
             for (var i = 0; i < _dropdown.options.Count; i++)
             {

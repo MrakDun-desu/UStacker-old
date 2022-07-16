@@ -56,18 +56,18 @@ namespace Blockstacker.Common
             using var request = UnityWebRequestTexture.GetTexture(requestUrl);
             request.SendWebRequest();
 
-            Texture2D texture = null;
+            Texture2D texture;
             try
             {
                 while (!request.isDone) await Task.Delay(10);
 
                 if (request.result != UnityWebRequest.Result.Success)
-                    Debug.Log(request.error);
-                else texture = DownloadHandlerTexture.GetContent(request);
+                    return null;
+                texture = DownloadHandlerTexture.GetContent(request);
             }
-            catch (Exception error)
+            catch (Exception)
             {
-                Debug.Log($"{error.Message}\n{error.StackTrace}");
+                return null;
             }
 
             return texture;
@@ -92,18 +92,19 @@ namespace Blockstacker.Common
 
             request.SendWebRequest();
 
-            AudioClip clip = null;
+            AudioClip clip;
             try
             {
                 while (!request.isDone) await Task.Delay(10);
 
                 if (request.result != UnityWebRequest.Result.Success)
-                    Debug.Log(request.error);
-                else clip = DownloadHandlerAudioClip.GetContent(request);
+                    return null;
+                
+                clip = DownloadHandlerAudioClip.GetContent(request);
             }
-            catch (Exception error)
+            catch (Exception)
             {
-                Debug.Log($"{error.Message}\n{error.StackTrace}");
+                return null;
             }
 
             return clip;
@@ -120,7 +121,7 @@ namespace Blockstacker.Common
             return ValidVideoExtensions.Contains(extension) ? FileType.Video : FileType.Invalid;
         }
 
-        public static AudioType? GetAudioType(string extension) => extension switch
+        private static AudioType? GetAudioType(string extension) => extension switch
         {
             "mp3" => AudioType.MPEG,
             "ogg" => AudioType.OGGVORBIS,

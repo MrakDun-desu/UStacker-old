@@ -4,7 +4,7 @@ namespace Blockstacker.GlobalSettings.Appliers
 {
     public class FullscreenModeApplier : SettingApplierBase
     {
-        public override void OnSettingChanged()
+        protected override void OnSettingChanged()
         {
             var newMode = AppSettings.Video.FullscreenMode;
             

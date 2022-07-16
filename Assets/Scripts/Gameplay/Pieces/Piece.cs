@@ -19,7 +19,7 @@ namespace Blockstacker.Gameplay.Pieces
         public Transform[] FullSpinDetectors = Array.Empty<Transform>();
         public UnityEvent PieceCleared;
 
-        private void Awake()
+        private void Start()
         {
             foreach (var block in Blocks)
             {

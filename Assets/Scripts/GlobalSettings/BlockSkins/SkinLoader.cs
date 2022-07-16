@@ -11,7 +11,7 @@ namespace Blockstacker.GlobalSettings.BlockSkins
 {
     public static class SkinLoader
     {
-        public static readonly List<SkinRecord> SkinRecords = new();
+        public static List<SkinRecord> SkinRecords { get; private set; } = new();
 
         public static event Action SkinChanged;
 
@@ -34,22 +34,46 @@ namespace Blockstacker.GlobalSettings.BlockSkins
 
         private static async Task GetSkinAsync(string path)
         {
-            SkinRecords.Add(
-                new SkinRecord
-                {
-                    File = "file.jpg",
-                    PieceType = "IPiece",
-                    ConnectedSprites = Array.Empty<ConnectedSprite>(),
-                    SpriteRecord = new SpriteRecord
-                    {
-                        PixelsPerUnit = 64, 
-                        PivotPoint = new Vector2Int(32, 32), 
-                        SpriteSize = new Vector2Int(64, 64), 
-                        SpriteStart = new Vector2Int(0, 0),
-                    }
-                });
+            var configFilePath = Path.Combine(path, CustomizationPaths.SkinConfiguration);
+            if (!File.Exists(configFilePath)) return;
 
-            await File.WriteAllTextAsync(Path.Combine(path, "output.json"), JsonConvert.SerializeObject(SkinRecords, StaticSettings.JsonSerializerSettings));
+            var skinJson = await File.ReadAllTextAsync(configFilePath);
+            SkinRecords = JsonConvert.DeserializeObject<List<SkinRecord>>(skinJson, StaticSettings.JsonSerializerSettings);
+            SkinRecords ??= new List<SkinRecord>();
+
+            var existingTextures = new Dictionary<string, Texture2D>();
+            var skinsLoaded = SkinRecords.Select(skinRecord => LoadSkinByRecord(skinRecord, existingTextures));
+            
+            await Task.WhenAll(skinsLoaded);
+        }
+
+        private static async Task LoadSkinByRecord(SkinRecord skinRecord, Dictionary<string, Texture2D> existingTextures)
+        {
+            if (skinRecord.IsConnected)
+            {
+                foreach (var connectedSprite in skinRecord.ConnectedSprites)
+                {
+                    foreach (var spriteRecord in connectedSprite.Sprites)
+                    {
+                        if (!await spriteRecord.TryLoadSpriteAsync(existingTextures))
+                            connectedSprite.Sprites.Remove(spriteRecord);
+                    }
+                    if (connectedSprite.Sprites.Count == 0)
+                        skinRecord.ConnectedSprites.Remove(connectedSprite);
+                }
+                if (skinRecord.ConnectedSprites.Count == 0)
+                    SkinRecords.Remove(skinRecord);
+            }
+            else
+            {
+                foreach (var spriteRecord in skinRecord.Sprites)
+                {
+                    if (!await spriteRecord.TryLoadSpriteAsync(existingTextures))
+                        skinRecord.Sprites.Remove(spriteRecord);
+                }
+                if (skinRecord.Sprites.Count == 0)
+                    SkinRecords.Remove(skinRecord);
+            }
         }
 
     }
