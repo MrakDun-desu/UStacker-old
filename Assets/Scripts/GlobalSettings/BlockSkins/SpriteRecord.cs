@@ -9,30 +9,34 @@ using UnityEngine;
 namespace Blockstacker.GlobalSettings.BlockSkins
 {
     [Serializable]
-    public record SpriteRecord
+    public class SpriteRecord
     {
         public string Filename;
         public bool LoadFromUrl;
         public float PixelsPerUnit = 64;
-        public Vector2 PivotPoint = new(32, 32);
+        public Vector2 PivotPoint = new(.5f, .5f);
         public Vector2 SpriteStart = new(0, 0);
         public Vector2 SpriteSize = new(64, 64);
 
         [JsonIgnore]
         public Sprite Sprite;
 
-        public async Task<bool> TryLoadSpriteAsync(Dictionary<string, Texture2D> existingTextures)
+        public bool TryLoadSpriteFromDict(Dictionary<string, Texture2D> existingTextures)
         {
-            Texture2D sourceTexture;
-            if (existingTextures.ContainsKey(Filename))
-                sourceTexture = existingTextures[Filename];
-            else
-            {
-                sourceTexture = await FileLoading.LoadTextureFromUrl(Filename, !LoadFromUrl);
-                if (sourceTexture == null) return false;
-                existingTextures.Add(Filename, sourceTexture);
-            }
-            
+            if (!existingTextures.TryGetValue(Filename, out var sourceTexture))
+                return false;
+
+            var spriteRect = new Rect(SpriteStart, SpriteSize);
+            Sprite = Sprite.Create(sourceTexture, spriteRect, PivotPoint, PixelsPerUnit);
+            return Sprite != null;
+        }
+        
+        public async Task<bool> TryLoadSpriteAsync()
+        {
+            var sourceTexture = await FileLoading.LoadTextureFromUrl(Filename, !LoadFromUrl);
+                if (sourceTexture is null)
+                    return false;
+
             var spriteRect = new Rect(SpriteStart, SpriteSize);
             Sprite = Sprite.Create(sourceTexture, spriteRect, PivotPoint, PixelsPerUnit);
             return true;

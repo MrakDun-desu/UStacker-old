@@ -256,6 +256,10 @@ PrefabInstance:
       value: ZPieceBlock (1)
       objectReference: {fileID: 0}
     - target: {fileID: 7329477014069562552, guid: bf8a58d8533028942805d5c410921353, type: 3}
+      propertyPath: _blockNumber
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329477014069562552, guid: bf8a58d8533028942805d5c410921353, type: 3}
       propertyPath: _initialPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -330,6 +334,10 @@ PrefabInstance:
     - target: {fileID: 7165901658316098003, guid: bf8a58d8533028942805d5c410921353, type: 3}
       propertyPath: m_Name
       value: ZPieceBlock (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329477014069562552, guid: bf8a58d8533028942805d5c410921353, type: 3}
+      propertyPath: _blockNumber
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7329477014069562552, guid: bf8a58d8533028942805d5c410921353, type: 3}
       propertyPath: _initialPosition.x
@@ -600,6 +608,10 @@ PrefabInstance:
     - target: {fileID: 7165901658316098003, guid: bf8a58d8533028942805d5c410921353, type: 3}
       propertyPath: m_Name
       value: ZPieceBlock (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329477014069562552, guid: bf8a58d8533028942805d5c410921353, type: 3}
+      propertyPath: _blockNumber
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7329477014069562552, guid: bf8a58d8533028942805d5c410921353, type: 3}
       propertyPath: _initialPosition.x

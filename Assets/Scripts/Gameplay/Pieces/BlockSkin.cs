@@ -1,5 +1,4 @@
-﻿using System;
-using Blockstacker.GlobalSettings.BlockSkins;
+﻿using Blockstacker.GlobalSettings.BlockSkins;
 using UnityEngine;
 
 namespace Blockstacker.Gameplay.Pieces
@@ -31,6 +30,17 @@ namespace Blockstacker.Gameplay.Pieces
 
         private void RefreshSkin()
         {
+            if (!_skinRecord.IsConnected)
+            {
+                if (_skinRecord.Sprites.Count > 0)
+                {
+                    var newSprite = _skinRecord.Sprites[0].Sprite;
+                    if (newSprite is not null)
+                        _renderer.sprite = _skinRecord.Sprites[0].Sprite;
+                }
+
+            }
+            _renderer.sortingOrder = (int) _skinRecord.Layer;
         }
 
     }

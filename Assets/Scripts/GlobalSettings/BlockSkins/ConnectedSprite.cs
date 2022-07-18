@@ -5,9 +5,9 @@ using Blockstacker.GlobalSettings.Enums;
 namespace Blockstacker.GlobalSettings.BlockSkins
 {
     [Serializable]
-    public record ConnectedSprite
+    public class ConnectedSprite
     {
         public ConnectedEdges ConnectedEdges;
-        public List<SpriteRecord> Sprites;
+        public List<SpriteRecord> Sprites = new();
     }
 }

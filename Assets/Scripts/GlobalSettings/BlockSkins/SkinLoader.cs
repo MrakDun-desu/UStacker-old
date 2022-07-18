@@ -22,7 +22,7 @@ namespace Blockstacker.GlobalSettings.BlockSkins
                 : Array.Empty<string>();
         }
 
-        public static async Task Reload(string path)
+        public static async Task ReloadAsync(string path)
         {
             SkinRecords.Clear();
             if (!Directory.Exists(path)) return;
@@ -41,13 +41,12 @@ namespace Blockstacker.GlobalSettings.BlockSkins
             SkinRecords = JsonConvert.DeserializeObject<List<SkinRecord>>(skinJson, StaticSettings.JsonSerializerSettings);
             SkinRecords ??= new List<SkinRecord>();
 
-            var existingTextures = new Dictionary<string, Texture2D>();
-            var skinsLoaded = SkinRecords.Select(skinRecord => LoadSkinByRecord(skinRecord, existingTextures));
-            
-            await Task.WhenAll(skinsLoaded);
+            var existingTextures = await LoadAllTexturesAsync(SkinRecords, path);
+            foreach (var skinRecord in SkinRecords)
+                LoadSkinByRecord(skinRecord, existingTextures);
         }
 
-        private static async Task LoadSkinByRecord(SkinRecord skinRecord, Dictionary<string, Texture2D> existingTextures)
+        private static void LoadSkinByRecord(SkinRecord skinRecord, Dictionary<string, Texture2D> existingTextures)
         {
             if (skinRecord.IsConnected)
             {
@@ -55,7 +54,7 @@ namespace Blockstacker.GlobalSettings.BlockSkins
                 {
                     foreach (var spriteRecord in connectedSprite.Sprites)
                     {
-                        if (!await spriteRecord.TryLoadSpriteAsync(existingTextures))
+                        if (!spriteRecord.TryLoadSpriteFromDict(existingTextures))
                             connectedSprite.Sprites.Remove(spriteRecord);
                     }
                     if (connectedSprite.Sprites.Count == 0)
@@ -68,12 +67,62 @@ namespace Blockstacker.GlobalSettings.BlockSkins
             {
                 foreach (var spriteRecord in skinRecord.Sprites)
                 {
-                    if (!await spriteRecord.TryLoadSpriteAsync(existingTextures))
+                    if (!spriteRecord.TryLoadSpriteFromDict(existingTextures))
                         skinRecord.Sprites.Remove(spriteRecord);
                 }
                 if (skinRecord.Sprites.Count == 0)
                     SkinRecords.Remove(skinRecord);
             }
+        }
+
+        private static async Task<Dictionary<string, Texture2D>> LoadAllTexturesAsync(ICollection<SkinRecord> skinRecords, string path)
+        {
+            var taskList = new List<Task>();
+            var output = new Dictionary<string, Texture2D>();
+            var fileList = new List<string>();
+            foreach (var skinRecord in skinRecords)
+            {
+                if (skinRecord.IsConnected)
+                {
+                    var spriteRecords = skinRecords
+                        .SelectMany(sr => sr.ConnectedSprites.SelectMany(cr => cr.Sprites));
+
+                    foreach (var spriteRecord in spriteRecords)
+                    {
+                        if (fileList.Contains(spriteRecord.Filename)) continue;
+                        
+                        fileList.Add(spriteRecord.Filename);
+                        taskList.Add(LoadTextureToDictionary(spriteRecord.Filename, !spriteRecord.LoadFromUrl, output, path));
+                    }
+                    
+                }
+                else
+                {
+                    var spriteRecords = skinRecords
+                        .SelectMany(sr => sr.Sprites);
+
+                    foreach (var spriteRecord in spriteRecords)
+                    {
+                        if (fileList.Contains(spriteRecord.Filename)) continue;
+                        
+                        fileList.Add(spriteRecord.Filename);
+                        taskList.Add(LoadTextureToDictionary(spriteRecord.Filename, !spriteRecord.LoadFromUrl, output, path));
+                    }
+                }
+            }
+
+            await Task.WhenAll(taskList);
+            return output;
+        }
+
+        private static async Task LoadTextureToDictionary(string filename, bool isFile, IDictionary<string, Texture2D> textures, string path)
+        {
+            var actualFilename = isFile ? Path.Combine(path, filename) : filename;
+                
+            var texture = await FileLoading.LoadTextureFromUrl(actualFilename, isFile);
+
+            if (texture is not null)
+                textures[filename] = texture;
         }
 
     }

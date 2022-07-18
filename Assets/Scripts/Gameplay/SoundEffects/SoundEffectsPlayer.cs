@@ -1,16 +1,61 @@
-﻿using Blockstacker.Gameplay.Communication;
+﻿using System;
+using System.Collections.Generic;
+using Blockstacker.Gameplay.Communication;
 using Blockstacker.GlobalSettings.Music;
+using NLua;
+using NLua.Exceptions;
 using UnityEngine;
 
 namespace Blockstacker.Gameplay.SoundEffects
 {
     [RequireComponent(typeof(AudioSource))]
-    public class DefaultSoundEffectsPlayer : MonoBehaviour
+    public class SoundEffectsPlayer : MonoBehaviour
     {
         [SerializeField] private AudioClipCollection _defaultEffects = new();
         [SerializeField] private MediatorSO _mediator;
 
         private AudioSource _audioSource;
+        private Lua _luaState;
+        
+        private readonly Dictionary<string, Type> RegisterableEvents = new()
+        {
+            {
+                "PieceSpawned", typeof(PieceSpawnedMessage)
+            },
+            {
+                "CountdownTicked", typeof(CountdownTickedMessage)
+            },
+            {
+                "PiecePlaced", typeof(PiecePlacedMessage)
+            },
+            {
+                "PieceMoved", typeof(PieceMovedMessage)
+            },
+            {
+                "HoldUsed", typeof(HoldUsedMessage)
+            },
+            {
+                "InputAction", typeof(InputActionMessage)
+            },
+            {
+                "PieceRotated", typeof(PieceRotatedMessage)
+            },
+            {
+                "GameLost", typeof(GameLostMessage)
+            },
+            {
+                "GameEnded", typeof(GameEndedMessage)
+            },
+            {
+                "GamePaused", typeof(GamePausedMessage)
+            },
+            {
+                "GameResumed", typeof(GameResumedMessage)
+            },
+            {
+                "GameStarted", typeof(GameResumedMessage)
+            },
+        };
 
         private void Awake()
         {
@@ -18,6 +63,14 @@ namespace Blockstacker.Gameplay.SoundEffects
         }
 
         private void Start()
+        {
+            if (string.IsNullOrEmpty(SoundPackLoader.SoundEffectsScript))
+                RegisterDefaultFunctions();
+            else
+                RegisterCustomFunctions();
+        }
+
+        private void RegisterDefaultFunctions()
         {
             _mediator.Register<PiecePlacedMessage>(HandlePiecePlaced);
             _mediator.Register<PieceRotatedMessage>(HandlePieceRotated);
@@ -29,9 +82,57 @@ namespace Blockstacker.Gameplay.SoundEffects
             _mediator.Register<GameEndedMessage>(_ => TryPlayClip("finish"));
         }
 
-        private void HandleHoldUsed(HoldUsedMessage obj)
+        private void RegisterCustomFunctions()
         {
-            if (obj.WasSuccessful)
+            
+            LuaTable events = null;
+            try
+            {
+                if (_luaState.DoString(SoundPackLoader.SoundEffectsScript)[0] is LuaTable eventTable)
+                {
+                    events = eventTable;
+                }
+            }
+            catch (LuaException ex)
+            {
+                Debug.Log(ex.Message);
+            }
+
+            if (events is null) return;
+            
+            foreach (var entry in RegisterableEvents)
+            {
+                if (events[entry.Key] is not LuaFunction function) continue;
+
+                void Action(Message message)
+                {
+                    object[] output = null;
+                    try
+                    {
+                        output = function.Call(message);
+                    }
+                    catch (LuaException ex)
+                    {
+                        Debug.Log(ex.Message);
+                    }
+
+                    if (output is null) return;
+                    
+                    foreach (var obj in output)
+                    {
+                        if (obj is not string clipName) return;
+                        
+                        TryPlayClip(clipName);    
+                    }
+                }
+
+                _mediator.Register((Action<Message>) Action, entry.Value);
+            }
+        }
+
+        private void HandleHoldUsed(HoldUsedMessage message)
+        {
+            if (message.WasSuccessful)
                 TryPlayClip("hold");
         }
 
@@ -50,7 +151,7 @@ namespace Blockstacker.Gameplay.SoundEffects
 
         private void HandlePieceSpawned(PieceSpawnedMessage message)
         {
-            if (message.NextPiece.EndsWith("Piece") && message.NextPiece.Length == 6)
+            if (!string.IsNullOrEmpty(message.NextPiece))
                 TryPlayClip(message.NextPiece[0].ToString().ToLower());
         }
 

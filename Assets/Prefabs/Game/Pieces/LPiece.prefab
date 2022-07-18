@@ -489,7 +489,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7662263200456811721, guid: 458d0a52522b0684ba11b2b19537fc6d, type: 3}
       propertyPath: PieceType
-      value: LPIece
+      value: LPiece
       objectReference: {fileID: 0}
     - target: {fileID: 7662263200456811721, guid: 458d0a52522b0684ba11b2b19537fc6d, type: 3}
       propertyPath: SpawnOffset.x

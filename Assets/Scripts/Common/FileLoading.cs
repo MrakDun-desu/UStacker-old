@@ -49,7 +49,7 @@ namespace Blockstacker.Common
 
         public static async Task<Texture2D> LoadTextureFromUrl(string path, bool isFile = true)
         {
-            if (GetFileType(path) != FileType.Texture) return null;
+            if (isFile && GetFileType(path) != FileType.Texture) return null;
 
             var requestUrl = isFile ? $"file://{path}" : path;
 
@@ -76,7 +76,7 @@ namespace Blockstacker.Common
 
         public static async Task<AudioClip> LoadAudioClipFromUrl(string path, bool isFile = true)
         {
-            if (GetFileType(path) != FileType.AudioClip) return null;
+            if (isFile && GetFileType(path) != FileType.AudioClip) return null;
             
             var extension = Path.GetExtension(path).Remove(0,1);
             var audioType = GetAudioType(extension);

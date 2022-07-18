@@ -42,8 +42,9 @@ namespace Blockstacker.Gameplay.Pieces
 
         private void UpdateBlockSkin()
         {
+            var skinRecords = SkinLoader.SkinRecords;
             var blockSkins = 
-                SkinLoader.SkinRecords.Where(record => record.PieceType == _pieceType && record.BlockNumbers.Contains(_blockNumber)).ToArray();
+                skinRecords.Where(record => record.PieceType == _pieceType && record.BlockNumbers.Contains(_blockNumber)).ToArray();
 
             if (blockSkins.Length == 0)
                 return;
