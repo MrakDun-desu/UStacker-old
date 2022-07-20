@@ -47,8 +47,11 @@ TagManager:
   - name: Ghost Piece
     uniqueID: 42295427
     locked: 0
-  - name: Pieces
+  - name: Active Pieces
     uniqueID: 2261089543
+    locked: 0
+  - name: Warning Piece
+    uniqueID: 3052562723
     locked: 0
   - name: UI
     uniqueID: 3059523045
