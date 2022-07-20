@@ -69,12 +69,13 @@ namespace Blockstacker.Gameplay
 
         public uint LethalHeight { get; set; }
         private Vector3 Up => transform.up * transform.localScale.y;
-        private Vector3 Right => transform.right * transform.localScale.x;
 
         private Vector2 CurrentOffset => new(
             transform.position.x + Width * .5f * transform.localScale.x,
             transform.position.y + Height * .5f * transform.localScale.y
         );
+
+        public event Action LinesCleared;
 
 
         private void Start()
@@ -182,6 +183,9 @@ namespace Blockstacker.Gameplay
                 i--;
             }
 
+            if (linesCleared > 0)
+                LinesCleared?.Invoke();
+            
             return linesCleared;
         }
 
@@ -221,17 +225,12 @@ namespace Blockstacker.Gameplay
             _mediator.Send(midgameMessage);
         }
 
-        private Vector2Int WorldSpaceToBoardPosition(Vector3 worldSpacePos)
+        public Vector2Int WorldSpaceToBoardPosition(Vector3 worldSpacePos)
         {
             _helperTransform.position = worldSpacePos;
             var localPosition = _helperTransform.localPosition;
             return new Vector2Int(Mathf.FloorToInt(localPosition.x),
                 Mathf.FloorToInt(localPosition.y));
-        }
-
-        public Vector3 BoardPositionToWorldSpace(Vector2Int boardPos)
-        {
-            return transform.position + boardPos.x * Right + boardPos.y * Up;
         }
 
         public bool IsEmpty(Vector2Int blockPosition)

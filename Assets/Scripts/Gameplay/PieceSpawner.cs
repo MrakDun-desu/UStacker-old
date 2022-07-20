@@ -31,7 +31,11 @@ namespace Blockstacker.Gameplay
         public void PrespawnPieces()
         {
             foreach (var nextIndex in PreviewContainers.Select(_ => Randomizer.GetNextPiece()))
-                _previews.AddPiece(Instantiate(AvailablePieces[nextIndex]));
+            {
+                var nextPiece = Instantiate(AvailablePieces[nextIndex]);
+                nextPiece.SetBoard(_board);
+                _previews.AddPiece(nextPiece);
+            }
         }
 
         public void SpawnPiece() => SpawnPiece(0d);
@@ -39,7 +43,9 @@ namespace Blockstacker.Gameplay
         public void SpawnPiece(double spawnTime)
         {
             var nextIndex = Randomizer.GetNextPiece();
-            var nextPiece = _previews.AddPiece(Instantiate(AvailablePieces[nextIndex]));
+            var swappedPiece = Instantiate(AvailablePieces[nextIndex]);
+            swappedPiece.SetBoard(_board);
+            var nextPiece = _previews.AddPiece(swappedPiece);
 
             SpawnPiece(nextPiece, spawnTime);
         }

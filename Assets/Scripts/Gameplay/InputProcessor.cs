@@ -401,14 +401,14 @@ namespace Blockstacker.Gameplay
                 KeyActionType = KeyActionType.KeyDown
             });
 
-            ActivePiece.transform.Rotate(Vector3.forward, rotationAngle);
+            ActivePiece.Rotate(rotationAngle);
             if (!SpinHandler.TryKick(
                     ActivePiece,
                     _board,
                     direction,
                     out _lastSpinResult))
             {
-                ActivePiece.transform.Rotate(Vector3.forward, -rotationAngle);
+                ActivePiece.Rotate(-rotationAngle);
                 return;
             }
 

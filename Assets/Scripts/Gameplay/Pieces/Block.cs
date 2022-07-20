@@ -3,7 +3,6 @@ using System.Linq;
 using Blockstacker.GlobalSettings.BlockSkins;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.PlayerLoop;
 
 namespace Blockstacker.Gameplay.Pieces
 {
@@ -16,6 +15,9 @@ namespace Blockstacker.Gameplay.Pieces
         [SerializeField] private GameObject _skinsParent;
 
         private string _pieceType;
+        private Piece _piece;
+        
+        public Board Board { get; set; }
 
         public event Action<Block> Cleared;
 
@@ -35,7 +37,8 @@ namespace Blockstacker.Gameplay.Pieces
 
         private void Start()
         {
-            _pieceType = GetComponentInParent<Piece>().PieceType;
+            _piece = GetComponentInParent<Piece>();
+            _pieceType = _piece.PieceType;
             UpdateBlockSkin();
             SkinLoader.SkinChanged += UpdateBlockSkin;
         }
@@ -56,6 +59,8 @@ namespace Blockstacker.Gameplay.Pieces
             foreach (var skinRecord in blockSkins)
             {
                 var newSkin = Instantiate(_blockSkinPrefab.gameObject, _skinsParent.transform).GetComponent<BlockSkin>();
+                newSkin.Board = Board;
+                newSkin.Piece = _piece;
                 newSkin.SkinRecord = skinRecord;
             }
         }
