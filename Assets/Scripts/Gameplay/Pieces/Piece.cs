@@ -19,14 +19,14 @@ namespace Blockstacker.Gameplay.Pieces
         public Transform[] FullSpinDetectors = Array.Empty<Transform>();
         public UnityEvent PieceCleared;
 
+        public event Action Rotated;
+
         private void Start()
         {
             foreach (var block in Blocks)
             {
                 block.Cleared += OnBlockCleared;
             }
-            
-            PieceCleared.AddListener(() => Destroy(gameObject));
         }
 
         private void OnBlockCleared(Block sender)
@@ -37,13 +37,19 @@ namespace Blockstacker.Gameplay.Pieces
             Destroy(gameObject);
         }
 
-        // public void RefreshBlocks()
-        // {
-        //     var blocksInChildren = GetComponentsInChildren<Block>();
-        //     Blocks.AddRange(blocksInChildren);
-        //     foreach (var block in Blocks) {
-        //         block.Reset();
-        //     }
-        // }
+        public void Rotate(int rotationAngle)
+        {
+            transform.Rotate(Vector3.forward, rotationAngle);
+            Rotated?.Invoke();
+        }
+
+        public void SetBoard(Board board)
+        {
+            foreach (var block in Blocks)
+            {
+                block.Board = board;
+            }
+        }
+        
     }
 }

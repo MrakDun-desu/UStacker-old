@@ -9575,15 +9575,15 @@ MonoBehaviour:
   _title: {fileID: 2143305715}
   _autoformatName: 1
   _dropdown: {fileID: 2143305714}
-  Values:
-  - Value: 1
-    Name: Time
-  - Value: 2
-    Name: Lines cleared
-  - Value: 4
-    Name: Pieces placed
-  - Value: 5
-    Name: None
+  _values:
+  - Name: Time
+    Value: 1
+  - Name: Lines Cleared
+    Value: 2
+  - Name: Pieces Placed
+    Value: 4
+  - Name: None
+    Value: 5
 --- !u!1001 &710734508832256206
 PrefabInstance:
   m_ObjectHideFlags: 0
