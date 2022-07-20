@@ -44,9 +44,15 @@ TagManager:
   - name: Backgrounds
     uniqueID: 3587240433
     locked: 0
+  - name: Ghost Piece
+    uniqueID: 1295504137
+    locked: 0
+  - name: Active Pieces
+    uniqueID: 2261089543
+    locked: 0
+  - name: Warning Piece
+    uniqueID: 3052562723
+    locked: 0
   - name: UI
     uniqueID: 3059523045
-    locked: 0
-  - name: Game
-    uniqueID: 2261089543
     locked: 0

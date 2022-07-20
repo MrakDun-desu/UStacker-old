@@ -4,7 +4,7 @@ using Blockstacker.Common;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
 using Blockstacker.Gameplay.Spins;
-using Unity.Plastic.Newtonsoft.Json;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Blockstacker.Gameplay.Initialization

@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using Blockstacker.Common;
 using Blockstacker.GlobalSettings.Groups;
-using Unity.Plastic.Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Blockstacker.GlobalSettings
 {
