@@ -62,14 +62,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6432798660450874880}
     m_Modifications:
-    - target: {fileID: 332015439432955913, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
-      propertyPath: m_SortingLayer
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 332015439432955913, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
-      propertyPath: m_SortingLayerID
-      value: 1295504137
-      objectReference: {fileID: 0}
     - target: {fileID: 2642920995141522598, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
       propertyPath: m_Name
       value: GhostPieceBlock
@@ -132,14 +124,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6432798660450874880}
     m_Modifications:
-    - target: {fileID: 332015439432955913, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
-      propertyPath: m_SortingLayer
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 332015439432955913, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
-      propertyPath: m_SortingLayerID
-      value: 1295504137
-      objectReference: {fileID: 0}
     - target: {fileID: 2642920995141522598, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
       propertyPath: m_Name
       value: GhostPieceBlock (2)
@@ -202,14 +186,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6432798660450874880}
     m_Modifications:
-    - target: {fileID: 332015439432955913, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
-      propertyPath: m_SortingLayer
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 332015439432955913, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
-      propertyPath: m_SortingLayerID
-      value: 1295504137
-      objectReference: {fileID: 0}
     - target: {fileID: 2642920995141522598, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
       propertyPath: m_Name
       value: GhostPieceBlock (3)
@@ -272,14 +248,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6432798660450874880}
     m_Modifications:
-    - target: {fileID: 332015439432955913, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
-      propertyPath: m_SortingLayer
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 332015439432955913, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
-      propertyPath: m_SortingLayerID
-      value: 1295504137
-      objectReference: {fileID: 0}
     - target: {fileID: 2642920995141522598, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
       propertyPath: m_Name
       value: GhostPieceBlock (1)

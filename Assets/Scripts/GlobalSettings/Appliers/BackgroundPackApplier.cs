@@ -2,14 +2,19 @@ using System.IO;
 using System.Threading.Tasks;
 using Blockstacker.Common;
 using Blockstacker.GlobalSettings.Backgrounds;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace Blockstacker.GlobalSettings.Appliers
 {
-    public class BackgroundPackApplier : SettingApplierBase
+    public class BackgroundPackApplier : SettingApplierBase, IAsyncApplier
     {
-        public UnityEvent LoadingStarted;
-        public UnityEvent LoadingFinished;
+        [SerializeField] public UnityEvent _loadingStarted;
+        [SerializeField] public UnityEvent _loadingFinished;
+
+        public UnityEvent LoadingStarted => _loadingStarted;
+        public UnityEvent LoadingFinished => _loadingFinished;
+        public string OngoingMessage => "Backgrounds loading...";
 
         protected override void OnSettingChanged()
         {

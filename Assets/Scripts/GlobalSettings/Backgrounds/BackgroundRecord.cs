@@ -45,10 +45,10 @@ namespace Blockstacker.GlobalSettings.Backgrounds
             Type = BackgroundType.Texture;
         }
 
-        public enum BackgroundType : byte
-        {
-            Video,
-            Texture
-        }
+    }
+    public enum BackgroundType : byte
+    {
+        Video,
+        Texture
     }
 }

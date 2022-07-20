@@ -55,16 +55,18 @@ namespace Blockstacker.GlobalSettings.Appliers
                 }
             }
 
+            if (newBackgrounds.Count == 0) return;
+
             var index = Random.Range(0, newBackgrounds.Count);
             var newBackground = newBackgrounds[index];
             switch (newBackground.Type)
             {
-                case BackgroundRecord.BackgroundType.Video:
+                case BackgroundType.Video:
                     _videoPlayer.url = $"file://{newBackground.VideoPath}";
                     _backgroundImage.texture = _videoPlayer.targetTexture;
                     _videoPlayer.Play();
                     break;
-                case BackgroundRecord.BackgroundType.Texture:
+                case BackgroundType.Texture:
                     _backgroundImage.texture = newBackground.Texture;
                     break;
                 default:

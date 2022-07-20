@@ -2,14 +2,19 @@ using System.IO;
 using System.Threading.Tasks;
 using Blockstacker.Common;
 using Blockstacker.GlobalSettings.Music;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace Blockstacker.GlobalSettings.Appliers
 {
-    public class SoundPackApplier : SettingApplierBase
+    public class SoundPackApplier : SettingApplierBase, IAsyncApplier
     {
-        public UnityEvent LoadingStarted;
-        public UnityEvent LoadingFinished;
+        [SerializeField] public UnityEvent _loadingStarted;
+        [SerializeField] public UnityEvent _loadingFinished;
+
+        public UnityEvent LoadingStarted => _loadingStarted;
+        public UnityEvent LoadingFinished => _loadingFinished;
+        public string OngoingMessage => "Sound pack loading...";
 
         protected override void OnSettingChanged()
         {
