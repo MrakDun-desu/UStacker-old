@@ -66,7 +66,7 @@ namespace Blockstacker.Gameplay
             _inputProcessor.ActivePiece = piece;
 
             var rotationSystem = _settings.Rules.Controls.ActiveRotationSystem;
-            var rotation = rotationSystem.GetKickTable(piece.PieceType).StartState;
+            var rotation = rotationSystem.GetKickTable(piece.Type).StartState;
             pieceTransform.Rotate(Vector3.forward, (float) rotation);
 
             var nextPiece = "";
@@ -75,7 +75,7 @@ namespace Blockstacker.Gameplay
             
             _mediator.Send(new PieceSpawnedMessage
             {
-                SpawnedPiece = piece.PieceType, NextPiece = nextPiece, Time = spawnTime
+                SpawnedPiece = piece.Type, NextPiece = nextPiece, Time = spawnTime
             });
 
             if (!_board.CanPlace(piece))

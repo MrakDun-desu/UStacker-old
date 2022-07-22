@@ -27,7 +27,7 @@ namespace Blockstacker.Gameplay
 
         public string GetPieceType()
         {
-            return _piece.PieceType;
+            return _piece.Type;
         } 
     }
 }

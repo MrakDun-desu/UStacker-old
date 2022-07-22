@@ -98,11 +98,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _skinRecord:
-    PieceType: IPiece
+    PieceType: 
     BlockNumbers: 00000000010000000200000003000000
     ConnectedSprites: []
     Layer: 0
     IsConnected: 0
-    ShouldRotate: 0
+    RotateWithPiece: 0
     AnimationFps: 60
     Sprites: []

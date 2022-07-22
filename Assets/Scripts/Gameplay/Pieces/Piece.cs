@@ -1,15 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Blockstacker.GameSettings.Enums;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Blockstacker.Gameplay.Pieces
 {
-    public class Piece : MonoBehaviour
+    public class Piece : MonoBehaviour, IBlockCollection
     {
         public List<Block> Blocks = new();
-        public string PieceType;
+        [field: SerializeField]
+        public string Type { get; set; }
         public Color GhostPieceColor;
         public Vector2 SpawnOffset;
         public Vector2 ContainerOffset;
@@ -18,8 +20,10 @@ namespace Blockstacker.Gameplay.Pieces
         public Transform[] SpinDetectors = Array.Empty<Transform>();
         public Transform[] FullSpinDetectors = Array.Empty<Transform>();
         public UnityEvent PieceCleared;
-
+        
         public event Action Rotated;
+        public IEnumerable<Vector3> BlockPositions => 
+            Blocks.Select(block => block.transform.position);
 
         private void Start()
         {

@@ -78,7 +78,7 @@ namespace Blockstacker.Gameplay
                 }
 
                 _ghostPiece.gameObject.SetActive(true);
-                _ghostPiece.SetActivePiece(value);
+                _ghostPiece.ActivePiece = value;
                 _ghostPiece.Render();
             }
         }
@@ -414,7 +414,7 @@ namespace Blockstacker.Gameplay
 
             var rotatedMessage = new PieceRotatedMessage
             {
-                PieceType = ActivePiece.PieceType,
+                PieceType = ActivePiece.Type,
                 Time = actionTime,
                 WasSpinRaw = _lastSpinResult.WasSpinRaw,
                 WasSpinMiniRaw = _lastSpinResult.WasSpinMiniRaw,
