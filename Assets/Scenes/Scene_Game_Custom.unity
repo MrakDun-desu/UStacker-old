@@ -3710,6 +3710,7 @@ Transform:
   - {fileID: 569528457}
   - {fileID: 1252429938}
   - {fileID: 1940435848}
+  - {fileID: 1437577895}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5547,6 +5548,51 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -75}
   m_SizeDelta: {x: 0, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1437577893
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1437577895}
+  - component: {fileID: 1437577894}
+  m_Layer: 0
+  m_Name: BoardGrid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1437577894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437577893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed73ab78bb384ef78d204478ab719a7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _board: {fileID: 878271531}
+--- !u!4 &1437577895
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437577893}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 878271532}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1449369111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7283,6 +7329,18 @@ MonoBehaviour:
       - m_Target: {fileID: 878271531}
         m_TargetAssemblyTypeName: Blockstacker.Gameplay.Board, Assembly-CSharp
         m_MethodName: ClearAllBlocks
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 878271531}
+        m_TargetAssemblyTypeName: Blockstacker.Gameplay.Board, Blockstacker.Gameplay
+        m_MethodName: ResetB2bAndCombo
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10620,7 +10678,8 @@ MonoBehaviour:
   _pieceSpawner: {fileID: 1685487601}
   _board: {fileID: 878271531}
   _boardBackground: {fileID: 569528455}
-  _gridPiece: {fileID: 6261951319669865305, guid: 3a1507dd0a82931498ca6bec7335d02b, type: 3}
+  _gridBlock: {fileID: 1563167965190000602, guid: 4645a69260f53674caf4c76c22366940, type: 3}
+  _gridPrefab: {fileID: 1437577894}
   _pieceContainerPrefab: {fileID: 8930354990229623398, guid: 1155493e35a2ad54faf7c922250b2086, type: 3}
   _inputProcessor: {fileID: 465133845}
   _srsRotationSystemSo: {fileID: 11400000, guid: b743b260e26929048b5fc66f1375029b, type: 2}

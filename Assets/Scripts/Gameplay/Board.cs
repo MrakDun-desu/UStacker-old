@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Common.Extensions;
+using Blockstacker.Gameplay.Blocks;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Spins;
@@ -330,6 +331,14 @@ namespace Blockstacker.Gameplay
             }
 
             Blocks.Clear();
+        }
+
+        public void ResetB2bAndCombo()
+        {
+            _backToBackActive = false;
+            _currentBackToBack = 0;
+            _comboActive = false;
+            _currentCombo = 0;
         }
     }
 }

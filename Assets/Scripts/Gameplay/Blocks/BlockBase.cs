@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using Blockstacker.Gameplay.Pieces;
 using Blockstacker.GlobalSettings.BlockSkins;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.Pieces
+namespace Blockstacker.Gameplay.Blocks
 {
     public class BlockBase : MonoBehaviour
     {
@@ -13,6 +15,15 @@ namespace Blockstacker.Gameplay.Pieces
         private string _collectionType;
         private IBlockCollection _blockCollection;
 
+        public string CollectionType
+        {
+            get => _collectionType;
+            set
+            {
+                _collectionType = value;
+                UpdateBlockSkin();
+            }
+        }
         public Board Board { get; set; }
 
         private void Awake()
@@ -22,17 +33,20 @@ namespace Blockstacker.Gameplay.Pieces
 
         private void Start()
         {
-            _collectionType = _blockCollection.Type;
-            UpdateBlockSkin();
+            CollectionType = _blockCollection.Type;
             SkinLoader.SkinChanged += UpdateBlockSkin;
+        }
+
+        private void OnDestroy()
+        {
+            SkinLoader.SkinChanged -= UpdateBlockSkin;
         }
 
         private void UpdateBlockSkin()
         {
-            var skinRecords = SkinLoader.SkinRecords;
-            var blockSkins =
-                skinRecords.Where(
-                    record => record.PieceType == _collectionType && record.BlockNumbers.Contains(_blockNumber)).ToArray();
+            var blockSkins = SkinLoader.SkinRecords
+                .Where(record => record.PieceType == CollectionType && record.BlockNumbers.Contains(_blockNumber))
+                .ToArray();
 
             if (blockSkins.Length == 0)
             {

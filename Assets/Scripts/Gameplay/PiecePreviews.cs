@@ -26,7 +26,7 @@ namespace Blockstacker.Gameplay
 
         public string GetFirstPieceType()
         {
-            return _containers.Count > 0 ? _containers[^1].GetPieceType() : lastPiece.Type;
+            return _containers.Count > 0 ? _containers[^1].PieceType : lastPiece.Type;
         }
     }
 }

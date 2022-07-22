@@ -1,10 +1,8 @@
 using System;
-using System.Linq;
-using Blockstacker.GlobalSettings.BlockSkins;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Blockstacker.Gameplay.Pieces
+namespace Blockstacker.Gameplay.Blocks
 {
     public class Block : BlockBase
     {

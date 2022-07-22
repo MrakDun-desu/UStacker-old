@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Common.Extensions;
+using Blockstacker.Gameplay.Pieces;
 using Blockstacker.GlobalSettings;
 using Blockstacker.GlobalSettings.Appliers;
 using Blockstacker.GlobalSettings.BlockSkins;
 using Blockstacker.GlobalSettings.Enums;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.Pieces
+namespace Blockstacker.Gameplay.Blocks
 {
     [RequireComponent(typeof(SpriteRenderer))]
     public class BlockSkin : MonoBehaviour
@@ -96,16 +97,26 @@ namespace Blockstacker.Gameplay.Pieces
                 Board.LinesCleared += PickConnectedPart;
             }
 
-            if (BlockCollection is GhostPiece ghostPiece)
+            switch (BlockCollection)
             {
-                _renderer.color = _renderer.color.WithAlpha(
-                    AppSettings.Gameplay.GhostPieceVisibility);
+                case GhostPiece ghostPiece:
+                {
+                    _renderer.color = _renderer.color.WithAlpha(
+                        AppSettings.Gameplay.GhostPieceVisibility);
 
-                GhostPieceVisibilityApplier.VisibilityChanged += ChangeAlpha;
+                    GhostPieceVisibilityApplier.VisibilityChanged += ChangeAlpha;
 
-                if (!AppSettings.Gameplay.ColorGhostPiece) return;
-                ghostPiece.ColorChanged += ChangeColor;
-                ChangeColor(ghostPiece.CurrentColor);
+                    if (!AppSettings.Gameplay.ColorGhostPiece) return;
+                    ghostPiece.ColorChanged += ChangeColor;
+                    ChangeColor(ghostPiece.CurrentColor);
+                    break;
+                }
+                case BoardGrid:
+                    _renderer.color = _renderer.color.WithAlpha(
+                        AppSettings.Gameplay.GridVisibility);
+
+                    GridVisibilityApplier.VisibilityChanged += ChangeAlpha;
+                    break;
             }
 
         }
@@ -180,8 +191,6 @@ namespace Blockstacker.Gameplay.Pieces
             
             switch (BlockCollection)
             {
-                case null:
-                    return;
                 case Piece piece:
                     piece.Rotated -= ResetRotation;
                     piece.Rotated -= PickConnectedPart;
@@ -191,6 +200,9 @@ namespace Blockstacker.Gameplay.Pieces
                     ghostPiece.Rendered -= PickConnectedPart;
                     ghostPiece.Rendered -= ResetRotation;
                     GhostPieceVisibilityApplier.VisibilityChanged -= ChangeAlpha;
+                    break;
+                case BoardGrid:
+                    GridVisibilityApplier.VisibilityChanged -= ChangeAlpha;
                     break;
             }
         }

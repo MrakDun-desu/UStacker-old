@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockstacker.Gameplay.Blocks;
 using Blockstacker.GameSettings;
 using Blockstacker.GlobalSettings;
+using Blockstacker.GlobalSettings.Appliers;
 using UnityEngine;
 
 namespace Blockstacker.Gameplay.Pieces
@@ -13,8 +15,10 @@ namespace Blockstacker.Gameplay.Pieces
         [SerializeField] private Board _board;
         [SerializeField] private GameSettingsSO _settings;
 
+        private static readonly Color _defaultColor = Color.white;
         private Piece _activePiece;
-        private Color _currentColor = Color.white;
+        private Color _currentColor = _defaultColor;
+        private bool _colorGhostPiece;
 
         public Piece ActivePiece
         {
@@ -33,9 +37,12 @@ namespace Blockstacker.Gameplay.Pieces
             get => _currentColor;
             private set
             {
-                if (!AppSettings.Gameplay.ColorGhostPiece) 
+                var newColor = value;
+                if (!_colorGhostPiece) 
+                    newColor = _defaultColor;
+                if (_currentColor == newColor)
                     return;
-                _currentColor = value;
+                _currentColor = newColor;
                 ColorChanged?.Invoke(_currentColor);
             }
         }
@@ -55,9 +62,16 @@ namespace Blockstacker.Gameplay.Pieces
             }
             if (_settings.Rules.Controls.ShowGhostPiece) return;
             gameObject.SetActive(false);
+            ColorGhostPieceApplier.ColorGhostPieceChanged += ChangeColoring;
+            ChangeColoring(AppSettings.Gameplay.ColorGhostPiece);
         }
 
-
+        private void ChangeColoring(bool value)
+        {
+            _colorGhostPiece = value;
+            CurrentColor = _defaultColor;
+        }
+        
         public void Render()
         {
             if (!_settings.Rules.Controls.ShowGhostPiece) return;

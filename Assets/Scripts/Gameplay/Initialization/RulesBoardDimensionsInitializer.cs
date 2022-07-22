@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using Blockstacker.Gameplay.Blocks;
+using Blockstacker.Gameplay.Pieces;
 using Blockstacker.GameSettings;
 using UnityEngine;
 
@@ -9,21 +11,24 @@ namespace Blockstacker.Gameplay.Initialization
         private readonly Board _board;
         private readonly GameObject _boardBackground;
         private readonly Camera _camera;
-        private readonly GameObject _gridPiece;
+        private readonly BlockBase _gridBlock;
+        private readonly BoardGrid _boardGrid;
 
         public RulesBoardDimensionsInitializer(
             StringBuilder errorBuilder,
             GameSettingsSO gameSettings,
             Board board,
             GameObject boardBackground,
-            GameObject gridPiece,
+            BlockBase gridBlock,
+            BoardGrid boardGrid,
             Camera camera
         )
             : base(errorBuilder, gameSettings)
         {
             _board = board;
             _boardBackground = boardBackground;
-            _gridPiece = gridPiece;
+            _gridBlock = gridBlock;
+            _boardGrid = boardGrid;
             _camera = camera;
         }
 
@@ -39,19 +44,24 @@ namespace Blockstacker.Gameplay.Initialization
                 1
             );
 
-            var boardGrid = new GameObject("Grid");
-            boardGrid.transform.SetParent(_board.transform);
-            boardGrid.transform.localPosition = Vector3.zero;
-            boardGrid.transform.localScale = Vector3.one;
+            var gridTransform = _boardGrid.transform;
+            gridTransform.SetParent(_board.transform);
+            gridTransform.localPosition = Vector3.zero;
+            gridTransform.localScale = Vector3.one;
 
             for (var y = 0; y < boardDimensions.BoardHeight; y++)
             for (var x = 0; x < boardDimensions.BoardWidth; x++)
             {
-                var gridPiece = Object.Instantiate(_gridPiece,
-                    boardGrid.transform,
-                    false);
-                gridPiece.transform.localPosition = new Vector3(
-                    x, y, gridPiece.transform.localPosition.z);
+                var gridBlock = Object.Instantiate(
+                    _gridBlock.gameObject,
+                    _boardGrid.transform,
+                    false
+                ).GetComponent<BlockBase>();
+
+                var blockTransform = gridBlock.transform;
+                blockTransform.localPosition = new Vector3(x + .5f, y + .5f, blockTransform.localPosition.z);
+                
+                _boardGrid.AddBlock(gridBlock);
             }
 
             _camera.orthographicSize =

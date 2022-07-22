@@ -44,6 +44,9 @@ TagManager:
   - name: Backgrounds
     uniqueID: 3587240433
     locked: 0
+  - name: Grid
+    uniqueID: 2538126741
+    locked: 0
   - name: Ghost Piece
     uniqueID: 42295427
     locked: 0

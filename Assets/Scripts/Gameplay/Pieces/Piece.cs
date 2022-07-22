@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockstacker.Gameplay.Blocks;
 using Blockstacker.GameSettings.Enums;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,9 +10,8 @@ namespace Blockstacker.Gameplay.Pieces
 {
     public class Piece : MonoBehaviour, IBlockCollection
     {
+        [SerializeField] private string _type;
         public List<Block> Blocks = new();
-        [field: SerializeField]
-        public string Type { get; set; }
         public Color GhostPieceColor;
         public Vector2 SpawnOffset;
         public Vector2 ContainerOffset;
@@ -20,8 +20,24 @@ namespace Blockstacker.Gameplay.Pieces
         public Transform[] SpinDetectors = Array.Empty<Transform>();
         public Transform[] FullSpinDetectors = Array.Empty<Transform>();
         public UnityEvent PieceCleared;
-        
+
         public event Action Rotated;
+
+        private string _currentType;
+        public string Type
+        {
+            get => _currentType;
+            set
+            {
+                if (string.Equals(_currentType, value))
+                    return;
+                
+                _currentType = value;
+                foreach (var block in Blocks)
+                    block.CollectionType = _currentType;
+            }
+        }
+
         public IEnumerable<Vector3> BlockPositions => 
             Blocks.Select(block => block.transform.position);
 
@@ -31,6 +47,8 @@ namespace Blockstacker.Gameplay.Pieces
             {
                 block.Cleared += OnBlockCleared;
             }
+
+            _currentType = _type;
         }
 
         private void OnBlockCleared(Block sender)
@@ -54,6 +72,8 @@ namespace Blockstacker.Gameplay.Pieces
                 block.Board = board;
             }
         }
-        
+
+        public void RevertType() => Type = _type;
+
     }
 }
