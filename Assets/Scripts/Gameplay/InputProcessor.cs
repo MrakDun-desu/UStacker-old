@@ -646,7 +646,6 @@ namespace Blockstacker.Gameplay
                     _pieceLocking = true;
                 }
 
-                _dropTimer = functionStartTime;
                 break;
             }
 
@@ -659,33 +658,27 @@ namespace Blockstacker.Gameplay
                 _settings.Rules.Controls.OnTouchGround != OnTouchGround.InfiniteMovement)
                 HandlePiecePlacement(lastDropTime);
 
-            switch (_settings.Rules.Controls.OnTouchGround)
-            {
-                case OnTouchGround.LimitedTime:
-                    if (_hardLockAmount < lastDropTime)
-                        HandlePiecePlacement(lastDropTime);
-                    break;
-                case OnTouchGround.LimitedMoves:
-                case OnTouchGround.InfiniteMovement:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            if (_settings.Rules.Controls.OnTouchGround == OnTouchGround.LimitedTime
+                && _hardLockAmount < lastDropTime)
+                HandlePiecePlacement(lastDropTime);
         }
 
         private void HandlePieceSpawning()
         {
-            var functionStartTime = _timer.CurrentTime;
             if (!_pieceIsNull) return;
+            var functionStartTime = _timer.CurrentTime;
             if (_pieceSpawnTime > functionStartTime) return;
 
             _lockTime = double.PositiveInfinity;
             _pieceLocking = false;
             _hardLockAmount = double.PositiveInfinity;
             _spawner.SpawnPiece(_pieceSpawnTime);
-            _dropTimer = functionStartTime + _effectiveDropTime;
+            _dropTimer = _pieceSpawnTime + _effectiveDropTime;
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Placement))
-                _dasDelay = functionStartTime + _handling.DasCutDelay;
+                _dasDelay = _pieceSpawnTime + _handling.DasCutDelay;
+            
+            // after piece spawn, game needs to update one more time to catch up with gravity
+            Update();
         }
 
         #endregion
