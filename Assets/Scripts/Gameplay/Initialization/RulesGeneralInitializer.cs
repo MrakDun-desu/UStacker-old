@@ -51,11 +51,9 @@ namespace Blockstacker.Gameplay.Initialization
 
         private void InitializeSeed()
         {
-            var newSeed = _gameSettings.Rules.General.UseRandomSeed
+             _gameSettings.Rules.General.ActiveSeed = _gameSettings.Rules.General.UseRandomSeed
                 ? Random.Range(int.MinValue, int.MaxValue)
                 : _gameSettings.Rules.General.SpecificSeed;
-            _gameSettings.Rules.General.ActiveSeed = newSeed;
-            Random.InitState(newSeed);
         }
 
         private void InitializeRandomizer()
@@ -74,20 +72,21 @@ namespace Blockstacker.Gameplay.Initialization
             }
 
             var isValid = true;
+            var seed = _gameSettings.Rules.General.ActiveSeed;
 
             IRandomizer randomizer = _gameSettings.Rules.General.RandomizerType switch
             {
-                RandomizerType.SevenBag => new CountPerBagRandomizer(_pieceCount),
-                RandomizerType.FourteenBag => new CountPerBagRandomizer(_pieceCount, 2),
-                RandomizerType.Random => new RandomRandomizer(_pieceCount),
-                RandomizerType.Classic => new ClassicRandomizer(_pieceCount),
-                RandomizerType.Pairs => new PairsRandomizer(_pieceCount),
+                RandomizerType.SevenBag => new CountPerBagRandomizer(_pieceCount, seed),
+                RandomizerType.FourteenBag => new CountPerBagRandomizer(_pieceCount, seed, 2),
+                RandomizerType.Random => new RandomRandomizer(_pieceCount, seed),
+                RandomizerType.Classic => new ClassicRandomizer(_pieceCount, seed),
+                RandomizerType.Pairs => new PairsRandomizer(_pieceCount, seed),
                 RandomizerType.Custom => new CustomRandomizer(
                     _pieceCount,
                     _gameSettings.Rules.General.CustomRandomizerScript,
-                    _gameSettings.Rules.General.ActiveSeed,
+                    seed,
                     out isValid),
-                _ => new CountPerBagRandomizer(_pieceCount)
+                _ => new CountPerBagRandomizer(_pieceCount, seed)
             };
 
             if (!isValid)
