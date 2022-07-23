@@ -92,6 +92,9 @@ namespace Blockstacker.Gameplay.Blocks
                     case GhostPiece ghost:
                         ghost.Rendered += PickConnectedPart;
                         break;
+                    case WarningPiece warning:
+                        warning.PieceChanged += PickConnectedPart;
+                        break;
                 }
 
                 Board.LinesCleared += PickConnectedPart;
@@ -200,6 +203,9 @@ namespace Blockstacker.Gameplay.Blocks
                     ghostPiece.Rendered -= PickConnectedPart;
                     ghostPiece.Rendered -= ResetRotation;
                     GhostPieceVisibilityApplier.VisibilityChanged -= ChangeAlpha;
+                    break;
+                case WarningPiece warningPiece:
+                    warningPiece.PieceChanged -= PickConnectedPart;
                     break;
                 case BoardGrid:
                     GridVisibilityApplier.VisibilityChanged -= ChangeAlpha;

@@ -23,6 +23,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private SpriteRenderer _backgroundRenderer;
         [SerializeField] private Camera _camera;
+        [SerializeField] private WarningPiece _warningPiece;
 
         [Tooltip("Zoom percentage change with one scroll unit")] [Range(0, 1)] [SerializeField]
         private float _boardZoomFactor = .05f;
@@ -41,6 +42,7 @@ namespace Blockstacker.Gameplay
         private uint _currentBackToBack;
         private bool _comboActive;
         private bool _backToBackActive;
+        private float _warningPieceTreshhold;
 
         public uint Width
         {
@@ -86,9 +88,11 @@ namespace Blockstacker.Gameplay
 
             ChangeBoardZoom(AppSettings.Gameplay.BoardZoom);
             ChangeVisibility(AppSettings.Gameplay.BoardVisibility);
+            _warningPieceTreshhold = AppSettings.Gameplay.WarningPieceTreshhold;
 
             BoardVisibilityApplier.VisibilityChanged += ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged += ChangeBoardZoom;
+            WarningPieceTreshholdApplier.TreshholdChanged += ChangeWarningPieceTreshhold;
         }
 
         private void Update()
@@ -101,6 +105,23 @@ namespace Blockstacker.Gameplay
         {
             BackgroundVisibilityApplier.VisibilityChanged -= ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged -= ChangeBoardZoom;
+            WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
+        }
+
+        private void ChangeWarningPieceTreshhold(float newTreshhold)
+        {
+            _warningPieceTreshhold = newTreshhold;
+            HandleWarningPiece();
+        }
+
+        private void HandleWarningPiece()
+        {
+            var blockCount = Blocks.Count;
+            var lethalHeight = LethalHeight;
+            if (blockCount + _warningPieceTreshhold >= lethalHeight)
+                _warningPiece.MakeVisible();
+            else
+                _warningPiece.MakeInvisible();
         }
 
         private void ChangeVisibility(float newAlpha)
@@ -299,6 +320,8 @@ namespace Blockstacker.Gameplay
                 PieceType = piece.Type
             };
 
+            HandleWarningPiece();
+            
             SendPlacementMessage(piecePlacedMsg);
             
             if (_settings.Rules.BoardDimensions.AllowClutchClears && linesWereCleared) return true;

@@ -16,6 +16,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private InputProcessor _inputProcessor;
         [SerializeField] private GameManager _manager;
         [SerializeField] private MediatorSO _mediator;
+        [SerializeField] private WarningPiece _warningPiece;
 
         public Piece[] AvailablePieces;
         public List<PieceContainer> PreviewContainers = new();
@@ -69,6 +70,8 @@ namespace Blockstacker.Gameplay
             var rotation = rotationSystem.GetKickTable(piece.Type).StartState;
             pieceTransform.Rotate(Vector3.forward, (float) rotation);
 
+            _warningPiece.SetPiece(_previews.GetFirstPiece());
+            
             var nextPiece = "";
             if (AppSettings.Sound.HearNextPieces)
                 nextPiece = _previews.GetFirstPieceType();

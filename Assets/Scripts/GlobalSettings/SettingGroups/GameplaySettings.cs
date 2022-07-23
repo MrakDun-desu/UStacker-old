@@ -10,6 +10,7 @@ namespace Blockstacker.GlobalSettings.Groups
         public float GridVisibility = .6f;
         public float GhostPieceVisibility = .5f;
         public float BoardZoom = 1;
+        public float WarningPieceTreshhold = 4;
         public bool CtrlScrollToChangeBoardZoom;
         public bool ScrollToChangeVolume = true;
         public bool DragMiddleButtonToRepositionBoard;

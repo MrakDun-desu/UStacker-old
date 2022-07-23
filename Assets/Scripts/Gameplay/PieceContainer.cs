@@ -12,10 +12,10 @@ namespace Blockstacker.Gameplay
         private Piece _piece;
         private bool _pieceIsNull = true;
 
-        private Piece Piece
+        public Piece Piece
         {
             get => _piece;
-            set
+            private set
             {
                 _pieceIsNull = value == null;
                 _piece = value;
