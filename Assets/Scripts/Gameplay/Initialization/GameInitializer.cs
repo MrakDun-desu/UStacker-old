@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Blockstacker.Gameplay.Blocks;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Presentation;
 using Blockstacker.GameSettings;
@@ -19,7 +20,8 @@ namespace Blockstacker.Gameplay.Initialization
         [Header("Board")] [SerializeField] private PieceSpawner _pieceSpawner;
         [SerializeField] private Board _board;
         [SerializeField] private GameObject _boardBackground;
-        [SerializeField] private GameObject _gridPiece;
+        [SerializeField] private BlockBase _gridBlock;
+        [SerializeField] private BoardGrid _gridPrefab;
         [SerializeField] private PieceContainer _pieceContainerPrefab;
         [SerializeField] private InputProcessor _inputProcessor;
 
@@ -73,7 +75,8 @@ namespace Blockstacker.Gameplay.Initialization
                     errorBuilder, _gameSettingsAsset,
                     _board,
                     _boardBackground,
-                    _gridPiece,
+                    _gridBlock,
+                    _gridPrefab,
                     Camera.main
                 ),
                 new RulesGeneralInitializer(

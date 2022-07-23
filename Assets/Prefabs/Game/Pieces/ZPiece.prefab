@@ -256,6 +256,10 @@ PrefabInstance:
       value: ZPieceBlock (1)
       objectReference: {fileID: 0}
     - target: {fileID: 7329477014069562552, guid: bf8a58d8533028942805d5c410921353, type: 3}
+      propertyPath: BlockNumber
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329477014069562552, guid: bf8a58d8533028942805d5c410921353, type: 3}
       propertyPath: _blockNumber
       value: 1
       objectReference: {fileID: 0}
@@ -334,6 +338,10 @@ PrefabInstance:
     - target: {fileID: 7165901658316098003, guid: bf8a58d8533028942805d5c410921353, type: 3}
       propertyPath: m_Name
       value: ZPieceBlock (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329477014069562552, guid: bf8a58d8533028942805d5c410921353, type: 3}
+      propertyPath: BlockNumber
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7329477014069562552, guid: bf8a58d8533028942805d5c410921353, type: 3}
       propertyPath: _blockNumber
@@ -420,6 +428,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7662263200456811721, guid: 458d0a52522b0684ba11b2b19537fc6d, type: 3}
+      propertyPath: _type
+      value: z
+      objectReference: {fileID: 0}
+    - target: {fileID: 7662263200456811721, guid: 458d0a52522b0684ba11b2b19537fc6d, type: 3}
       propertyPath: PieceType
       value: ZPiece
       objectReference: {fileID: 0}
@@ -488,8 +500,16 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7662263200456811721, guid: 458d0a52522b0684ba11b2b19537fc6d, type: 3}
+      propertyPath: <Type>k__BackingField
+      value: z
+      objectReference: {fileID: 0}
+    - target: {fileID: 7662263200456811721, guid: 458d0a52522b0684ba11b2b19537fc6d, type: 3}
       propertyPath: SpinDetectors.Array.size
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7662263200456811721, guid: 458d0a52522b0684ba11b2b19537fc6d, type: 3}
+      propertyPath: <PieceType>k__BackingField
+      value: z
       objectReference: {fileID: 0}
     - target: {fileID: 7662263200456811721, guid: 458d0a52522b0684ba11b2b19537fc6d, type: 3}
       propertyPath: SpinDetectors.Array.data[0]
@@ -608,6 +628,10 @@ PrefabInstance:
     - target: {fileID: 7165901658316098003, guid: bf8a58d8533028942805d5c410921353, type: 3}
       propertyPath: m_Name
       value: ZPieceBlock (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329477014069562552, guid: bf8a58d8533028942805d5c410921353, type: 3}
+      propertyPath: BlockNumber
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7329477014069562552, guid: bf8a58d8533028942805d5c410921353, type: 3}
       propertyPath: _blockNumber

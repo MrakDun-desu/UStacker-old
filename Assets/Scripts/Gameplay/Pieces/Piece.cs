@@ -1,15 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Blockstacker.Gameplay.Blocks;
 using Blockstacker.GameSettings.Enums;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Blockstacker.Gameplay.Pieces
 {
-    public class Piece : MonoBehaviour
+    public class Piece : MonoBehaviour, IBlockCollection
     {
+        [SerializeField] private string _type;
         public List<Block> Blocks = new();
-        public string PieceType;
         public Color GhostPieceColor;
         public Vector2 SpawnOffset;
         public Vector2 ContainerOffset;
@@ -21,12 +23,37 @@ namespace Blockstacker.Gameplay.Pieces
 
         public event Action Rotated;
 
+        private string _currentType;
+        public string Type
+        {
+            get => _currentType;
+            set
+            {
+                if (string.Equals(_currentType, value))
+                    return;
+                
+                _currentType = value;
+                foreach (var block in Blocks)
+                    block.CollectionType = _currentType;
+            }
+        }
+
+        public IEnumerable<Vector3> BlockPositions => 
+            Blocks.Select(block => block.transform.position);
+
+        private void Awake()
+        {
+            for (var i = 0; i < Blocks.Count; i++)
+            {
+                var block = Blocks[i];
+                block.Cleared += OnBlockCleared;
+                block.BlockNumber = (uint)i;
+            }
+        }
+
         private void Start()
         {
-            foreach (var block in Blocks)
-            {
-                block.Cleared += OnBlockCleared;
-            }
+            _currentType = _type;
         }
 
         private void OnBlockCleared(Block sender)
@@ -50,6 +77,8 @@ namespace Blockstacker.Gameplay.Pieces
                 block.Board = board;
             }
         }
-        
+
+        public void RevertType() => Type = _type;
+
     }
 }

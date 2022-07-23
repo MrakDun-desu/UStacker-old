@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Blockstacker.Common.Extensions;
+using Blockstacker.Gameplay.Pieces;
+using Blockstacker.GlobalSettings;
+using Blockstacker.GlobalSettings.Appliers;
 using Blockstacker.GlobalSettings.BlockSkins;
 using Blockstacker.GlobalSettings.Enums;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.Pieces
+namespace Blockstacker.Gameplay.Blocks
 {
     [RequireComponent(typeof(SpriteRenderer))]
     public class BlockSkin : MonoBehaviour
@@ -16,7 +19,7 @@ namespace Blockstacker.Gameplay.Pieces
         private float _switchFrameTime;
         private List<SpriteRecord> _currentSprites = new();
         
-        public Piece Piece { get; set; }
+        public IBlockCollection BlockCollection { get; set; }
         public Board Board { get; set; }
         
         public SkinRecord SkinRecord
@@ -52,14 +55,25 @@ namespace Blockstacker.Gameplay.Pieces
             _renderer.sprite = _currentSprites[newSpriteIndex].Sprite;
         }
 
-        private void RefreshSkin()
+        public void RefreshSkin()
         {
             _switchFrameTime = 1f / SkinRecord.AnimationFps;
             _renderer.sortingOrder = (int) SkinRecord.Layer;
-            
-            if (SkinRecord.RotateWithPiece) return;
-            transform.rotation = Quaternion.Euler(Vector3.zero);
-            Piece.Rotated += ResetRotation;
+
+            if (!SkinRecord.RotateWithPiece)
+            {
+                switch (BlockCollection)
+                {
+                    case Piece piece:
+                        ResetRotation();
+                        piece.Rotated += ResetRotation;
+                        break;
+                    case GhostPiece ghost:
+                        ResetRotation();
+                        ghost.Rendered += ResetRotation;
+                        break;
+                }
+            }
 
             if (!SkinRecord.IsConnected)
             {
@@ -70,9 +84,44 @@ namespace Blockstacker.Gameplay.Pieces
             {
                 PickConnectedPart();
 
-                Piece.Rotated += PickConnectedPart;
+                switch (BlockCollection)
+                {
+                    case Piece piece:
+                        piece.Rotated += PickConnectedPart;
+                        break;
+                    case GhostPiece ghost:
+                        ghost.Rendered += PickConnectedPart;
+                        break;
+                    case WarningPiece warning:
+                        warning.PieceChanged += PickConnectedPart;
+                        break;
+                }
+
                 Board.LinesCleared += PickConnectedPart;
             }
+
+            switch (BlockCollection)
+            {
+                case GhostPiece ghostPiece:
+                {
+                    _renderer.color = _renderer.color.WithAlpha(
+                        AppSettings.Gameplay.GhostPieceVisibility);
+
+                    GhostPieceVisibilityApplier.VisibilityChanged += ChangeAlpha;
+
+                    if (!AppSettings.Gameplay.ColorGhostPiece) return;
+                    ghostPiece.ColorChanged += ChangeColor;
+                    ChangeColor(ghostPiece.CurrentColor);
+                    break;
+                }
+                case BoardGrid:
+                    _renderer.color = _renderer.color.WithAlpha(
+                        AppSettings.Gameplay.GridVisibility);
+
+                    GridVisibilityApplier.VisibilityChanged += ChangeAlpha;
+                    break;
+            }
+
         }
 
         private void PickConnectedPart()
@@ -108,28 +157,60 @@ namespace Blockstacker.Gameplay.Pieces
         {
             var boardTransform = Board.transform;
             var boardScale = boardTransform.localScale;
-            var myPos = transform.position;
-            return myPos + (boardTransform.right * (pos.x * boardScale.x) + boardTransform.up * (pos.y * boardScale.y));
+            var myTransform = transform;
+            var myPos = myTransform.position;
+            return myPos + (myTransform.right * (pos.x * boardScale.x) + myTransform.up * (pos.y * boardScale.y));
         }
 
         private bool MyPieceInPos(Vector2Int pos)
         {
             var checkedPos = Board.WorldSpaceToBoardPosition(RelativePos(pos));
-            return Piece.Blocks.Any(block => Board.WorldSpaceToBoardPosition(block.transform.position) == checkedPos);
+            return BlockCollection.BlockPositions.Any(worldPos => Board.WorldSpaceToBoardPosition(worldPos) == checkedPos);
         }
-        
+
+        #region Event subscriber functions
+
         private void ResetRotation()
         {
             transform.rotation = Quaternion.Euler(Vector3.zero);
         }
 
+        private void ChangeColor(Color color)
+        {
+            _renderer.color = _renderer.color.WithValue(color);
+        }
+
+        private void ChangeAlpha(float alpha)
+        {
+            _renderer.color = _renderer.color.WithAlpha(alpha);
+        }
+        
+        #endregion
+
         private void OnDestroy()
         {
-            if (Piece == null) return;
+            if (Board != null)
+                Board.LinesCleared -= PickConnectedPart;
             
-            Piece.Rotated -= ResetRotation;
-            Piece.Rotated -= PickConnectedPart;
-            Board.LinesCleared -= PickConnectedPart;
+            switch (BlockCollection)
+            {
+                case Piece piece:
+                    piece.Rotated -= ResetRotation;
+                    piece.Rotated -= PickConnectedPart;
+                    break;
+                case GhostPiece ghostPiece:
+                    ghostPiece.ColorChanged -= ChangeColor;
+                    ghostPiece.Rendered -= PickConnectedPart;
+                    ghostPiece.Rendered -= ResetRotation;
+                    GhostPieceVisibilityApplier.VisibilityChanged -= ChangeAlpha;
+                    break;
+                case WarningPiece warningPiece:
+                    warningPiece.PieceChanged -= PickConnectedPart;
+                    break;
+                case BoardGrid:
+                    GridVisibilityApplier.VisibilityChanged -= ChangeAlpha;
+                    break;
+            }
         }
 
     }

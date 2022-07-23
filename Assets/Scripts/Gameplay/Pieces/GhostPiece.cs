@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Common.Extensions;
+using Blockstacker.Gameplay.Blocks;
 using Blockstacker.GameSettings;
 using Blockstacker.GlobalSettings;
 using Blockstacker.GlobalSettings.Appliers;
@@ -8,67 +9,86 @@ using UnityEngine;
 
 namespace Blockstacker.Gameplay.Pieces
 {
-    public class GhostPiece : MonoBehaviour
+    public class GhostPiece : MonoBehaviour, IBlockCollection
     {
-        public List<Transform> Blocks = new();
+        [SerializeField] private List<BlockBase> Blocks = new();
         [SerializeField] private Board _board;
         [SerializeField] private GameSettingsSO _settings;
 
-        private readonly List<SpriteRenderer> _blockRenderers = new();
+        private static readonly Color _defaultColor = Color.white;
         private Piece _activePiece;
+        private Color _currentColor = _defaultColor;
+        private bool _colorGhostPiece;
 
+        public Piece ActivePiece
+        {
+            get => _activePiece;
+            set
+            {
+                if (!_settings.Rules.Controls.ShowGhostPiece) return;
+
+                _activePiece = value;
+                CurrentColor = _activePiece.GhostPieceColor;
+            }
+        }
+
+        public Color CurrentColor
+        {
+            get => _currentColor;
+            private set
+            {
+                var newColor = value;
+                if (!_colorGhostPiece) 
+                    newColor = _defaultColor;
+                if (_currentColor == newColor)
+                    return;
+                _currentColor = newColor;
+                ColorChanged?.Invoke(_currentColor);
+            }
+        }
+
+        public IEnumerable<Vector3> BlockPositions =>
+            Blocks.Select(block => block.transform.position);
+
+        public string Type => "ghost";
+        public event Action<Color> ColorChanged;
+        public event Action Rendered;
+        
         private void Awake()
         {
-            var newAlpha = AppSettings.Gameplay.GhostPieceVisibility;
-            foreach (var spriteRenderer in Blocks.Select(block => block.GetComponentInChildren<SpriteRenderer>()))
+            for (var i = 0; i < Blocks.Count; i++)
             {
-                spriteRenderer.color = spriteRenderer.color.WithAlpha(newAlpha);
-                _blockRenderers.Add(spriteRenderer);
+                var block = Blocks[i];
+                block.Board = _board;
+                block.BlockNumber = (uint)i;
             }
+        }
 
-            GhostPieceVisibilityApplier.VisibilityChanged += ChangeRendererAlphas;
+        private void Start()
+        {
+            if (!_settings.Rules.Controls.ShowGhostPiece)
+                gameObject.SetActive(false);
+
             ColorGhostPieceApplier.ColorGhostPieceChanged += ChangeColoring;
-
-            if (_settings.Rules.Controls.ShowGhostPiece) return;
-            foreach (var block in Blocks) block.gameObject.SetActive(false);
+            ChangeColoring(AppSettings.Gameplay.ColorGhostPiece);
         }
 
-        private void OnDestroy()
+        private void ChangeColoring(bool value)
         {
-            GhostPieceVisibilityApplier.VisibilityChanged -= ChangeRendererAlphas;
-            ColorGhostPieceApplier.ColorGhostPieceChanged -= ChangeColoring;
+            _colorGhostPiece = value;
+            CurrentColor = _defaultColor;
         }
-
-        private void ChangeColoring(bool colorThis)
-        {
-            if (!colorThis) return;
-            foreach (var spriteRenderer in _blockRenderers)
-                spriteRenderer.color = spriteRenderer.color.WithValue(Color.white);
-        }
-
-        private void ChangeRendererAlphas(float newAlpha)
-        {
-            foreach (var spriteRenderer in _blockRenderers)
-                spriteRenderer.color = spriteRenderer.color.WithAlpha(newAlpha);
-        }
-
-        public void SetActivePiece(Piece value)
-        {
-            if (!_settings.Rules.Controls.ShowGhostPiece) return;
-
-            _activePiece = value;
-
-            if (!AppSettings.Gameplay.ColorGhostPiece) return;
-            
-            foreach (var spriteRenderer in _blockRenderers)
-                spriteRenderer.color = spriteRenderer.color.WithValue(_activePiece.GhostPieceColor);
-        }
-
+        
         public void Render()
         {
             if (!_settings.Rules.Controls.ShowGhostPiece) return;
-            transform.position = _activePiece.transform.position;
-            for (var i = 0; i < Blocks.Count; i++) Blocks[i].position = _activePiece.Blocks[i].transform.position;
+            
+            transform.position = ActivePiece.transform.position;
+            for (var i = 0; i < Blocks.Count; i++)
+            {
+                Blocks[i].transform.position = ActivePiece.Blocks[i].transform.position;
+                Blocks[i].transform.rotation = ActivePiece.Blocks[i].transform.rotation;
+            }
 
             var moveVector = Vector2Int.down;
             while (_board.CanPlace(Blocks, moveVector)) moveVector += Vector2Int.down;
@@ -81,6 +101,8 @@ namespace Blockstacker.Gameplay.Pieces
                 piecePosition.y + moveVector.y,
                 piecePosition.z);
             pieceTransform.localPosition = piecePosition;
+            
+            Rendered?.Invoke();
         }
     }
 }

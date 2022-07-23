@@ -35,12 +35,12 @@ namespace Blockstacker.Gameplay.Spins
                     return true;
 
                 if (piece.FullSpinDetectors.All(spinDetector => !board.IsEmpty(spinDetector.position, kick)) ||
-                    _rotationSystem.GetKickTable(piece.PieceType).FullSpinKicks.Contains(kick))
+                    _rotationSystem.GetKickTable(piece.Type).FullSpinKicks.Contains(kick))
                     result.WasSpinRaw = true;
                 else
                     result.WasSpinMiniRaw = true;
 
-                result = CheckSpinResult(result, piece.PieceType);
+                result = CheckSpinResult(result, piece.Type);
 
                 return true;
             }
@@ -57,7 +57,7 @@ namespace Blockstacker.Gameplay.Spins
                     formerResult.WasSpinMini = false;
                     return formerResult;
                 case AllowedSpins.TSpins:
-                    if (pieceType == "TPiece")
+                    if (pieceType == "t")
                     {
                         formerResult.WasSpin = formerResult.WasSpinRaw;
                         formerResult.WasSpinMini = formerResult.WasSpinMiniRaw;
@@ -81,7 +81,7 @@ namespace Blockstacker.Gameplay.Spins
 
         private IEnumerable<Vector2Int> GetKickList(Piece piece, RotateDirection direction)
         {
-            var kickTable = _rotationSystem.GetKickTable(piece.PieceType);
+            var kickTable = _rotationSystem.GetKickTable(piece.Type);
             return direction switch
             {
                 RotateDirection.Clockwise => piece.RotationState switch

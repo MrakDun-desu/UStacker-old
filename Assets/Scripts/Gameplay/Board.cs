@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Common.Extensions;
+using Blockstacker.Gameplay.Blocks;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Spins;
@@ -22,6 +23,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private SpriteRenderer _backgroundRenderer;
         [SerializeField] private Camera _camera;
+        [SerializeField] private WarningPiece _warningPiece;
 
         [Tooltip("Zoom percentage change with one scroll unit")] [Range(0, 1)] [SerializeField]
         private float _boardZoomFactor = .05f;
@@ -31,7 +33,7 @@ namespace Blockstacker.Gameplay
         private readonly List<Block[]> Blocks = new();
 
         private Vector3 _dragStartPosition;
-        private Vector3 _dragStartTransformPosition;
+        private Vector3 _dragStarttransformPosition;
         private uint _height;
         private Vector3 _offset;
         private uint _width;
@@ -40,6 +42,7 @@ namespace Blockstacker.Gameplay
         private uint _currentBackToBack;
         private bool _comboActive;
         private bool _backToBackActive;
+        private float _warningPieceTreshhold;
 
         public uint Width
         {
@@ -47,10 +50,10 @@ namespace Blockstacker.Gameplay
             set
             {
                 _width = value;
-                var myTransform = transform;
-                var myPos = myTransform.position;
-                myTransform.position =
-                    new Vector3(-value * .5f * myTransform.localScale.x + _offset.x, myPos.y, myPos.z);
+                var mytransform = transform;
+                var myPos = mytransform.position;
+                mytransform.position =
+                    new Vector3(-value * .5f * mytransform.localScale.x + _offset.x, myPos.y, myPos.z);
             }
         }
 
@@ -60,10 +63,10 @@ namespace Blockstacker.Gameplay
             set
             {
                 _height = value;
-                var myTransform = transform;
-                var myPos = myTransform.position;
-                myTransform.position =
-                    new Vector3(myPos.x, -value * .5f * myTransform.localScale.y + _offset.y, myPos.z);
+                var mytransform = transform;
+                var myPos = mytransform.position;
+                mytransform.position =
+                    new Vector3(myPos.x, -value * .5f * mytransform.localScale.y + _offset.y, myPos.z);
             }
         }
 
@@ -85,9 +88,11 @@ namespace Blockstacker.Gameplay
 
             ChangeBoardZoom(AppSettings.Gameplay.BoardZoom);
             ChangeVisibility(AppSettings.Gameplay.BoardVisibility);
+            _warningPieceTreshhold = AppSettings.Gameplay.WarningPieceTreshhold;
 
             BoardVisibilityApplier.VisibilityChanged += ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged += ChangeBoardZoom;
+            WarningPieceTreshholdApplier.TreshholdChanged += ChangeWarningPieceTreshhold;
         }
 
         private void Update()
@@ -100,6 +105,23 @@ namespace Blockstacker.Gameplay
         {
             BackgroundVisibilityApplier.VisibilityChanged -= ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged -= ChangeBoardZoom;
+            WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
+        }
+
+        private void ChangeWarningPieceTreshhold(float newTreshhold)
+        {
+            _warningPieceTreshhold = newTreshhold;
+            HandleWarningPiece();
+        }
+
+        private void HandleWarningPiece()
+        {
+            var blockCount = Blocks.Count;
+            var lethalHeight = LethalHeight;
+            if (blockCount + _warningPieceTreshhold >= lethalHeight)
+                _warningPiece.MakeVisible();
+            else
+                _warningPiece.MakeInvisible();
         }
 
         private void ChangeVisibility(float newAlpha)
@@ -132,13 +154,13 @@ namespace Blockstacker.Gameplay
             if (middleButton.wasPressedThisFrame)
             {
                 _dragStartPosition = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
-                _dragStartTransformPosition = transform.position;
+                _dragStarttransformPosition = transform.position;
             }
             else if (middleButton.isPressed)
             {
                 var currentPosition = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
                 var positionDifference = currentPosition - _dragStartPosition;
-                transform.position = _dragStartTransformPosition + positionDifference;
+                transform.position = _dragStarttransformPosition + positionDifference;
                 AppSettings.Gameplay.BoardOffset = CurrentOffset;
                 _offset = CurrentOffset;
             }
@@ -147,9 +169,9 @@ namespace Blockstacker.Gameplay
         private void ChangeBoardZoom(float zoom)
         {
             if (Mathf.Abs(zoom - transform.localScale.x) < .01f) return;
-            var myTransform = transform;
-            myTransform.localScale = new Vector3(zoom, zoom, 1);
-            myTransform.position = new Vector3(-zoom * .5f * Width, -zoom * .5f * Height, 1);
+            var mytransform = transform;
+            mytransform.localScale = new Vector3(zoom, zoom, 1);
+            mytransform.position = new Vector3(-zoom * .5f * Width, -zoom * .5f * Height, 1);
         }
 
         private void ClearLine(int lineNumber)
@@ -233,7 +255,7 @@ namespace Blockstacker.Gameplay
                 Mathf.FloorToInt(localPosition.y));
         }
 
-        public bool IsEmpty(Vector2Int blockPosition)
+        private bool IsEmpty(Vector2Int blockPosition)
         {
             if (blockPosition.x < 0 || blockPosition.x >= Width ||
                 blockPosition.y < 0) return false;
@@ -254,9 +276,9 @@ namespace Blockstacker.Gameplay
             return piece.Blocks.All(block => IsEmpty(block.transform.position, offset));
         }
 
-        public bool CanPlace(IEnumerable<Transform> transforms, Vector2Int offset = new())
+        public bool CanPlace(IEnumerable<BlockBase> blocks, Vector2Int offset = new())
         {
-            return transforms.All(tf => IsEmpty(tf.position, offset));
+            return blocks.All(block => IsEmpty(block.transform.position, offset));
         }
 
         public void Place(Block block)
@@ -295,9 +317,11 @@ namespace Blockstacker.Gameplay
                 LinesCleared = linesCleared, WasAllClear = wasAllClear, Time = placementTime,
                 WasSpin = lastSpinResult.WasSpin, WasSpinMini = lastSpinResult.WasSpinMini,
                 WasSpinRaw = lastSpinResult.WasSpinRaw, WasSpinMiniRaw = lastSpinResult.WasSpinMiniRaw,
-                PieceType = piece.PieceType
+                PieceType = piece.Type
             };
 
+            HandleWarningPiece();
+            
             SendPlacementMessage(piecePlacedMsg);
             
             if (_settings.Rules.BoardDimensions.AllowClutchClears && linesWereCleared) return true;
@@ -330,6 +354,14 @@ namespace Blockstacker.Gameplay
             }
 
             Blocks.Clear();
+        }
+
+        public void ResetB2bAndCombo()
+        {
+            _backToBackActive = false;
+            _currentBackToBack = 0;
+            _comboActive = false;
+            _currentCombo = 0;
         }
     }
 }

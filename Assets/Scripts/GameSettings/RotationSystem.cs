@@ -6,13 +6,13 @@ namespace Blockstacker.GameSettings
     {
         public readonly Dictionary<string, KickTable> KickTables = new()
         {
-            {"IPiece", new KickTable()},
-            {"TPiece", new KickTable()},
-            {"OPiece", new KickTable()},
-            {"JPiece", new KickTable()},
-            {"LPiece", new KickTable()},
-            {"SPiece", new KickTable()},
-            {"ZPiece", new KickTable()},
+            {"t", new KickTable()},
+            {"i", new KickTable()},
+            {"o", new KickTable()},
+            {"l", new KickTable()},
+            {"j", new KickTable()},
+            {"s", new KickTable()},
+            {"z", new KickTable()},
         };
 
         public KickTable DefaultTable = new();

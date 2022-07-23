@@ -78,7 +78,7 @@ namespace Blockstacker.Gameplay
                 }
 
                 _ghostPiece.gameObject.SetActive(true);
-                _ghostPiece.SetActivePiece(value);
+                _ghostPiece.ActivePiece = value;
                 _ghostPiece.Render();
             }
         }
@@ -174,6 +174,8 @@ namespace Blockstacker.Gameplay
             var spawnTime = _settings.Rules.Controls.PiecePlacedDelay;
             if (linesCleared)
                 spawnTime += _settings.Rules.Controls.LineClearDelay;
+            
+            PieceHolder.UnmarkUsed();
 
             _pieceSpawnTime = placementTime + spawnTime;
             ActivePiece = null;
@@ -414,7 +416,7 @@ namespace Blockstacker.Gameplay
 
             var rotatedMessage = new PieceRotatedMessage
             {
-                PieceType = ActivePiece.PieceType,
+                PieceType = ActivePiece.Type,
                 Time = actionTime,
                 WasSpinRaw = _lastSpinResult.WasSpinRaw,
                 WasSpinMiniRaw = _lastSpinResult.WasSpinMiniRaw,
@@ -486,6 +488,9 @@ namespace Blockstacker.Gameplay
             });
 
             var newPiece = PieceHolder.SwapPiece(ActivePiece);
+            if (!_settings.Rules.Controls.UnlimitedHold)
+                PieceHolder.MarkUsed();
+                
             if (newPiece == null)
                 _spawner.SpawnPiece(actionTime);
             else
