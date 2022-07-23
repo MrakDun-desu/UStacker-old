@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _blockNumber: 0
-  _blockSkinPrefab: {fileID: 4485470995567755605, guid: 394ce65bb77d5f6468e62ab063fe7d9b, type: 3}
+  _blockSkinPrefab: {fileID: 8511571351680272736, guid: 6747bb234c733dd4ab34c8f446e952e5, type: 3}
   _skinsParent: {fileID: 2642920995141522598}
 --- !u!1001 &1872332129280914450
 PrefabInstance:
@@ -61,7 +61,7 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 9111377490cd3ef479b4885daae5a992, type: 3}
     - target: {fileID: 251863856023356778, guid: 394ce65bb77d5f6468e62ab063fe7d9b, type: 3}
       propertyPath: m_SortingLayer
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 251863856023356778, guid: 394ce65bb77d5f6468e62ab063fe7d9b, type: 3}
       propertyPath: m_SortingLayerID

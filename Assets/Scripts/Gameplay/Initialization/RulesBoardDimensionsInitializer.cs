@@ -53,10 +53,10 @@ namespace Blockstacker.Gameplay.Initialization
             for (var x = 0; x < boardDimensions.BoardWidth; x++)
             {
                 var gridBlock = Object.Instantiate(
-                    _gridBlock.gameObject,
+                    _gridBlock,
                     _boardGrid.transform,
                     false
-                ).GetComponent<BlockBase>();
+                );
 
                 var blockTransform = gridBlock.transform;
                 blockTransform.localPosition = new Vector3(x + .5f, y + .5f, blockTransform.localPosition.z);

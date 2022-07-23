@@ -8,12 +8,22 @@ namespace Blockstacker.Gameplay.Blocks
     {
         [SerializeField] private UnityEvent _onCleared;
         [SerializeField] private Vector2 _initialPosition;
+        [SerializeField] private BlockSkin[] _normalSkins;
+        [SerializeField] private BlockSkin[] _holdSkins;
 
         public event Action<Block> Cleared;
+
+        private string _originalCollectionType;
 
         private void OnValidate()
         {
             ResetPosition();
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            _originalCollectionType = CollectionType;
         }
 
         private void ResetPosition()
@@ -30,6 +40,31 @@ namespace Blockstacker.Gameplay.Blocks
         {
             _onCleared.Invoke();
             Cleared?.Invoke(this);
+        }
+
+        protected override void UpdateBlockSkin()
+        {
+            if (CollectionType == PieceContainer.USED_HOLD_TYPE)
+                ChangeSkin(true);
+            else if (CollectionType == _originalCollectionType)
+                ChangeSkin(false);
+            else
+                base.UpdateBlockSkin();
+        }
+
+        private void ChangeSkin(bool newIsHold)
+        {
+            if (TryGetSkins(out var newSkins))
+            {
+                ReplaceOldSkins(newSkins);
+                return;
+            }
+
+            foreach (var blockSkin in _holdSkins)
+                blockSkin.gameObject.SetActive(newIsHold);
+
+            foreach (var blockSkin in _normalSkins)
+                blockSkin.gameObject.SetActive(!newIsHold);
         }
     }
 

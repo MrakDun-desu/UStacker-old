@@ -5,7 +5,7 @@ namespace Blockstacker.Gameplay
 {
     public class PieceContainer : MonoBehaviour
     {
-        private const string USED_HOLD_TYPE = "usedHold";
+        public const string USED_HOLD_TYPE = "usedHold";
 
         public const float Width = 6;
         public const float Height = 3;

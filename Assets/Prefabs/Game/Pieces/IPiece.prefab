@@ -242,6 +242,10 @@ PrefabInstance:
       value: IPieceBlock (1)
       objectReference: {fileID: 0}
     - target: {fileID: 7329477014069562552, guid: 454f4f93bac8e3040899fa2c0aa9b09f, type: 3}
+      propertyPath: BlockNumber
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329477014069562552, guid: 454f4f93bac8e3040899fa2c0aa9b09f, type: 3}
       propertyPath: _blockNumber
       value: 1
       objectReference: {fileID: 0}
@@ -322,6 +326,10 @@ PrefabInstance:
       value: IPieceBlock (3)
       objectReference: {fileID: 0}
     - target: {fileID: 7329477014069562552, guid: 454f4f93bac8e3040899fa2c0aa9b09f, type: 3}
+      propertyPath: BlockNumber
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329477014069562552, guid: 454f4f93bac8e3040899fa2c0aa9b09f, type: 3}
       propertyPath: _blockNumber
       value: 3
       objectReference: {fileID: 0}
@@ -400,6 +408,10 @@ PrefabInstance:
     - target: {fileID: 7165901658316098003, guid: 454f4f93bac8e3040899fa2c0aa9b09f, type: 3}
       propertyPath: m_Name
       value: IPieceBlock (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329477014069562552, guid: 454f4f93bac8e3040899fa2c0aa9b09f, type: 3}
+      propertyPath: BlockNumber
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7329477014069562552, guid: 454f4f93bac8e3040899fa2c0aa9b09f, type: 3}
       propertyPath: _blockNumber

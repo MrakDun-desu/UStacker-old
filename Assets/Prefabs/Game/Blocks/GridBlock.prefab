@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _blockNumber: 0
-  _blockSkinPrefab: {fileID: 4589151237188437917, guid: c43aef4c7421453429d35a179cd7f1d5, type: 3}
+  _blockSkinPrefab: {fileID: 8511571351680272736, guid: c43aef4c7421453429d35a179cd7f1d5, type: 3}
   _skinsParent: {fileID: 2909645223224758105}
 --- !u!1001 &4129710802763059756
 PrefabInstance:

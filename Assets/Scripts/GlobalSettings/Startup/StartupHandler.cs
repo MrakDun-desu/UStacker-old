@@ -25,7 +25,7 @@ namespace Blockstacker.GlobalSettings.Startup
                 _loadersActive++;
                 loader.LoadingStarted.AddListener(() =>
                 {
-                    messageText = Instantiate(_loaderMessagePrefab, _loaderMessageParent).GetComponent<TMP_Text>();
+                    messageText = Instantiate(_loaderMessagePrefab, _loaderMessageParent);
                     messageText.text = loader.OngoingMessage;
                 });
                 loader.LoadingFinished.AddListener(() =>

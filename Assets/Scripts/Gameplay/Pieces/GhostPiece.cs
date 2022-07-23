@@ -56,12 +56,19 @@ namespace Blockstacker.Gameplay.Pieces
         
         private void Awake()
         {
-            foreach (var block in Blocks)
+            for (var i = 0; i < Blocks.Count; i++)
             {
+                var block = Blocks[i];
                 block.Board = _board;
+                block.BlockNumber = (uint)i;
             }
-            if (_settings.Rules.Controls.ShowGhostPiece) return;
-            gameObject.SetActive(false);
+        }
+
+        private void Start()
+        {
+            if (!_settings.Rules.Controls.ShowGhostPiece)
+                gameObject.SetActive(false);
+
             ColorGhostPieceApplier.ColorGhostPieceChanged += ChangeColoring;
             ChangeColoring(AppSettings.Gameplay.ColorGhostPiece);
         }

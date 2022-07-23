@@ -41,13 +41,18 @@ namespace Blockstacker.Gameplay.Pieces
         public IEnumerable<Vector3> BlockPositions => 
             Blocks.Select(block => block.transform.position);
 
+        private void Awake()
+        {
+            for (var i = 0; i < Blocks.Count; i++)
+            {
+                var block = Blocks[i];
+                block.Cleared += OnBlockCleared;
+                block.BlockNumber = (uint)i;
+            }
+        }
+
         private void Start()
         {
-            foreach (var block in Blocks)
-            {
-                block.Cleared += OnBlockCleared;
-            }
-
             _currentType = _type;
         }
 

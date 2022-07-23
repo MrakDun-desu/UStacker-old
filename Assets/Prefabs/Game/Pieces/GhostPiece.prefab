@@ -62,13 +62,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6432798660450874880}
     m_Modifications:
-    - target: {fileID: -4081184198196579118, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
-      propertyPath: _blockSkinPrefab
-      value: 
-      objectReference: {fileID: 4589151237188437917, guid: 6747bb234c733dd4ab34c8f446e952e5, type: 3}
     - target: {fileID: 1910952246265164152, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
       propertyPath: m_SortingLayer
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2642920995141522598, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
       propertyPath: m_Name
@@ -144,16 +140,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 6432798660450874880}
     m_Modifications:
     - target: {fileID: -4081184198196579118, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
-      propertyPath: _blockNumber
+      propertyPath: BlockNumber
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -4081184198196579118, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
-      propertyPath: _blockSkinPrefab
-      value: 
-      objectReference: {fileID: 4589151237188437917, guid: 6747bb234c733dd4ab34c8f446e952e5, type: 3}
+      propertyPath: _blockNumber
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1910952246265164152, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
       propertyPath: m_SortingLayer
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2642920995141522598, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
       propertyPath: m_Name
@@ -229,16 +225,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 6432798660450874880}
     m_Modifications:
     - target: {fileID: -4081184198196579118, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
-      propertyPath: _blockNumber
+      propertyPath: BlockNumber
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -4081184198196579118, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
-      propertyPath: _blockSkinPrefab
-      value: 
-      objectReference: {fileID: 4589151237188437917, guid: 6747bb234c733dd4ab34c8f446e952e5, type: 3}
+      propertyPath: _blockNumber
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1910952246265164152, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
       propertyPath: m_SortingLayer
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2642920995141522598, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
       propertyPath: m_Name
@@ -314,16 +310,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 6432798660450874880}
     m_Modifications:
     - target: {fileID: -4081184198196579118, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
-      propertyPath: _blockNumber
+      propertyPath: BlockNumber
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -4081184198196579118, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
-      propertyPath: _blockSkinPrefab
-      value: 
-      objectReference: {fileID: 4589151237188437917, guid: 6747bb234c733dd4ab34c8f446e952e5, type: 3}
+      propertyPath: _blockNumber
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1910952246265164152, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
       propertyPath: m_SortingLayer
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2642920995141522598, guid: b78c6596c01c2a946aab1e1056cb6b29, type: 3}
       propertyPath: m_Name
