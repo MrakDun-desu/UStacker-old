@@ -8,8 +8,7 @@ namespace Blockstacker.Gameplay.Blocks
     {
         [SerializeField] private UnityEvent _onCleared;
         [SerializeField] private Vector2 _initialPosition;
-        [SerializeField] private BlockSkin[] _normalSkins;
-        [SerializeField] private BlockSkin[] _holdSkins;
+        [SerializeField] private GameObject _holdSkinsParent;
 
         public event Action<Block> Cleared;
 
@@ -49,23 +48,22 @@ namespace Blockstacker.Gameplay.Blocks
             else if (CollectionType == _originalCollectionType)
                 ChangeSkin(false);
             else
+            {
                 base.UpdateBlockSkin();
+                _holdSkinsParent.gameObject.SetActive(false);
+                _skinsParent.SetActive(true);
+            }
         }
 
         private void ChangeSkin(bool newIsHold)
         {
             if (TryGetSkins(out var newSkins))
             {
-                ReplaceOldSkins(newSkins);
-                return;
+                ReplaceOldSkins(newSkins, newIsHold ? _holdSkinsParent : _skinsParent);
             }
 
-            foreach (var blockSkin in _holdSkins)
-                blockSkin.gameObject.SetActive(newIsHold);
-
-            foreach (var blockSkin in _normalSkins)
-                blockSkin.gameObject.SetActive(!newIsHold);
+            _skinsParent.SetActive(!newIsHold);
+            _holdSkinsParent.gameObject.SetActive(newIsHold);
         }
     }
-
 }

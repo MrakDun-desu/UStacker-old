@@ -30,7 +30,7 @@ namespace Blockstacker.Gameplay.Blocks
         private void Awake()
         {
             _blockCollection = GetComponentInParent<IBlockCollection>();
-            _defaultSkins = GetComponentsInChildren<BlockSkin>();
+            _defaultSkins = _skinsParent.GetComponentsInChildren<BlockSkin>();
         }
 
         protected virtual void Start()
@@ -42,17 +42,6 @@ namespace Blockstacker.Gameplay.Blocks
         private void OnDestroy()
         {
             SkinLoader.SkinChanged -= UpdateBlockSkin;
-        }
-
-        private void AddNewSkins(IEnumerable<SkinRecord> newSkins)
-        {
-            foreach (var skinRecord in newSkins)
-            {
-                var newSkin = Instantiate(_blockSkinPrefab, _skinsParent.transform);
-                newSkin.Board = Board;
-                newSkin.BlockCollection = _blockCollection;
-                newSkin.SkinRecord = skinRecord;
-            }
         }
 
         protected virtual void UpdateBlockSkin()
@@ -68,7 +57,7 @@ namespace Blockstacker.Gameplay.Blocks
                 return;
             }
 
-            ReplaceOldSkins(newSkins);
+            ReplaceOldSkins(newSkins, _skinsParent);
         }
 
         protected bool TryGetSkins(out SkinRecord[] newSkins)
@@ -80,12 +69,23 @@ namespace Blockstacker.Gameplay.Blocks
             return newSkins.Length != 0;
         }
 
-        protected void ReplaceOldSkins(IEnumerable<SkinRecord> newSkins)
+        protected void ReplaceOldSkins(IEnumerable<SkinRecord> newSkins, GameObject parent)
         {
-            foreach (Transform blockSkin in _skinsParent.transform)
+            foreach (Transform blockSkin in parent.transform)
                 Destroy(blockSkin.gameObject);
             
-            AddNewSkins(newSkins);
+            AddNewSkins(newSkins, parent);
+        }
+
+        private void AddNewSkins(IEnumerable<SkinRecord> newSkins, GameObject parent)
+        {
+            foreach (var skinRecord in newSkins)
+            {
+                var newSkin = Instantiate(_blockSkinPrefab, parent.transform);
+                newSkin.Board = Board;
+                newSkin.BlockCollection = _blockCollection;
+                newSkin.SkinRecord = skinRecord;
+            }
         }
 
     }

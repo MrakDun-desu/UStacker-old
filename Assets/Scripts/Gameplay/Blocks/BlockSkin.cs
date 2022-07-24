@@ -14,8 +14,8 @@ namespace Blockstacker.Gameplay.Blocks
     public class BlockSkin : MonoBehaviour
     {
         [SerializeField] private SkinRecord _skinRecord;
+        [SerializeField] private SpriteRenderer _renderer;
         
-        private SpriteRenderer _renderer;
         private float _switchFrameTime;
         private List<SpriteRecord> _currentSprites = new();
         
@@ -29,11 +29,6 @@ namespace Blockstacker.Gameplay.Blocks
                 _skinRecord = value;
                 RefreshSkin();
             }
-        }
-
-        private void Awake()
-        {
-            _renderer = GetComponent<SpriteRenderer>();
         }
 
         private void Update()
