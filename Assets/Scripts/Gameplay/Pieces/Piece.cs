@@ -5,6 +5,7 @@ using Blockstacker.Gameplay.Blocks;
 using Blockstacker.GameSettings.Enums;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Pool;
 
 namespace Blockstacker.Gameplay.Pieces
 {
@@ -22,8 +23,8 @@ namespace Blockstacker.Gameplay.Pieces
         public UnityEvent PieceCleared;
 
         public event Action Rotated;
+        public ObjectPool<Piece> SourcePool { get; set; }
 
-        private string _currentType;
         public string Type
         {
             get => _currentType;
@@ -37,12 +38,15 @@ namespace Blockstacker.Gameplay.Pieces
                     block.CollectionType = _currentType;
             }
         }
-
         public IEnumerable<Vector3> BlockPositions => 
-            Blocks.Select(block => block.transform.position);
+            _activeTransforms.Select(tf => tf.position);
+
+        private string _currentType;
+        private List<Transform> _activeTransforms = new();
 
         private void Awake()
         {
+            _activeTransforms.AddRange(Blocks.Select(block => block.transform));
             for (var i = 0; i < Blocks.Count; i++)
             {
                 var block = Blocks[i];
@@ -58,10 +62,10 @@ namespace Blockstacker.Gameplay.Pieces
 
         private void OnBlockCleared(Block sender)
         {
-            Blocks.Remove(sender);
+            _activeTransforms.Remove(sender.transform);
             if (Blocks.Count != 0) return;
             PieceCleared.Invoke();
-            Destroy(gameObject);
+            SourcePool.Release(this);
         }
 
         public void Rotate(int rotationAngle)
@@ -80,5 +84,17 @@ namespace Blockstacker.Gameplay.Pieces
 
         public void RevertType() => Type = _type;
 
+        public void ResetState()
+        {
+            gameObject.SetActive(true);
+            foreach (var block in Blocks)
+            {
+                if (!_activeTransforms.Contains(block.transform))
+                    _activeTransforms.Add(block.transform);
+                    
+                block.gameObject.SetActive(true);
+                block.ResetPosition();
+            }
+        }
     }
 }

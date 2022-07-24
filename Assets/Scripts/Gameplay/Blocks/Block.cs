@@ -25,7 +25,7 @@ namespace Blockstacker.Gameplay.Blocks
             _originalCollectionType = CollectionType;
         }
 
-        private void ResetPosition()
+        public void ResetPosition()
         {
             var myTransform = transform;
             myTransform.localPosition = new Vector3(

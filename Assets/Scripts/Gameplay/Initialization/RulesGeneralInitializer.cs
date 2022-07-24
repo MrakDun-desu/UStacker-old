@@ -96,7 +96,7 @@ namespace Blockstacker.Gameplay.Initialization
             }
 
             _spawner.Randomizer = randomizer;
-            _spawner.AvailablePieces = _availablePieces;
+            _spawner.SetAvailablePieces(_availablePieces);
         }
 
         private void InitializePieceContainers()
