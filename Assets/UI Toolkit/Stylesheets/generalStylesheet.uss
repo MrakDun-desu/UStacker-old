@@ -1,0 +1,43 @@
+:root {
+    --control-bg-color: rgba(173, 173, 173, 255);
+    --control-bg-color-focus: rgba(221, 221, 221, 255);
+    --control-bg-color-hover: rgba(204, 204, 204, 255);
+}
+
+.menuRoot {
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+}
+
+.main-menu-title {
+    font-size: 100px;
+    -unity-text-align: upper-center;
+    white-space: nowrap;
+    margin-bottom: 30px;
+    color: rgba(63, 63, 63, 255);
+}
+
+.mainMenuButton {
+    width: 400px;
+    height: 100px;
+    margin-bottom: 50px;
+    font-size: 50px;
+}
+
+.unity-button {
+    background-color: var(--control-bg-color);
+}
+
+.unity-button:focus {
+    background-color: var(--control-bg-color-focus);
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+}
+
+.unity-button:hover {
+    background-color: var(--control-bg-color-hover);
+}
