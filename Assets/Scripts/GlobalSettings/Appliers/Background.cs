@@ -16,9 +16,19 @@ namespace Blockstacker.GlobalSettings.Appliers
         private RawImage _backgroundImage;
         private VideoPlayer _videoPlayer;
         private Texture _defaultTexture;
+        private float _widthToHeightRatio = 16f / 9f;
+        private float _heightToWidthRatio = 9f / 16f;
+        private Camera _camera;
+        private RectTransform _myTransform;
+        private float _lastFrameRatio;
+
+        private const float REFERENCE_WIDTH = 1920f;
+        private const float REFERENCE_HEIGHT = 1080f;
 
         private void Awake()
         {
+            _camera = FindObjectOfType<Camera>();
+            _myTransform = GetComponent<RectTransform>();
             _backgroundImage = GetComponent<RawImage>();
             _videoPlayer = GetComponent<VideoPlayer>();
             _defaultTexture = _backgroundImage.texture;
@@ -59,18 +69,57 @@ namespace Blockstacker.GlobalSettings.Appliers
 
             var index = Random.Range(0, newBackgrounds.Count);
             var newBackground = newBackgrounds[index];
+            Texture newTexture;
             switch (newBackground.Type)
             {
                 case BackgroundType.Video:
                     _videoPlayer.url = $"file://{newBackground.VideoPath}";
-                    _backgroundImage.texture = _videoPlayer.targetTexture;
+                    newTexture = _videoPlayer.targetTexture;
+                    _backgroundImage.texture = newTexture;
                     _videoPlayer.Play();
                     break;
                 case BackgroundType.Texture:
+                    newTexture = newBackground.Texture;
                     _backgroundImage.texture = newBackground.Texture;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+
+            if (newTexture is null) return;
+
+            _widthToHeightRatio = (float) newTexture.width / newTexture.height;
+            _heightToWidthRatio = (float) newTexture.height / newTexture.width;
+
+            UpdateBackgroundSize((float) _camera.pixelWidth / _camera.pixelHeight);
+        }
+
+        private void Update()
+        {
+            var realWidthToHeightRatio = (float) _camera.pixelWidth / _camera.pixelHeight;
+
+            if (Mathf.Abs(realWidthToHeightRatio - _lastFrameRatio) < .001f)
+                return;
+
+            _lastFrameRatio = realWidthToHeightRatio;
+            UpdateBackgroundSize(realWidthToHeightRatio);
+        }
+
+        private void UpdateBackgroundSize(float realRatio)
+        {
+            if (realRatio > _widthToHeightRatio)
+            {
+                var newWidth = REFERENCE_WIDTH * realRatio / _widthToHeightRatio;
+                _myTransform.sizeDelta = new Vector2(
+                    newWidth,
+                    newWidth * _heightToWidthRatio);
+            }
+            else
+            {
+                var newHeight = REFERENCE_HEIGHT / _heightToWidthRatio / realRatio;
+                _myTransform.sizeDelta = new Vector2(
+                    newHeight * _widthToHeightRatio,
+                    newHeight);
             }
         }
     }

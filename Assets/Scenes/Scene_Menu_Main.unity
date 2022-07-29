@@ -1094,27 +1094,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3029180447029622579, guid: 1d529d5c22e6b9f45be37609b276dec9, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3029180447029622579, guid: 1d529d5c22e6b9f45be37609b276dec9, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3029180447029622579, guid: 1d529d5c22e6b9f45be37609b276dec9, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3029180447029622579, guid: 1d529d5c22e6b9f45be37609b276dec9, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3029180447029622579, guid: 1d529d5c22e6b9f45be37609b276dec9, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 1920
       objectReference: {fileID: 0}
     - target: {fileID: 3029180447029622579, guid: 1d529d5c22e6b9f45be37609b276dec9, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 1080
       objectReference: {fileID: 0}
     - target: {fileID: 3029180447029622579, guid: 1d529d5c22e6b9f45be37609b276dec9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1170,11 +1170,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d529d5c22e6b9f45be37609b276dec9, type: 3}
---- !u!224 &1681976418 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 3029180447029622579, guid: 1d529d5c22e6b9f45be37609b276dec9, type: 3}
-  m_PrefabInstance: {fileID: 1681976417}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1682779557
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1277,13 +1272,13 @@ RectTransform:
   - {fileID: 610878767}
   - {fileID: 895243303}
   - {fileID: 847452244}
-  m_Father: {fileID: 1681976418}
-  m_RootOrder: 0
+  m_Father: {fileID: 8692974509622913042}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -675.90356, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2015324362
 CanvasRenderer:
