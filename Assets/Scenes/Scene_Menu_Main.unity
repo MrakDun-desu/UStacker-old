@@ -200,7 +200,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1423481496248963441, guid: 97ec1e8a66186ba4cb7717e90c5e5c9a, type: 3}
       propertyPath: m_Name
-      value: Background
+      value: BackgroundDocument
       objectReference: {fileID: 0}
     - target: {fileID: 1423481496248963444, guid: 97ec1e8a66186ba4cb7717e90c5e5c9a, type: 3}
       propertyPath: m_RootOrder
@@ -245,6 +245,10 @@ PrefabInstance:
     - target: {fileID: 1423481496248963444, guid: 97ec1e8a66186ba4cb7717e90c5e5c9a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1423481496248963446, guid: 97ec1e8a66186ba4cb7717e90c5e5c9a, type: 3}
+      propertyPath: _backgroundName
+      value: mainMenu
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97ec1e8a66186ba4cb7717e90c5e5c9a, type: 3}

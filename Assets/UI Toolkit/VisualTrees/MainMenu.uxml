@@ -1,15 +1,9 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements"
-         xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements"
-         noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI%20Toolkit/base.uss?fileID=7433441132597879392&amp;guid=281d7450d4ccb734189462bb4a995285&amp;type=3#base"/>
-    <ui:VisualElement name="root" class="menuRoot">
-        <ui:Label text="BlockStacker-desu" display-tooltip-when-elided="false" name="title" enable-rich-text="false"
-                  class="main-menu-title"/>
-        <ui:Button text="Play" display-tooltip-when-elided="true" binding-path=".mainMenuButton" name="playButton"
-                   tooltip="Start the game" class="mainMenuButton first-focused"/>
-        <ui:Button text="Settings" display-tooltip-when-elided="true" binding-path=".mainMenuButton"
-                   name="settingsButton" class="mainMenuButton"/>
-        <ui:Button text="Exit Game" display-tooltip-when-elided="true" binding-path=".mainMenuButton" name="exitButton"
-                   class="mainMenuButton" style="width: 300px; height: 70px; font-size: 40px;"/>
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/generalStylesheet.uss?fileID=7433441132597879392&amp;guid=281d7450d4ccb734189462bb4a995285&amp;type=3#generalStylesheet" />
+    <ui:VisualElement name="root" class="menu-root">
+        <ui:Label text="BlockStacker-desu" display-tooltip-when-elided="false" name="title" enable-rich-text="false" class="main-menu-title" />
+        <ui:Button text="Play" display-tooltip-when-elided="true" binding-path=".mainMenuButton" name="playButton" tooltip="Start the game" class="first-focused main-menu-button" />
+        <ui:Button text="Settings" display-tooltip-when-elided="true" binding-path=".mainMenuButton" name="settingsButton" class="main-menu-button" />
+        <ui:Button text="Exit Game" display-tooltip-when-elided="true" binding-path=".mainMenuButton" name="exitButton" class="main-menu-button" style="width: 300px; height: 70px; font-size: 40px;" />
     </ui:VisualElement>
 </ui:UXML>

@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/generalStylesheet.uss?fileID=7433441132597879392&amp;guid=281d7450d4ccb734189462bb4a995285&amp;type=3#generalStylesheet" />
+    <ui:VisualElement name="root" class="menu-root">
+        <ui:Label text="Settings" display-tooltip-when-elided="true" name="sceneTitle" class="settings-scene-title" />
+        <ui:VisualElement name="buttonsContainer" style="flex-wrap: wrap; max-height: 59%; flex-direction: row; width: 800px; justify-content: space-around; align-items: center; margin-bottom: 50px;">
+            <ui:Button text="Controls" display-tooltip-when-elided="true" name="controlsButton" class="global-settings-button" />
+            <ui:Button text="Handling" display-tooltip-when-elided="true" name="handlingButton" class="global-settings-button" />
+            <ui:Button text="Sound" display-tooltip-when-elided="true" name="soundButton" class="global-settings-button" />
+            <ui:Button text="Video" display-tooltip-when-elided="true" name="videoButton" class="global-settings-button" />
+            <ui:Button text="Gameplay" display-tooltip-when-elided="true" name="gameplayButton" enable-rich-text="true" class="global-settings-button" />
+            <ui:Button text="Customization" display-tooltip-when-elided="true" name="customizationButton" class="global-settings-button" />
+            <ui:Button text="Export/Import" display-tooltip-when-elided="true" name="exportImportButton" class="global-settings-button" />
+            <ui:Button text="Others" display-tooltip-when-elided="true" name="othersButton" class="global-settings-button" />
+        </ui:VisualElement>
+        <ui:Button text="Back" display-tooltip-when-elided="true" name="backButton" style="width: 120px; height: 40px; font-size: 16px;" />
+    </ui:VisualElement>
+</ui:UXML>
