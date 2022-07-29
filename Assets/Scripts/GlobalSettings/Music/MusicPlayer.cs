@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Common;
 using Blockstacker.Common.Extensions;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,6 +13,7 @@ namespace Blockstacker.GlobalSettings.Music
     [RequireComponent(typeof(AudioSource))]
     public class MusicPlayer : MonoSingleton<MusicPlayer>
     {
+        [ContextMenuItem("Copy JSON to clipboard", nameof(CopyToClipboard))]
         [SerializeField] private MusicConfiguration _musicConfiguration;
         [Range(0, 10)] [SerializeField] private float _switchInterval;
         [Range(0, 10)] [SerializeField] private float _quietenTime = 1f;
@@ -27,6 +29,12 @@ namespace Blockstacker.GlobalSettings.Music
         private float _nextSongStartTime;
         private float _timeUntilQuiet;
 
+        private void CopyToClipboard()
+        {
+            var output = JsonConvert.SerializeObject(_musicConfiguration, StaticSettings.JsonSerializerSettings);
+            GUIUtility.systemCopyBuffer = output;
+        }
+        
         public static List<MusicOption> ListAvailableOptions()
         {
             var outList =
@@ -66,7 +74,7 @@ namespace Blockstacker.GlobalSettings.Music
 
                 return;
             }
-
+            
             switch (customGameMusic.OptionType)
             {
                 case OptionType.Track:
@@ -119,14 +127,16 @@ namespace Blockstacker.GlobalSettings.Music
             base.Awake();
             _audioSource = GetComponent<AudioSource>();
             Configuration = _musicConfiguration;
-
-            SceneManager.sceneLoaded += OnSceneChanged;
+            Configuration.SetDefaultMusic(_defaultMusic.Select(entry => entry.Key).ToList());
         }
 
         public void Start()
         {
+            SceneManager.sceneLoaded += OnSceneChanged;
             if (Configuration.MenuMusic.TryGetRandomElement(out var nextTrack))
                 PlayNextTrack(nextTrack);
+
+            SoundPackLoader.SoundPackChanged += () => PlayTrackByScene(_currentSceneType);
         }
 
         private void PlayNextTrack(string trackName)
@@ -171,13 +181,19 @@ namespace Blockstacker.GlobalSettings.Music
 
             StartCoroutine(MuteSourceOverTime());
 
-            if (newScene.name.StartsWith(MENU_STRING))
+            PlayTrackByScene(newScene.name);
+        }
+
+        private void PlayTrackByScene(string sceneName)
+        {
+            
+            if (sceneName.StartsWith(MENU_STRING))
             {
                 if (Configuration.MenuMusic.TryGetRandomElement(out var nextTrack))
                     PlayNextTrack(nextTrack);
                 _currentSceneType = MENU_STRING;
             }
-            else if (newScene.name.StartsWith(GAME_STRING))
+            else if (sceneName.StartsWith(GAME_STRING))
             {
                 // game scenes handle music playing by themselves
                 _currentSceneType = GAME_STRING;

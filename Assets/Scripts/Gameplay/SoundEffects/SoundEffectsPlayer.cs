@@ -20,16 +20,25 @@ namespace Blockstacker.Gameplay.SoundEffects
         private readonly Dictionary<string, Type> RegisterableEvents = new()
         {
             {
-                "PieceSpawned", typeof(PieceSpawnedMessage)
-            },
-            {
                 "CountdownTicked", typeof(CountdownTickedMessage)
             },
             {
-                "PiecePlaced", typeof(PiecePlacedMessage)
+                "GameEnded", typeof(GameEndedMessage)
             },
             {
-                "PieceMoved", typeof(PieceMovedMessage)
+                "GameLost", typeof(GameLostMessage)
+            },
+            {
+                "GamePaused", typeof(GamePausedMessage)
+            },
+            {
+                "GameRestarted", typeof(GameRestartedMessage)
+            },
+            {
+                "GameResumed", typeof(GameResumedMessage)
+            },
+            {
+                "GameStarted", typeof(GameStartedMessage)
             },
             {
                 "HoldUsed", typeof(HoldUsedMessage)
@@ -38,22 +47,16 @@ namespace Blockstacker.Gameplay.SoundEffects
                 "InputAction", typeof(InputActionMessage)
             },
             {
+                "PieceMoved", typeof(PieceMovedMessage)
+            },
+            {
+                "PiecePlaced", typeof(PiecePlacedMessage)
+            },
+            {
                 "PieceRotated", typeof(PieceRotatedMessage)
             },
             {
-                "GameLost", typeof(GameLostMessage)
-            },
-            {
-                "GameEnded", typeof(GameEndedMessage)
-            },
-            {
-                "GamePaused", typeof(GamePausedMessage)
-            },
-            {
-                "GameResumed", typeof(GameResumedMessage)
-            },
-            {
-                "GameStarted", typeof(GameResumedMessage)
+                "PieceSpawned", typeof(PieceSpawnedMessage)
             },
         };
 

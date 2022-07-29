@@ -41,6 +41,7 @@ namespace Blockstacker.Gameplay
             if (_gameLost || _gameEnded)
                 GameRestartAfterEnd();
             _gameRunning = true;
+            _mediator.Send(new GameStartedMessage());
             GameStarted.Invoke();
         }
 

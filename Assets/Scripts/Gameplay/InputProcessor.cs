@@ -129,8 +129,8 @@ namespace Blockstacker.Gameplay
             {
                 var wasSoftDrop = !wasHardDrop && _effectiveDropTime < _normalDropTime;
 
-                var hitWall = !_board.CanPlace(ActivePiece, Vector2Int.left) ||
-                              !_board.CanPlace(ActivePiece, Vector2Int.right);
+                var hitWall = moveVector.x != 0 && (!_board.CanPlace(ActivePiece, Vector2Int.left) ||
+                              !_board.CanPlace(ActivePiece, Vector2Int.right));
 
                 _mediator.Send(new PieceMovedMessage
                 {

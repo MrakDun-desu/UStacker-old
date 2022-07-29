@@ -11,8 +11,8 @@ namespace Blockstacker.GlobalSettings.Music
 {
     public static class SoundPackLoader
     {
-        public static Dictionary<string, AudioClip> Music = new();
-        public static Dictionary<string, AudioClip> SoundEffects = new();
+        public static readonly Dictionary<string, AudioClip> Music = new();
+        public static readonly Dictionary<string, AudioClip> SoundEffects = new();
 
         public static string SoundEffectsScript;
 
