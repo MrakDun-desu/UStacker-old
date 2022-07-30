@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockstacker.Common.Alerts;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.GlobalSettings.Music;
 using NLua;
@@ -69,8 +70,9 @@ namespace Blockstacker.Gameplay.SoundEffects
         {
             if (string.IsNullOrEmpty(SoundPackLoader.SoundEffectsScript))
                 RegisterDefaultFunctions();
-            else
-                RegisterCustomFunctions();
+            
+            if (!TryRegisterCustomFunctions())
+                RegisterDefaultFunctions();
         }
 
         private void RegisterDefaultFunctions()
@@ -85,23 +87,30 @@ namespace Blockstacker.Gameplay.SoundEffects
             _mediator.Register<GameEndedMessage>(_ => TryPlayClip("finish"));
         }
 
-        private void RegisterCustomFunctions()
+        private bool TryRegisterCustomFunctions()
         {
-            
+            _luaState = new Lua();
             LuaTable events = null;
             try
             {
-                if (_luaState.DoString(SoundPackLoader.SoundEffectsScript)[0] is LuaTable eventTable)
+                var registeredEvents = _luaState.DoString(SoundPackLoader.SoundEffectsScript);
+                if (registeredEvents.Length == 0) return false;
+                if (registeredEvents[0] is LuaTable eventTable)
                 {
                     events = eventTable;
                 }
             }
             catch (LuaException ex)
             {
-                Debug.Log(ex.Message);
+                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                    "Error reading sound effects script!",
+                    $"Switching to default sound effects.\nLua error: {ex.Message}",
+                    AlertType.Error
+                    ));
+                return false;
             }
 
-            if (events is null) return;
+            if (events is null) return false;
             
             foreach (var entry in RegisterableEvents)
             {
@@ -116,7 +125,11 @@ namespace Blockstacker.Gameplay.SoundEffects
                     }
                     catch (LuaException ex)
                     {
-                        Debug.Log(ex.Message);
+                        _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                            "Error executing user code!",
+                            $"Error executing sound effects script.\nLua error: {ex.Message}",
+                            AlertType.Error
+                            ));
                     }
 
                     if (output is null) return;
@@ -131,6 +144,8 @@ namespace Blockstacker.Gameplay.SoundEffects
 
                 _mediator.Register((Action<Message>) Action, entry.Value);
             }
+
+            return true;
         }
 
         private void HandleHoldUsed(HoldUsedMessage message)
@@ -252,7 +267,11 @@ namespace Blockstacker.Gameplay.SoundEffects
             else if (_defaultEffects.TryGetValue(clipName, out clip))
                 _audioSource.PlayOneShot(clip);
             else
-                Debug.Log($"Clip {clipName} not found!");
+                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                    "Clip not found!",
+                    $"Sound effect with a name {clipName} was not found.",
+                    AlertType.Warning
+                    ));
         }
     }
 }

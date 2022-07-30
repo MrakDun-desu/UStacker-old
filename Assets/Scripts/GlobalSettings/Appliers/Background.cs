@@ -98,7 +98,7 @@ namespace Blockstacker.GlobalSettings.Appliers
         {
             var realWidthToHeightRatio = (float) _camera.pixelWidth / _camera.pixelHeight;
 
-            if (Mathf.Abs(realWidthToHeightRatio - _lastFrameRatio) < .001f)
+            if (Math.Abs(realWidthToHeightRatio - _lastFrameRatio) < 0.000000001f)
                 return;
 
             _lastFrameRatio = realWidthToHeightRatio;
@@ -109,17 +109,16 @@ namespace Blockstacker.GlobalSettings.Appliers
         {
             if (realRatio > _widthToHeightRatio)
             {
-                var newWidth = REFERENCE_WIDTH * realRatio / _widthToHeightRatio;
+                var newWidth = REFERENCE_WIDTH * realRatio * _heightToWidthRatio;
                 _myTransform.sizeDelta = new Vector2(
                     newWidth,
                     newWidth * _heightToWidthRatio);
             }
             else
             {
-                var newHeight = REFERENCE_HEIGHT / _heightToWidthRatio / realRatio;
                 _myTransform.sizeDelta = new Vector2(
-                    newHeight * _widthToHeightRatio,
-                    newHeight);
+                    REFERENCE_HEIGHT * _widthToHeightRatio,
+                    REFERENCE_HEIGHT);
             }
         }
     }

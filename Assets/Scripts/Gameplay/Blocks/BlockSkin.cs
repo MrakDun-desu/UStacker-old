@@ -121,26 +121,26 @@ namespace Blockstacker.Gameplay.Blocks
 
         private void PickConnectedPart()
         {
-            var edges = ConnectedEdges.None;
+            var edges = Edges.None;
             if (!MyPieceInPos(Vector2Int.right))
-                edges |= ConnectedEdges.Right;
+                edges |= Edges.Right;
             if (!MyPieceInPos(Vector2Int.left))
-                edges |= ConnectedEdges.Left;
+                edges |= Edges.Left;
             if (!MyPieceInPos(Vector2Int.up))
-                edges |= ConnectedEdges.Top;
+                edges |= Edges.Top;
             if (!MyPieceInPos(Vector2Int.down))
-                edges |= ConnectedEdges.Bottom;
+                edges |= Edges.Bottom;
             
             if (!MyPieceInPos(new Vector2Int(1,1)) && MyPieceInPos(Vector2Int.up) && MyPieceInPos(Vector2Int.right))
-                edges |= ConnectedEdges.TopRight;
+                edges |= Edges.TopRight;
             if (!MyPieceInPos(new Vector2Int(-1,1)) && MyPieceInPos(Vector2Int.up) && MyPieceInPos(Vector2Int.left))
-                edges |= ConnectedEdges.TopLeft;
+                edges |= Edges.TopLeft;
             if (!MyPieceInPos(new Vector2Int(1,-1)) && MyPieceInPos(Vector2Int.down) && MyPieceInPos(Vector2Int.right))
-                edges |= ConnectedEdges.BottomRight;
+                edges |= Edges.BottomRight;
             if (!MyPieceInPos(new Vector2Int(-1, -1)) && MyPieceInPos(Vector2Int.down) && MyPieceInPos(Vector2Int.left))
-                edges |= ConnectedEdges.BottomLeft;
+                edges |= Edges.BottomLeft;
 
-            var connectedSprite = SkinRecord.ConnectedSprites.Find(sprite => sprite.ConnectedEdges == edges);
+            var connectedSprite = SkinRecord.ConnectedSprites.Find(sprite => sprite.Edges == edges);
             if (connectedSprite is null)
                 return;
             

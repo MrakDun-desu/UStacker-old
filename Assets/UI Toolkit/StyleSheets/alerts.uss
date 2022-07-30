@@ -1,0 +1,73 @@
+.alert-control {
+    width: 100%;
+    transition-duration: 0.6s;
+    opacity: 1;
+}
+
+.alert-control.added {
+    opacity: 0;
+    translate: 0 100px;
+}
+
+.alert-control.removed {
+    opacity: 0;
+    translate: 0 -100px;
+}
+
+.alert-control #parent {
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.alert-control .alert-title {
+    padding: 5px 10px;
+    font-size: 18px;
+    border-radius: 5px;
+}
+
+.alert-control .alert-text {
+    white-space: normal;
+}
+
+.alert-control .alert-info {
+    background-color: rgb(155, 155, 155);
+}
+
+.alert-info .alert-title {
+    background-color: rgb(197, 197, 197);
+}
+
+.alert-control .alert-success {
+    background-color: rgb(54, 173, 67);
+}
+
+.alert-success .alert-title {
+    background-color: rgb(81, 255, 99);
+}
+
+.alert-control .alert-warning {
+    background-color: rgb(239, 164, 62);
+}
+
+.alert-warning .alert-title {
+    background-color: rgb(255, 190, 102);
+}
+
+.alert-control .alert-error {
+    background-color: rgb(168, 28, 28);
+}
+
+.alert-error .alert-title {
+    background-color: rgb(239, 33, 33);
+}
+
+#alertField {
+    justify-content: flex-end;
+    align-items: flex-end;
+    flex-direction: column;
+    margin: 50px;
+    width: 350px;
+    opacity: 1;
+    height: auto;
+    min-height: 99px;
+}

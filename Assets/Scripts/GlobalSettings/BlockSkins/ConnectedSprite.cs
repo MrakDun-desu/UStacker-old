@@ -7,7 +7,7 @@ namespace Blockstacker.GlobalSettings.BlockSkins
     [Serializable]
     public class ConnectedSprite
     {
-        public ConnectedEdges ConnectedEdges;
+        public Edges Edges;
         public List<SpriteRecord> Sprites = new();
     }
 }

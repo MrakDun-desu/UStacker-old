@@ -3,7 +3,7 @@
 namespace Blockstacker.GlobalSettings.Enums
 {
     [Flags]
-    public enum ConnectedEdges : byte
+    public enum Edges : byte
     {
         None =        0b00000000, // 0
         Top =         0b00000001, // 1
@@ -14,6 +14,5 @@ namespace Blockstacker.GlobalSettings.Enums
         TopRight =    0b00100000, // 32
         BottomLeft =  0b01000000, // 64
         BottomRight = 0b10000000, // 128
-        All =         0b00001111
     }
 }

@@ -6,7 +6,7 @@ namespace Blockstacker.GlobalSettings.BlockSkins
     [Serializable]
     public class SkinRecord
     {
-        public string PieceType = "IPiece";
+        public string SkinType = "i";
         public uint[] BlockNumbers =
         {
             0u,
@@ -14,11 +14,11 @@ namespace Blockstacker.GlobalSettings.BlockSkins
             2u,
             3u
         };
-        public List<ConnectedSprite> ConnectedSprites = new();
-        public uint Layer;
+        public int Layer;
         public bool IsConnected;
         public bool RotateWithPiece;
         public float AnimationFps = 60f;
         public List<SpriteRecord> Sprites = new();
+        public List<ConnectedSprite> ConnectedSprites = new();
     }
 }

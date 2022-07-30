@@ -63,7 +63,7 @@ namespace Blockstacker.Gameplay.Blocks
         protected bool TryGetSkins(out SkinRecord[] newSkins)
         {
             newSkins = SkinLoader.SkinRecords
-                .Where(record => record.PieceType == CollectionType && record.BlockNumbers.Contains(BlockNumber))
+                .Where(record => record.SkinType == CollectionType && record.BlockNumbers.Contains(BlockNumber))
                 .ToArray();
 
             return newSkins.Length != 0;

@@ -4,7 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockstacker.Common;
+using Blockstacker.Common.Alerts;
 using Newtonsoft.Json;
+using NLua;
+using NLua.Exceptions;
 using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Music
@@ -25,10 +28,6 @@ namespace Blockstacker.GlobalSettings.Music
                 : Array.Empty<string>();
         }
 
-        /// <summary>
-        /// Reloads music, sound effects, menu sounds and sound effects script.
-        /// </summary>
-        /// <param name="path">Name of the soundpack directory to load from</param>
         public static async Task Reload(string path)
         {
             if (!Directory.Exists(path)) return;
@@ -51,13 +50,27 @@ namespace Blockstacker.GlobalSettings.Music
             if (!File.Exists(scriptPath))
                 return;
             
-            // TODO add script validation here
             SoundEffectsScript = await File.ReadAllTextAsync(scriptPath);
+            var lua = new Lua();
+            try
+            {
+                lua.DoString(SoundEffectsScript);
+            }
+            catch (LuaException ex)
+            {
+                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                    "Error loading script!",
+                    $"Error loading sound effects script.\nLua error: {ex.Message}",
+                    AlertType.Error));
+                SoundEffectsScript = null;
+            }
         }
 
         private static async Task LoadMusicAsync(string path)
         {
             await LoadClipsFromDirectoryAsync(path, Music);
+            
+            MusicPlayer.Configuration.GameMusic.AddRange(Music.Keys);
             
             var confPath = Path.Combine(path, CustomizationPaths.MusicConfFile);
             if (!File.Exists(confPath))
@@ -67,8 +80,6 @@ namespace Blockstacker.GlobalSettings.Music
             var musicConf = JsonConvert.DeserializeObject<MusicConfiguration>(musicConfStr, StaticSettings.JsonSerializerSettings);
             
             MusicPlayer.Configuration.Rewrite(musicConf);
-
-
         }
 
         private static async Task LoadClipsFromDirectoryAsync(string path, IDictionary<string, AudioClip> target)

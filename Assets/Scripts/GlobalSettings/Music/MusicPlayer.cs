@@ -62,6 +62,7 @@ namespace Blockstacker.GlobalSettings.Music
             else return;
             _audioSource.volume = 1;
             ResumeNormalPlaying();
+
         }
 
         public void PlayCustomGameTrackImmediate()
