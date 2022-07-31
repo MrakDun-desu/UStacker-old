@@ -53,7 +53,7 @@ namespace Blockstacker.Gameplay.Blocks
         public void RefreshSkin()
         {
             _switchFrameTime = 1f / SkinRecord.AnimationFps;
-            _renderer.sortingOrder = (int) SkinRecord.Layer;
+            _renderer.sortingOrder = SkinRecord.Layer;
 
             if (!SkinRecord.RotateWithPiece)
             {
@@ -92,7 +92,8 @@ namespace Blockstacker.Gameplay.Blocks
                         break;
                 }
 
-                Board.LinesCleared += PickConnectedPart;
+                if (BlockCollection is not BoardGrid)
+                    Board.LinesCleared += PickConnectedPart;
             }
 
             switch (BlockCollection)
@@ -118,6 +119,27 @@ namespace Blockstacker.Gameplay.Blocks
             }
 
         }
+        
+        private Vector3 RelativePos(Vector2Int pos)
+        {
+            var boardScale = Board.transform.localScale;
+            var myTransform = transform;
+            var myPos = myTransform.position;
+            return myPos + (myTransform.right * (pos.x * boardScale.x) + myTransform.up * (pos.y * boardScale.y));
+        }
+
+        private bool MyPieceInPos(Vector2Int pos)
+        {
+            var checkedPos = RelativePos(pos);
+            return BlockCollection.BlockPositions.Any(worldPos => AreClose(worldPos, checkedPos));
+        }
+
+        private bool AreClose(Vector3 pos1, Vector3 pos2)
+        {
+            return (pos1 - pos2).sqrMagnitude < Mathf.Pow(Board.transform.localScale.x, 2) * .5f;
+        }
+
+        #region Event subscriber functions
 
         private void PickConnectedPart()
         {
@@ -147,23 +169,6 @@ namespace Blockstacker.Gameplay.Blocks
             _currentSprites = connectedSprite.Sprites;
             Update();
         }
-
-        private Vector3 RelativePos(Vector2Int pos)
-        {
-            var boardTransform = Board.transform;
-            var boardScale = boardTransform.localScale;
-            var myTransform = transform;
-            var myPos = myTransform.position;
-            return myPos + (myTransform.right * (pos.x * boardScale.x) + myTransform.up * (pos.y * boardScale.y));
-        }
-
-        private bool MyPieceInPos(Vector2Int pos)
-        {
-            var checkedPos = Board.WorldSpaceToBoardPosition(RelativePos(pos));
-            return BlockCollection.BlockPositions.Any(worldPos => Board.WorldSpaceToBoardPosition(worldPos) == checkedPos);
-        }
-
-        #region Event subscriber functions
 
         private void ResetRotation()
         {

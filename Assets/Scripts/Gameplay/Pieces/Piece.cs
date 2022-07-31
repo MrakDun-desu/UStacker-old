@@ -22,9 +22,12 @@ namespace Blockstacker.Gameplay.Pieces
         public Transform[] FullSpinDetectors = Array.Empty<Transform>();
         public UnityEvent PieceCleared;
 
+        private string _currentType;
+        private readonly List<Transform> _activeTransforms = new();
         public event Action Rotated;
+        
         public ObjectPool<Piece> SourcePool { get; set; }
-
+        
         public string Type
         {
             get => _currentType;
@@ -40,9 +43,6 @@ namespace Blockstacker.Gameplay.Pieces
         }
         public IEnumerable<Vector3> BlockPositions => 
             _activeTransforms.Select(tf => tf.position);
-
-        private string _currentType;
-        private List<Transform> _activeTransforms = new();
 
         private void Awake()
         {
@@ -94,6 +94,15 @@ namespace Blockstacker.Gameplay.Pieces
                     
                 block.gameObject.SetActive(true);
                 block.ResetPosition();
+            }
+        }
+
+        [ContextMenu("Log block positions")]
+        private void LogBlockPositions()
+        {
+            foreach (var block in Blocks.Where(block => _activeTransforms.Contains(block.transform)))
+            {
+                Debug.Log(block.Board.WorldSpaceToBoardPosition(block.transform.position));
             }
         }
     }

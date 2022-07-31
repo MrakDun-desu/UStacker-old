@@ -48,6 +48,7 @@ namespace Blockstacker.Gameplay
             var swappedPiece = GetPieceFromPool(nextIndex);
             swappedPiece.SetBoard(_board);
             var nextPiece = _previews.AddPiece(swappedPiece);
+            swappedPiece.Rotate(360);
 
             SpawnPiece(nextPiece, spawnTime);
         }

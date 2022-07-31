@@ -22,10 +22,10 @@ namespace Blockstacker.GlobalSettings.Music
 
         public void Rewrite(MusicConfiguration other)
         {
+            UpdateGroup(GameMusic, other.GameMusic, false);
             UpdateGroup(MenuMusic, other.MenuMusic);
             UpdateGroup(VictoryMusic, other.VictoryMusic);
             UpdateGroup(LossMusic, other.LossMusic);
-            UpdateGroup(GameMusic, other.GameMusic);
 
             if (other.GameMusicGroups.Count == 0) return;
             
@@ -45,15 +45,20 @@ namespace Blockstacker.GlobalSettings.Music
 
         }
 
-        private void UpdateGroup(List<string> mine, IReadOnlyCollection<string> other)
+        private void UpdateGroup(List<string> mine, IReadOnlyCollection<string> other, bool removeFromGame = true)
         {
             if (other.Count == 0) return;
             mine.Clear();
-            mine.AddRange(
-                other.Where(
-                    str => SoundPackLoader.Music.ContainsKey(str) || _defaultMusic.Contains(str)
-                    )
-                );
+            var newMusic = other.Where(
+                str => SoundPackLoader.Music.ContainsKey(str) || _defaultMusic.Contains(str)
+            ).ToArray();
+            mine.AddRange(newMusic);
+            if (!removeFromGame) return;
+            
+            foreach (var clipName in newMusic)
+            {
+                GameMusic.Remove(clipName);
+            }
         }
     }
 }

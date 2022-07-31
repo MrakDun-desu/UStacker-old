@@ -26,14 +26,22 @@ namespace Blockstacker.Gameplay
 
         public void MarkUsed()
         {
-            if (!_pieceIsNull)
-                _piece.Type = USED_HOLD_TYPE;
+            if (_pieceIsNull)
+                return;
+            
+            _piece.Type = USED_HOLD_TYPE;
+            // rotating to reset state
+            _piece.Rotate(360);
         }
 
         public void UnmarkUsed()
         {
-            if (!_pieceIsNull)
-                _piece.RevertType();
+            if (_pieceIsNull) 
+                return;
+            
+            _piece.RevertType();
+            // rotating to reset state
+            _piece.Rotate(360);
         }
 
         public Piece SwapPiece(Piece newPiece)
