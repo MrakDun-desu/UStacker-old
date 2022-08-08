@@ -100,6 +100,8 @@ namespace Blockstacker.Gameplay
             if (_activePiece != null)
                 Destroy(_activePiece.gameObject);
             ActivePiece = null;
+            
+            if (!_settings.Rules.Controls.AllowHold) return;
             var holdPiece = PieceHolder.SwapPiece(null);
             if (holdPiece != null)
                 Destroy(holdPiece.gameObject);
@@ -175,7 +177,8 @@ namespace Blockstacker.Gameplay
             if (linesCleared)
                 spawnTime += _settings.Rules.Controls.LineClearDelay;
             
-            PieceHolder.UnmarkUsed();
+            if (_settings.Rules.Controls.AllowHold)
+                PieceHolder.UnmarkUsed();
 
             _pieceSpawnTime = placementTime + spawnTime;
             ActivePiece = null;
@@ -490,7 +493,7 @@ namespace Blockstacker.Gameplay
             var newPiece = PieceHolder.SwapPiece(ActivePiece);
             if (!_settings.Rules.Controls.UnlimitedHold)
                 PieceHolder.MarkUsed();
-                
+
             if (newPiece == null)
                 _spawner.SpawnPiece(actionTime);
             else
