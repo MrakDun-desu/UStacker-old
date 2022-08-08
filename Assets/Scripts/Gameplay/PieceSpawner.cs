@@ -24,6 +24,7 @@ namespace Blockstacker.Gameplay
 
         private PiecePreviews _previews;
         private ObjectPool<Piece>[] _piecePools;
+        private int _defaultPoolCapacity;
 
         public void InitContainers()
         {
@@ -32,6 +33,16 @@ namespace Blockstacker.Gameplay
 
         public void PrespawnPieces()
         {
+            foreach (var piecePool in _piecePools)
+            {
+                var newPieces = new Piece[_defaultPoolCapacity];
+                for (var i = 0; i < _defaultPoolCapacity; i++)
+                    newPieces[i] = piecePool.Get();
+
+                foreach (var newPiece in newPieces)
+                    piecePool.Release(newPiece);
+            }
+
             foreach (var nextIndex in PreviewContainers.Select(_ => Randomizer.GetNextPiece()))
             {
                 var nextPiece = GetPieceFromPool(nextIndex);
@@ -48,7 +59,6 @@ namespace Blockstacker.Gameplay
             var swappedPiece = GetPieceFromPool(nextIndex);
             swappedPiece.SetBoard(_board);
             var nextPiece = _previews.AddPiece(swappedPiece);
-            swappedPiece.Rotate(360);
 
             SpawnPiece(nextPiece, spawnTime);
         }
@@ -96,7 +106,7 @@ namespace Blockstacker.Gameplay
         public void SetAvailablePieces(IEnumerable<Piece> pieces)
         {
             var blockCount = _settings.Rules.BoardDimensions.BoardHeight * _settings.Rules.BoardDimensions.BoardWidth;
-            var defaultCapacity = (int) (blockCount / 25u);
+            _defaultPoolCapacity = (int) (blockCount / 25u);
             var maxSize = (int) (blockCount / 3u);
 
             _piecePools = pieces.Select(piece =>
@@ -107,7 +117,7 @@ namespace Blockstacker.Gameplay
                     p => p.gameObject.SetActive(false),
                     p => Destroy(p.gameObject),
                     true,
-                    defaultCapacity,
+                    _defaultPoolCapacity,
                     maxSize
                 );
             }).ToArray();

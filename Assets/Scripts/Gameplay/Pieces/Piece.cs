@@ -46,6 +46,7 @@ namespace Blockstacker.Gameplay.Pieces
 
         private void Awake()
         {
+            _currentType = _type;
             _activeTransforms.AddRange(Blocks.Select(block => block.transform));
             for (var i = 0; i < Blocks.Count; i++)
             {
@@ -53,11 +54,6 @@ namespace Blockstacker.Gameplay.Pieces
                 block.Cleared += OnBlockCleared;
                 block.BlockNumber = (uint)i;
             }
-        }
-
-        private void Start()
-        {
-            _currentType = _type;
         }
 
         private void OnBlockCleared(Block sender)

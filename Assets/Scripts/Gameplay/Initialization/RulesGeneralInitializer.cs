@@ -45,8 +45,10 @@ namespace Blockstacker.Gameplay.Initialization
         {
             InitializeSeed();
             InitializeRandomizer();
-            if (!_isRestarting)
-                InitializePieceContainers();
+            
+            if (_isRestarting) return;
+            InitializePieceContainers();
+            InitializePieceHolder();
         }
 
         private void InitializeSeed()
@@ -101,14 +103,6 @@ namespace Blockstacker.Gameplay.Initialization
 
         private void InitializePieceContainers()
         {
-            var pieceHolder = Object.Instantiate(_pieceContainerPrefab, _board.transform);
-            pieceHolder.transform.localPosition = new Vector3(
-                -PieceContainer.Width,
-                (int) _board.Height - PieceContainer.Height
-            );
-
-            _inputProcessor.PieceHolder = pieceHolder;
-
             for (var i = 0; i < _gameSettings.Rules.General.NextPieceCount; i++)
             {
                 var pieceContainer = Object.Instantiate(_pieceContainerPrefab, _board.transform);
@@ -118,6 +112,19 @@ namespace Blockstacker.Gameplay.Initialization
                 );
                 _spawner.PreviewContainers.Add(pieceContainer);
             }
+        }
+
+        private void InitializePieceHolder()
+        {
+            if (!_gameSettings.Rules.Controls.AllowHold) return;
+            var pieceHolder = Object.Instantiate(_pieceContainerPrefab, _board.transform);
+            pieceHolder.transform.localPosition = new Vector3(
+                -PieceContainer.Width,
+                (int) _board.Height - PieceContainer.Height
+            );
+
+            _inputProcessor.PieceHolder = pieceHolder;
+
         }
     }
 }

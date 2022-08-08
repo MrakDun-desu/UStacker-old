@@ -7,7 +7,6 @@ namespace Blockstacker.Gameplay
     public class PiecePreviews
     {
         private readonly List<PieceContainer> _containers;
-        private Piece lastPiece;
 
         public PiecePreviews(List<PieceContainer> containers)
         {
@@ -17,22 +16,19 @@ namespace Blockstacker.Gameplay
 
         public Piece AddPiece(Piece newPiece)
         {
-            if (_containers.Count > 0)
-                return _containers.Aggregate(newPiece, (current, container) => container.SwapPiece(current));
-            var temp = lastPiece;
-            lastPiece = newPiece;
-            return temp;
+            return _containers.Count > 0
+                ? _containers.Aggregate(newPiece, (current, container) => container.SwapPiece(current))
+                : newPiece;
         }
 
         public string GetFirstPieceType()
         {
-            return _containers.Count > 0 ? _containers[^1].PieceType : lastPiece.Type;
+            return _containers.Count > 0 ? _containers[^1].PieceType : "";
         }
 
         public Piece GetFirstPiece()
         {
-            
-            return _containers.Count > 0 ? _containers[^1].Piece : lastPiece;
+            return _containers.Count > 0 ? _containers[^1].Piece : null;
         }
     }
 }
