@@ -26,7 +26,7 @@ namespace Blockstacker.GlobalSettings.BlockSkins
                 return false;
 
             var spriteRect = new Rect(SpriteStart, SpriteSize);
-            Sprite = Sprite.Create(sourceTexture, spriteRect, PivotPoint, PixelsPerUnit);
+            Sprite = Sprite.Create(sourceTexture, spriteRect, PivotPoint, PixelsPerUnit, 0, SpriteMeshType.FullRect);
             return Sprite != null;
         }
         
@@ -37,7 +37,7 @@ namespace Blockstacker.GlobalSettings.BlockSkins
                     return false;
 
             var spriteRect = new Rect(SpriteStart, SpriteSize);
-            Sprite = Sprite.Create(sourceTexture, spriteRect, PivotPoint, PixelsPerUnit);
+            Sprite = Sprite.Create(sourceTexture, spriteRect, PivotPoint, PixelsPerUnit, 0, SpriteMeshType.FullRect);
             return true;
         }
     }
