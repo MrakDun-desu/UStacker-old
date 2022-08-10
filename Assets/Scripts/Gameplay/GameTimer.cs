@@ -7,6 +7,7 @@ namespace Blockstacker.Gameplay
     {
         private bool _isRunning;
         private double _startTime;
+        private bool _isPaused;
         private double _pauseStartTime;
         private double _pausedTime;
         
@@ -26,28 +27,34 @@ namespace Blockstacker.Gameplay
 
         public void StartTiming()
         {
+            _pausedTime = 0d;
             _startTime = Time.realtimeSinceStartupAsDouble;
             _isRunning = true;
         }
 
         public void ResumeTiming()
         {
-            if (_isRunning) return;
+            if (_isRunning || !_isPaused) return;
             _pausedTime += Time.realtimeSinceStartupAsDouble - _pauseStartTime;
             _isRunning = true;
+            _isPaused = false;
         }
 
-        public void StopTiming()
+        public void PauseTiming()
         {
+            if (!_isRunning) return;
+            
             _pauseStartTime = Time.realtimeSinceStartupAsDouble;
             _isRunning = false;
+            _isPaused = true;
         }
 
         public void ResetTiming()
         {
             _pausedTime = 0d;
             _startTime = Time.realtimeSinceStartupAsDouble;
-            StopTiming();
+            _pauseStartTime = Time.realtimeSinceStartupAsDouble;
+            _isRunning = false;
         }
     }
 }

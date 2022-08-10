@@ -7272,7 +7272,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 139450738}
         m_TargetAssemblyTypeName: Blockstacker.Gameplay.GameTimer, Assembly-CSharp
-        m_MethodName: StopTiming
+        m_MethodName: PauseTiming
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7546,7 +7546,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 139450738}
         m_TargetAssemblyTypeName: Blockstacker.Gameplay.GameTimer, Assembly-CSharp
-        m_MethodName: StopTiming
+        m_MethodName: PauseTiming
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7645,7 +7645,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 139450738}
         m_TargetAssemblyTypeName: Blockstacker.Gameplay.GameTimer, Assembly-CSharp
-        m_MethodName: StopTiming
+        m_MethodName: PauseTiming
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
