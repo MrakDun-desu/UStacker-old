@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text;
+using Blockstacker.Common;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Randomizers;
 using Blockstacker.GameSettings;
@@ -38,9 +39,6 @@ namespace Blockstacker.Gameplay.Initialization
             _isRestarting = isRestarting;
         }
 
-        private static string RandomizersPath =>
-            Path.Combine(Application.persistentDataPath, "ruleCustomization/randomizers");
-
         public override void Execute()
         {
             InitializeSeed();
@@ -63,7 +61,7 @@ namespace Blockstacker.Gameplay.Initialization
             if (_gameSettings.Rules.General.RandomizerType == RandomizerType.Custom)
             {
                 var randomizerScriptPath =
-                    Path.Combine(RandomizersPath, _gameSettings.Rules.General.CustomRandomizerName);
+                    Path.Combine(CustomizationPaths.Randomizers, _gameSettings.Rules.General.CustomRandomizerName);
                 if (!File.Exists(randomizerScriptPath))
                 {
                     _errorBuilder.AppendLine("Custom randomizer script not found.");
@@ -80,6 +78,7 @@ namespace Blockstacker.Gameplay.Initialization
             {
                 RandomizerType.SevenBag => new CountPerBagRandomizer(_pieceCount, seed),
                 RandomizerType.FourteenBag => new CountPerBagRandomizer(_pieceCount, seed, 2),
+                RandomizerType.Stride => new StrideRandomizer(_pieceCount, seed),
                 RandomizerType.Random => new RandomRandomizer(_pieceCount, seed),
                 RandomizerType.Classic => new ClassicRandomizer(_pieceCount, seed),
                 RandomizerType.Pairs => new PairsRandomizer(_pieceCount, seed),
@@ -93,7 +92,7 @@ namespace Blockstacker.Gameplay.Initialization
 
             if (!isValid)
             {
-                _errorBuilder.AppendLine("Custom random bag script is not valid.");
+                _errorBuilder.AppendLine("Custom randomizer script is not valid.");
                 return;
             }
 

@@ -15,13 +15,13 @@ MonoBehaviour:
   Settings:
     Rules:
       General:
-        RandomizerType: 0
+        RandomizerType: 6
         CustomRandomizerName: 
         CustomRandomizerScript: 
         AllowedSpins: 0
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: 257285499
+        ActiveSeed: 1464489835
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
@@ -37,10 +37,10 @@ MonoBehaviour:
         ShowGhostPiece: 1
         OverrideHandling: 0
         Handling:
-          DelayedAutoShift: 0.0833333358168602
+          DelayedAutoShift: 0.10000000149011612
           AutomaticRepeatRate: 0
           SoftDropFactor: Infinity
-          DasCutDelay: 0.01666666753590107
+          DasCutDelay: 0.02000000141561032
           DoubleDropPreventionInterval: 0
           DelayDasOn: 1
           AntiDasBehavior: 2

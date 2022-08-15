@@ -68,9 +68,6 @@ namespace Blockstacker.Gameplay.SoundEffects
 
         private void Start()
         {
-            if (string.IsNullOrEmpty(SoundPackLoader.SoundEffectsScript))
-                RegisterDefaultFunctions();
-            
             if (!TryRegisterCustomFunctions())
                 RegisterDefaultFunctions();
         }
@@ -89,6 +86,9 @@ namespace Blockstacker.Gameplay.SoundEffects
 
         private bool TryRegisterCustomFunctions()
         {
+            if (string.IsNullOrEmpty(SoundPackLoader.SoundEffectsScript))
+                return false;
+            
             _luaState = new Lua();
             LuaTable events = null;
             try
@@ -106,7 +106,7 @@ namespace Blockstacker.Gameplay.SoundEffects
                     "Error reading sound effects script!",
                     $"Switching to default sound effects.\nLua error: {ex.Message}",
                     AlertType.Error
-                    ));
+                ));
                 return false;
             }
 

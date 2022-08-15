@@ -7,6 +7,7 @@ namespace Blockstacker.GameSettings.Enums
         Classic,
         Pairs,
         Random,
-        Custom
+        Custom,
+        Stride
     }
 }

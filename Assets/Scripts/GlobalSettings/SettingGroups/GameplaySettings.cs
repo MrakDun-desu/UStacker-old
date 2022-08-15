@@ -16,9 +16,7 @@ namespace Blockstacker.GlobalSettings.Groups
         public bool DragMiddleButtonToRepositionBoard;
         public bool ColorGhostPiece;
         public Vector2 BoardOffset = Vector2.zero;
-        
-        // Implement in future
-        // public bool MatrixBounce = true;
-        // public bool ShowNotFocusedWarning = true;
+        public bool ShowNotFocusedWarning = true;
+        public bool MatrixBounce = true;
     }
 }

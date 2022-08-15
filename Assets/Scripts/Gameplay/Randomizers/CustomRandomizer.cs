@@ -7,7 +7,9 @@ namespace Blockstacker.Gameplay.Randomizers
     public class CustomRandomizer : IRandomizer
     {
         private readonly Lua _luaState = new();
-        private readonly int _pieceCount; // not needed for now - 
+        private readonly int _pieceCount; // not needed for now
+        private LuaFunction _nextPieceFunction;
+        private const string SEED_NAME = "Seed";
 
         public CustomRandomizer(int pieceCount, string script, int seed, out bool isValid)
         {
@@ -15,13 +17,13 @@ namespace Blockstacker.Gameplay.Randomizers
             isValid = ValidateScript(seed, script);
             if (!isValid) return;
             _luaState = new Lua();
-            _luaState.DoString($"seed = {seed}");
-            _luaState.DoString(script);
+            _luaState[SEED_NAME] = seed;
+            _nextPieceFunction = _luaState.DoString(script)[0] as LuaFunction;
         }
 
         public int GetNextPiece()
         {
-            var result = _luaState.DoString("GetNextPiece()");
+            var result = _nextPieceFunction.Call();
 
             if (result.Length < 1) return 0;
 
@@ -41,15 +43,17 @@ namespace Blockstacker.Gameplay.Randomizers
         {
             try
             {
-                _luaState.DoString($"seed = {seed}");
-                _luaState.DoString(script);
+                _luaState[SEED_NAME] = seed;
+                var retValue = _luaState.DoString(script);
+                if (retValue.Length < 1) return false;
+                _nextPieceFunction = retValue[0] as LuaFunction;
             }
-            catch (LuaScriptException)
+            catch (LuaException)
             {
                 return false;
             }
 
-            var result = _luaState.DoString("GetNextPiece()");
+            var result = _nextPieceFunction?.Call();
             if (result is null || result.Length < 1) return false;
 
             var nextPiece = result[0] switch
