@@ -20,6 +20,10 @@ namespace Blockstacker.GlobalSettings.Appliers
                 Application.focusChanged -= OnFocusChanged;
         }
 
-        private void OnFocusChanged(bool hasFocus) => _warning.SetActive(!hasFocus);
+        private void OnFocusChanged(bool hasFocus)
+        {
+            if (_warning == null) return;
+            _warning.SetActive(!hasFocus);
+        }
     }
 }

@@ -5,7 +5,6 @@ using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
 using Blockstacker.Gameplay.Spins;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace Blockstacker.Gameplay.Initialization
 {
@@ -28,18 +27,14 @@ namespace Blockstacker.Gameplay.Initialization
             _inputProcessor = inputProcessor;
         }
 
-        private static string KickSystemsPath => Path.Combine(
-            Application.persistentDataPath, "ruleCustomization/rotationSystems"
-        );
-
         public override void Execute()
         {
             RotationSystem customSystem = new();
             if (_gameSettings.Rules.Controls.RotationSystem ==
                 RotationSystemType.Custom)
             {
-                var kickTablePath = Path.Combine(KickSystemsPath,
-                    _gameSettings.Rules.General.CustomRandomizerName);
+                var kickTablePath = Path.Combine(CustomizationPaths.RotationSystems,
+                    _gameSettings.Rules.Controls.CustomRotationSystemName);
                 if (!File.Exists(kickTablePath))
                 {
                     _errorBuilder.AppendLine("Custom rotation system not found.");

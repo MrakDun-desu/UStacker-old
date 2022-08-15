@@ -21,15 +21,15 @@ MonoBehaviour:
         AllowedSpins: 0
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: 1464489835
+        ActiveSeed: -150068887
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
         AllowHardDrop: 1
         AllowHold: 1
         UnlimitedHold: 0
-        RotationSystem: 0
-        CustomRotationSystemName: 
+        RotationSystem: 2
+        CustomRotationSystemName: rotSystem.json
         PiecePlacedDelay: 0
         LineClearDelay: 0
         OnTouchGround: 0

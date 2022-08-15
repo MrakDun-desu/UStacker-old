@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockstacker.Common;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Blockstacker.GameSettings
@@ -10,9 +12,14 @@ namespace Blockstacker.GameSettings
     {
         [SerializeField] private List<KeyValuePair> _kickTables = new();
         [SerializeField] private List<KeyValuePair> _duplicateTables = new();
-
         [SerializeField] private KickTable DefaultKickTable = new();
 
+        [ContextMenu("Copy JSON to clipboard")]
+        public void CopyToClipboard()
+        {
+            GUIUtility.systemCopyBuffer = JsonConvert.SerializeObject(RotationSystem, StaticSettings.JsonSerializerSettings);
+        }
+        
         public readonly RotationSystem RotationSystem = new();
 
         public void OnBeforeSerialize()

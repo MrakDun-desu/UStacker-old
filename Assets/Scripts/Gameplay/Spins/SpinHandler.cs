@@ -52,32 +52,53 @@ namespace Blockstacker.Gameplay.Spins
         {
             switch (_allowedSpins)
             {
+                case AllowedSpins.All:
+                    formerResult.WasSpin = formerResult.WasSpinRaw;
+                    formerResult.WasSpinMini = formerResult.WasSpinMiniRaw;
+                    return formerResult;
                 case AllowedSpins.Stupid:
                     formerResult.WasSpin = true;
                     formerResult.WasSpinMini = false;
-                    return formerResult;
-                case AllowedSpins.TSpins:
-                    if (pieceType == "t")
-                    {
-                        formerResult.WasSpin = formerResult.WasSpinRaw;
-                        formerResult.WasSpinMini = formerResult.WasSpinMiniRaw;
-                    }
-                    else
-                    {
-                        formerResult.WasSpin = false;
-                        formerResult.WasSpinMini = false;
-                    }
-                    return formerResult;
-                case AllowedSpins.All:
                     return formerResult;
                 case AllowedSpins.None:
                     formerResult.WasSpin = false;
                     formerResult.WasSpinMini = false;
                     return formerResult;
+                case AllowedSpins.ISpins:
+                case AllowedSpins.TSpins:
+                case AllowedSpins.LSpins:
+                case AllowedSpins.JSpins:
+                case AllowedSpins.OSpins:
+                case AllowedSpins.SSpins:
+                case AllowedSpins.ZSpins:
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    break;
             }
+
+            if (CheckSpinValidity(pieceType))
+            {
+                formerResult.WasSpin = formerResult.WasSpinRaw;
+                formerResult.WasSpinMini = formerResult.WasSpinMiniRaw;
+                return formerResult;
+            }
+            formerResult.WasSpin = false;
+            formerResult.WasSpinMini = false;
+
+            return formerResult;
         }
+
+        private bool CheckSpinValidity(string pieceType)
+            => pieceType switch
+            {
+                "i" => _allowedSpins.HasFlag(AllowedSpins.ISpins),
+                "t" => _allowedSpins.HasFlag(AllowedSpins.TSpins),
+                "l" => _allowedSpins.HasFlag(AllowedSpins.LSpins),
+                "j" => _allowedSpins.HasFlag(AllowedSpins.JSpins),
+                "o" => _allowedSpins.HasFlag(AllowedSpins.OSpins),
+                "s" => _allowedSpins.HasFlag(AllowedSpins.SSpins),
+                "z" => _allowedSpins.HasFlag(AllowedSpins.ZSpins),
+                _ => false
+            };
 
         private IEnumerable<Vector2Int> GetKickList(Piece piece, RotateDirection direction)
         {
