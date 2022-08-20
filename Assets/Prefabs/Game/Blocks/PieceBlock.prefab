@@ -49,7 +49,7 @@ MonoBehaviour:
   BlockNumber: 0
   _blockSkinPrefab: {fileID: 8615181212073349032, guid: 394ce65bb77d5f6468e62ab063fe7d9b, type: 3}
   _skinsParent: {fileID: 3688347092978483058}
-  _onCleared:
+  OnCleared:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3163467946176739645}

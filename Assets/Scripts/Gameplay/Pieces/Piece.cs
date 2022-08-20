@@ -56,10 +56,10 @@ namespace Blockstacker.Gameplay.Pieces
             }
         }
 
-        private void OnBlockCleared(Block sender)
+        private void OnBlockCleared(ClearableBlock sender)
         {
             _activeTransforms.Remove(sender.transform);
-            if (Blocks.Count != 0) return;
+            if (_activeTransforms.Count != 0) return;
             PieceCleared.Invoke();
             SourcePool.Release(this);
         }

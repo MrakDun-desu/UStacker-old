@@ -7,8 +7,8 @@ namespace Blockstacker.GameSettings.Enums
     {
         None = 0,
         Singles = 1,
-        Doubles = 2,
-        Triples = 4,
-        Quads = 8
+        Doubles = 1 << 1,
+        Triples = 1 << 2,
+        Quads = 1 << 3
     }
 }

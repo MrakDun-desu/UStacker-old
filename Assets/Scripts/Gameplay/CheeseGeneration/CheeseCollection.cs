@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Gameplay.Blocks;
+using Blockstacker.Gameplay.Pieces;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.Pieces
+namespace Blockstacker.Gameplay.CheeseGeneration
 {
-    public class BoardGrid : MonoBehaviour, IBlockCollection
+    public class CheeseCollection : MonoBehaviour, IBlockCollection
     {
-        [SerializeField] private Board _board;
-        private readonly List<BlockBase> _blocks = new();
+        private List<BlockBase> _blocks;
+        public string Type => "cheese";
         public IEnumerable<Vector3> BlockPositions => _blocks.Select(block => block.transform.position);
-        public string Type => "grid";
 
         public void AddBlock(BlockBase block)
         {
             _blocks.Add(block);
-            block.Board = _board;
         }
+
     }
 }

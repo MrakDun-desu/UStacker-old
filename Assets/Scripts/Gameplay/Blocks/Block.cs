@@ -1,16 +1,13 @@
-using System;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Blockstacker.Gameplay.Blocks
 {
-    public class Block : BlockBase
+    public class Block : ClearableBlock
     {
-        [SerializeField] private UnityEvent _onCleared;
         [SerializeField] private Vector2 _initialPosition;
         [SerializeField] private GameObject _holdSkinsParent;
 
-        public event Action<Block> Cleared;
 
         private string _originalCollectionType;
 
@@ -33,12 +30,6 @@ namespace Blockstacker.Gameplay.Blocks
                 _initialPosition.y,
                 myTransform.localPosition.z
             );
-        }
-
-        public void Clear()
-        {
-            _onCleared.Invoke();
-            Cleared?.Invoke(this);
         }
 
         protected override void UpdateBlockSkin()
