@@ -88,5 +88,10 @@ namespace Blockstacker.Gameplay.Blocks
             }
         }
 
+        public void SetBlockCollection(IBlockCollection newCollection)
+        {
+            _blockCollection = newCollection;
+        }
+
     }
 }

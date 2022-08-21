@@ -12,7 +12,7 @@ namespace Blockstacker.Gameplay
         
         ReadOnlyCollection<ReadOnlyCollection<bool>> Slots { get; }
 
-        void AddCheeseLines(IEnumerable<IEnumerable<bool>> slots);
+        void AddCheeseLines(List<List<bool>> slots);
         void AddCheeseLines(LuaTable slotsTable);
     }
 }

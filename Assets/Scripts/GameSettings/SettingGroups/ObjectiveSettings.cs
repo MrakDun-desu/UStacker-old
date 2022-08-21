@@ -11,7 +11,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         public double EndConditionCount = 40;
         public bool ToppingOutIsOkay;
         public CheeseGeneration CheeseGeneration = CheeseGeneration.None;
-        public int MaxCheeseHeight = 10;
+        public uint MaxCheeseHeight = 10;
         public bool UseCustomCheeseScript;
         public string CustomCheeseScriptName = "";
         public string CustomCheeseScript = "";

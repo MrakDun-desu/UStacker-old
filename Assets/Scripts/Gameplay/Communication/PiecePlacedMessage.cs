@@ -6,6 +6,7 @@ namespace Blockstacker.Gameplay.Communication
     public record PiecePlacedMessage : MidgameMessage
     {
         public uint LinesCleared;
+        public uint CheeseLinesCleared;
         public uint CurrentCombo;
         public uint CurrentBackToBack;
         public string PieceType;
