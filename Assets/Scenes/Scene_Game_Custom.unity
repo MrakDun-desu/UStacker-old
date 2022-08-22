@@ -3991,8 +3991,8 @@ MonoBehaviour:
   _backgroundRenderer: {fileID: 569528456}
   _camera: {fileID: 1617022711}
   _warningPiece: {fileID: 178267823}
-  _cheeseBlockPrefab: {fileID: 1817985151758386682, guid: 6e8bdcd444f7bfe41a710cf4bff75fb6, type: 3}
-  _cheeseCollectionPrefab: {fileID: 6542221489855597950, guid: 5be1dc40c1e84c8429b2aeda7bdb00b7, type: 3}
+  _garbageBlockPrefab: {fileID: 1817985151758386682, guid: 6e8bdcd444f7bfe41a710cf4bff75fb6, type: 3}
+  _garbageLayerPrefab: {fileID: 6542221489855597950, guid: 5be1dc40c1e84c8429b2aeda7bdb00b7, type: 3}
   _boardZoomFactor: 0.1
   _minimumBoardScale: 0.1
 --- !u!4 &878271532

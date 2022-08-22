@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.GameSettings;
 using UnityEngine;
@@ -15,12 +16,25 @@ namespace Blockstacker.Gameplay.CheeseGeneration
 
         private Random _random;
         private int _lastHole = -1;
+        private int _linesLeft;
+        private List<int> _holeSizes;
 
         private void Awake()
         {
             if (_settings.Objective.CheeseGeneration != GameSettings.Enums.CheeseGeneration.None ||
                 _settings.Objective.UseCustomCheeseScript)
                 _board.LinesCleared += GenerateCheeseLayer;
+
+            _holeSizes = new List<int>();
+            var cheeseGeneration = _settings.Objective.CheeseGeneration;
+            if (cheeseGeneration.HasFlag(GameSettings.Enums.CheeseGeneration.Singles))
+                _holeSizes.Add(1);
+            if (cheeseGeneration.HasFlag(GameSettings.Enums.CheeseGeneration.Doubles))
+                _holeSizes.Add(2);
+            if (cheeseGeneration.HasFlag(GameSettings.Enums.CheeseGeneration.Triples))
+                _holeSizes.Add(3);
+            if (cheeseGeneration.HasFlag(GameSettings.Enums.CheeseGeneration.Quads))
+                _holeSizes.Add(4);
             
             _mediator.Register<GameStartedMessage>(StartGeneration);
         }
@@ -39,22 +53,41 @@ namespace Blockstacker.Gameplay.CheeseGeneration
 
         private void GenerateCheeseLayer()
         {
-            var missingCheese = _settings.Objective.MaxCheeseHeight - _board.CheeseHeight;
+            if (_holeSizes.Count < 1) return;
             
-            for (var y = 0; y < missingCheese; y++)
+            var missingCheese = _settings.Objective.MaxCheeseHeight - _board.GarbageHeight;
+            
+            var cheeseLayer = new List<List<bool>>();
+            var addToLast = _linesLeft > 0;
+            
+            while (missingCheese > 0u)
             {
-                var newCheeseLayer = new List<List<bool>> {new()};
-                var hole = _random.Next((int) _board.Width);
-                while (hole == _lastHole)
-                    hole = _random.Next((int) _board.Width);
+                missingCheese--;
 
-                _lastHole = hole;
+                if (_linesLeft <= 0)
+                {
+                    if (cheeseLayer.Count > 0)
+                    {
+                        _board.AddCheeseLayer(cheeseLayer, addToLast);
+                        cheeseLayer = new List<List<bool>>();
+                    }
+
+                    _linesLeft = _holeSizes[_random.Next(_holeSizes.Count)];
+                    var newHole = _random.Next((int) _board.Width);
+                    while (newHole == _lastHole)
+                        newHole = _random.Next((int) _board.Width);
+                    
+                    _lastHole = newHole;
+                    addToLast = false;
+                }
                 
+                cheeseLayer.Add(new List<bool>());
+                _linesLeft--;
                 for (var x = 0; x < _board.Width; x++)
-                    newCheeseLayer[0].Add(hole != x);
-                
-                _board.AddCheeseLines(newCheeseLayer);
+                    cheeseLayer[^1].Add(_lastHole != x);
             }
+            
+            _board.AddCheeseLayer(cheeseLayer, addToLast);
         }
     }
 }

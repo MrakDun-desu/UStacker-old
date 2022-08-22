@@ -8,14 +8,14 @@ using UnityEngine.Pool;
 
 namespace Blockstacker.Gameplay.CheeseGeneration
 {
-    public class CheeseCollection : MonoBehaviour, IBlockCollection
+    public class GarbageLayer : MonoBehaviour, IBlockCollection
     {
         private readonly List<ClearableBlock> _blocks = new();
         public ReadOnlyCollection<ClearableBlock> Blocks => _blocks.AsReadOnly();
-        public string Type => "cheese";
+        public string Type => "garbage";
         public IEnumerable<Vector3> BlockPositions => _blocks.Select(block => block.transform.position);
 
-        public ObjectPool<CheeseCollection> SourcePool;
+        public ObjectPool<GarbageLayer> SourcePool;
         public ObjectPool<ClearableBlock> BlockSourcePool;
 
         public void AddBlock(ClearableBlock block)

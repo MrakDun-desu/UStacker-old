@@ -28,8 +28,8 @@ namespace Blockstacker.Gameplay
         [SerializeField] private SpriteRenderer _backgroundRenderer;
         [SerializeField] private Camera _camera;
         [SerializeField] private WarningPiece _warningPiece;
-        [SerializeField] private ClearableBlock _cheeseBlockPrefab;
-        [SerializeField] private CheeseCollection _cheeseCollectionPrefab;
+        [SerializeField] private ClearableBlock _garbageBlockPrefab;
+        [SerializeField] private GarbageLayer _garbageLayerPrefab;
 
         [Tooltip("Zoom percentage change with one scroll unit")] [Range(0, 1)] [SerializeField]
         private float _boardZoomFactor = .05f;
@@ -55,8 +55,10 @@ namespace Blockstacker.Gameplay
         private bool _backToBackActive;
         private float _warningPieceTreshhold;
 
-        private ObjectPool<CheeseCollection> _cheeseCollectionPool;
-        private ObjectPool<ClearableBlock> _cheeseBlockPool;
+        private ObjectPool<GarbageLayer> _garbageLayerPool;
+        private ObjectPool<ClearableBlock> _garbageBlockPool;
+
+        private GarbageLayer _lastGarbageLayer;
 
         public uint Width
         {
@@ -84,7 +86,7 @@ namespace Blockstacker.Gameplay
             }
         }
 
-        public uint CheeseHeight { get; private set; }
+        public uint GarbageHeight { get; private set; }
 
         public uint LethalHeight { get; set; }
         private Vector3 Up => transform.up * transform.localScale.y;
@@ -110,25 +112,32 @@ namespace Blockstacker.Gameplay
             WarningPieceTreshholdApplier.TreshholdChanged += ChangeWarningPieceTreshhold;
         }
 
-        private CheeseCollection CreateCheeseCollection()
+        private GarbageLayer CreateGarbageLayer()
         {
-            var newCheeseCollection = Instantiate(_cheeseCollectionPrefab, transform);
+            var newCheeseCollection = Instantiate(_garbageLayerPrefab, transform);
             newCheeseCollection.transform.localPosition = Vector3.zero;
-            newCheeseCollection.SourcePool = _cheeseCollectionPool;
-            newCheeseCollection.BlockSourcePool = _cheeseBlockPool;
+            newCheeseCollection.SourcePool = _garbageLayerPool;
+            newCheeseCollection.BlockSourcePool = _garbageBlockPool;
 
             return newCheeseCollection;
         }
 
-        private void DestroyCheeseCollection(CheeseCollection collection)
+        private void DestroyGarbageLayer(GarbageLayer layer)
         {
-            foreach (var block in collection.Blocks)
+            foreach (var block in layer.Blocks)
             {
-                _cheeseBlockPool.Release(block);
+                _garbageBlockPool.Release(block);
                 block.transform.SetParent(null);
             }
 
-            Destroy(collection.gameObject);
+            Destroy(layer.gameObject);
+        }
+
+        private ClearableBlock CreateGarbageBlock()
+        {
+            var newGarbageBlock = Instantiate(_garbageBlockPrefab);
+            newGarbageBlock.Board = this;
+            return newGarbageBlock;
         }
 
         private void Update()
@@ -221,8 +230,8 @@ namespace Blockstacker.Gameplay
             }
 
             Blocks.RemoveAt(lineNumber);
-            if (CheeseHeight > lineNumber)
-                CheeseHeight--;
+            if (GarbageHeight > lineNumber)
+                GarbageHeight--;
 
             var slots = Slots;
             for (var y = lineNumber; y < Blocks.Count; y++)
@@ -237,7 +246,7 @@ namespace Blockstacker.Gameplay
         private void CheckAndClearLines(out uint linesCleared, out uint cheeseLinesCleared)
         {
             linesCleared = 0;
-            var cheeseHeightStart = CheeseHeight;
+            var cheeseHeightStart = GarbageHeight;
             for (var i = 0; i < Blocks.Count; i++)
             {
                 var isFull = Slots[i].All(blockExists => blockExists);
@@ -250,7 +259,7 @@ namespace Blockstacker.Gameplay
             if (linesCleared > 0)
                 LinesCleared?.Invoke();
 
-            cheeseLinesCleared = cheeseHeightStart - CheeseHeight;
+            cheeseLinesCleared = cheeseHeightStart - GarbageHeight;
         }
 
         private void SendPlacementMessage(PiecePlacedMessage midgameMessage)
@@ -396,7 +405,7 @@ namespace Blockstacker.Gameplay
             }
 
             Blocks.Clear();
-            CheeseHeight = 0;
+            GarbageHeight = 0;
         }
 
         public void ResetB2bAndCombo()
@@ -407,10 +416,11 @@ namespace Blockstacker.Gameplay
             _currentCombo = 0;
         }
 
-        public void AddCheeseLines(List<List<bool>> slots)
+        public void AddCheeseLayer(List<List<bool>> slots, bool addToLast)
         {
-            var newCheeseLayer = _cheeseCollectionPool.Get();
-            var cheeseLayerTransform = newCheeseLayer.transform;
+            var newGarbageLayer = addToLast && _lastGarbageLayer is not null 
+                ? _lastGarbageLayer 
+                : _garbageLayerPool.Get();
 
             var height = 0;
 
@@ -428,16 +438,20 @@ namespace Blockstacker.Gameplay
                 {
                     if (!line[x]) continue;
 
-                    var cheeseBlock = _cheeseBlockPool.Get();
+                    var cheeseBlock = _garbageBlockPool.Get();
                     var cheeseBlockTransform = cheeseBlock.transform;
-                    cheeseBlockTransform.SetParent(cheeseLayerTransform);
+                    cheeseBlockTransform.SetParent(newGarbageLayer.transform);
                     cheeseBlockTransform.localPosition = new Vector3(x + .5f, height + .5f);
                     cheeseBlockTransform.localScale = Vector3.one;
-                    newCheeseLayer.AddBlock(cheeseBlock);
+                    newGarbageLayer.AddBlock(cheeseBlock);
                 }
             }
 
-            CheeseHeight += (uint) height;
+            if (height <= 0)
+                return;
+
+            _lastGarbageLayer = newGarbageLayer;
+            GarbageHeight += (uint) height;
 
             var activeSlots = Slots;
             for (var y = 0; y < Blocks.Count; y++)
@@ -451,13 +465,13 @@ namespace Blockstacker.Gameplay
             for (var i = 0; i < height; i++)
                 Blocks.Insert(0, new ClearableBlock[Width]);
 
-            foreach (var block in newCheeseLayer.Blocks)
+            foreach (var block in newGarbageLayer.Blocks)
             {
                 Place(block);
             }
         }
 
-        public void AddCheeseLines(LuaTable slotsTable)
+        public void AddCheeseLayer(LuaTable slotsTable, bool addToLast)
         {
             List<List<bool>> slots = new();
             foreach (var entry in slotsTable)
@@ -472,7 +486,7 @@ namespace Blockstacker.Gameplay
                 }
             }
 
-            AddCheeseLines(slots);
+            AddCheeseLayer(slots, addToLast);
         }
 
         public void InitializeCheesePools()
@@ -480,17 +494,17 @@ namespace Blockstacker.Gameplay
             if (_settings.Objective.CheeseGeneration == GameSettings.Enums.CheeseGeneration.None &&
                 !_settings.Objective.UseCustomCheeseScript) return;
 
-            _cheeseCollectionPool = new ObjectPool<CheeseCollection>(
-                CreateCheeseCollection,
+            _garbageLayerPool = new ObjectPool<GarbageLayer>(
+                CreateGarbageLayer,
                 cc => cc.gameObject.SetActive(true),
                 cc => cc.gameObject.SetActive(false),
-                DestroyCheeseCollection,
+                DestroyGarbageLayer,
                 true,
                 (int) (_height / 2u),
                 (int) _height);
 
-            _cheeseBlockPool = new ObjectPool<ClearableBlock>(
-                () => Instantiate(_cheeseBlockPrefab),
+            _garbageBlockPool = new ObjectPool<ClearableBlock>(
+                CreateGarbageBlock,
                 b => b.gameObject.SetActive(true),
                 null,
                 b => Destroy(b.gameObject),
