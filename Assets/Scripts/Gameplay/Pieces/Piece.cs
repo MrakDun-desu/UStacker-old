@@ -90,6 +90,8 @@ namespace Blockstacker.Gameplay.Pieces
                     
                 block.gameObject.SetActive(true);
                 block.ResetPosition();
+                Rotated?.Invoke();
+                RotationState = RotationState.Zero;
             }
         }
 

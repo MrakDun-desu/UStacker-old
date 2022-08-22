@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Blockstacker.Gameplay.Blocks;
@@ -18,6 +19,8 @@ namespace Blockstacker.Gameplay.CheeseGeneration
         public ObjectPool<GarbageLayer> SourcePool;
         public ObjectPool<ClearableBlock> BlockSourcePool;
 
+        public event Action BlocksAdded;
+
         public void AddBlock(ClearableBlock block)
         {
             block.SetBlockCollection(this);
@@ -34,5 +37,12 @@ namespace Blockstacker.Gameplay.CheeseGeneration
                 SourcePool.Release(this);
         }
 
+        public void TriggerBlocksAdded()
+        {
+            foreach (var block in _blocks)
+                block.RefreshSkins();
+            
+            BlocksAdded?.Invoke();
+        }
     }
 }

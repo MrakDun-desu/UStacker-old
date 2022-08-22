@@ -406,6 +406,7 @@ namespace Blockstacker.Gameplay
 
             Blocks.Clear();
             GarbageHeight = 0;
+            _lastGarbageLayer = null;
         }
 
         public void ResetB2bAndCombo()
@@ -469,6 +470,8 @@ namespace Blockstacker.Gameplay
             {
                 Place(block);
             }
+            
+            newGarbageLayer.TriggerBlocksAdded();
         }
 
         public void AddCheeseLayer(LuaTable slotsTable, bool addToLast)

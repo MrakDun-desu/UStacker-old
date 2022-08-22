@@ -16,6 +16,8 @@ namespace Blockstacker.Gameplay.Blocks
         private IBlockCollection _blockCollection;
         private BlockSkin[] _defaultSkins;
 
+        private readonly List<BlockSkin> _currentSkins = new();
+
         public string CollectionType
         {
             get => _collectionType;
@@ -46,6 +48,7 @@ namespace Blockstacker.Gameplay.Blocks
 
         protected virtual void UpdateBlockSkin()
         {
+            _currentSkins.Clear();
             if (!TryGetSkins(out var newSkins))
             {
                 foreach (var skin in _defaultSkins)
@@ -53,6 +56,7 @@ namespace Blockstacker.Gameplay.Blocks
                     skin.Board = Board;
                     skin.BlockCollection = _blockCollection;
                     skin.RefreshSkin();
+                    _currentSkins.Add(skin);
                 }
                 return;
             }
@@ -85,12 +89,23 @@ namespace Blockstacker.Gameplay.Blocks
                 newSkin.Board = Board;
                 newSkin.BlockCollection = _blockCollection;
                 newSkin.SkinRecord = skinRecord;
+                _currentSkins.Add(newSkin);
             }
         }
 
         public void SetBlockCollection(IBlockCollection newCollection)
         {
             _blockCollection = newCollection;
+        }
+
+        public void RefreshSkins()
+        {
+            foreach (var skin in _currentSkins)
+            {
+                skin.UnregisterEvents();
+                skin.BlockCollection = _blockCollection;
+                skin.RefreshSkin();
+            }
         }
 
     }

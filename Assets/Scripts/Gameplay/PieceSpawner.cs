@@ -80,7 +80,7 @@ namespace Blockstacker.Gameplay
 
             var rotationSystem = _settings.Rules.Controls.ActiveRotationSystem;
             var rotation = rotationSystem.GetKickTable(piece.Type).StartState;
-            pieceTransform.Rotate(Vector3.forward, (float) rotation);
+            piece.Rotate((int) rotation);
 
             _warningPiece.SetPiece(_previews.GetFirstPiece());
 

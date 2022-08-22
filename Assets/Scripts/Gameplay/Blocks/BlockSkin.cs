@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Common.Extensions;
+using Blockstacker.Gameplay.CheeseGeneration;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.GlobalSettings;
 using Blockstacker.GlobalSettings.Appliers;
@@ -89,6 +91,9 @@ namespace Blockstacker.Gameplay.Blocks
                         break;
                     case WarningPiece warning:
                         warning.PieceChanged += PickConnectedPart;
+                        break;
+                    case GarbageLayer garbageLayer:
+                        garbageLayer.BlocksAdded += PickConnectedPart;
                         break;
                 }
 
@@ -187,7 +192,7 @@ namespace Blockstacker.Gameplay.Blocks
         
         #endregion
 
-        private void OnDestroy()
+        public void UnregisterEvents()
         {
             if (Board != null)
                 Board.LinesCleared -= PickConnectedPart;
@@ -207,11 +212,18 @@ namespace Blockstacker.Gameplay.Blocks
                 case WarningPiece warningPiece:
                     warningPiece.PieceChanged -= PickConnectedPart;
                     break;
+                case GarbageLayer garbageLayer:
+                    garbageLayer.BlocksAdded -= PickConnectedPart;
+                    break;
                 case BoardGrid:
                     GridVisibilityApplier.VisibilityChanged -= ChangeAlpha;
                     break;
             }
         }
 
+        private void OnDestroy()
+        {
+            UnregisterEvents();
+        }
     }
 }
