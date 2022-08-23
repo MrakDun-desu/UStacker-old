@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Blocks;
-using Blockstacker.Gameplay.CheeseGeneration;
+using Blockstacker.Gameplay.GarbageGeneration;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Spins;
@@ -19,7 +19,7 @@ using UnityEngine.Pool;
 
 namespace Blockstacker.Gameplay
 {
-    public class Board : MonoBehaviour, IBoard
+    public class Board : MonoBehaviour
     {
         [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private Transform _helperTransform;
@@ -87,7 +87,6 @@ namespace Blockstacker.Gameplay
         }
 
         public uint GarbageHeight { get; private set; }
-
         public uint LethalHeight { get; set; }
         private Vector3 Up => transform.up * transform.localScale.y;
 
@@ -97,6 +96,8 @@ namespace Blockstacker.Gameplay
         );
 
         public event Action LinesCleared;
+
+        public IGarbageGenerator GarbageGenerator;
 
         private void Start()
         {
@@ -110,6 +111,29 @@ namespace Blockstacker.Gameplay
             BoardVisibilityApplier.VisibilityChanged += ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged += ChangeBoardZoom;
             WarningPieceTreshholdApplier.TreshholdChanged += ChangeWarningPieceTreshhold;
+            
+            _mediator.Register<GameStartedMessage>(OnGameStarted);
+        }
+        
+        private void Update()
+        {
+            HandleBoardZooming();
+            HandleBoardDrag();
+        }
+
+        private void OnDestroy()
+        {
+            BackgroundVisibilityApplier.VisibilityChanged -= ChangeVisibility;
+            BoardZoomApplier.BoardZoomChanged -= ChangeBoardZoom;
+            WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
+            
+            _mediator.Unregister<GameStartedMessage>(OnGameStarted);
+        }
+
+        private void OnGameStarted(GameStartedMessage message)
+        {
+            GarbageGenerator?.ResetState(message.Seed);
+            GarbageGenerator?.GenerateGarbage(_settings.Objective.MaxCheeseHeight);
         }
 
         private GarbageLayer CreateGarbageLayer()
@@ -138,19 +162,6 @@ namespace Blockstacker.Gameplay
             var newGarbageBlock = Instantiate(_garbageBlockPrefab);
             newGarbageBlock.Board = this;
             return newGarbageBlock;
-        }
-
-        private void Update()
-        {
-            HandleBoardZooming();
-            HandleBoardDrag();
-        }
-
-        private void OnDestroy()
-        {
-            BackgroundVisibilityApplier.VisibilityChanged -= ChangeVisibility;
-            BoardZoomApplier.BoardZoomChanged -= ChangeBoardZoom;
-            WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
         }
 
         private void ChangeWarningPieceTreshhold(float newTreshhold)
@@ -296,6 +307,7 @@ namespace Blockstacker.Gameplay
             midgameMessage.CurrentBackToBack = _currentBackToBack;
 
             _mediator.Send(midgameMessage);
+            GarbageGenerator?.GenerateGarbage(_settings.Objective.MaxCheeseHeight - GarbageHeight, midgameMessage);
         }
 
         public Vector2Int WorldSpaceToBoardPosition(Vector3 worldSpacePos)
@@ -417,7 +429,7 @@ namespace Blockstacker.Gameplay
             _currentCombo = 0;
         }
 
-        public void AddCheeseLayer(List<List<bool>> slots, bool addToLast)
+        public void AddGarbageLayer(IList<List<bool>> slots, bool addToLast)
         {
             var newGarbageLayer = addToLast && _lastGarbageLayer is not null 
                 ? _lastGarbageLayer 
@@ -474,29 +486,25 @@ namespace Blockstacker.Gameplay
             newGarbageLayer.TriggerBlocksAdded();
         }
 
-        public void AddCheeseLayer(LuaTable slotsTable, bool addToLast)
+        public void AddGarbageLayer(LuaTable slotsTable, bool addToLast)
         {
-            List<List<bool>> slots = new();
-            foreach (var entry in slotsTable)
+            var slots = new List<List<bool>>();
+
+            foreach (LuaTable entry in slotsTable)
             {
-                if (entry is not LuaTable line) continue;
+                var line = new List<bool>();
+                foreach (bool slot in entry)
+                    line.Add(slot);
 
-                slots.Add(new List<bool>());
-                foreach (var slotObject in line)
-                {
-                    if (slotObject is bool slot)
-                        slots[-1].Add(slot);
-                }
+                if (line.Count != Width || line.TrueForAll(isOccupied => isOccupied)) continue;
+                slots.Add(line);
             }
-
-            AddCheeseLayer(slots, addToLast);
+            
+            AddGarbageLayer(slots, addToLast);
         }
 
-        public void InitializeCheesePools()
+        public void InitializeGarbagePools()
         {
-            if (_settings.Objective.CheeseGeneration == GameSettings.Enums.CheeseGeneration.None &&
-                !_settings.Objective.UseCustomCheeseScript) return;
-
             _garbageLayerPool = new ObjectPool<GarbageLayer>(
                 CreateGarbageLayer,
                 cc => cc.gameObject.SetActive(true),

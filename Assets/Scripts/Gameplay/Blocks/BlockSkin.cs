@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Common.Extensions;
-using Blockstacker.Gameplay.CheeseGeneration;
+using Blockstacker.Gameplay.GarbageGeneration;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.GlobalSettings;
 using Blockstacker.GlobalSettings.Appliers;

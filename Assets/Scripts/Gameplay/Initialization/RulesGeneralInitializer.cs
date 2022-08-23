@@ -71,7 +71,7 @@ namespace Blockstacker.Gameplay.Initialization
                 _gameSettings.Rules.General.CustomRandomizerScript = File.ReadAllText(randomizerScriptPath);
             }
 
-            var isValid = true;
+            string validationErrors = null;
             var seed = _gameSettings.Rules.General.ActiveSeed;
 
             IRandomizer randomizer = _gameSettings.Rules.General.RandomizerType switch
@@ -86,13 +86,13 @@ namespace Blockstacker.Gameplay.Initialization
                     _pieceCount,
                     _gameSettings.Rules.General.CustomRandomizerScript,
                     seed,
-                    out isValid),
+                    out validationErrors),
                 _ => new CountPerBagRandomizer(_pieceCount, seed)
             };
 
-            if (!isValid)
+            if (validationErrors is not null)
             {
-                _errorBuilder.AppendLine("Custom randomizer script is not valid.");
+                _errorBuilder.AppendLine(validationErrors);
                 return;
             }
 

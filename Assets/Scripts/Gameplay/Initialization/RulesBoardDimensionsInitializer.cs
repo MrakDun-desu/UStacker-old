@@ -64,8 +64,6 @@ namespace Blockstacker.Gameplay.Initialization
                 _boardGrid.AddBlock(gridBlock);
             }
 
-            _board.InitializeCheesePools();
-            
             _camera.orthographicSize =
                 boardDimensions.BoardHeight * .5f + _gameSettings.Rules.BoardDimensions.BoardPadding;
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Blockstacker.Gameplay.Blocks;
+using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Presentation;
 using Blockstacker.GameSettings;
@@ -14,6 +15,7 @@ namespace Blockstacker.Gameplay.Initialization
     public class GameInitializer : MonoBehaviour
     {
         [SerializeField] private GameSettingsSO _gameSettingsAsset;
+        [SerializeField] private MediatorSO _mediator;
 
         [Space] [SerializeField] private Piece[] _availablePieces = Array.Empty<Piece>();
 
@@ -93,6 +95,9 @@ namespace Blockstacker.Gameplay.Initialization
                     _srsRotationSystemSo.RotationSystem,
                     _srsPlusRotationSystemSo.RotationSystem,
                     _inputProcessor),
+                new GarbageGenerationInitializer(
+                    errorBuilder, _gameSettingsAsset,
+                    _board),
                 new PresentationInitializer(
                     errorBuilder, _gameSettingsAsset,
                     _gameTitle,

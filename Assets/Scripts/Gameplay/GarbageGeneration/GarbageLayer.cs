@@ -7,7 +7,7 @@ using Blockstacker.Gameplay.Pieces;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Blockstacker.Gameplay.CheeseGeneration
+namespace Blockstacker.Gameplay.GarbageGeneration
 {
     public class GarbageLayer : MonoBehaviour, IBlockCollection
     {

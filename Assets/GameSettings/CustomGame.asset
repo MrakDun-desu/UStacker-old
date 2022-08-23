@@ -21,7 +21,7 @@ MonoBehaviour:
         AllowedSpins: 0
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: 1646944106
+        ActiveSeed: -1762259456
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
@@ -127,8 +127,8 @@ MonoBehaviour:
       GameEndCondition: 2
       EndConditionCount: 40
       ToppingOutIsOkay: 0
-      CheeseGeneration: -1
-      MaxCheeseHeight: 5
+      CheeseGeneration: 1
+      MaxCheeseHeight: 7
       UseCustomCheeseScript: 0
       CustomCheeseScriptName: 
       CustomCheeseScript: 
