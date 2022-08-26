@@ -7,9 +7,9 @@ namespace Blockstacker.Common
     {
         public static string GlobalSettings => Path.Combine(Application.persistentDataPath, "appSettings.json");
         public static string InputPresets => Path.Combine(Application.persistentDataPath, "inputPresets");
-        public static string RulesCustomization => Path.Combine(Application.persistentDataPath, "rulesCustomization");
+        private static string RulesCustomization => Path.Combine(Application.persistentDataPath, "rulesCustomization");
         public static string Randomizers => Path.Combine(RulesCustomization, "randomizers");
-        public static string CheeseGenerators => Path.Combine(RulesCustomization, "cheeseGenerators");
+        public static string CheeseGenerators => Path.Combine(RulesCustomization, "garbageGenerators");
         public static string ScoringSystems => Path.Combine(RulesCustomization, "scoringSystems");
         public static string RotationSystems => Path.Combine(RulesCustomization, "rotationSystems");
         

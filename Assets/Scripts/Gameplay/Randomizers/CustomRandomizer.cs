@@ -23,20 +23,27 @@ namespace Blockstacker.Gameplay.Randomizers
 
         public int GetNextPiece()
         {
-            var result = _nextPieceFunction.Call();
-
-            if (result.Length < 1) return 0;
-
-            var nextPiece = result[0] switch
+            try
             {
-                double d => (int) d,
-                long l => (int) l,
-                int i => i,
-                _ => 0
-            };
+                var result = _nextPieceFunction.Call();
 
-            nextPiece = Mathf.Clamp(nextPiece, 0, _pieceCount - 1);
-            return nextPiece;
+                if (result.Length < 1) return 0;
+
+                var nextPiece = result[0] switch
+                {
+                    double d => (int) d,
+                    long l => (int) l,
+                    int i => i,
+                    _ => 0
+                };
+
+                nextPiece = Mathf.Clamp(nextPiece, 0, _pieceCount - 1);
+                return nextPiece;
+            }
+            catch (LuaException)
+            {
+                return 0;
+            }
         }
 
         private string ValidateScript(int seed, string script)
@@ -46,7 +53,7 @@ namespace Blockstacker.Gameplay.Randomizers
                 _luaState[SEED_VARIABLE_NAME] = seed;
                 var retValue = _luaState.DoString(script);
                 if (retValue.Length < 1) 
-                    return "Error: Randomizer script doesn't return.";
+                    return "Error: Randomizer script doesn't return";
                 _nextPieceFunction = retValue[0] as LuaFunction;
             }
             catch (LuaException ex)

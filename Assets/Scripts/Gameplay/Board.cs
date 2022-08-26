@@ -12,7 +12,6 @@ using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
 using Blockstacker.GlobalSettings;
 using Blockstacker.GlobalSettings.Appliers;
-using NLua;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
@@ -484,23 +483,6 @@ namespace Blockstacker.Gameplay
             }
             
             newGarbageLayer.TriggerBlocksAdded();
-        }
-
-        public void AddGarbageLayer(LuaTable slotsTable, bool addToLast)
-        {
-            var slots = new List<List<bool>>();
-
-            foreach (LuaTable entry in slotsTable)
-            {
-                var line = new List<bool>();
-                foreach (bool slot in entry)
-                    line.Add(slot);
-
-                if (line.Count != Width || line.TrueForAll(isOccupied => isOccupied)) continue;
-                slots.Add(line);
-            }
-            
-            AddGarbageLayer(slots, addToLast);
         }
 
         public void InitializeGarbagePools()

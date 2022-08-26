@@ -54,9 +54,10 @@ namespace Blockstacker.Gameplay.GarbageGeneration
                     }
 
                     _linesLeft = _holeSizes[_random.Next(_holeSizes.Count)];
-                    var newHole = _random.Next((int) _board.Width);
-                    while (newHole == _lastHole)
+                    int newHole;
+                    do
                         newHole = _random.Next((int) _board.Width);
+                    while (newHole == _lastHole);
                     
                     _lastHole = newHole;
                     addToLast = false;

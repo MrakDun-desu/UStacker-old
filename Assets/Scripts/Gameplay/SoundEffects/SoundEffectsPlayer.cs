@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blockstacker.Common.Alerts;
+using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.GlobalSettings.Music;
 using NLua;
@@ -90,6 +91,7 @@ namespace Blockstacker.Gameplay.SoundEffects
                 return false;
             
             _luaState = new Lua();
+            _luaState.RestrictMaliciousFunctions();
             LuaTable events = null;
             try
             {
