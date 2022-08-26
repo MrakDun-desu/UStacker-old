@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Blockstacker.Common.Alerts;
 using Blockstacker.Gameplay;
 using Blockstacker.Gameplay.Communication;
 using NLua;
@@ -23,7 +24,7 @@ namespace Gameplay.Stats
         private void Start()
         {
             _luaState = new Lua();
-            _luaState["stats"] = _counter.Stats;
+            _luaState["Stats"] = _counter.Stats;
             _updateStatCor = StartCoroutine(UpdateStatCor());
             _mediator.Register<GameRestartedMessage>(_ => HandleGameRestarted());
             _mediator.Register<GameLostMessage>(_ => HandleGameEnded());
@@ -31,7 +32,7 @@ namespace Gameplay.Stats
 
         private void HandleGameRestarted()
         {
-            _luaState["stats"] = _counter.Stats;
+            _luaState["Stats"] = _counter.Stats;
             if (_updateStatCor != null) return;
             _updateStatCor = StartCoroutine(UpdateStatCor());
         }
@@ -46,7 +47,7 @@ namespace Gameplay.Stats
         {
             while (true)
             {
-                _luaState["currentTime"] = _timer.CurrentTimeAsSpan;
+                _luaState["CurrentTime"] = _timer.CurrentTimeAsSpan;
                 string displayString;
                 try
                 {
@@ -54,6 +55,8 @@ namespace Gameplay.Stats
                 }
                 catch (LuaException ex)
                 {
+                    _ = AlertDisplayer.Instance.ShowAlert(new Alert("Exception in stat script",
+                        $"Exception in script:\n {ex.Message}", AlertType.Error));
                     displayString = ex.Message;
                 }
 

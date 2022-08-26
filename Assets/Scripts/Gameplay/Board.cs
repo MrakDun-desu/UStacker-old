@@ -132,7 +132,7 @@ namespace Blockstacker.Gameplay
         private void OnGameStarted(GameStartedMessage message)
         {
             GarbageGenerator?.ResetState(message.Seed);
-            GarbageGenerator?.GenerateGarbage(_settings.Objective.MaxCheeseHeight);
+            GarbageGenerator?.GenerateGarbage(_settings.Objective.GarbageHeight);
         }
 
         private GarbageLayer CreateGarbageLayer()
@@ -306,7 +306,7 @@ namespace Blockstacker.Gameplay
             midgameMessage.CurrentBackToBack = _currentBackToBack;
 
             _mediator.Send(midgameMessage);
-            GarbageGenerator?.GenerateGarbage(_settings.Objective.MaxCheeseHeight - GarbageHeight, midgameMessage);
+            GarbageGenerator?.GenerateGarbage(_settings.Objective.GarbageHeight - GarbageHeight, midgameMessage);
         }
 
         public Vector2Int WorldSpaceToBoardPosition(Vector3 worldSpacePos)
@@ -376,7 +376,7 @@ namespace Blockstacker.Gameplay
             var piecePlacedMsg =
                 new PiecePlacedMessage
                 {
-                    LinesCleared = linesCleared, CheeseLinesCleared = cheeseLinesCleared, WasAllClear = wasAllClear,
+                    LinesCleared = linesCleared, GarbageLinesCleared = cheeseLinesCleared, WasAllClear = wasAllClear,
                     Time = placementTime, WasSpin = lastSpinResult.WasSpin, WasSpinMini = lastSpinResult.WasSpinMini,
                     WasSpinRaw = lastSpinResult.WasSpinRaw, WasSpinMiniRaw = lastSpinResult.WasSpinMiniRaw,
                     PieceType = piece.Type

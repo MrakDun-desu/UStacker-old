@@ -22,18 +22,18 @@ namespace Blockstacker.Gameplay.Initialization
 
         public override void Execute()
         {
-            if (!_gameSettings.Objective.UseCustomCheeseScript &&
-                _gameSettings.Objective.CheeseGeneration == CheeseGeneration.None)
+            if (!_gameSettings.Objective.UseCustomGarbageScript &&
+                _gameSettings.Objective._garbageGeneration == GameSettings.Enums.GarbageGeneration.None)
                 return;
             
             _board.InitializeGarbagePools();
             
             var readonlyBoard = new ReadonlyBoard(_board);
-            if (_gameSettings.Objective.UseCustomCheeseScript)
+            if (_gameSettings.Objective.UseCustomGarbageScript)
             {
                 var cheeseScriptPath = Path.Combine(
                     CustomizationPaths.CheeseGenerators,
-                    _gameSettings.Objective.CustomCheeseScriptName
+                    _gameSettings.Objective.CustomGarbageScriptName
                 );
                 if (!File.Exists(cheeseScriptPath))
                 {
@@ -41,21 +41,21 @@ namespace Blockstacker.Gameplay.Initialization
                     return;
                 }
 
-                _gameSettings.Objective.CustomCheeseScript = File.ReadAllText(cheeseScriptPath);
+                _gameSettings.Objective.CustomGarbageScript = File.ReadAllText(cheeseScriptPath);
 
             }
 
             string validationErrors = null;
 
-            IGarbageGenerator garbageGenerator = _gameSettings.Objective.UseCustomCheeseScript switch
+            IGarbageGenerator garbageGenerator = _gameSettings.Objective.UseCustomGarbageScript switch
             {
                 false => new DefaultGarbageGenerator(
                     readonlyBoard,
-                    _gameSettings.Objective.CheeseGeneration
+                    _gameSettings.Objective._garbageGeneration
                     ),
                 true => new CustomGarbageGenerator(
                     readonlyBoard,
-                    _gameSettings.Objective.CustomCheeseScript,
+                    _gameSettings.Objective.CustomGarbageScript,
                     out validationErrors)
             };
 

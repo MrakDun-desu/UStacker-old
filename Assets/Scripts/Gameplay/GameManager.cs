@@ -30,7 +30,8 @@ namespace Blockstacker.Gameplay
         private bool _gameEnded;
         private bool _gameLost;
         private bool _gameStarted;
-        private bool _gameRunning;
+
+        public bool GameRunning { get; private set; }
 
         #region Game event management
 
@@ -40,7 +41,7 @@ namespace Blockstacker.Gameplay
                 FirstTimeGameStart();
             if (_gameLost || _gameEnded)
                 GameRestartAfterEnd();
-            _gameRunning = true;
+            GameRunning = true;
             _mediator.Send(new GameStartedMessage {Seed = _settings.Rules.General.ActiveSeed});
             GameStarted.Invoke();
         }
@@ -63,7 +64,7 @@ namespace Blockstacker.Gameplay
         {
             if (_gameEnded || !_gameStarted) return;
 
-            if (_gameRunning)
+            if (GameRunning)
             {
                 GamePaused.Invoke();
                 _mediator.Send(new GamePausedMessage());
@@ -74,7 +75,7 @@ namespace Blockstacker.Gameplay
                 _mediator.Send(new GameResumedMessage());
             }
 
-            _gameRunning = !_gameRunning;
+            GameRunning = !GameRunning;
         }
 
         public void Restart()
@@ -101,7 +102,7 @@ namespace Blockstacker.Gameplay
             _gameEnded = true;
             Replay.ActionList = new List<InputActionMessage>();
             Replay.ActionList.AddRange(_gameRecorder.ActionList);
-            Replay.Stats = _statCounter.Stats with { };
+            Replay.Stats = _statCounter.Stats;
             Replay.GameLength = _timer.CurrentTimeAsSpan;
             GameEnded.Invoke();
             _mediator.Send(new GameEndedMessage());
@@ -144,15 +145,15 @@ namespace Blockstacker.Gameplay
         {
             switch (_settings.Objective.GameEndCondition)
             {
-                case GameEndCondition.Score:
-                    break;
                 case GameEndCondition.Time:
                     break;
                 case GameEndCondition.LinesCleared:
                     if (_statCounter.Stats.LinesCleared >= _settings.Objective.EndConditionCount)
                         EndGame();
                     break;
-                case GameEndCondition.CheeseLinesCleared:
+                case GameEndCondition.GarbageLinesCleared:
+                    if (_statCounter.Stats.GarbageLinesCleared >= _settings.Objective.EndConditionCount)
+                        EndGame();
                     break;
                 case GameEndCondition.PiecesPlaced:
                     if (_statCounter.Stats.PiecesPlaced >= _settings.Objective.EndConditionCount)

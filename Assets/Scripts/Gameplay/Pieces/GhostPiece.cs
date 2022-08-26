@@ -73,10 +73,10 @@ namespace Blockstacker.Gameplay.Pieces
             ChangeColoring(AppSettings.Gameplay.ColorGhostPiece);
         }
 
-        private void ChangeColoring(bool value)
+        private void ChangeColoring(bool colorGhostPiece)
         {
-            _colorGhostPiece = value;
-            CurrentColor = _defaultColor;
+            _colorGhostPiece = colorGhostPiece;
+            CurrentColor = colorGhostPiece ? _activePiece.GhostPieceColor : _defaultColor;
         }
         
         public void Render()

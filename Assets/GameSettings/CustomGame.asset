@@ -21,7 +21,7 @@ MonoBehaviour:
         AllowedSpins: 0
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: -346817566
+        ActiveSeed: 21527842
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
@@ -127,11 +127,11 @@ MonoBehaviour:
       GameEndCondition: 2
       EndConditionCount: 40
       ToppingOutIsOkay: 0
-      CheeseGeneration: 0
-      MaxCheeseHeight: 7
-      UseCustomCheeseScript: 0
-      CustomCheeseScriptName: 
-      CustomCheeseScript: 
+      _garbageGeneration: 1
+      GarbageHeight: 10
+      UseCustomGarbageScript: 0
+      CustomGarbageScriptName: 
+      CustomGarbageScript: 
     Presentation:
       Title: Sprint 40L
       UseCountdown: 1

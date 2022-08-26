@@ -3,7 +3,7 @@ using System;
 namespace Blockstacker.GameSettings.Enums
 {
     [Flags]
-    public enum CheeseGeneration : short
+    public enum GarbageGeneration : short
     {
         None = 0,
         Singles = 1,

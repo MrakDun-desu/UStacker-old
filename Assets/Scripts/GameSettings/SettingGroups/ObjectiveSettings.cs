@@ -10,10 +10,10 @@ namespace Blockstacker.GameSettings.SettingGroups
         public GameEndCondition GameEndCondition = GameEndCondition.LinesCleared;
         public double EndConditionCount = 40;
         public bool ToppingOutIsOkay;
-        public CheeseGeneration CheeseGeneration = CheeseGeneration.None;
-        public uint MaxCheeseHeight = 10;
-        public bool UseCustomCheeseScript;
-        public string CustomCheeseScriptName = "";
-        public string CustomCheeseScript = "";
+        public GarbageGeneration _garbageGeneration = GarbageGeneration.None;
+        public uint GarbageHeight = 10;
+        public bool UseCustomGarbageScript;
+        public string CustomGarbageScriptName = "";
+        public string CustomGarbageScript = "";
     }
 }

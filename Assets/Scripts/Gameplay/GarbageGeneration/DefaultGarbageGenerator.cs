@@ -13,15 +13,15 @@ namespace Blockstacker.Gameplay.GarbageGeneration
         private readonly ReadonlyBoard _board;
         private readonly List<int> _holeSizes = new();
 
-        public DefaultGarbageGenerator(ReadonlyBoard board, CheeseGeneration cheeseGeneration)
+        public DefaultGarbageGenerator(ReadonlyBoard board, GameSettings.Enums.GarbageGeneration garbageGeneration)
         {
-            if (cheeseGeneration.HasFlag(CheeseGeneration.Singles))
+            if (garbageGeneration.HasFlag(GameSettings.Enums.GarbageGeneration.Singles))
                 _holeSizes.Add(1);
-            if (cheeseGeneration.HasFlag(CheeseGeneration.Doubles))
+            if (garbageGeneration.HasFlag(GameSettings.Enums.GarbageGeneration.Doubles))
                 _holeSizes.Add(2);
-            if (cheeseGeneration.HasFlag(CheeseGeneration.Triples))
+            if (garbageGeneration.HasFlag(GameSettings.Enums.GarbageGeneration.Triples))
                 _holeSizes.Add(3);
-            if (cheeseGeneration.HasFlag(CheeseGeneration.Quads))
+            if (garbageGeneration.HasFlag(GameSettings.Enums.GarbageGeneration.Quads))
                 _holeSizes.Add(4);
 
             _board = board;

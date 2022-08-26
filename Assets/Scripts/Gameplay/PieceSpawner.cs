@@ -26,6 +26,8 @@ namespace Blockstacker.Gameplay
         private ObjectPool<Piece>[] _piecePools;
         private int _defaultPoolCapacity;
 
+        private bool _containersEmpty = true;
+
         public void InitContainers()
         {
             _previews = new PiecePreviews(PreviewContainers);
@@ -33,34 +35,29 @@ namespace Blockstacker.Gameplay
 
         public void PrespawnPieces()
         {
-            foreach (var piecePool in _piecePools)
-            {
-                var newPieces = new Piece[_defaultPoolCapacity];
-                for (var i = 0; i < _defaultPoolCapacity; i++)
-                    newPieces[i] = piecePool.Get();
-
-                foreach (var newPiece in newPieces)
-                    piecePool.Release(newPiece);
-            }
-
             foreach (var nextIndex in PreviewContainers.Select(_ => Randomizer.GetNextPiece()))
             {
                 var nextPiece = GetPieceFromPool(nextIndex);
                 nextPiece.SetBoard(_board);
                 _previews.AddPiece(nextPiece);
             }
+
+            _containersEmpty = false;
         }
 
         public void SpawnPiece() => SpawnPiece(0d);
 
-        public void SpawnPiece(double spawnTime)
+        public bool SpawnPiece(double spawnTime)
         {
+            if (!_manager.GameRunning || _containersEmpty) return false;
+            
             var nextIndex = Randomizer.GetNextPiece();
             var swappedPiece = GetPieceFromPool(nextIndex);
             swappedPiece.SetBoard(_board);
             var nextPiece = _previews.AddPiece(swappedPiece);
 
             SpawnPiece(nextPiece, spawnTime);
+            return true;
         }
 
         public void SpawnPiece(Piece piece, double spawnTime)
@@ -71,6 +68,7 @@ namespace Blockstacker.Gameplay
                 (int) _settings.Rules.BoardDimensions.PieceSpawnHeight,
                 boardTransform.position.z
             );
+
             var pieceTransform = piece.transform;
             pieceTransform.SetParent(boardTransform);
             pieceTransform.localScale = Vector3.one;
@@ -84,9 +82,7 @@ namespace Blockstacker.Gameplay
 
             _warningPiece.SetPiece(_previews.GetFirstPiece());
 
-            var nextPiece = "";
-            if (AppSettings.Sound.HearNextPieces)
-                nextPiece = _previews.GetFirstPieceType();
+            var nextPiece = AppSettings.Sound.HearNextPieces ? _previews.GetFirstPieceType() : "";
 
             _mediator.Send(new PieceSpawnedMessage
             {
@@ -101,6 +97,8 @@ namespace Blockstacker.Gameplay
         {
             foreach (var piece in PreviewContainers.Select(container => container.SwapPiece(null))
                          .Where(piece => piece != null)) Destroy(piece.gameObject);
+
+            _containersEmpty = true;
         }
 
         public void SetAvailablePieces(IEnumerable<Piece> pieces)

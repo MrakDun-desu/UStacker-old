@@ -104,7 +104,6 @@ namespace Blockstacker.Gameplay.Blocks
             switch (BlockCollection)
             {
                 case GhostPiece ghostPiece:
-                {
                     _renderer.color = _renderer.color.WithAlpha(
                         AppSettings.Gameplay.GhostPieceVisibility);
 
@@ -114,7 +113,6 @@ namespace Blockstacker.Gameplay.Blocks
                     ghostPiece.ColorChanged += ChangeColor;
                     ChangeColor(ghostPiece.CurrentColor);
                     break;
-                }
                 case BoardGrid:
                     _renderer.color = _renderer.color.WithAlpha(
                         AppSettings.Gameplay.GridVisibility);

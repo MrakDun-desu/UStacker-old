@@ -22,11 +22,16 @@ namespace Gameplay.Stats
         public uint MiniSpinDoubles;
         public uint MiniSpinTriples;
         public uint MiniSpinQuads;
-
         public uint LongestCombo;
         public uint LongestBackToBack;
         public uint AllClears;
         public uint Holds;
+        public uint GarbageLinesCleared;
+        public double PiecesPerSecond;
+        public double KeysPerPiece;
+        public double KeysPerSecond;
+        public double LinesPerMinute;
+        public string Score;
 
         public void Reset()
         {
@@ -35,5 +40,7 @@ namespace Gameplay.Stats
                 fieldInfo.SetValue(this, default);
             }
         }
+        
+
     }
 }

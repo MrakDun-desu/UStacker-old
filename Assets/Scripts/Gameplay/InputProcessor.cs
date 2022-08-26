@@ -680,7 +680,8 @@ namespace Blockstacker.Gameplay
             _lockTime = double.PositiveInfinity;
             _pieceLocking = false;
             _hardLockAmount = double.PositiveInfinity;
-            _spawner.SpawnPiece(_pieceSpawnTime);
+            if (!_spawner.SpawnPiece(_pieceSpawnTime))
+                return;
             _dropTimer = _pieceSpawnTime + _effectiveDropTime;
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Placement))
                 _dasDelay = _pieceSpawnTime + _handling.DasCutDelay;
