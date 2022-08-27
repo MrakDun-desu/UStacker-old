@@ -1,28 +1,40 @@
 using System;
+using System.Collections.Generic;
+using Blockstacker.Common.Extensions;
 
 namespace Blockstacker.Gameplay.Randomizers
 {
     public class PairsRandomizer : IRandomizer
     {
-        private readonly int _range;
+        
+        private readonly List<string> _availableValues = new()
+        {
+            "i",
+            "t",
+            "o",
+            "l",
+            "j",
+            "s",
+            "z",
+        };
         private readonly Random _random;
-        private int _lastValue;
+        private int _lastIndex;
         private bool _shouldChange = true;
 
-        public PairsRandomizer(int range, int seed)
+        public PairsRandomizer(IEnumerable<string> availablePieces, int seed)
         {
-            _range = range;
+            _availableValues = _availableValues.Filter(availablePieces);
+            
             _random = new Random(seed);
-            _lastValue = range;
         }
 
-        public int GetNextPiece()
+        public string GetNextPiece()
         {
             if (_shouldChange)
-                _lastValue = _random.Next(0, _range);
+                _lastIndex = _random.Next(0, _availableValues.Count);
 
             _shouldChange = !_shouldChange;
-            return _lastValue;
+            return _availableValues[_lastIndex];
         }
     }
 }

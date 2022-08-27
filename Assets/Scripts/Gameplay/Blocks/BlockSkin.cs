@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.GarbageGeneration;
@@ -22,8 +21,9 @@ namespace Blockstacker.Gameplay.Blocks
         private List<SpriteRecord> _currentSprites = new();
         
         public IBlockCollection BlockCollection { get; set; }
+
         public Board Board { get; set; }
-        
+
         public SkinRecord SkinRecord
         {
             get => _skinRecord;

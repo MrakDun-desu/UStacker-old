@@ -11209,13 +11209,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameSettingsAsset: {fileID: 11400000, guid: 82a8dfd8c479a9746b991978530983d6, type: 2}
   _availablePieces:
-  - {fileID: 1093545944072464245, guid: e4fe46de298d9114a9907985cff363b0, type: 3}
-  - {fileID: 1093545944072464245, guid: 109f4435ed1d5b449a0dcb9107955691, type: 3}
-  - {fileID: 1093545944072464245, guid: c054b28fcee28a041a7cbf6bdfbde795, type: 3}
-  - {fileID: 1093545944072464245, guid: f407f41436c22fa429a0ee4de961f329, type: 3}
-  - {fileID: 1093545944072464245, guid: b71c5698d64d8f64d80a8374acee1936, type: 3}
-  - {fileID: 1093545944072464245, guid: fdc4cb4c34148dc4e86a85b812183cd8, type: 3}
-  - {fileID: 1093545944072464245, guid: 540307ddda24a584587b1ed1be668cdd, type: 3}
+    _entries:
+    - Key: i
+      Value: {fileID: 1093545944072464245, guid: e4fe46de298d9114a9907985cff363b0, type: 3}
+    - Key: t
+      Value: {fileID: 1093545944072464245, guid: 109f4435ed1d5b449a0dcb9107955691, type: 3}
+    - Key: o
+      Value: {fileID: 1093545944072464245, guid: b71c5698d64d8f64d80a8374acee1936, type: 3}
+    - Key: l
+      Value: {fileID: 1093545944072464245, guid: c054b28fcee28a041a7cbf6bdfbde795, type: 3}
+    - Key: j
+      Value: {fileID: 1093545944072464245, guid: f407f41436c22fa429a0ee4de961f329, type: 3}
+    - Key: s
+      Value: {fileID: 1093545944072464245, guid: fdc4cb4c34148dc4e86a85b812183cd8, type: 3}
+    - Key: z
+      Value: {fileID: 1093545944072464245, guid: 540307ddda24a584587b1ed1be668cdd, type: 3}
+    _duplicateEntries: []
   _pieceSpawner: {fileID: 1685487601}
   _board: {fileID: 878271531}
   _boardBackground: {fileID: 569528455}

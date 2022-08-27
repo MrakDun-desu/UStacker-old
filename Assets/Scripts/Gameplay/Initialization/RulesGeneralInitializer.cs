@@ -1,38 +1,37 @@
+using System;
 using System.IO;
 using System.Text;
 using Blockstacker.Common;
-using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Randomizers;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
 using UnityEngine;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace Blockstacker.Gameplay.Initialization
 {
     public class RulesGeneralInitializer : InitializerBase
     {
-        private readonly Piece[] _availablePieces;
+        private readonly PieceDictionary _availablePieces;
         private readonly Board _board;
         private readonly InputProcessor _inputProcessor;
         private readonly bool _isRestarting;
         private readonly PieceContainer _pieceContainerPrefab;
-        private readonly int _pieceCount;
         private readonly PieceSpawner _spawner;
 
         public RulesGeneralInitializer(
             StringBuilder problemBuilder,
             GameSettingsSO gameSettings,
-            int pieceCount,
+            PieceDictionary availablePieces,
             PieceSpawner spawner,
-            Piece[] availablePieces,
             Board board,
             PieceContainer pieceContainerPrefab,
             InputProcessor inputProcessor,
             bool isRestarting = false) : base(problemBuilder, gameSettings)
         {
-            _pieceCount = pieceCount;
-            _spawner = spawner;
             _availablePieces = availablePieces;
+            _spawner = spawner;
             _board = board;
             _pieceContainerPrefab = pieceContainerPrefab;
             _inputProcessor = inputProcessor;
@@ -76,18 +75,18 @@ namespace Blockstacker.Gameplay.Initialization
 
             IRandomizer randomizer = _gameSettings.Rules.General.RandomizerType switch
             {
-                RandomizerType.SevenBag => new CountPerBagRandomizer(_pieceCount, seed),
-                RandomizerType.FourteenBag => new CountPerBagRandomizer(_pieceCount, seed, 2),
-                RandomizerType.Stride => new StrideRandomizer(_pieceCount, seed),
-                RandomizerType.Random => new RandomRandomizer(_pieceCount, seed),
-                RandomizerType.Classic => new ClassicRandomizer(_pieceCount, seed),
-                RandomizerType.Pairs => new PairsRandomizer(_pieceCount, seed),
+                RandomizerType.SevenBag => new CountPerBagRandomizer(_availablePieces.Keys, seed),
+                RandomizerType.FourteenBag => new CountPerBagRandomizer(_availablePieces.Keys, seed, 2),
+                RandomizerType.Stride => new StrideRandomizer(_availablePieces.Keys, seed),
+                RandomizerType.Random => new RandomRandomizer(_availablePieces.Keys, seed),
+                RandomizerType.Classic => new ClassicRandomizer(_availablePieces.Keys, seed),
+                RandomizerType.Pairs => new PairsRandomizer(_availablePieces.Keys, seed),
                 RandomizerType.Custom => new CustomRandomizer(
-                    _pieceCount,
+                    _availablePieces.Keys,
                     _gameSettings.Rules.General.CustomRandomizerScript,
                     seed,
                     out validationErrors),
-                _ => new CountPerBagRandomizer(_pieceCount, seed)
+                _ => throw new IndexOutOfRangeException()
             };
 
             if (validationErrors is not null)
@@ -97,6 +96,9 @@ namespace Blockstacker.Gameplay.Initialization
             }
 
             _spawner.Randomizer = randomizer;
+
+            if (_isRestarting) return;
+            
             _spawner.SetAvailablePieces(_availablePieces);
         }
 

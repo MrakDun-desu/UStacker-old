@@ -15,9 +15,8 @@ namespace Blockstacker.Gameplay.Initialization
     public class GameInitializer : MonoBehaviour
     {
         [SerializeField] private GameSettingsSO _gameSettingsAsset;
-        [SerializeField] private MediatorSO _mediator;
 
-        [Space] [SerializeField] private Piece[] _availablePieces = Array.Empty<Piece>();
+        [Space] [SerializeField] private PieceDictionary _availablePieces = new();
 
         [Header("Board")] [SerializeField] private PieceSpawner _pieceSpawner;
         [SerializeField] private Board _board;
@@ -83,9 +82,8 @@ namespace Blockstacker.Gameplay.Initialization
                 ),
                 new RulesGeneralInitializer(
                     errorBuilder, _gameSettingsAsset,
-                    _availablePieces.Length,
-                    _pieceSpawner,
                     _availablePieces,
+                    _pieceSpawner,
                     _board,
                     _pieceContainerPrefab,
                     _inputProcessor),
@@ -116,9 +114,8 @@ namespace Blockstacker.Gameplay.Initialization
             {
                 new RulesGeneralInitializer(
                     errorBuilder, _gameSettingsAsset,
-                    _availablePieces.Length,
-                    _pieceSpawner,
                     _availablePieces,
+                    _pieceSpawner,
                     _board,
                     _pieceContainerPrefab,
                     _inputProcessor,

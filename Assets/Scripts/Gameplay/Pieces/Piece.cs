@@ -95,6 +95,11 @@ namespace Blockstacker.Gameplay.Pieces
             }
         }
 
+        public void ReleaseFromPool()
+        {
+            SourcePool.Release(this);
+        }
+
         [ContextMenu("Log block positions")]
         private void LogBlockPositions()
         {
