@@ -16,13 +16,13 @@ namespace Blockstacker.Common.Extensions
             return true;
         }
 
-        public static List<T> Filter<T>(this IEnumerable<T> enumerable, IEnumerable<T> other)
+        public static List<T> Filter<T>(this IEnumerable<T> enumerable, IEnumerable<T> filter)
         {
-            var array = enumerable.ToArray();
-            var outList = other.ToList();
-            for (var i = 0; i < array.Length; i++)
+            var filterArray = filter.ToArray();
+            var outList = enumerable.ToList();
+            for (var i = 0; i < outList.Count; i++)
             {
-                if (array.Contains(array[i])) continue;
+                if (filterArray.Contains(outList[i])) continue;
                 
                 outList.RemoveAt(i);
                 i--;

@@ -15,13 +15,13 @@ MonoBehaviour:
   Settings:
     Rules:
       General:
-        RandomizerType: 6
+        RandomizerType: 0
         CustomRandomizerName: 
         CustomRandomizerScript: 
-        AllowedSpins: 0
+        AllowedSpins: 2
         UseRandomSeed: 1
-        SpecificSeed: 0
-        ActiveSeed: -346817566
+        SpecificSeed: 1666713314
+        ActiveSeed: -1331841548
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1

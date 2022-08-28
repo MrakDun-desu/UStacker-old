@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Blockstacker.Gameplay.Blocks
 {
@@ -7,7 +6,6 @@ namespace Blockstacker.Gameplay.Blocks
     {
         [SerializeField] private Vector2 _initialPosition;
         [SerializeField] private GameObject _holdSkinsParent;
-
 
         private string _originalCollectionType;
 
@@ -55,6 +53,14 @@ namespace Blockstacker.Gameplay.Blocks
 
             _skinsParent.SetActive(!newIsHold);
             _holdSkinsParent.gameObject.SetActive(newIsHold);
+        }
+
+        [ContextMenu("Set initial position")]
+        private void SetInitialPosition()
+        {
+            var localPosition = transform.localPosition;
+            _initialPosition.x = localPosition.x;
+            _initialPosition.y = localPosition.y;
         }
     }
 }

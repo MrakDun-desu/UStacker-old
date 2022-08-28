@@ -512,10 +512,6 @@ PrefabInstance:
       propertyPath: _board
       value: 
       objectReference: {fileID: 878271531}
-    - target: {fileID: 582198197865139037, guid: d1c4816adb56bcc499e2aaf53554988d, type: 3}
-      propertyPath: _settings
-      value: 
-      objectReference: {fileID: 11400000, guid: 82a8dfd8c479a9746b991978530983d6, type: 2}
     - target: {fileID: 6432798660450874880, guid: d1c4816adb56bcc499e2aaf53554988d, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -11224,6 +11220,20 @@ MonoBehaviour:
       Value: {fileID: 1093545944072464245, guid: fdc4cb4c34148dc4e86a85b812183cd8, type: 3}
     - Key: z
       Value: {fileID: 1093545944072464245, guid: 540307ddda24a584587b1ed1be668cdd, type: 3}
+    - Key: giantI
+      Value: {fileID: 1093545944072464245, guid: 57cfc44be73952f4e910fcb7e8ce3f61, type: 3}
+    - Key: giantT
+      Value: {fileID: 1093545944072464245, guid: 5107f6ba27d036143a794303e80352da, type: 3}
+    - Key: giantO
+      Value: {fileID: 1093545944072464245, guid: 036e30a6aeacd0145964ba0fb3894347, type: 3}
+    - Key: giantL
+      Value: {fileID: 1093545944072464245, guid: 5972ff7deadcccf479b7a8b46fc78e69, type: 3}
+    - Key: giantJ
+      Value: {fileID: 1093545944072464245, guid: 7725e2369858e4043ab1bfd70144b12f, type: 3}
+    - Key: giantS
+      Value: {fileID: 1093545944072464245, guid: 305aad9b55270c54fb7a573a753669e4, type: 3}
+    - Key: giantZ
+      Value: {fileID: 1093545944072464245, guid: 5d915780e887d944f8acf1c2f708a414, type: 3}
     _duplicateEntries: []
   _pieceSpawner: {fileID: 1685487601}
   _board: {fileID: 878271531}
