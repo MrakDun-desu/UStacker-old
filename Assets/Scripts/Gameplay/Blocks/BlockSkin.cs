@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.GarbageGeneration;
@@ -17,17 +16,19 @@ namespace Blockstacker.Gameplay.Blocks
     {
         [SerializeField] private SkinRecord _skinRecord;
         [SerializeField] private SpriteRenderer _renderer;
-        
+
         private float _switchFrameTime;
         private List<SpriteRecord> _currentSprites = new();
-        
+
         public IBlockCollection BlockCollection { get; set; }
+
         public Board Board { get; set; }
-        
+
         public SkinRecord SkinRecord
         {
             get => _skinRecord;
-            set {
+            set
+            {
                 _skinRecord = value;
                 RefreshSkin();
             }
@@ -120,9 +121,8 @@ namespace Blockstacker.Gameplay.Blocks
                     GridVisibilityApplier.VisibilityChanged += ChangeAlpha;
                     break;
             }
-
         }
-        
+
         private Vector3 RelativePos(Vector2Int pos)
         {
             var boardScale = Board.transform.localScale;
@@ -155,20 +155,21 @@ namespace Blockstacker.Gameplay.Blocks
                 edges |= Edges.Top;
             if (!MyPieceInPos(Vector2Int.down))
                 edges |= Edges.Bottom;
-            
-            if (!MyPieceInPos(new Vector2Int(1,1)) && MyPieceInPos(Vector2Int.up) && MyPieceInPos(Vector2Int.right))
+
+            if (!MyPieceInPos(new Vector2Int(1, 1)) && MyPieceInPos(Vector2Int.up) && MyPieceInPos(Vector2Int.right))
                 edges |= Edges.TopRight;
-            if (!MyPieceInPos(new Vector2Int(-1,1)) && MyPieceInPos(Vector2Int.up) && MyPieceInPos(Vector2Int.left))
+            if (!MyPieceInPos(new Vector2Int(-1, 1)) && MyPieceInPos(Vector2Int.up) && MyPieceInPos(Vector2Int.left))
                 edges |= Edges.TopLeft;
-            if (!MyPieceInPos(new Vector2Int(1,-1)) && MyPieceInPos(Vector2Int.down) && MyPieceInPos(Vector2Int.right))
+            if (!MyPieceInPos(new Vector2Int(1, -1)) && MyPieceInPos(Vector2Int.down) && MyPieceInPos(Vector2Int.right))
                 edges |= Edges.BottomRight;
             if (!MyPieceInPos(new Vector2Int(-1, -1)) && MyPieceInPos(Vector2Int.down) && MyPieceInPos(Vector2Int.left))
                 edges |= Edges.BottomLeft;
 
-            var connectedSprite = SkinRecord.ConnectedSprites.Find(sprite => sprite.Edges == edges);
+            var connectedSprite = SkinRecord.ConnectedSprites.Find(sprite => sprite.Edges == edges) ??
+                                  SkinRecord.ConnectedSprites.Find(sprite => sprite.Edges == Edges.None);
             if (connectedSprite is null)
                 return;
-            
+
             _currentSprites = connectedSprite.Sprites;
             Update();
         }
@@ -187,14 +188,14 @@ namespace Blockstacker.Gameplay.Blocks
         {
             _renderer.color = _renderer.color.WithAlpha(alpha);
         }
-        
+
         #endregion
 
         public void UnregisterEvents()
         {
             if (Board != null)
                 Board.LinesCleared -= PickConnectedPart;
-            
+
             switch (BlockCollection)
             {
                 case Piece piece:

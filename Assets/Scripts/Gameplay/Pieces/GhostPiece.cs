@@ -6,19 +6,22 @@ using Blockstacker.GameSettings;
 using Blockstacker.GlobalSettings;
 using Blockstacker.GlobalSettings.Appliers;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace Blockstacker.Gameplay.Pieces
 {
     public class GhostPiece : MonoBehaviour, IBlockCollection
     {
-        [SerializeField] private List<BlockBase> Blocks = new();
+        [SerializeField] private BlockBase _blockPrefab;
         [SerializeField] private Board _board;
         [SerializeField] private GameSettingsSO _settings;
 
         private static readonly Color _defaultColor = Color.white;
+        private readonly List<BlockBase> _blocks = new();
         private Piece _activePiece;
         private Color _currentColor = _defaultColor;
         private bool _colorGhostPiece;
+        private ObjectPool<BlockBase> _blockPool;
 
         public Piece ActivePiece
         {
@@ -29,6 +32,8 @@ namespace Blockstacker.Gameplay.Pieces
 
                 _activePiece = value;
                 CurrentColor = _activePiece.GhostPieceColor;
+
+                UpdateBlockCount();
             }
         }
 
@@ -48,20 +53,23 @@ namespace Blockstacker.Gameplay.Pieces
         }
 
         public IEnumerable<Vector3> BlockPositions =>
-            Blocks.Select(block => block.transform.position);
+            _blocks.Select(block => block.transform.position);
 
         public string Type => "ghost";
         public event Action<Color> ColorChanged;
         public event Action Rendered;
-        
+
         private void Awake()
         {
-            for (var i = 0; i < Blocks.Count; i++)
-            {
-                var block = Blocks[i];
-                block.Board = _board;
-                block.BlockNumber = (uint)i;
-            }
+            _blockPool = new ObjectPool<BlockBase>(
+                CreateBlock,
+                block => block.gameObject.SetActive(true),
+                block => block.gameObject.SetActive(false),
+                block => Destroy(block.gameObject),
+                true,
+                4,
+                20
+            );
         }
 
         private void Start()
@@ -73,10 +81,32 @@ namespace Blockstacker.Gameplay.Pieces
             ChangeColoring(AppSettings.Gameplay.ColorGhostPiece);
         }
 
+        private BlockBase CreateBlock()
+        {
+            var newBlock = Instantiate(_blockPrefab, transform);
+            newBlock.Board = _board;
+            newBlock.BlockNumber = (uint)Mathf.Min(_blocks.Count, 3);
+            return newBlock;
+        }
+
         private void ChangeColoring(bool colorGhostPiece)
         {
             _colorGhostPiece = colorGhostPiece;
             CurrentColor = colorGhostPiece ? _activePiece.GhostPieceColor : _defaultColor;
+        }
+
+        private void UpdateBlockCount()
+        {
+            while (_blocks.Count > ActivePiece.Blocks.Count)
+            {
+                _blockPool.Release(_blocks[^1]);
+                _blocks.RemoveAt(_blocks.Count - 1);
+            }
+
+            while (_blocks.Count < ActivePiece.Blocks.Count)
+            {
+                _blocks.Add(_blockPool.Get());
+            }
         }
         
         public void Render()
@@ -84,14 +114,14 @@ namespace Blockstacker.Gameplay.Pieces
             if (!_settings.Rules.Controls.ShowGhostPiece) return;
             
             transform.position = ActivePiece.transform.position;
-            for (var i = 0; i < Blocks.Count; i++)
+            for (var i = 0; i < _blocks.Count; i++)
             {
-                Blocks[i].transform.position = ActivePiece.Blocks[i].transform.position;
-                Blocks[i].transform.rotation = ActivePiece.Blocks[i].transform.rotation;
+                _blocks[i].transform.position = ActivePiece.Blocks[i].transform.position;
+                _blocks[i].transform.rotation = ActivePiece.Blocks[i].transform.rotation;
             }
 
             var moveVector = Vector2Int.down;
-            while (_board.CanPlace(Blocks, moveVector)) moveVector += Vector2Int.down;
+            while (_board.CanPlace(_blocks, moveVector)) moveVector += Vector2Int.down;
             moveVector -= Vector2Int.down;
 
             var pieceTransform = transform;

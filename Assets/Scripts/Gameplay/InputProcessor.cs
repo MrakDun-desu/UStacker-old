@@ -97,14 +97,15 @@ namespace Blockstacker.Gameplay
         public void DeleteActivePiece()
         {
             enabled = false;
-            if (_activePiece != null)
-                Destroy(_activePiece.gameObject);
+            if (!_pieceIsNull)
+                _activePiece.ReleaseFromPool();
             ActivePiece = null;
             
             if (!_settings.Rules.Controls.AllowHold) return;
             var holdPiece = PieceHolder.SwapPiece(null);
-            if (holdPiece != null)
-                Destroy(holdPiece.gameObject);
+            if (holdPiece == null) return;
+            holdPiece.RevertType();
+            holdPiece.ReleaseFromPool();
         }
 
         public void ResetProcessor()

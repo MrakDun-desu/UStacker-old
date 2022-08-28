@@ -1,27 +1,37 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Blockstacker.Common.Extensions;
 
 namespace Blockstacker.Gameplay.Randomizers
 {
     public class CountPerBagRandomizer : IRandomizer
     {
-        private readonly int[] _availableValues;
+        private readonly List<string> _availableValues = new()
+        {
+            "i",
+            "t",
+            "o",
+            "l",
+            "j",
+            "s",
+            "z",
+        };
+
         private readonly int _count;
-        private readonly List<int> _currentValues;
+        private readonly List<string> _currentValues = new();
         private readonly Random _random;
 
-        public CountPerBagRandomizer(int range, int seed, int count = 1)
+        public CountPerBagRandomizer(IEnumerable<string> availablePieces, int seed, int count = 1)
         {
+            _availableValues = _availableValues.Filter(availablePieces);
+            
             _random = new Random(seed);
-            _availableValues = new int[range];
-            for (var i = 0; i < range; i++) 
-                _availableValues[i] = i;
             _count = count;
-            _currentValues = new List<int>();
             InitializeCurrentPieces();
         }
 
-        public int GetNextPiece()
+        public string GetNextPiece()
         {
             if (_currentValues.Count == 0) InitializeCurrentPieces();
             var nextIndex = _random.Next(0, _currentValues.Count);
@@ -32,7 +42,7 @@ namespace Blockstacker.Gameplay.Randomizers
 
         private void InitializeCurrentPieces()
         {
-            for (var i = 0; i < _count; i++) 
+            for (var i = 0; i < _count; i++)
                 _currentValues.AddRange(_availableValues);
         }
     }

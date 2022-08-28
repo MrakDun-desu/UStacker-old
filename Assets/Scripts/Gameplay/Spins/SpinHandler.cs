@@ -27,21 +27,25 @@ namespace Blockstacker.Gameplay.Spins
 
             foreach (var kick in kickList)
             {
-                if (!board.CanPlace(piece, kick)) continue;
+                var actualKick = kick;
+                if (piece.Type.StartsWith("giant"))
+                    actualKick *= 2;
+                
+                if (!board.CanPlace(piece, actualKick)) continue;
 
-                result.Kick = kick;
-                if (piece.SpinDetectors.Count(spinDetector => !board.IsEmpty(spinDetector.position, kick)) <
+                result.Kick = actualKick;
+                if (piece.SpinDetectors.Count(spinDetector => !board.IsEmpty(spinDetector.position, actualKick)) <
                     piece.MinimumSpinDetectors)
                     return true;
 
-                if (piece.FullSpinDetectors.All(spinDetector => !board.IsEmpty(spinDetector.position, kick)) ||
+                if (piece.FullSpinDetectors.All(spinDetector => !board.IsEmpty(spinDetector.position, actualKick)) ||
                     _rotationSystem.GetKickTable(piece.Type).FullSpinKicks.Contains(kick))
                     result.WasSpinRaw = true;
                 else
                     result.WasSpinMiniRaw = true;
 
                 result = CheckSpinResult(result, piece.Type);
-
+                
                 return true;
             }
 
@@ -88,7 +92,11 @@ namespace Blockstacker.Gameplay.Spins
         }
 
         private bool CheckSpinValidity(string pieceType)
-            => pieceType switch
+        {
+            if (pieceType.StartsWith("giant"))
+                pieceType = pieceType[^1].ToString().ToLowerInvariant();
+            
+            return pieceType switch
             {
                 "i" => _allowedSpins.HasFlag(AllowedSpins.ISpins),
                 "t" => _allowedSpins.HasFlag(AllowedSpins.TSpins),
@@ -99,6 +107,7 @@ namespace Blockstacker.Gameplay.Spins
                 "z" => _allowedSpins.HasFlag(AllowedSpins.ZSpins),
                 _ => false
             };
+        }
 
         private IEnumerable<Vector2Int> GetKickList(Piece piece, RotateDirection direction)
         {

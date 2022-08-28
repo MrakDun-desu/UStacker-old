@@ -31,7 +31,7 @@ namespace Blockstacker.Gameplay
             
             _piece.Type = USED_HOLD_TYPE;
             // rotating to reset state
-            _piece.Rotate(360);
+            _piece.Rotate(0);
         }
 
         public void UnmarkUsed()
@@ -41,7 +41,7 @@ namespace Blockstacker.Gameplay
             
             _piece.RevertType();
             // rotating to reset state
-            _piece.Rotate(360);
+            _piece.Rotate(0);
         }
 
         public Piece SwapPiece(Piece newPiece)
@@ -57,6 +57,10 @@ namespace Blockstacker.Gameplay
                 _piece.ContainerOffset.y + Height * .5f);
             pieceTransform.localScale = new Vector3(1, 1, 1);
             pieceTransform.rotation = transform.rotation;
+            
+            // rotating to reset state
+            newPiece.Rotate(0);
+            
             return temp;
         }
     }

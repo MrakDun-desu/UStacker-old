@@ -1,26 +1,33 @@
 using System;
 using System.Collections.Generic;
+using Blockstacker.Common.Extensions;
 
 namespace Blockstacker.Gameplay.Randomizers
 {
     public class StrideRandomizer : IRandomizer
     {
-        private readonly int[] _availableValues;
-        private readonly List<int> _currentValues;
+        private readonly List<string> _availableValues = new()
+        {
+            "i",
+            "t",
+            "o",
+            "l",
+            "j",
+            "s",
+            "z",
+        };
+        private readonly List<string> _currentValues = new();
         private readonly Random _random;
         private int _ignoreSzoFor = 2;
 
-        public StrideRandomizer(int range, int seed)
+        public StrideRandomizer(IEnumerable<string> availablePieces, int seed)
         {
+            _availableValues = _availableValues.Filter(availablePieces);
             _random = new Random(seed);
-            _availableValues = new int[range];
-            for (var i = 0; i < range; i++) 
-                _availableValues[i] = i;
-            _currentValues = new List<int>();
             InitializeCurrentPieces();
         }
 
-        public int GetNextPiece()
+        public string GetNextPiece()
         {
             if (_currentValues.Count == 0) InitializeCurrentPieces();
             var nextIndex = _random.Next(0, _currentValues.Count);
@@ -28,7 +35,7 @@ namespace Blockstacker.Gameplay.Randomizers
 
             if (_ignoreSzoFor > 0)
             {
-                while (nextValue > 3) // undesired pieces are above 3 (o, s, z)
+                while (nextValue is "s" or "z" or "o") // undesired pieces are above 3 (o, s, z)
                 {
                     nextIndex = _random.Next(0, _currentValues.Count);
                     nextValue = _currentValues[nextIndex];

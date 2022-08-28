@@ -22,6 +22,7 @@ namespace Blockstacker.Gameplay.Pieces
         public Transform[] FullSpinDetectors = Array.Empty<Transform>();
         public UnityEvent PieceCleared;
 
+        private bool _activeInPool = true;
         private string _currentType;
         private readonly List<Transform> _activeTransforms = new();
         public event Action Rotated;
@@ -52,7 +53,7 @@ namespace Blockstacker.Gameplay.Pieces
             {
                 var block = Blocks[i];
                 block.Cleared += OnBlockCleared;
-                block.BlockNumber = (uint)i;
+                block.BlockNumber = (uint)Mathf.Min(i, 3);
             }
         }
 
@@ -61,7 +62,7 @@ namespace Blockstacker.Gameplay.Pieces
             _activeTransforms.Remove(sender.transform);
             if (_activeTransforms.Count != 0) return;
             PieceCleared.Invoke();
-            SourcePool.Release(this);
+            ReleaseFromPool();
         }
 
         public void Rotate(int rotationAngle)
@@ -83,6 +84,7 @@ namespace Blockstacker.Gameplay.Pieces
         public void ResetState()
         {
             gameObject.SetActive(true);
+            _activeInPool = true;
             foreach (var block in Blocks)
             {
                 if (!_activeTransforms.Contains(block.transform))
@@ -93,6 +95,14 @@ namespace Blockstacker.Gameplay.Pieces
                 Rotated?.Invoke();
                 RotationState = RotationState.Zero;
             }
+        }
+
+        public void ReleaseFromPool()
+        {
+            if (!_activeInPool) return;
+            
+            SourcePool.Release(this);
+            _activeInPool = false;
         }
 
         [ContextMenu("Log block positions")]

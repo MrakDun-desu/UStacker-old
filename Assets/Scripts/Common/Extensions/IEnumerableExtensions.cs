@@ -15,5 +15,20 @@ namespace Blockstacker.Common.Extensions
             element = list[index];
             return true;
         }
+
+        public static List<T> Filter<T>(this IEnumerable<T> enumerable, IEnumerable<T> filter)
+        {
+            var filterArray = filter.ToArray();
+            var outList = enumerable.ToList();
+            for (var i = 0; i < outList.Count; i++)
+            {
+                if (filterArray.Contains(outList[i])) continue;
+                
+                outList.RemoveAt(i);
+                i--;
+            }
+
+            return outList;
+        }
     }
 }

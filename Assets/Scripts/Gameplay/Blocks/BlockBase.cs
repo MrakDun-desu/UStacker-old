@@ -8,16 +8,15 @@ namespace Blockstacker.Gameplay.Blocks
 {
     public class BlockBase : MonoBehaviour
     {
-        public uint BlockNumber;
         [SerializeField] private BlockSkin _blockSkinPrefab;
         [SerializeField] protected GameObject _skinsParent;
 
         private string _collectionType;
         private IBlockCollection _blockCollection;
         private BlockSkin[] _defaultSkins;
-
         private readonly List<BlockSkin> _currentSkins = new();
 
+        public uint BlockNumber { get; set; }
         public string CollectionType
         {
             get => _collectionType;
@@ -69,6 +68,14 @@ namespace Blockstacker.Gameplay.Blocks
             newSkins = SkinLoader.SkinRecords
                 .Where(record => record.SkinType == CollectionType && record.BlockNumbers.Contains(BlockNumber))
                 .ToArray();
+
+            if (newSkins.Length == 0 && CollectionType.StartsWith("giant"))
+            {
+                var simplifiedCollectionType = CollectionType[^1].ToString().ToLowerInvariant();
+                newSkins = SkinLoader.SkinRecords
+                    .Where(record => record.SkinType == simplifiedCollectionType)
+                    .ToArray();
+            }
 
             return newSkins.Length != 0;
         }
