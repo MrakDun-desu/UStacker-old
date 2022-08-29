@@ -120,15 +120,15 @@ namespace Blockstacker.Gameplay.Levelling
         private void HandlePieceMoved(PieceMovedMessage pieceMoved)
         {
             if (!pieceMoved.WasSoftDrop) return;
-            
-            var newScore = new ScoreAddedMessage {Score = -(long)pieceMoved.Y, Time = pieceMoved.Time};
+
+            var newScore = new ScoreAddedMessage {Score = -(long) pieceMoved.Y, Time = pieceMoved.Time};
             _mediator.Send(newScore);
         }
 
-        private float CalculateGravity()
+        private double CalculateGravity()
         {
-            var effectiveLevel = Mathf.Min(29, (int) _currentLevel);
-            return (float) _levelGravities[effectiveLevel];
+            var effectiveLevel = Mathf.Min(_levelGravities.Length - 1, (int) _currentLevel);
+            return _levelGravities[effectiveLevel];
         }
     }
 }

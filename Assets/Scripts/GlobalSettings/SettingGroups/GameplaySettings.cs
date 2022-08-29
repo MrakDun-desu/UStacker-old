@@ -17,6 +17,5 @@ namespace Blockstacker.GlobalSettings.Groups
         public bool ColorGhostPiece;
         public Vector2 BoardOffset = Vector2.zero;
         public bool ShowNotFocusedWarning = true;
-        public bool MatrixBounce = true;
     }
 }

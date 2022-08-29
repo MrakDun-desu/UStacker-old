@@ -6,18 +6,16 @@ namespace Blockstacker.GlobalSettings.Music
     {
         private MusicPlayer _musicPlayer;
 
-        private void Awake() => FindMusicPlayer();
-
         private void FindMusicPlayer()
         {
             if (_musicPlayer == null)
                 _musicPlayer = FindObjectOfType<MusicPlayer>();
         }
 
-        public void PlayCustomGameTrack()
+        public void PlayGameTrackByType(string gameType)
         {
             FindMusicPlayer();
-            _musicPlayer.PlayCustomGameTrackImmediate();
+            _musicPlayer.PlayTrackByGameTypeImmediate(gameType);
         }
 
         public void PlayVictoryTrack()

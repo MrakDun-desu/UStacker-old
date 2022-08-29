@@ -65,10 +65,9 @@ namespace Blockstacker.GlobalSettings.Music
 
         }
 
-        public void PlayCustomGameTrackImmediate()
+        public void PlayTrackByGameTypeImmediate(string gameType)
         {
-            var customGameMusic = AppSettings.Sound.CustomGameMusic;
-            if (customGameMusic is null || string.IsNullOrEmpty(customGameMusic.Name))
+            if (!AppSettings.Sound.GameMusicDictionary.TryGetValue(gameType, out var gameMusicOption))
             {
                 if (Configuration.GameMusic.TryGetRandomElement(out var trackName))
                     PlayImmediate(trackName);
@@ -76,13 +75,21 @@ namespace Blockstacker.GlobalSettings.Music
                 return;
             }
             
-            switch (customGameMusic.OptionType)
+            if (gameMusicOption is null || string.IsNullOrEmpty(gameMusicOption.Name))
+            {
+                if (Configuration.GameMusic.TryGetRandomElement(out var trackName))
+                    PlayImmediate(trackName);
+
+                return;
+            }
+            
+            switch (gameMusicOption.OptionType)
             {
                 case OptionType.Track:
-                    PlayImmediate(customGameMusic.Name);
+                    PlayImmediate(gameMusicOption.Name);
                     break;
                 case OptionType.Group:
-                    PlayFromGroupImmediate(customGameMusic.Name);
+                    PlayFromGroupImmediate(gameMusicOption.Name);
                     break;
                 case OptionType.Random:
                     if (Configuration.GameMusic.TryGetRandomElement(out var trackName))

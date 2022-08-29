@@ -12,6 +12,6 @@ namespace Blockstacker.Gameplay
         public List<InputActionMessage> ActionList;
         public GameSettingsSO.SettingsContainer GameSettings;
         public StatContainer Stats;
-        public TimeSpan GameLength;
+        public double GameLength;
     }
 }

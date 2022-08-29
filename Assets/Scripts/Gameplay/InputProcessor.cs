@@ -85,8 +85,8 @@ namespace Blockstacker.Gameplay
 
         private void Awake()
         {
-            _normalDropTime = 1 / 60d / _settings.Rules.Levelling.Gravity;
-            _currentGravity = _settings.Rules.Levelling.Gravity;
+            _normalDropTime = 1 / 60d / _settings.Rules.Gravity.DefaultGravity;
+            _currentGravity = _settings.Rules.Gravity.DefaultGravity;
             _effectiveDropTime = _normalDropTime;
             _dropTimer = _normalDropTime;
             _handling = _settings.Rules.Controls.Handling;
@@ -188,7 +188,7 @@ namespace Blockstacker.Gameplay
         private void UpdatePiecePlacementVars(double updateTime)
         {
             if (!_pieceLocking) return;
-            _lockTime = updateTime + _settings.Rules.Levelling.LockDelay;
+            _lockTime = updateTime + _settings.Rules.Gravity.DefaultLockDelay;
             if (_settings.Rules.Controls.OnTouchGround != OnTouchGround.LimitedMoves) return;
             _hardLockAmount -= 1;
             if (_hardLockAmount <= 0) HandlePiecePlacement(updateTime);
@@ -637,7 +637,7 @@ namespace Blockstacker.Gameplay
 
                 if (!_pieceLocking)
                 {
-                    _lockTime = touchGroundTime + _settings.Rules.Levelling.LockDelay;
+                    _lockTime = touchGroundTime + _settings.Rules.Gravity.DefaultLockDelay;
                     switch (_settings.Rules.Controls.OnTouchGround)
                     {
                         case OnTouchGround.LimitedTime:

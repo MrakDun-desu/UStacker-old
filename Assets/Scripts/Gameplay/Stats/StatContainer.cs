@@ -31,7 +31,6 @@ namespace Gameplay.Stats
         public double KeysPerPiece;
         public double KeysPerSecond;
         public double LinesPerMinute;
-        public string Score;
 
         public void Reset()
         {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Blockstacker.GlobalSettings.Music;
 
 namespace Blockstacker.GlobalSettings.Groups
@@ -14,6 +15,6 @@ namespace Blockstacker.GlobalSettings.Groups
         public bool HearNextPieces;
         
         // not viewed in global settings UI
-        public MusicOption CustomGameMusic = new MusicOption(OptionType.Random, "");
+        public Dictionary<string, MusicOption> GameMusicDictionary = new();
     }
 }

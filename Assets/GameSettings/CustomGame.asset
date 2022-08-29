@@ -18,10 +18,10 @@ MonoBehaviour:
         RandomizerType: 6
         CustomRandomizerName: 
         CustomRandomizerScript: 
-        AllowedSpins: 0
+        AllowedSpins: 2
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: 21527842
+        ActiveSeed: -1234502806
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
@@ -107,13 +107,10 @@ MonoBehaviour:
           DelayDasOn: 1
           AntiDasBehavior: 2
           DiagonalLockBehavior: 0
-      Levelling:
-        Gravity: 0.02
-        LockDelay: 0.5
-        StartingLevel: 1
-        LevellingSystem: 3
-        CustomLevellingScriptName: 
-        CustomLevellingScript: 
+      Gravity:
+        DefaultGravity: 0.02
+        DefaultLockDelay: 0.5
+        StartingLevel: 0
       BoardDimensions:
         BoardHeight: 20
         BoardWidth: 10
@@ -124,10 +121,10 @@ MonoBehaviour:
         BoardPadding: 5
     Objective:
       MainStat: 1
-      GameEndCondition: 2
+      GameEndCondition: 1
       EndConditionCount: 40
       ToppingOutIsOkay: 0
-      _garbageGeneration: 1
+      _garbageGeneration: 0
       GarbageHeight: 10
       UseCustomGarbageScript: 0
       CustomGarbageScriptName: 

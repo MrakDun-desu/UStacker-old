@@ -33,7 +33,6 @@ namespace Gameplay.Stats
         public double KeysPerPiece => _parent.KeysPerPiece;
         public double KeysPerSecond => _parent.KeysPerSecond;
         public double LinesPerMinute => _parent.LinesPerMinute;
-        public string Score => _parent.Score;
         
         public ReadonlyStatContainer(StatContainer parent)
         {

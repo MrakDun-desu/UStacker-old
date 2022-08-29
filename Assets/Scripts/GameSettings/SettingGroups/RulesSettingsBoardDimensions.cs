@@ -10,7 +10,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         public uint BoardWidth = 10;
         public uint LethalHeight = 20;
         public uint PieceSpawnHeight = 21;
-        public TopoutCondition TopoutCondition = TopoutCondition.LethalHeightLoose;
+        public TopoutCondition TopoutCondition = TopoutCondition.AllBlocksAboveLethal;
         public bool AllowClutchClears = true;
         public uint BoardPadding = 4;
     }

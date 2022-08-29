@@ -13,6 +13,12 @@ namespace Blockstacker.GlobalSettings.Music
             OptionType = optionType;
             Name = name;
         }
+
+        public MusicOption()
+        {
+            OptionType = OptionType.Random;
+            Name = "";
+        }
     }
 
     public enum OptionType : byte

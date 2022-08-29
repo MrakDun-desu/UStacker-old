@@ -11,8 +11,8 @@ namespace Blockstacker.GameSettings.Changers
         private static TopoutCondition[] Values => new[]
         {
             TopoutCondition.PieceSpawn,
-            TopoutCondition.LethalHeightLoose,
-            TopoutCondition.LethalHeightStrict
+            TopoutCondition.AllBlocksAboveLethal,
+            TopoutCondition.OneBlockAboveLethal
         };
 
         private static string[] ShownValues => new[]

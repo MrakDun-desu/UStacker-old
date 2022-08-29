@@ -100,12 +100,13 @@ namespace Blockstacker.Gameplay
         public void EndGame()
         {
             _gameEnded = true;
+            var gameEndTime = _timer.CurrentTime;
             Replay.ActionList = new List<InputActionMessage>();
             Replay.ActionList.AddRange(_gameRecorder.ActionList);
             Replay.Stats = _statCounter.Stats;
-            Replay.GameLength = _timer.CurrentTimeAsSpan;
+            Replay.GameLength = gameEndTime;
             GameEnded.Invoke();
-            _mediator.Send(new GameEndedMessage());
+            _mediator.Send(new GameEndedMessage {EndTime = gameEndTime});
         }
 
         public void TogglePause(InputAction.CallbackContext ctx)

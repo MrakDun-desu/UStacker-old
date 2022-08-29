@@ -22,7 +22,7 @@ namespace Blockstacker.GlobalSettings.Changers
                 _title.text = _controlPath[^1].FormatCamelCase();
         }
 
-        protected void OnSettingChanged()
+        protected void InvokeSettingChanged()
         {
             SettingChanged?.Invoke();
         }

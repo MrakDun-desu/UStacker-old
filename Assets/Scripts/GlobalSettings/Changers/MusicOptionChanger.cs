@@ -6,14 +6,21 @@ using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Changers
 {
-    public class MusicOptionChanger : AppSettingChangerBase<MusicOption>
+    public class MusicOptionChanger : AppSettingChangerBase<Dictionary<string, MusicOption>>
     {
         [Space]
         [SerializeField] private TMP_Dropdown _typeDropdown;
         [SerializeField] private TMP_Dropdown _nameDropdown;
+        [SerializeField] private string _gameType = "";
 
         private readonly List<MusicOption> _groupOptions = new();
         private readonly List<MusicOption> _trackOptions = new();
+
+        private MusicOption ChangedOption
+        {
+            get => AppSettings.Sound.GameMusicDictionary.TryGetValue(_gameType, out var value) ? value : null;
+            set => AppSettings.Sound.GameMusicDictionary[_gameType] = value;
+        }
 
         private void Start()
         {
@@ -83,7 +90,9 @@ namespace Blockstacker.GlobalSettings.Changers
 
         private void RefreshValue()
         {
-            var currentOption = AppSettings.GetValue<MusicOption>(_controlPath);
+            ChangedOption ??= new MusicOption();
+
+            var currentOption = ChangedOption;
             for (var i = 0; i < _typeDropdown.options.Count; i++)
             {
                 if (!string.Equals(currentOption.OptionType.ToString(), _typeDropdown.options[i].text)) continue;
@@ -101,22 +110,24 @@ namespace Blockstacker.GlobalSettings.Changers
             if (!Enum.TryParse<OptionType>(_typeDropdown.options[index].text, out var newType))
                 return;
 
-            RefreshNameOptions(AppSettings.Sound.CustomGameMusic with
+            RefreshNameOptions(ChangedOption with
             {
                 OptionType = newType
             });
 
-            SetValue(new MusicOption(newType, _nameDropdown.options[0].text));
+            ChangedOption = new MusicOption(newType, _nameDropdown.options[0].text);
+            InvokeSettingChanged();
             AppSettings.TrySave();
         }
 
         public void OnNameSelected(int index)
         {
             var newName = _nameDropdown.options[index].text;
-            SetValue(AppSettings.GetValue<MusicOption>(_controlPath) with
-            {
-                Name = newName
-            });
+            var optionType = ChangedOption.OptionType;
+            
+            ChangedOption = new MusicOption(optionType, newName);
+            
+            InvokeSettingChanged();
             AppSettings.TrySave();
         }
 

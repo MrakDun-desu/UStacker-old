@@ -2074,7 +2074,6 @@ MonoBehaviour:
     KeysPerPiece: 0
     KeysPerSecond: 0
     LinesPerMinute: 0
-    Score: 
 --- !u!4 &557688172
 Transform:
   m_ObjectHideFlags: 0
@@ -6824,15 +6823,16 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 297083102}
-        m_TargetAssemblyTypeName: Blockstacker.Music.MusicPlayerFinder, Blockstacker.Music
-        m_MethodName: PlayCustomGameTrack
-        m_Mode: 1
+        m_TargetAssemblyTypeName: Blockstacker.GlobalSettings.Music.MusicPlayerFinder,
+          Blockstacker.GlobalSettings
+        m_MethodName: PlayGameTrackByType
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: custom
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 1685487601}
@@ -7466,13 +7466,10 @@ MonoBehaviour:
             DelayDasOn: 0
             AntiDasBehavior: 1
             DiagonalLockBehavior: 0
-        Levelling:
-          Gravity: 0.02
-          LockDelay: 0.5
-          StartingLevel: 1
-          LevellingSystem: 3
-          CustomLevellingScriptName: 
-          CustomLevellingScript: 
+        Gravity:
+          DefaultGravity: 0.02
+          DefaultLockDelay: 0.5
+          StartingLevel: 0
         BoardDimensions:
           BoardHeight: 22
           BoardWidth: 10
@@ -7523,7 +7520,7 @@ MonoBehaviour:
       KeysPerPiece: 0
       KeysPerSecond: 0
       LinesPerMinute: 0
-      Score: 
+    GameLength: 0
 --- !u!4 &1579597092
 Transform:
   m_ObjectHideFlags: 0
@@ -9778,7 +9775,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameSettingsAsset: {fileID: 11400000, guid: 82a8dfd8c479a9746b991978530983d6, type: 2}
-  _mediator: {fileID: 0}
   _availablePieces:
     _entries:
     - Key: i

@@ -71,7 +71,7 @@ namespace Blockstacker.GlobalSettings.Changers
             _slider.SetRealValue(newValue);
             SetValue(newValue);
             _valueChanged.Invoke(newValue);
-            OnSettingChanged();
+            InvokeSettingChanged();
         }
 
         public void OnSliderMoved()
@@ -89,7 +89,7 @@ namespace Blockstacker.GlobalSettings.Changers
 
             SetValue(value);
             _valueChanged.Invoke(value);
-            OnSettingChanged();
+            InvokeSettingChanged();
         }
     }
 }

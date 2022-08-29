@@ -392,11 +392,11 @@ namespace Blockstacker.Gameplay
             {
                 case TopoutCondition.PieceSpawn:
                     break;
-                case TopoutCondition.LethalHeightStrict:
+                case TopoutCondition.OneBlockAboveLethal:
                     if (!isCompletelyBelowLethal)
                         _manager.LoseGame();
                     break;
-                case TopoutCondition.LethalHeightLoose:
+                case TopoutCondition.AllBlocksAboveLethal:
                     if (!isPartlyBelowLethal)
                         _manager.LoseGame();
                     break;
