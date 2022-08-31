@@ -7,11 +7,11 @@ using NLua.Exceptions;
 using TMPro;
 using UnityEngine;
 
-namespace Gameplay.Stats
+namespace Blockstacker.Gameplay.Stats
 {
     public class StatDisplayer : MonoBehaviour
     {
-        [SerializeField] private StatCounter _counter;
+        [SerializeField] private StatCounterManager _counterManager;
         [SerializeField] private TMP_Text _displayText;
         [SerializeField] private GameTimer _timer;
         [SerializeField] private MediatorSO _mediator;
@@ -24,7 +24,7 @@ namespace Gameplay.Stats
         private void Start()
         {
             _luaState = new Lua();
-            _luaState["Stats"] = _counter.Stats;
+            _luaState["Stats"] = _counterManager.Stats;
             _updateStatCor = StartCoroutine(UpdateStatCor());
             _mediator.Register<GameRestartedMessage>(_ => HandleGameRestarted());
             _mediator.Register<GameLostMessage>(_ => HandleGameEnded());
@@ -32,7 +32,7 @@ namespace Gameplay.Stats
 
         private void HandleGameRestarted()
         {
-            _luaState["Stats"] = _counter.Stats;
+            _luaState["Stats"] = _counterManager.Stats;
             if (_updateStatCor != null) return;
             _updateStatCor = StartCoroutine(UpdateStatCor());
         }

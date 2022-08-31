@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blockstacker.Gameplay.Communication;
+using Blockstacker.Gameplay.Stats;
 using Blockstacker.GameSettings;
-using Gameplay.Stats;
 
 namespace Blockstacker.Gameplay
 {

@@ -1,104 +1,105 @@
 ﻿using System;
-using Blockstacker.Gameplay;
+using System.Collections.Generic;
+using Blockstacker.Common.Alerts;
+using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
-using Blockstacker.Gameplay.Enums;
+using Blockstacker.GameSettings;
+using Blockstacker.GlobalSettings.StatCounting;
+using NLua;
+using NLua.Exceptions;
+using TMPro;
 using UnityEngine;
 
-namespace Gameplay.Stats
+namespace Blockstacker.Gameplay.Stats
 {
     public class StatCounter : MonoBehaviour
     {
-        [SerializeField] private MediatorSO _mediator;
-        [SerializeField] private GameTimer _timer;
-        [SerializeField] private StatContainer _stats = new();
+        [SerializeField] private TMP_Text _text;
 
-        public ReadonlyStatContainer Stats;
+        private CustomStatEntry _statEntry = null;
+        private Lua _luaState;
 
-        private void Awake()
+        public GameSettingsSO Settings;
+        public MediatorSO Mediator;
+        public StatCounterRecord StatCounterRecord { get; set; }
+
+        private readonly Dictionary<string, Type> RegisterableEvents = new()
         {
-            _mediator.Register<InputActionMessage>(OnInputAction);
-            _mediator.Register<PiecePlacedMessage>(OnPiecePlaced);
-            Stats = new ReadonlyStatContainer(_stats);
-        }
+            {"GameEnded", typeof(GameEndedMessage)},
+            {"GameStarted", typeof(GameStartedMessage)},
+            {"HoldUsed", typeof(HoldUsedMessage)},
+            {"InputAction", typeof(InputActionMessage)},
+            {"LevelChanged", typeof(LevelChangedMessage)},
+            {"PieceMoved", typeof(PieceMovedMessage)},
+            {"PiecePlaced", typeof(PiecePlacedMessage)},
+            {"PieceRotated", typeof(PieceRotatedMessage)},
+            {"PieceSpawned", typeof(PieceSpawnedMessage)},
+        };
 
-        private void OnDestroy()
+        private const string STARTING_LEVEL_VAR_NAME = "StartingLevel";
+        private const string IS_LEVELLING_VAR_NAME = "IsLevellingSystem";
+        private const string UTILITY_VAR_NAME = "StatUtility";
+
+        private void Start()
         {
-            _mediator.Unregister<InputActionMessage>(OnInputAction);
-            _mediator.Unregister<PiecePlacedMessage>(OnPiecePlaced);
-        }
+            if (string.IsNullOrEmpty(StatCounterRecord.Script))
+                return;
+            _luaState = new Lua();
+            _luaState.RestrictMaliciousFunctions();
 
-        private void OnInputAction(InputActionMessage message)
-        {
-            if (message.KeyActionType == KeyActionType.KeyDown) _stats.KeysPressed++;
-            _stats.KeysPerSecond = _stats.KeysPressed / message.Time;
-        }
+            _luaState[STARTING_LEVEL_VAR_NAME] = Settings.Rules.Gravity.StartingLevel;
+            _luaState[IS_LEVELLING_VAR_NAME] = StatCounterRecord.IsLevellingSystem;
+            // _luaState[UTILITY_VAR_NAME] TODO
+            
+            LuaTable events = null;
 
-        private void OnPiecePlaced(PiecePlacedMessage message)
-        {
-            _stats.PiecesPlaced++;
-            _stats.LinesCleared += message.LinesCleared;
-            _stats.GarbageLinesCleared += message.GarbageLinesCleared;
-
-            if (message.WasAllClear) 
-                _stats.AllClears++;
-            if (message.CurrentCombo > _stats.LongestCombo) 
-                _stats.LongestCombo = message.CurrentCombo;
-            if (message.CurrentBackToBack > _stats.LongestBackToBack)
-                _stats.LongestBackToBack = message.CurrentBackToBack;
-
-            switch (message.LinesCleared)
+            try
             {
-                case 0:
-                    if (message.WasSpin)
-                        _stats.Spins++;
-                    else if (message.WasSpinMini)
-                        _stats.MiniSpins++;
-                    break;
-                case 1:
-                    if (message.WasSpin)
-                        _stats.SpinSingles++;
-                    else if (message.WasSpinMini)
-                        _stats.MiniSpinSingles++;
-                    else
-                        _stats.Singles++;
-                    break;
-                case 2:
-                    if (message.WasSpin)
-                        _stats.SpinDoubles++;
-                    else if (message.WasSpinMini)
-                        _stats.MiniSpinDoubles++;
-                    else
-                        _stats.Doubles++;
-                    break;
-                case 3:
-                    if (message.WasSpin)
-                        _stats.SpinTriples++;
-                    else if (message.WasSpinMini)
-                        _stats.MiniSpinTriples++;
-                    else
-                        _stats.MiniSpinTriples++;
-                    break;
-                case 4:
-                    if (message.WasSpin)
-                        _stats.SpinQuads++;
-                    else if (message.WasSpinMini)
-                        _stats.MiniSpinQuads++;
-                    else
-                        _stats.Quads++;
-                    break;
+                var returnedValue = _luaState.DoString(StatCounterRecord.Script);
+                if (returnedValue.Length == 0) return;
+                if (returnedValue[0] is LuaTable eventTable)
+                {
+                    events = eventTable;
+                }
             }
-        }
+            catch (LuaException ex)
+            {
+                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                    $"Error reading stat script {StatCounterRecord.Name}",
+                    $"Lua error: {ex.Message}",
+                    AlertType.Error));
+                return;
+            }
 
-        private void Update()
-        {
-            _stats.LinesPerMinute = _stats.LinesCleared / _timer.CurrentTime;
-            _stats.PiecesPerSecond = _stats.PiecesPlaced / _timer.CurrentTime;
-            _stats.KeysPerPiece = (double)_stats.KeysPressed / _stats.PiecesPlaced;
-        }
+            if (events is null) return;
 
-        public void ResetStats()
-        {
-            _stats.Reset();
+            foreach (var entry in RegisterableEvents)
+            {
+                if (events[entry.Key] is not LuaFunction function) continue;
+
+                void Action(Message message)
+                {
+                    object[] output;
+                    try
+                    {
+                        output = function.Call(message);
+                    }
+                    catch (LuaException ex)
+                    {
+                        _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                            $"Error executing stat script {StatCounterRecord.Name}",
+                            $"Lua error: {ex.Message}",
+                            AlertType.Error));
+                        return;
+                    }
+
+                    if (output is null || output.Length == 0 || output[0] is not string outputString) return;
+
+                    _text.text = outputString;
+                }
+                
+                Mediator.Register((Action<Message>) Action, entry.Value);
+            }
         }
     }
 }

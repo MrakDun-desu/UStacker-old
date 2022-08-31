@@ -112,17 +112,13 @@ namespace Blockstacker.Gameplay.Levelling
                 _mediator.Send(newGravity);
                 _mediator.Send(newLevel);
             }
-
-            var newScore = new ScoreAddedMessage {Score = scoreAddition, Time = piecePlaced.Time};
-            _mediator.Send(newScore);
         }
 
         private void HandlePieceMoved(PieceMovedMessage pieceMoved)
         {
             if (!pieceMoved.WasSoftDrop) return;
 
-            var newScore = new ScoreAddedMessage {Score = -(long) pieceMoved.Y, Time = pieceMoved.Time};
-            _mediator.Send(newScore);
+            var newScore = -(long) pieceMoved.Y;
         }
 
         private double CalculateGravity()

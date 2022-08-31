@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
-using Gameplay.Stats;
+using Blockstacker.Gameplay.Stats;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -15,7 +15,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private GameTimer _timer;
-        [SerializeField] private StatCounter _statCounter;
+        [SerializeField] private StatCounterManager _statCounterManager;
         [SerializeField] private GameRecorder _gameRecorder;
 
         [Space] [SerializeField] private UnityEvent GameStartedFirstTime;
@@ -103,7 +103,7 @@ namespace Blockstacker.Gameplay
             var gameEndTime = _timer.CurrentTime;
             Replay.ActionList = new List<InputActionMessage>();
             Replay.ActionList.AddRange(_gameRecorder.ActionList);
-            Replay.Stats = _statCounter.Stats;
+            Replay.Stats = _statCounterManager.Stats;
             Replay.GameLength = gameEndTime;
             GameEnded.Invoke();
             _mediator.Send(new GameEndedMessage {EndTime = gameEndTime});
@@ -149,15 +149,15 @@ namespace Blockstacker.Gameplay
                 case GameEndCondition.Time:
                     break;
                 case GameEndCondition.LinesCleared:
-                    if (_statCounter.Stats.LinesCleared >= _settings.Objective.EndConditionCount)
+                    if (_statCounterManager.Stats.LinesCleared >= _settings.Objective.EndConditionCount)
                         EndGame();
                     break;
                 case GameEndCondition.GarbageLinesCleared:
-                    if (_statCounter.Stats.GarbageLinesCleared >= _settings.Objective.EndConditionCount)
+                    if (_statCounterManager.Stats.GarbageLinesCleared >= _settings.Objective.EndConditionCount)
                         EndGame();
                     break;
                 case GameEndCondition.PiecesPlaced:
-                    if (_statCounter.Stats.PiecesPlaced >= _settings.Objective.EndConditionCount)
+                    if (_statCounterManager.Stats.PiecesPlaced >= _settings.Objective.EndConditionCount)
                         EndGame();
                     break;
                 case GameEndCondition.None:

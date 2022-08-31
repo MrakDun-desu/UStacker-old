@@ -18,48 +18,22 @@ namespace Blockstacker.Gameplay.SoundEffects
 
         private AudioSource _audioSource;
         private Lua _luaState;
-        
+
         private readonly Dictionary<string, Type> RegisterableEvents = new()
         {
-            {
-                "CountdownTicked", typeof(CountdownTickedMessage)
-            },
-            {
-                "GameEnded", typeof(GameEndedMessage)
-            },
-            {
-                "GameLost", typeof(GameLostMessage)
-            },
-            {
-                "GamePaused", typeof(GamePausedMessage)
-            },
-            {
-                "GameRestarted", typeof(GameRestartedMessage)
-            },
-            {
-                "GameResumed", typeof(GameResumedMessage)
-            },
-            {
-                "GameStarted", typeof(GameStartedMessage)
-            },
-            {
-                "HoldUsed", typeof(HoldUsedMessage)
-            },
-            {
-                "InputAction", typeof(InputActionMessage)
-            },
-            {
-                "PieceMoved", typeof(PieceMovedMessage)
-            },
-            {
-                "PiecePlaced", typeof(PiecePlacedMessage)
-            },
-            {
-                "PieceRotated", typeof(PieceRotatedMessage)
-            },
-            {
-                "PieceSpawned", typeof(PieceSpawnedMessage)
-            },
+            {"CountdownTicked", typeof(CountdownTickedMessage)},
+            {"GameEnded", typeof(GameEndedMessage)},
+            {"GameLost", typeof(GameLostMessage)},
+            {"GamePaused", typeof(GamePausedMessage)},
+            {"GameRestarted", typeof(GameRestartedMessage)},
+            {"GameResumed", typeof(GameResumedMessage)},
+            {"GameStarted", typeof(GameStartedMessage)},
+            {"HoldUsed", typeof(HoldUsedMessage)},
+            {"InputAction", typeof(InputActionMessage)},
+            {"PieceMoved", typeof(PieceMovedMessage)},
+            {"PiecePlaced", typeof(PiecePlacedMessage)},
+            {"PieceRotated", typeof(PieceRotatedMessage)},
+            {"PieceSpawned", typeof(PieceSpawnedMessage)},
         };
 
         private void Awake()
@@ -89,15 +63,15 @@ namespace Blockstacker.Gameplay.SoundEffects
         {
             if (string.IsNullOrEmpty(SoundPackLoader.SoundEffectsScript))
                 return false;
-            
+
             _luaState = new Lua();
             _luaState.RestrictMaliciousFunctions();
             LuaTable events = null;
             try
             {
-                var registeredEvents = _luaState.DoString(SoundPackLoader.SoundEffectsScript);
-                if (registeredEvents.Length == 0) return false;
-                if (registeredEvents[0] is LuaTable eventTable)
+                var returnedValue = _luaState.DoString(SoundPackLoader.SoundEffectsScript);
+                if (returnedValue.Length == 0) return false;
+                if (returnedValue[0] is LuaTable eventTable)
                 {
                     events = eventTable;
                 }
@@ -113,7 +87,7 @@ namespace Blockstacker.Gameplay.SoundEffects
             }
 
             if (events is null) return false;
-            
+
             foreach (var entry in RegisterableEvents)
             {
                 if (events[entry.Key] is not LuaFunction function) continue;
@@ -131,16 +105,16 @@ namespace Blockstacker.Gameplay.SoundEffects
                             "Error executing user code!",
                             $"Error executing sound effects script.\nLua error: {ex.Message}",
                             AlertType.Error
-                            ));
+                        ));
                     }
 
                     if (output is null) return;
-                    
+
                     foreach (var obj in output)
                     {
                         if (obj is not string clipName) return;
-                        
-                        TryPlayClip(clipName);    
+
+                        TryPlayClip(clipName);
                     }
                 }
 
@@ -273,7 +247,7 @@ namespace Blockstacker.Gameplay.SoundEffects
                     "Clip not found!",
                     $"Sound effect with a name {clipName} was not found.",
                     AlertType.Warning
-                    ));
+                ));
         }
     }
 }
