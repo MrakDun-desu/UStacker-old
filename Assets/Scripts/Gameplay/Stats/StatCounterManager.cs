@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Blockstacker.Gameplay;
-using Blockstacker.Gameplay.Communication;
+﻿using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Enums;
 using UnityEngine;
 
@@ -13,26 +11,32 @@ namespace Blockstacker.Gameplay.Stats
         [SerializeField] private GameTimer _timer;
         [SerializeField] private StatContainer _stats = new();
 
-        public List<CustomStatEntry> CustomStats = new();
         public ReadonlyStatContainer Stats;
 
         private void Start()
         {
+            Stats = new ReadonlyStatContainer(_stats);
             _mediator.Register<InputActionMessage>(OnInputAction);
             _mediator.Register<PiecePlacedMessage>(OnPiecePlaced);
-            Stats = new ReadonlyStatContainer(_stats);
+            _mediator.Register<GameStartedMessage>(OnGameStarted);
         }
 
         private void OnDestroy()
         {
             _mediator.Unregister<InputActionMessage>(OnInputAction);
             _mediator.Unregister<PiecePlacedMessage>(OnPiecePlaced);
+            _mediator.Unregister<GameStartedMessage>(OnGameStarted);
         }
 
         private void OnInputAction(InputActionMessage message)
         {
             if (message.KeyActionType == KeyActionType.KeyDown) _stats.KeysPressed++;
             _stats.KeysPerSecond = _stats.KeysPressed / message.Time;
+        }
+
+        private void OnGameStarted(GameStartedMessage _)
+        {
+            _stats.Reset();
         }
 
         private void OnPiecePlaced(PiecePlacedMessage message)
@@ -96,11 +100,6 @@ namespace Blockstacker.Gameplay.Stats
             _stats.LinesPerMinute = _stats.LinesCleared / _timer.CurrentTime;
             _stats.PiecesPerSecond = _stats.PiecesPlaced / _timer.CurrentTime;
             _stats.KeysPerPiece = (double)_stats.KeysPressed / _stats.PiecesPlaced;
-        }
-
-        public void ResetStats()
-        {
-            _stats.Reset();
         }
     }
 }

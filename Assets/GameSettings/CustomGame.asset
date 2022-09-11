@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36f7ab6fbbd4e8b40a0d398785ed582d, type: 3}
   m_Name: CustomGame
   m_EditorClassIdentifier: 
+  GameType: {fileID: 11400000, guid: d5b147ab88e76c1479291959c777b01d, type: 2}
   Settings:
     Rules:
       General:

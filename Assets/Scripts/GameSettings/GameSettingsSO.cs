@@ -1,6 +1,8 @@
 using System;
 using System.Reflection;
+using Blockstacker.Common;
 using Blockstacker.GameSettings.SettingGroups;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Blockstacker.GameSettings
@@ -8,7 +10,9 @@ namespace Blockstacker.GameSettings
     [CreateAssetMenu(fileName = "GameSettings", menuName = "Blockstacker/Game settings asset")]
     public class GameSettingsSO : ScriptableObject
     {
-        [SerializeField] public SettingsContainer Settings = new();
+        [JsonIgnore]
+        public StringReferenceSO GameType;
+        public SettingsContainer Settings = new();
         public RulesSettings Rules => Settings.Rules;
         public ObjectiveSettings Objective => Settings.Objective;
         public PresentationSettings Presentation => Settings.Presentation;

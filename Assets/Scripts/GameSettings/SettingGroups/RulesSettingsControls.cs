@@ -11,6 +11,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         public bool AllowHardDrop = true;
         public bool AllowHold = true;
         public bool UnlimitedHold;
+        public bool ShowGhostPiece = true;
         public RotationSystemType RotationSystem = RotationSystemType.SRS;
         public string CustomRotationSystemName = "";
         public RotationSystem ActiveRotationSystem;
@@ -18,7 +19,6 @@ namespace Blockstacker.GameSettings.SettingGroups
         public double LineClearDelay;
         public OnTouchGround OnTouchGround = OnTouchGround.LimitedTime;
         public double OnTouchGroundAmount = 5;
-        public bool ShowGhostPiece = true;
         public bool OverrideHandling;
         public HandlingSettings Handling = new();
     }

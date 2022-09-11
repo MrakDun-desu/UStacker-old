@@ -33,7 +33,11 @@ namespace Blockstacker.GlobalSettings.Backgrounds
         public static async Task Reload(string path)
         {
             Backgrounds.Clear();
-            if (!Directory.Exists(path)) return;
+            if (!Directory.Exists(path))
+            {
+                BackgroundPackChanged?.Invoke();
+                return;
+            }
 
             var taskList = Directory.EnumerateFiles(path)
                 .Select(HandleBackgroundLoadAsync).ToList();
@@ -73,8 +77,7 @@ namespace Blockstacker.GlobalSettings.Backgrounds
 
         private static async Task<BackgroundRecord> LoadBackgroundRecordAsync(string path)
         {
-            var type = FileLoading.GetFileType(path);
-            switch (type)
+            switch (FileLoading.GetFileType(path))
             {
                 case FileType.Texture:
                     var newBackground = await FileLoading.LoadTextureFromUrl(path);

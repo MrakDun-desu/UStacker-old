@@ -6,6 +6,7 @@ namespace Blockstacker.GameSettings.SettingGroups
     [Serializable]
     public record ObjectiveSettings
     {
+        public bool LowerScoreIsBetter = false;
         public MainStat MainStat = MainStat.Time;
         public GameEndCondition GameEndCondition = GameEndCondition.LinesCleared;
         public double EndConditionCount = 40;

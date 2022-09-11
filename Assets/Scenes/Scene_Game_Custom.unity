@@ -2027,7 +2027,7 @@ GameObject:
   - component: {fileID: 557688172}
   - component: {fileID: 557688171}
   m_Layer: 0
-  m_Name: StatCounter
+  m_Name: StatCounterManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2045,6 +2045,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc4b38f55a5942c2b6900a77092f990e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _board: {fileID: 0}
   _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   _timer: {fileID: 139450738}
   _stats:
@@ -6787,7 +6788,7 @@ MonoBehaviour:
   _settings: {fileID: 11400000, guid: 82a8dfd8c479a9746b991978530983d6, type: 2}
   _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   _timer: {fileID: 139450738}
-  _statCounter: {fileID: 557688171}
+  _statCounterManager: {fileID: 557688171}
   _gameRecorder: {fileID: 564900343}
   GameStartedFirstTime:
     m_PersistentCalls:
@@ -6826,10 +6827,11 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: Blockstacker.GlobalSettings.Music.MusicPlayerFinder,
           Blockstacker.GlobalSettings
         m_MethodName: PlayGameTrackByType
-        m_Mode: 5
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: d5b147ab88e76c1479291959c777b01d, type: 2}
+          m_ObjectArgumentAssemblyTypeName: Blockstacker.Common.StringReferenceSO,
+            Blockstacker.Common
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: custom
@@ -7113,18 +7115,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 557688171}
-        m_TargetAssemblyTypeName: Blockstacker.Gameplay.StatCounter, Assembly-CSharp
-        m_MethodName: ResetStats
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -9925,18 +9915,6 @@ MonoBehaviour:
       - m_Target: {fileID: 465133845}
         m_TargetAssemblyTypeName: Blockstacker.Gameplay.InputProcessor, Assembly-CSharp
         m_MethodName: ResetProcessor
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 557688171}
-        m_TargetAssemblyTypeName: Blockstacker.Gameplay.StatCounter, Assembly-CSharp
-        m_MethodName: ResetStats
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

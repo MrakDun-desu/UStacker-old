@@ -19,7 +19,6 @@ namespace Blockstacker.GlobalSettings.Music
         public static readonly Dictionary<string, AudioClip> SoundEffects = new();
 
         public static string SoundEffectsScript;
-
         public static event Action SoundPackChanged;
 
         public static IEnumerable<string> EnumerateSoundPacks()
@@ -31,11 +30,18 @@ namespace Blockstacker.GlobalSettings.Music
 
         public static async Task Reload(string path)
         {
-            if (!Directory.Exists(path)) return;
+            Music.Clear();
+            SoundEffects.Clear();
+            SoundEffectsScript = "";
+            if (!Directory.Exists(path))
+            {
+                SoundPackChanged?.Invoke();
+                return;
+            }
             var taskList = new List<Task>
             {
-                LoadSoundEffectsAsync(Path.Combine(path, CustomizationPaths.SoundEffects)),
-                LoadMusicAsync(Path.Combine(path, CustomizationPaths.Music))
+                LoadSoundEffectsAsync(Path.Combine(path, CustomizationFilenames.SoundEffects)),
+                LoadMusicAsync(Path.Combine(path, CustomizationFilenames.Music))
             };
 
             await Task.WhenAll(taskList);
@@ -47,7 +53,7 @@ namespace Blockstacker.GlobalSettings.Music
         {
             await LoadClipsFromDirectoryAsync(path, SoundEffects);
 
-            var scriptPath = Path.Combine(path, CustomizationPaths.SoundEffectScript);
+            var scriptPath = Path.Combine(path, CustomizationFilenames.SoundEffectScript);
             if (!File.Exists(scriptPath))
                 return;
             
@@ -74,7 +80,7 @@ namespace Blockstacker.GlobalSettings.Music
             
             MusicPlayer.Configuration.GameMusic.AddRange(Music.Keys);
             
-            var confPath = Path.Combine(path, CustomizationPaths.MusicConfFile);
+            var confPath = Path.Combine(path, CustomizationFilenames.MusicConfig);
             if (!File.Exists(confPath))
                 return;
             

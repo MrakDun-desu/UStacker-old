@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Blockstacker.Common;
+using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Music
 {
@@ -12,10 +13,10 @@ namespace Blockstacker.GlobalSettings.Music
                 _musicPlayer = FindObjectOfType<MusicPlayer>();
         }
 
-        public void PlayGameTrackByType(string gameType)
+        public void PlayGameTrackByType(StringReferenceSO gameType)
         {
             FindMusicPlayer();
-            _musicPlayer.PlayTrackByGameTypeImmediate(gameType);
+            _musicPlayer.PlayTrackByGameTypeImmediate(gameType.Value);
         }
 
         public void PlayVictoryTrack()
