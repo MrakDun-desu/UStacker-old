@@ -15,6 +15,7 @@ namespace Blockstacker.GlobalSettings
         public static GameplaySettings Gameplay => Settings.Gameplay;
         public static VideoSettings Video => Settings.Video;
         public static CustomizationSettings Customization => Settings.Customization;
+        public static StatCountingSettings StatCounting => Settings.StatCounting;
         public static OtherSettings Other => Settings.Others;
 
         public static event Action SettingsReloaded;
@@ -119,6 +120,7 @@ namespace Blockstacker.GlobalSettings
             public GameplaySettings Gameplay = new();
             public VideoSettings Video = new();
             public CustomizationSettings Customization = new();
+            public StatCountingSettings StatCounting = new();
             public OtherSettings Others = new();
             public string Rebinds;
         }

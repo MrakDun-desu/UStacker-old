@@ -6,8 +6,9 @@ namespace Blockstacker.GlobalSettings.StatCounting
     [Serializable]
     public class StatCounterRecord
     {
+        public StatCounterType Type;
         public string Name;
-        public bool IsLevellingSystem;
+        public string Filename;
         public string Script;
         public Vector2 Position;
         public Vector2 Size;

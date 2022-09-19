@@ -1,0 +1,71 @@
+.stat-counter-changer > VisualElement {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.stat-counter-changer .unity-label {
+    width: 150px;
+}
+
+.stat-counter-changer .unity-text-field {
+    width: 200px;
+}
+
+.stat-counter-changer .unity-popup-field {
+    width: 200px;
+}
+
+.stat-counter-changer .unity-slider {
+    width: 200px;
+}
+
+.stat-counter-changer .unity-slider .unity-text-field {
+    width: 96px;
+    height: 35px;
+}
+
+.stat-counter-changer .vector-container {
+    flex-direction: row;
+}
+
+.stat-counter-changer .vector-container .unity-float-field {
+    width: 96px;
+}
+
+.stat-counting-changer .button-container {
+    justify-content: center;
+    align-items: center;
+}
+
+.stat-counting-changer .unity-button {
+    width: 200px;
+}
+
+.stat-counter-changer {
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+}
+
+.title-container {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+}
+
+#Back {
+    width: 100px;
+    height: 30px;
+    position: absolute;
+    left: 0;
+}
+
+.title-container .unity-label {
+    font-size: 30px;
+}

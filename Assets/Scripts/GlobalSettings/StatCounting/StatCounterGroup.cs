@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Blockstacker.GlobalSettings.StatCounting
 {
+    [Serializable]
     public class StatCounterGroup
     {
         public string Name;
-        public StatCounterRecord LevellingStatCounter;
-        public List<StatCounterRecord> StatCounters;
+        public List<StatCounterRecord> StatCounters = new();
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blockstacker.Gameplay.Communication;
-using Blockstacker.GameSettings.Enums;
 
 namespace Blockstacker.Gameplay.GarbageGeneration
 {
@@ -40,7 +39,7 @@ namespace Blockstacker.Gameplay.GarbageGeneration
 
             var newGarbageLayer = new List<List<bool>>();
             var addToLast = _linesLeft > 0;
-            
+
             while (amount > 0u)
             {
                 amount--;
@@ -54,21 +53,23 @@ namespace Blockstacker.Gameplay.GarbageGeneration
                     }
 
                     _linesLeft = _holeSizes[_random.Next(_holeSizes.Count)];
+
                     int newHole;
-                    do
+                    if (_lastHole == -1)
                         newHole = _random.Next((int) _board.Width);
-                    while (newHole == _lastHole);
-                    
+                    else
+                        newHole = (_lastHole + _random.Next((int) _board.Width - 1) + 1) % (int) _board.Width;
+
                     _lastHole = newHole;
                     addToLast = false;
                 }
-                
+
                 newGarbageLayer.Add(new List<bool>());
                 _linesLeft--;
                 for (var x = 0; x < _board.Width; x++)
                     newGarbageLayer[^1].Add(_lastHole != x);
             }
-            
+
             _board.AddGarbageLayer(newGarbageLayer, addToLast);
         }
     }

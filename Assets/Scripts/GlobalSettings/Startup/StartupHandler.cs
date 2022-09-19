@@ -1,6 +1,7 @@
 using System;
 using Blockstacker.GlobalSettings.Appliers;
 using Blockstacker.GlobalSettings.Changers;
+using Blockstacker.GlobalSettings.StatCounting;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,6 +14,7 @@ namespace Blockstacker.GlobalSettings.Startup
         [SerializeField] private InputActionAsset _actionAsset;
         [SerializeField] private TMP_Text _loaderMessagePrefab;
         [SerializeField] private Transform _loaderMessageParent;
+        [SerializeField] private PremadeStatCountersSo _premadeStatCounters;
 
         private uint _loadersActive;
         public event Action SettingChanged;
@@ -35,10 +37,18 @@ namespace Blockstacker.GlobalSettings.Startup
                     RemoveLoader();
                 });
             }
-            
+
             AddSceneChangeMethods();
             AppSettings.TryLoad();
             SettingChanged?.Invoke();
+            if (AppSettings.StatCounting.StatCounterGroups.Count <= 0 && _premadeStatCounters != null)
+            {
+                foreach (var group in _premadeStatCounters.PremadeGroups)
+                    while (!AppSettings.StatCounting.StatCounterGroups.TryAdd(Guid.NewGuid(), group))
+                    {
+                    }
+            }
+
             FinishStartup();
         }
 
