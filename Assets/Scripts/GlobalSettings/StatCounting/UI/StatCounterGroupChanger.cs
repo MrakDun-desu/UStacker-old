@@ -51,6 +51,7 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
             var nameContainer = new VisualElement();
             nameContainer.AddToClassList(NAME_CONTAINER_CLASS);
             _nameField = new TextField();
+            _nameField.SetValueWithoutNotify("Group name");
             nameContainer.Add(_nameField);
 
             _counterChangersContainer = new VisualElement();
@@ -83,11 +84,13 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
 
             _statCounterChangers.Clear();
 
-            foreach (var statCounter in Value.StatCounters)
-                AddStatCounter(statCounter);
+            foreach (var counter in Value.StatCounters)
+            {
+                AddStatCounter(counter);
+            }
         }
 
-        private void AddStatCounter(StatCounterRecord newCounter)
+        private void AddStatCounter(StatCounterRecord newCounter, bool addToValue = false)
         {
             var newCounterChanger = new StatCounterChanger(_premadeCounterTypes)
             {
@@ -96,7 +99,8 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
             newCounterChanger.Removed += DeleteStatCounter;
             _counterChangersContainer.Add(newCounterChanger);
             _statCounterChangers.Add(newCounterChanger);
-            Value.StatCounters.Add(newCounter);
+            if (addToValue)
+                Value.StatCounters.Add(newCounter);
         }
 
         private void DeleteStatCounter(StatCounterChanger changer)
@@ -115,6 +119,6 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
         }
 
         private void OnStatCounterAdded() =>
-            AddStatCounter(new StatCounterRecord());
+            AddStatCounter(new StatCounterRecord(), true);
     }
 }

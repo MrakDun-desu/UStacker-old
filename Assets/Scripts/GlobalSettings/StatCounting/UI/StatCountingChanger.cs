@@ -48,7 +48,7 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
 
             var buttonContainer = new VisualElement();
             buttonContainer.AddToClassList(BUTTON_CONTAINER_CLASS);
-            buttonContainer.Add(new Button(() => AddGroup(Guid.NewGuid(), new StatCounterGroup())){text = ADD_GROUP_BUTTON_TEXT});
+            buttonContainer.Add(new Button(OnGroupAdded){text = ADD_GROUP_BUTTON_TEXT});
 
             AddToClassList(SELF_CLASS);
             Add(titleContainer);
@@ -71,7 +71,7 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
                 AddGroup(id, group);
         }
 
-        private void AddGroup(Guid newId, StatCounterGroup newGroup)
+        private void AddGroup(Guid newId, StatCounterGroup newGroup, bool addToValue = false)
         {
             var newGroupChanger = new StatCounterGroupChanger(_premadeCounterTypes)
             {
@@ -80,9 +80,10 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
             };
 
             _groupsContainer.Add(newGroupChanger);
-            _statCounterGroups.Add(newId, newGroup);
             _groupChangers.Add(newId, newGroupChanger);
             newGroupChanger.GroupRemoved += OnGroupRemoved;
+            if (addToValue)
+                _statCounterGroups.Add(newId, newGroup);
         }
 
         private void OnGroupRemoved(Guid groupId)
@@ -92,6 +93,16 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
             _groupsContainer.Remove(_groupChangers[groupId]);
             _groupChangers.Remove(groupId);
             _statCounterGroups.Remove(groupId);
+        }
+
+        private void OnGroupAdded()
+        {
+            Guid newGuid;
+            do
+            {
+                newGuid = Guid.NewGuid();
+            } while (_statCounterGroups.ContainsKey(newGuid));
+            AddGroup(Guid.NewGuid(), new StatCounterGroup(), true);
         }
     }
 }

@@ -111,22 +111,15 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
             Add(updateIntervalContainer);
             Add(removeButtonContainer);
 
-            AddListenersToFields();
             RefreshValue();
+            AddListenersToFields();
         }
 
         private void RefreshValue()
         {
             _typeDropdown.choices.Clear();
             _typeDropdown.choices.AddRange(_premadeCounterTypes.Select(value => value.Name));
-            for (var i = 0; i < _typeDropdown.choices.Count; i++)
-            {
-                if (Value.Type == StatCounterType.Normal && Value.Name == _typeDropdown.choices[i])
-                {
-                    _typeDropdown.index = i;
-                }
-            }
-
+            _typeDropdown.SetValueWithoutNotify(Value.Type == StatCounterType.Normal ? Value.Name : "Custom");
             _nameField.SetValueWithoutNotify(Value.Name);
             _filenameField.SetValueWithoutNotify(Value.Filename);
             _positionXField.SetValueWithoutNotify(Value.Position.x);
