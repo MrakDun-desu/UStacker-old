@@ -9,10 +9,10 @@ namespace Blockstacker.Gameplay.GarbageGeneration
         private Random _random;
         private int _lastHole = -1;
         private int _linesLeft;
-        private readonly ReadonlyBoard _board;
+        private readonly GarbageBoardInterface _boardInterface;
         private readonly List<int> _holeSizes = new();
 
-        public DefaultGarbageGenerator(ReadonlyBoard board, GameSettings.Enums.GarbageGeneration garbageGeneration)
+        public DefaultGarbageGenerator(GarbageBoardInterface boardInterface, GameSettings.Enums.GarbageGeneration garbageGeneration)
         {
             if (garbageGeneration.HasFlag(GameSettings.Enums.GarbageGeneration.Singles))
                 _holeSizes.Add(1);
@@ -23,7 +23,7 @@ namespace Blockstacker.Gameplay.GarbageGeneration
             if (garbageGeneration.HasFlag(GameSettings.Enums.GarbageGeneration.Quads))
                 _holeSizes.Add(4);
 
-            _board = board;
+            _boardInterface = boardInterface;
         }
 
         public void ResetState(int seed)
@@ -48,7 +48,7 @@ namespace Blockstacker.Gameplay.GarbageGeneration
                 {
                     if (newGarbageLayer.Count > 0)
                     {
-                        _board.AddGarbageLayer(newGarbageLayer, addToLast);
+                        _boardInterface.AddGarbageLayer(newGarbageLayer, addToLast);
                         newGarbageLayer = new List<List<bool>>();
                     }
 
@@ -56,9 +56,9 @@ namespace Blockstacker.Gameplay.GarbageGeneration
 
                     int newHole;
                     if (_lastHole == -1)
-                        newHole = _random.Next((int) _board.Width);
+                        newHole = _random.Next((int) _boardInterface.Width);
                     else
-                        newHole = (_lastHole + _random.Next((int) _board.Width - 1) + 1) % (int) _board.Width;
+                        newHole = (_lastHole + _random.Next((int) _boardInterface.Width - 1) + 1) % (int) _boardInterface.Width;
 
                     _lastHole = newHole;
                     addToLast = false;
@@ -66,11 +66,11 @@ namespace Blockstacker.Gameplay.GarbageGeneration
 
                 newGarbageLayer.Add(new List<bool>());
                 _linesLeft--;
-                for (var x = 0; x < _board.Width; x++)
+                for (var x = 0; x < _boardInterface.Width; x++)
                     newGarbageLayer[^1].Add(_lastHole != x);
             }
 
-            _board.AddGarbageLayer(newGarbageLayer, addToLast);
+            _boardInterface.AddGarbageLayer(newGarbageLayer, addToLast);
         }
     }
 }

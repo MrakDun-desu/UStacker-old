@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30c7e74a4b804022aef7c59547c34b5d, type: 3}
+  m_Name: PremadeStatCounters
+  m_EditorClassIdentifier: 
+  PremadeGroups:
+  - Name: Sprint Counters
+    StatCounters:
+    - Type: 0
+      Name: Test
+      Filename: 
+      Script: "function OnUpdated()\n\treturn \"Test\"\nend\n\nreturn {\n\t[\"Updated\"]
+        = OnUpdated\n}"
+      Position: {x: -4, y: 0}
+      Size: {x: 4, y: 2}
+      UpdateInterval: 0

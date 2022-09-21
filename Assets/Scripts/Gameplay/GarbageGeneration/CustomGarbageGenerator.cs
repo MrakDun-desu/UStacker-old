@@ -8,7 +8,7 @@ namespace Blockstacker.Gameplay.GarbageGeneration
     public class CustomGarbageGenerator : IGarbageGenerator
     {
         private Lua _luaState;
-        private readonly ReadonlyBoard _board;
+        private readonly GarbageBoardInterface _boardInterface;
         private readonly string _script;
 
         private LuaFunction _generationFunction;
@@ -16,13 +16,13 @@ namespace Blockstacker.Gameplay.GarbageGeneration
         private const string BOARD_VARIABLE_NAME = "Board";
         private const string SEED_VARIABLE_NAME = "Seed";
         
-        public CustomGarbageGenerator(ReadonlyBoard board, string script, out string validationErrors)
+        public CustomGarbageGenerator(GarbageBoardInterface boardInterface, string script, out string validationErrors)
         {
             if (!ValidateScript(script, out validationErrors))
                 return;
 
             _script = script;
-            _board = board;
+            _boardInterface = boardInterface;
         }
 
         public void ResetState(int seed)
@@ -30,7 +30,7 @@ namespace Blockstacker.Gameplay.GarbageGeneration
             _luaState = new Lua();
             _luaState.RestrictMaliciousFunctions();
             _luaState[SEED_VARIABLE_NAME] = seed;
-            _luaState[BOARD_VARIABLE_NAME] = _board;
+            _luaState[BOARD_VARIABLE_NAME] = _boardInterface;
             _generationFunction =  _luaState.DoString(_script)[0] as LuaFunction;
         }
 
@@ -45,7 +45,7 @@ namespace Blockstacker.Gameplay.GarbageGeneration
             {
                 _luaState = new Lua();
                 _luaState[SEED_VARIABLE_NAME] = 0;
-                _luaState[BOARD_VARIABLE_NAME] = new ReadonlyBoard(null);
+                _luaState[BOARD_VARIABLE_NAME] = new GarbageBoardInterface(null);
 
                 var result = _luaState.DoString(script);
                 if (result.Length < 1)

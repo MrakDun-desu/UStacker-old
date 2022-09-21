@@ -1,0 +1,29 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/StyleSheets/mainMenu.uss?fileID=7433441132597879392&amp;guid=9755b7c0bbeaeeb48868b8b75fce2d75&amp;type=3#mainMenu" />
+    <ui:VisualElement name="MainMenuContainer" style="flex-direction: row;">
+        <ui:VisualElement name="MainMenu">
+            <ui:Label text="Block" display-tooltip-when-elided="true" name="TitlePartOne" class="title" style="-unity-font-style: normal;" />
+            <ui:Label text="Stacker" display-tooltip-when-elided="true" name="TitlePartTwo" class="title" />
+            <ui:Button text="Singleplayer" display-tooltip-when-elided="true" name="SingleplayerButton">
+                <ui:VisualElement />
+            </ui:Button>
+            <ui:Button text="Multiplayer" display-tooltip-when-elided="true" name="MultiplayerButton" />
+            <ui:Button text="Leaderboards" display-tooltip-when-elided="true" name="LeaderboardsButton" focusable="true" />
+            <ui:VisualElement name="MiniButtonsContainer">
+                <ui:Button display-tooltip-when-elided="true" name="SettingsButton" tooltip="Settings" />
+                <ui:Button display-tooltip-when-elided="true" name="CreditsButton" tooltip="Credits" />
+                <ui:Button display-tooltip-when-elided="true" name="ExitButton" tooltip="Exit" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="MainMenuSide">
+            <ui:VisualElement name="CommunityLinks">
+                <ui:VisualElement name="LinksContainer">
+                    <ui:Button display-tooltip-when-elided="true" name="ItchIoButton" />
+                    <ui:Button display-tooltip-when-elided="true" name="DiscordButton" />
+                </ui:VisualElement>
+                <ui:Label text="Join the" display-tooltip-when-elided="true" name="CommunityLabel1" />
+                <ui:Label text="community" display-tooltip-when-elided="true" name="CommunityLabel2" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

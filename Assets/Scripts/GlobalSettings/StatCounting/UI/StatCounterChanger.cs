@@ -50,6 +50,9 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
         private readonly Slider _updateIntervalSlider;
         private readonly Button _removeButton;
 
+        private readonly VisualElement _nameContainer;
+        private readonly VisualElement _filenameContainer;
+
         private readonly PremadeCounterType[] _premadeCounterTypes;
 
         public StatCounterChanger() : this(Array.Empty<PremadeCounterType>()) {} 
@@ -63,15 +66,15 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
             _typeDropdown = new DropdownField();
             dropdownContainer.Add(_typeDropdown);
 
-            var nameContainer = new VisualElement();
-            nameContainer.Add(new Label(NAME_LABEL));
+            _nameContainer = new VisualElement();
+            _nameContainer.Add(new Label(NAME_LABEL));
             _nameField = new TextField();
-            nameContainer.Add(_nameField);
+            _nameContainer.Add(_nameField);
 
-            var filenameContainer = new VisualElement();
-            filenameContainer.Add(new Label(FILENAME_LABEL));
+            _filenameContainer = new VisualElement();
+            _filenameContainer.Add(new Label(FILENAME_LABEL));
             _filenameField = new TextField();
-            filenameContainer.Add(_filenameField);
+            _filenameContainer.Add(_filenameField);
 
             var positionContainer = new VisualElement();
             positionContainer.Add(new Label(POSITION_LABEL));
@@ -104,8 +107,8 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
 
             AddToClassList(SELF_CLASS);
             Add(dropdownContainer);
-            Add(nameContainer);
-            Add(filenameContainer);
+            Add(_nameContainer);
+            Add(_filenameContainer);
             Add(positionContainer);
             Add(sizeContainer);
             Add(updateIntervalContainer);
@@ -115,11 +118,17 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
             AddListenersToFields();
         }
 
-        private void RefreshValue()
+        private void RefreshValue(bool refreshDropdown = true)
         {
-            _typeDropdown.choices.Clear();
-            _typeDropdown.choices.AddRange(_premadeCounterTypes.Select(value => value.Name));
-            _typeDropdown.SetValueWithoutNotify(Value.Type == StatCounterType.Normal ? Value.Name : "Custom");
+            if (refreshDropdown) {
+                _typeDropdown.choices.Clear();
+                _typeDropdown.choices.AddRange(_premadeCounterTypes.Select(value => value.Name));
+                _typeDropdown.SetValueWithoutNotify(Value.Type == StatCounterType.Normal ? Value.Name : "Custom");
+            }
+            var displayCustomFields = Value.Type == StatCounterType.Custom ? DisplayStyle.Flex : DisplayStyle.None;
+            _nameContainer.style.display = displayCustomFields;
+            _filenameContainer.style.display = displayCustomFields;
+            
             _nameField.SetValueWithoutNotify(Value.Name);
             _filenameField.SetValueWithoutNotify(Value.Filename);
             _positionXField.SetValueWithoutNotify(Value.Position.x);
@@ -171,10 +180,7 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
                     throw new ArgumentOutOfRangeException();
             }
 
-            var showCustomFields = pickedValue.Type == StatCounterType.Custom;
-            _nameField.isReadOnly = showCustomFields;
-            _filenameField.visible = showCustomFields;
-            RefreshValue();
+            RefreshValue(false);
         }
 
         private void OnNameChanged(string newName)

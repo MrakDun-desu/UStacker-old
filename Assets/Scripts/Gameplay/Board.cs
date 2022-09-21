@@ -43,7 +43,7 @@ namespace Blockstacker.Gameplay
                 .ToList().AsReadOnly();
 
         private Vector3 _dragStartPosition;
-        private Vector3 _dragStarttransformPosition;
+        private Vector3 _dragStartTransformPosition;
         private uint _height;
         private Vector3 _offset;
         private uint _width;
@@ -204,18 +204,18 @@ namespace Blockstacker.Gameplay
         {
             if (!AppSettings.Gameplay.DragMiddleButtonToRepositionBoard) return;
 
-            var middleButton = Mouse.current.middleButton;
             var mouse = Mouse.current;
+            var middleButton = mouse.middleButton;
             if (middleButton.wasPressedThisFrame)
             {
                 _dragStartPosition = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
-                _dragStarttransformPosition = transform.position;
+                _dragStartTransformPosition = transform.position;
             }
             else if (middleButton.isPressed)
             {
                 var currentPosition = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
                 var positionDifference = currentPosition - _dragStartPosition;
-                transform.position = _dragStarttransformPosition + positionDifference;
+                transform.position = _dragStartTransformPosition + positionDifference;
                 AppSettings.Gameplay.BoardOffset = CurrentOffset;
                 _offset = CurrentOffset;
             }

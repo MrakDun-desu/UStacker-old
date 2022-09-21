@@ -436,6 +436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 401b5370f9d145ce92a672420ad101a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _alertVisibleInterval: 10
 --- !u!114 &1336444503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -508,6 +509,7 @@ MonoBehaviour:
   _actionAsset: {fileID: -944628639613478452, guid: ffdfab209b8a7fc44b5fe46d6bf57835, type: 3}
   _loaderMessagePrefab: {fileID: 5039783636459060750, guid: a84320154fb288747973e2db6fa3f5a9, type: 3}
   _loaderMessageParent: {fileID: 1132150172}
+  _premadeStatCounters: {fileID: 11400000, guid: ebc412188cb305c4cada0faf2bd6c6eb, type: 2}
 --- !u!4 &1505477389
 Transform:
   m_ObjectHideFlags: 0

@@ -1,5 +1,8 @@
-﻿using Blockstacker.Gameplay.Communication;
+﻿using System.Linq;
+using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Enums;
+using Blockstacker.GameSettings;
+using Blockstacker.GlobalSettings;
 using UnityEngine;
 
 namespace Blockstacker.Gameplay.Stats
@@ -7,6 +10,9 @@ namespace Blockstacker.Gameplay.Stats
     public class StatCounterManager : MonoBehaviour
     {
         [SerializeField] private Board _board;
+        [SerializeField] private Canvas _statCountersCanvas;
+        [SerializeField] private StatCounterDisplayer _displayerPrefab;
+        [SerializeField] private GameSettingsSO _gameSettings;
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private GameTimer _timer;
         [SerializeField] private StatContainer _stats = new();
@@ -19,6 +25,22 @@ namespace Blockstacker.Gameplay.Stats
             _mediator.Register<InputActionMessage>(OnInputAction);
             _mediator.Register<PiecePlacedMessage>(OnPiecePlaced);
             _mediator.Register<GameStartedMessage>(OnGameStarted);
+            CreateStatCounters();
+        }
+
+        private void CreateStatCounters()
+        {
+            var gameName = _gameSettings.GameType.Value;
+            var groupId = AppSettings.StatCounting.GameStatCounterDictionary[gameName];
+            if (!AppSettings.StatCounting.StatCounterGroups.TryGetValue(groupId, out var counterGroup)) return;
+
+            foreach (var statCounter in counterGroup.StatCounters.Where(counter => !string.IsNullOrEmpty(counter.Script)))
+            {
+                var newCounter = Instantiate(_displayerPrefab, _statCountersCanvas.transform);
+                
+                newCounter.SetRequiredFields(_mediator, new StatBoardInterface(_board), Stats);
+                newCounter.StatCounter = statCounter;
+            }
         }
 
         private void OnDestroy()

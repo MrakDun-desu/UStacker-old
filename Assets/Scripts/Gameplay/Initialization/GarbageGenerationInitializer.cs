@@ -28,7 +28,7 @@ namespace Blockstacker.Gameplay.Initialization
             
             _board.InitializeGarbagePools();
             
-            var readonlyBoard = new ReadonlyBoard(_board);
+            var readonlyBoard = new GarbageBoardInterface(_board);
             if (_gameSettings.Objective.UseCustomGarbageScript)
             {
                 var cheeseScriptPath = Path.Combine(

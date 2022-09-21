@@ -1,20 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using JetBrains.Annotations;
 using NLua;
 
 namespace Blockstacker.Gameplay.GarbageGeneration
 {
-    public class ReadonlyBoard
+    public class GarbageBoardInterface
     {
         private readonly Board _source;
         private readonly bool _isDummy;
         
         public uint Width => _isDummy ? 10u : _source.Width;
 
+        [UsedImplicitly]
         public uint Height => _isDummy ? 20u : _source.Height;
+        [UsedImplicitly]
         public uint GarbageHeight => _isDummy ? 5u : _source.GarbageHeight;
-
+        [UsedImplicitly]
         public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots =>
             _isDummy ? new List<ReadOnlyCollection<bool>>().AsReadOnly() : _source.Slots;
 
@@ -24,6 +27,7 @@ namespace Blockstacker.Gameplay.GarbageGeneration
             _source.AddGarbageLayer(slots, addToLast);
         }
 
+        [UsedImplicitly]
         public void AddGarbageLayer(LuaTable slotsTable, bool addToLast)
         {
             var slots = slotsTable.Values.Cast<LuaTable>()
@@ -33,7 +37,7 @@ namespace Blockstacker.Gameplay.GarbageGeneration
             _source.AddGarbageLayer(slots, addToLast);
         }
 
-        public ReadonlyBoard(Board source)
+        public GarbageBoardInterface(Board source)
         {
             _isDummy = source == null;
             _source = source;

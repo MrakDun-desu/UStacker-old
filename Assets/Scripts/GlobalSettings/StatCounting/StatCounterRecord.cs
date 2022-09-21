@@ -9,7 +9,7 @@ namespace Blockstacker.GlobalSettings.StatCounting
         public StatCounterType Type;
         public string Name;
         public string Filename;
-        public string Script;
+        [TextArea(5, 100)] public string Script;
         public Vector2 Position;
         public Vector2 Size;
         public float UpdateInterval;
