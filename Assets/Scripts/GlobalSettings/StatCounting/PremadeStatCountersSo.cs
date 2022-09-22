@@ -7,5 +7,6 @@ namespace Blockstacker.GlobalSettings.StatCounting
     public class PremadeStatCountersSo : ScriptableObject
     {
         public StatCounterGroup[] PremadeGroups = Array.Empty<StatCounterGroup>();
+        public StatCounterGroup DefaultGroup = new();
     }
 }

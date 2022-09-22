@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.UIElements;
 
 namespace Blockstacker.GlobalSettings.StatCounting.UI
@@ -24,13 +25,13 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
 
         private Dictionary<Guid, StatCounterGroup> _statCounterGroups;
         private readonly Dictionary<Guid, StatCounterGroupChanger> _groupChangers = new();
-        private readonly PremadeCounterType[] _premadeCounterTypes;
+        private readonly StatCounterSO[] _premadeCounterTypes;
 
-        public StatCountingChanger() : this(Array.Empty<PremadeCounterType>())
+        public StatCountingChanger() : this(Array.Empty<StatCounterSO>())
         {
         }
 
-        public StatCountingChanger(PremadeCounterType[] premadeCounterTypes)
+        public StatCountingChanger(StatCounterSO[] premadeCounterTypes)
         {
             _premadeCounterTypes = premadeCounterTypes;
 
@@ -90,6 +91,9 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
         {
             if (!_groupChangers.ContainsKey(groupId)) return;
 
+            foreach (var (key, _) in AppSettings.StatCounting.GameStatCounterDictionary.Where(pair => pair.Value == groupId))
+                AppSettings.StatCounting.GameStatCounterDictionary.Remove(key);
+            
             _groupsContainer.Remove(_groupChangers[groupId]);
             _groupChangers.Remove(groupId);
             _statCounterGroups.Remove(groupId);

@@ -43,6 +43,11 @@ namespace Blockstacker.GlobalSettings.Startup
             SettingChanged?.Invoke();
             if (AppSettings.StatCounting.StatCounterGroups.Count <= 0 && _premadeStatCounters != null)
             {
+                while (!AppSettings.StatCounting.StatCounterGroups.TryAdd(Guid.NewGuid(),
+                           _premadeStatCounters.DefaultGroup.Copy()))
+                {
+                }
+
                 foreach (var group in _premadeStatCounters.PremadeGroups)
                     while (!AppSettings.StatCounting.StatCounterGroups.TryAdd(Guid.NewGuid(), group))
                     {

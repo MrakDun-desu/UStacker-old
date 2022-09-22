@@ -8,5 +8,17 @@ namespace Blockstacker.GlobalSettings.StatCounting
     {
         public string Name;
         public List<StatCounterRecord> StatCounters = new();
+
+        public StatCounterGroup Copy()
+        {
+            var output = new StatCounterGroup {Name = Name};
+
+            foreach (var counter in StatCounters)
+            {
+                output.StatCounters.Add(counter.Copy());
+            }
+
+            return output;
+        }
     }
 }

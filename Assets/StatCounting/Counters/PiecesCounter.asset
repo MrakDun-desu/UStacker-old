@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f7b19afc3ad4ed2bb249b321cca5777, type: 3}
+  m_Name: PiecesCounter
+  m_EditorClassIdentifier: 
+  Value:
+    Name: Pieces
+    Type: 0
+    Filename: 
+    Script: "function Reset()\n\tPiecesPlaced = 0\nend\nfunction OnPiecePlaced()\n\tPiecesPlaced
+      = PiecesPlaced + 1\nend\nfunction OnUpdated()\n\tlocal pps = Stats.PiecesPerSecond\n\treturn
+      \"Pieces: \" .. PiecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\nend\nReset()\nreturn
+      {\n\t[\"CounterUpdated\"] = OnUpdated,\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStarted\"]
+      = Reset,\n\t[\"GameRestarted\"] = Reset\n}"
+    Position: {x: -6, y: 5}
+    Size: {x: 6, y: 4}
+    UpdateInterval: 0.1

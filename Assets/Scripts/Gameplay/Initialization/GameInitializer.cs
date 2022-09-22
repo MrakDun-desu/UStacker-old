@@ -20,6 +20,7 @@ namespace Blockstacker.Gameplay.Initialization
 
         [Header("Board")] [SerializeField] private PieceSpawner _pieceSpawner;
         [SerializeField] private Board _board;
+        [SerializeField] private RectTransform _statsCanvasTransform;
         [SerializeField] private GameObject _boardBackground;
         [SerializeField] private BlockBase _gridBlock;
         [SerializeField] private BoardGrid _gridPrefab;
@@ -78,6 +79,7 @@ namespace Blockstacker.Gameplay.Initialization
                     _boardBackground,
                     _gridBlock,
                     _gridPrefab,
+                    _statsCanvasTransform,
                     Camera.main
                 ),
                 new RulesGeneralInitializer(

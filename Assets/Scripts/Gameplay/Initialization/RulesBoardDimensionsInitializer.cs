@@ -13,6 +13,7 @@ namespace Blockstacker.Gameplay.Initialization
         private readonly Camera _camera;
         private readonly BlockBase _gridBlock;
         private readonly BoardGrid _boardGrid;
+        private readonly RectTransform _statCanvasTransform;
 
         public RulesBoardDimensionsInitializer(
             StringBuilder errorBuilder,
@@ -21,6 +22,7 @@ namespace Blockstacker.Gameplay.Initialization
             GameObject boardBackground,
             BlockBase gridBlock,
             BoardGrid boardGrid,
+            RectTransform statsCanvasTransform,
             Camera camera
         )
             : base(errorBuilder, gameSettings)
@@ -30,6 +32,7 @@ namespace Blockstacker.Gameplay.Initialization
             _gridBlock = gridBlock;
             _boardGrid = boardGrid;
             _camera = camera;
+            _statCanvasTransform = statsCanvasTransform;
         }
 
         public override void Execute()
@@ -43,6 +46,9 @@ namespace Blockstacker.Gameplay.Initialization
                 boardDimensions.BoardHeight,
                 1
             );
+
+            _statCanvasTransform.sizeDelta =
+                new Vector2(boardDimensions.BoardWidth + 200f, boardDimensions.BoardHeight + 200f);
 
             var gridTransform = _boardGrid.transform;
             gridTransform.SetParent(_board.transform);

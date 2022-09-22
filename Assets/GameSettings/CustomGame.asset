@@ -22,13 +22,14 @@ MonoBehaviour:
         AllowedSpins: 2
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: -1234502806
+        ActiveSeed: -1121017585
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
         AllowHardDrop: 1
         AllowHold: 1
         UnlimitedHold: 0
+        ShowGhostPiece: 1
         RotationSystem: 0
         CustomRotationSystemName: 
         ActiveRotationSystem:
@@ -97,7 +98,6 @@ MonoBehaviour:
         LineClearDelay: 0
         OnTouchGround: 0
         OnTouchGroundAmount: 5
-        ShowGhostPiece: 1
         OverrideHandling: 0
         Handling:
           DelayedAutoShift: 0.10000000149011612
@@ -121,6 +121,7 @@ MonoBehaviour:
         AllowClutchClears: 1
         BoardPadding: 5
     Objective:
+      LowerScoreIsBetter: 0
       MainStat: 1
       GameEndCondition: 1
       EndConditionCount: 40

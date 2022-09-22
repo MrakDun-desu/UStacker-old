@@ -7,7 +7,7 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
     public class StatCountingUIController : MonoBehaviour
     {
         [SerializeField] private UIDocument _statCountingDocument;
-        [SerializeField] private PremadeCounterType[] _premadeCounters;
+        [SerializeField] private StatCounterSO[] _premadeCounters;
         [SerializeField] private UnityEvent _onBackButtonClick;
         
         private void OnEnable()

@@ -12,14 +12,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30c7e74a4b804022aef7c59547c34b5d, type: 3}
   m_Name: PremadeStatCounters
   m_EditorClassIdentifier: 
-  PremadeGroups:
-  - Name: Sprint Counters
+  PremadeGroups: []
+  DefaultGroup:
+    Name: Default
     StatCounters:
-    - Type: 0
-      Name: Test
+    - Name: Stopwatch
+      Type: 0
       Filename: 
-      Script: "function OnUpdated()\n\treturn \"Test\"\nend\n\nreturn {\n\t[\"Updated\"]
-        = OnUpdated\n}"
-      Position: {x: -4, y: 0}
-      Size: {x: 4, y: 2}
+      Script: "function OnUpdated()\n\treturn \"Time: \" .. StatUtility:GetFormattedTime()\nend\nreturn
+        {\n\t[\"CounterUpdated\"] = OnUpdated\n}"
+      Position: {x: -6, y: 0}
+      Size: {x: 6, y: 2}
+      UpdateInterval: 0.01
+    - Name: Pieces
+      Type: 0
+      Filename: 
+      Script: "function ResetPiecesPlaced()\n\tPiecesPlaced = 0\nend\nfunction OnPiecePlaced()\n\tPiecesPlaced
+        = PiecesPlaced + 1\nend\nfunction OnUpdated()\n\tlocal pps = Stats.PiecesPerSecond\n\treturn
+        \"Pieces: \" .. PiecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\nend\nResetPiecesPlaced()\nreturn
+        {\n\t[\"CounterUpdated\"] = OnUpdated,\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStarted\"]
+        = ResetPiecesPlaced,\n\t[\"GameRestarted\"] = ResetPiecesPlaced\n}"
+      Position: {x: -6, y: 3}
+      Size: {x: 6, y: 4}
+      UpdateInterval: 0.1
+    - Name: Lines cleared
+      Type: 0
+      Filename: 
+      Script: "function ResetLinesCleared()\n\tLinesCleared = 0\n\treturn \"Lines
+        cleared: 0\"\nend\nfunction OnPiecePlaced(message)\n\tLinesCleared = LinesCleared
+        + message.LinesCleared\n\treturn \"Lines cleared: \" .. LinesCleared\nend\nResetLinesCleared()\nreturn
+        {\n\t[\"GameStarted\"] = ResetLinesCleared,\n\t[\"GameRestarted\"] = ResetLinesCleared,\n\t[\"PiecePlaced\"]
+        = OnPiecePlaced\n}"
+      Position: {x: -8, y: 8}
+      Size: {x: 8, y: 2}
       UpdateInterval: 0

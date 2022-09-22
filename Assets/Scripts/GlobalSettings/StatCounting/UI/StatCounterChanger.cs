@@ -53,11 +53,11 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
         private readonly VisualElement _nameContainer;
         private readonly VisualElement _filenameContainer;
 
-        private readonly PremadeCounterType[] _premadeCounterTypes;
+        private readonly StatCounterSO[] _premadeCounterTypes;
 
-        public StatCounterChanger() : this(Array.Empty<PremadeCounterType>()) {} 
+        public StatCounterChanger() : this(Array.Empty<StatCounterSO>()) {} 
         
-        public StatCounterChanger(PremadeCounterType[] premadeCounterTypes)
+        public StatCounterChanger(StatCounterSO[] premadeCounterTypes)
         {
             _premadeCounterTypes = premadeCounterTypes;
             
@@ -122,7 +122,7 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
         {
             if (refreshDropdown) {
                 _typeDropdown.choices.Clear();
-                _typeDropdown.choices.AddRange(_premadeCounterTypes.Select(value => value.Name));
+                _typeDropdown.choices.AddRange(_premadeCounterTypes.Select(value => value.Value.Name));
                 _typeDropdown.SetValueWithoutNotify(Value.Type == StatCounterType.Normal ? Value.Name : "Custom");
             }
             var displayCustomFields = Value.Type == StatCounterType.Custom ? DisplayStyle.Flex : DisplayStyle.None;
@@ -152,19 +152,18 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
 
         private void OnTypePicked()
         {
-            var pickedValue = _premadeCounterTypes[_typeDropdown.index];
+            var pickedValue = _premadeCounterTypes[_typeDropdown.index].Value;
             Value.Type = pickedValue.Type;
             switch (pickedValue.Type)
             {
                 case StatCounterType.Normal:
                 {
-                    var pickedCounter = pickedValue.StatCounterSo.Value;
-                    Value.Name = pickedCounter.Name;
-                    Value.Filename = pickedCounter.Filename;
-                    Value.Script = pickedCounter.Script;
-                    Value.Position = pickedCounter.Position;
-                    Value.Size = pickedCounter.Size;
-                    Value.UpdateInterval = pickedCounter.UpdateInterval;
+                    Value.Name = pickedValue.Name;
+                    Value.Filename = pickedValue.Filename;
+                    Value.Script = pickedValue.Script;
+                    Value.Position = pickedValue.Position;
+                    Value.Size = pickedValue.Size;
+                    Value.UpdateInterval = pickedValue.UpdateInterval;
 
                     break;
                 }

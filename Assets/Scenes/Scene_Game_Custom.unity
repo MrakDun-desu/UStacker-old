@@ -9836,6 +9836,7 @@ MonoBehaviour:
     _duplicateEntries: []
   _pieceSpawner: {fileID: 1685487601}
   _board: {fileID: 878271531}
+  _statsCanvasTransform: {fileID: 1510403475}
   _boardBackground: {fileID: 569528455}
   _gridBlock: {fileID: 1563167965190000602, guid: 4645a69260f53674caf4c76c22366940, type: 3}
   _gridPrefab: {fileID: 1437577894}

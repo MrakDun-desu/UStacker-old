@@ -9,12 +9,15 @@ namespace Blockstacker.Gameplay.Communication
     {
         private readonly Dictionary<Type, List<Delegate>> _registeredActions = new();
 
-        public void Register<TMessage>(Action<TMessage> action)
+        public void Register<TMessage>(Action<TMessage> action, bool putFirst = false)
             where TMessage : Message
         {
             var key = typeof(TMessage);
             if (!_registeredActions.ContainsKey(key)) _registeredActions[key] = new List<Delegate>();
-            _registeredActions[key].Add(action);
+            if (putFirst)
+                _registeredActions[key].Insert(0, action);
+            else 
+                _registeredActions[key].Add(action);
         }
 
         public void Register(object action, Type type)

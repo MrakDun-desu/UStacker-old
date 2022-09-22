@@ -38,13 +38,13 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
 
         private readonly TextField _nameField;
         private readonly VisualElement _counterChangersContainer;
-        private readonly PremadeCounterType[] _premadeCounterTypes;
+        private readonly StatCounterSO[] _premadeCounterTypes;
 
-        public StatCounterGroupChanger() : this(Array.Empty<PremadeCounterType>())
+        public StatCounterGroupChanger() : this(Array.Empty<StatCounterSO>())
         {
         }
 
-        public StatCounterGroupChanger(PremadeCounterType[] premadeCounterTypes)
+        public StatCounterGroupChanger(StatCounterSO[] premadeCounterTypes)
         {
             _premadeCounterTypes = premadeCounterTypes;
             

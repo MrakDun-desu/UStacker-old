@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8f7b19afc3ad4ed2bb249b321cca5777, type: 3}
-  m_Name: StatCounter
+  m_Name: CustomCounter
   m_EditorClassIdentifier: 
   Value:
-    Type: 0
-    Name: PPS
+    Name: Custom
+    Type: 1
     Filename: 
     Script: 
-    Position: {x: 0, y: 0}
-    Size: {x: 0, y: 0}
+    Position: {x: -6, y: 1}
+    Size: {x: 6, y: 0}
     UpdateInterval: 0

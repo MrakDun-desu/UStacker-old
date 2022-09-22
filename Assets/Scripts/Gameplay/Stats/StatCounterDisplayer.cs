@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using Blockstacker.Common.Alerts;
 using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
-using Blockstacker.GlobalSettings.Music;
 using Blockstacker.GlobalSettings.StatCounting;
-using JetBrains.Annotations;
 using NLua;
 using NLua.Exceptions;
 using TMPro;
@@ -21,18 +19,6 @@ namespace Blockstacker.Gameplay.Stats
         [SerializeField] private RectTransform _textContainer;
         [SerializeField] private RectTransform _moveHandle;
         [SerializeField] private RectTransform _sizeHandle;
-
-        private StatCounterRecord _statCounter;
-
-        public StatCounterRecord StatCounter
-        {
-            get => _statCounter;
-            set
-            {
-                _statCounter = value;
-                RefreshStatCounter();
-            }
-        }
 
         private static readonly Dictionary<string, Type> RegisterableEvents = new()
         {
@@ -63,6 +49,8 @@ namespace Blockstacker.Gameplay.Stats
         private StatBoardInterface _boardInterface;
         private ReadonlyStatContainer _statContainer;
         private Camera _camera;
+        private StatCounterRecord _statCounter;
+        private StatUtility _statUtility;
 
         private Vector2 moveHandlePosition => _moveHandle.position;
         private Vector2 moveHandleSize => _moveHandle.sizeDelta;
@@ -77,18 +65,18 @@ namespace Blockstacker.Gameplay.Stats
         private void RefreshStatCounter()
         {
             _textContainer.localPosition =
-                new Vector3(StatCounter.Position.x, StatCounter.Position.y, _textContainer.localPosition.z);
-            _textContainer.sizeDelta = StatCounter.Size;
+                new Vector3(_statCounter.Position.x, _statCounter.Position.y, _textContainer.localPosition.z);
+            _textContainer.sizeDelta = _statCounter.Size;
 
             _luaState = new Lua();
             _luaState.RestrictMaliciousFunctions();
-            _luaState[UTILITY_NAME] = new StatUtility();
+            _luaState[UTILITY_NAME] = _statUtility;
             _luaState[STAT_CONTAINER_NAME] = _statContainer;
             _luaState[BOARD_INTERFACE_NAME] = _boardInterface;
             LuaTable events = null;
             try
             {
-                var returnedValue = _luaState.DoString(SoundPackLoader.SoundEffectsScript);
+                var returnedValue = _luaState.DoString(_statCounter.Script);
                 if (returnedValue.Length == 0) return;
                 if (returnedValue[0] is LuaTable eventTable)
                 {
@@ -98,10 +86,11 @@ namespace Blockstacker.Gameplay.Stats
             catch (LuaException ex)
             {
                 _ = AlertDisplayer.Instance.ShowAlert(new Alert(
-                    "Error reading sound effects script!",
-                    $"Switching to default sound effects.\nLua error: {ex.Message}",
+                    "Error reading stat counter script!",
+                    $"Stat {_statCounter.Name} won't be displayed.\nLua error: {ex.Message}",
                     AlertType.Error
                 ));
+                _displayText.text = "";
                 return;
             }
 
@@ -120,10 +109,11 @@ namespace Blockstacker.Gameplay.Stats
                     catch (LuaException ex)
                     {
                         _ = AlertDisplayer.Instance.ShowAlert(new Alert(
-                            "Error executing user code!",
-                            $"Error executing stat counter script with name {StatCounter.Name}.\nLua error: {ex.Message}",
+                            "Error executing stat counter script!",
+                            $"Error executing stat counter script with name {_statCounter.Name}.\nLua error: {ex.Message}",
                             AlertType.Error
                         ));
+                        _displayText.text = "";
                     }
                 }
 
@@ -148,13 +138,14 @@ namespace Blockstacker.Gameplay.Stats
                 {
                     _ = AlertDisplayer.Instance.ShowAlert(new Alert(
                         "Error executing user code!",
-                        $"Error executing stat counter script with name {StatCounter.Name}.\nLua error: {ex.Message}",
+                        $"Error executing stat counter script with name {_statCounter.Name}.\nLua error: {ex.Message}",
                         AlertType.Error
                     ));
+                    _displayText.text = "";
                     yield break;
                 }
 
-                yield return new WaitForSeconds(StatCounter.UpdateInterval);
+                yield return new WaitForSeconds(_statCounter.UpdateInterval);
             }
         }
 
@@ -174,89 +165,70 @@ namespace Blockstacker.Gameplay.Stats
         private void Update()
         {
             var mousePos = _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            // HandlePositionDrag(mousePos);
+            HandlePositionDrag(mousePos);
             HandleSizeDrag(mousePos);
         }
 
-        // private void HandlePositionDrag(Vector2 mousePos)
-        // {
-        //     if (mousePos.IsInside(moveHandlePosition,
-        //             new Vector2(moveHandlePosition.x + moveHandleSize.x, moveHandlePosition.y - moveHandleSize.y)) &&
-        //         Mouse.current.leftButton.wasPressedThisFrame)
-        //     {
-        //         _dragStartPosition = mousePos;
-        //         _dragStartTransformPosition = _textContainer.localPosition;
-        //         _isDraggingPosition = true;
-        //     }
-        //     else if (Mouse.current.leftButton.isPressed && _isDraggingPosition)
-        //     {
-        //         var positionDifference = (Vector3) mousePos - _dragStartPosition;
-        //         var newPos = _dragStartTransformPosition + positionDifference;
-        //         _textContainer.localPosition = newPos;
-        //         StatCounter.Position = newPos;
-        //         _isDraggingPosition = false;
-        //     }
-        // }
+        private void HandlePositionDrag(Vector2 mousePos)
+        {
+            if (Mouse.current.leftButton.wasPressedThisFrame &&
+                mousePos.IsInside(moveHandlePosition,
+                    new Vector2(moveHandlePosition.x + moveHandleSize.x,
+                        moveHandlePosition.y + moveHandleSize.y)))
+
+            {
+                _dragStartPosition = mousePos;
+                _dragStartTransformPosition = _textContainer.localPosition;
+                _isDraggingPosition = true;
+            }
+            else if (Mouse.current.leftButton.isPressed && _isDraggingPosition)
+            {
+                var positionDifference = (Vector3) mousePos - _dragStartPosition;
+                var newPos = _dragStartTransformPosition + positionDifference;
+                newPos.x = Mathf.Round(newPos.x);
+                newPos.y = Mathf.Round(newPos.y);
+                _textContainer.localPosition = newPos;
+                _statCounter.Position = newPos;
+            }
+            else if (Mouse.current.leftButton.wasReleasedThisFrame)
+            {
+                _isDraggingPosition = false;
+            }
+        }
 
         private void HandleSizeDrag(Vector2 mousePos)
         {
             if (mousePos.IsInside(sizeHandlePosition,
-                    new Vector2(sizeHandlePosition.x - sizeHandleSize.x, sizeHandlePosition.y + sizeHandleSize.y)) &&
+                    new Vector2(sizeHandlePosition.x - sizeHandleSize.x, sizeHandlePosition.y - sizeHandleSize.y)) &&
                 Mouse.current.leftButton.wasPressedThisFrame)
             {
-                _dragStartPosition = mousePos;
                 _isDraggingSize = true;
             }
             else if (Mouse.current.leftButton.isPressed && _isDraggingSize)
             {
-                var positionDifference = mousePos - (Vector2) _dragStartPosition;
-                var sizeDelta = _textContainer.sizeDelta;
-                sizeDelta += positionDifference;
+                var containerPos = (Vector2) _textContainer.position;
+                var sizeDelta = (mousePos - containerPos) / _textContainer.lossyScale;
+                sizeDelta.x = Mathf.Round(sizeDelta.x);
+                sizeDelta.y = Mathf.Round(sizeDelta.y);
                 _textContainer.sizeDelta = sizeDelta;
                 _statCounter.Size = sizeDelta;
+            }
+            else if (Mouse.current.leftButton.wasReleasedThisFrame)
+            {
                 _isDraggingSize = false;
             }
         }
 
         public void SetRequiredFields(MediatorSO mediator, StatBoardInterface board,
-            ReadonlyStatContainer statContainer)
+            ReadonlyStatContainer statContainer, StatUtility statUtility,
+            StatCounterRecord statCounter)
         {
             _mediator = mediator;
             _boardInterface = board;
             _statContainer = statContainer;
-        }
-
-        private class StatUtility
-        {
-            [UsedImplicitly]
-            public static string FormatTime(double seconds)
-            {
-                const char paddingChar = '0';
-                const int msLength = 3;
-                const int sLength = 2;
-                const int mLength = 2;
-
-                var timeSpan = TimeSpan.FromSeconds(seconds);
-
-                var ms = timeSpan.Milliseconds.ToString();
-                var s = timeSpan.Seconds.ToString();
-                var m = timeSpan.Minutes.ToString();
-                var h = ((int) timeSpan.TotalHours).ToString();
-
-                ms = ms.PadLeft(msLength, paddingChar);
-
-                if (timeSpan.Minutes == 0 && timeSpan.TotalHours < 1)
-                    return $"{s}.{ms}";
-
-                s = s.PadLeft(sLength, paddingChar);
-
-                if (timeSpan.TotalHours < 1)
-                    return $"{m}:{s}.{ms}";
-
-                m = m.PadLeft(mLength, paddingChar);
-
-                return $"{h}:{m}:{s}.{ms}";
-            }
+            _statCounter = statCounter;
+            _statUtility = statUtility;
+            RefreshStatCounter();
         }
     }
 }
