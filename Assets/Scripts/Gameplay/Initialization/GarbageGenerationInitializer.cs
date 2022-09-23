@@ -23,7 +23,7 @@ namespace Blockstacker.Gameplay.Initialization
         public override void Execute()
         {
             if (!_gameSettings.Objective.UseCustomGarbageScript &&
-                _gameSettings.Objective._garbageGeneration == GameSettings.Enums.GarbageGeneration.None)
+                _gameSettings.Objective.GarbageGeneration == GameSettings.Enums.GarbageGeneration.None)
                 return;
             
             _board.InitializeGarbagePools();
@@ -51,7 +51,7 @@ namespace Blockstacker.Gameplay.Initialization
             {
                 false => new DefaultGarbageGenerator(
                     readonlyBoard,
-                    _gameSettings.Objective._garbageGeneration
+                    _gameSettings.Objective.GarbageGeneration
                     ),
                 true => new CustomGarbageGenerator(
                     readonlyBoard,

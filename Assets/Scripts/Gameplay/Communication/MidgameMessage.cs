@@ -5,6 +5,11 @@ namespace Blockstacker.Gameplay.Communication
     [Serializable]
     public abstract record MidgameMessage : Message
     {
-        public double Time;
+        public readonly double Time;
+
+        protected MidgameMessage(double time)
+        {
+            Time = time;
+        }
     }
 }

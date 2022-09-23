@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 
 namespace Blockstacker.Common.Attributes
@@ -21,3 +22,4 @@ namespace Blockstacker.Common.Attributes
         }
     }
 }
+#endif

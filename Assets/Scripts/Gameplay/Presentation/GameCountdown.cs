@@ -52,7 +52,7 @@ namespace Blockstacker.Gameplay.Presentation
                 }
 
                 if (_active)
-                    _mediator.Send(new CountdownTickedMessage {RemainingTicks = _currentCount});
+                    _mediator.Send(new CountdownTickedMessage(_currentCount));
             }
         }
 
@@ -75,7 +75,7 @@ namespace Blockstacker.Gameplay.Presentation
             _nextInterval = Time.realtimeSinceStartup + CountdownInterval;
             _currentCount = CountdownCount + 1;
             _countdownText.text = CountdownCount.ToString();
-            _mediator.Send(new CountdownTickedMessage{RemainingTicks = _currentCount});
+            _mediator.Send(new CountdownTickedMessage(_currentCount));
         }
     }
 }

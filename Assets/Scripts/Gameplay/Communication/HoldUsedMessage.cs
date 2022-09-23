@@ -2,6 +2,11 @@
 {
     public record HoldUsedMessage : MidgameMessage
     {
-        public bool WasSuccessful;
+        public readonly bool WasSuccessful;
+
+        public HoldUsedMessage(bool wasSuccessful, double time) : base(time)
+        {
+            WasSuccessful = wasSuccessful;
+        }
     }
 }

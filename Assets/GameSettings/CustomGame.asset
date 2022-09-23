@@ -22,7 +22,7 @@ MonoBehaviour:
         AllowedSpins: 2
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: -1121017585
+        ActiveSeed: 177832115
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
@@ -100,18 +100,18 @@ MonoBehaviour:
         OnTouchGroundAmount: 5
         OverrideHandling: 0
         Handling:
-          DelayedAutoShift: 0.10000000149011612
+          DelayedAutoShift: 0.0833333358168602
           AutomaticRepeatRate: 0
           SoftDropFactor: Infinity
-          DasCutDelay: 0.02000000141561032
-          DoubleDropPreventionInterval: 0
+          DasCutDelay: 0.01666666753590107
+          DoubleDropPreventionInterval: 0.03333333507180214
           DelayDasOn: 1
+          CancelDelayWithMovement: 1
           AntiDasBehavior: 2
           DiagonalLockBehavior: 0
       Gravity:
         DefaultGravity: 0.02
         DefaultLockDelay: 0.5
-        StartingLevel: 0
       BoardDimensions:
         BoardHeight: 20
         BoardWidth: 10
@@ -121,13 +121,16 @@ MonoBehaviour:
         AllowClutchClears: 1
         BoardPadding: 5
     Objective:
-      LowerScoreIsBetter: 0
       MainStat: 1
       GameEndCondition: 1
       EndConditionCount: 40
       ToppingOutIsOkay: 0
-      _garbageGeneration: 0
+      GarbageGeneration: 0
       GarbageHeight: 10
+      StartingLevel: 0
+      GameManagerType: 0
+      CustomGameManagerName: 
+      CUstomGameManagerScript: 
       UseCustomGarbageScript: 0
       CustomGarbageScriptName: 
       CustomGarbageScript: 

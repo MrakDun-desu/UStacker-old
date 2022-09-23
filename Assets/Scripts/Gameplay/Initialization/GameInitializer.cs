@@ -37,7 +37,6 @@ namespace Blockstacker.Gameplay.Initialization
         [SerializeField] private GameObject _loadingOverlay;
 
         [Header("Events")] public UnityEvent GameInitialized;
-        public UnityEvent GameReinitialized;
         public UnityEvent<string> GameFailedToInitialize;
 
         private void Start()
@@ -61,7 +60,7 @@ namespace Blockstacker.Gameplay.Initialization
             StringBuilder errorBuilder = new();
             if (TryReinitialize(errorBuilder))
             {
-                GameReinitialized.Invoke();
+                GameInitialized.Invoke();
                 _loadingOverlay.SetActive(false);
                 return;
             }

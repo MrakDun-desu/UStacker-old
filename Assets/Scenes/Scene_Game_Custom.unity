@@ -2052,6 +2052,7 @@ MonoBehaviour:
   _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   _timer: {fileID: 139450738}
   _stats:
+    Score: 0
     LinesCleared: 0
     PiecesPlaced: 0
     KeysPressed: 0
@@ -6770,7 +6771,7 @@ GameObject:
   - component: {fileID: 1579597092}
   - component: {fileID: 1579597091}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: GameStateManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7462,7 +7463,6 @@ MonoBehaviour:
         Gravity:
           DefaultGravity: 0.02
           DefaultLockDelay: 0.5
-          StartingLevel: 0
         BoardDimensions:
           BoardHeight: 22
           BoardWidth: 10
@@ -7472,13 +7472,16 @@ MonoBehaviour:
           AllowClutchClears: 1
           BoardPadding: 4
       Objective:
-        LowerScoreIsBetter: 0
         MainStat: 1
         GameEndCondition: 2
         EndConditionCount: 40
         ToppingOutIsOkay: 0
-        _garbageGeneration: 0
+        GarbageGeneration: 0
         GarbageHeight: 10
+        StartingLevel: 0
+        GameManagerType: 0
+        CustomGameManagerName: 
+        CUstomGameManagerScript: 
         UseCustomGarbageScript: 0
         CustomGarbageScriptName: 
         CustomGarbageScript: 
@@ -7488,6 +7491,7 @@ MonoBehaviour:
         CountdownInterval: 1
         CountdownCount: 3
     Stats:
+      Score: 0
       LinesCleared: 0
       PiecesPlaced: 0
       KeysPressed: 0
@@ -7845,7 +7849,6 @@ MonoBehaviour:
   _manager: {fileID: 1579597091}
   _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   _warningPiece: {fileID: 178267823}
-  PreviewContainers: []
 --- !u!4 &1685487602
 Transform:
   m_ObjectHideFlags: 0
@@ -9850,58 +9853,6 @@ MonoBehaviour:
   GameInitialized:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8692974509622913043}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1815941597}
-        m_TargetAssemblyTypeName: Blockstacker.Gameplay.Presentation.GameCountdown,
-          Assembly-CSharp
-        m_MethodName: StartCountdown
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1685487601}
-        m_TargetAssemblyTypeName: Blockstacker.Gameplay.PieceSpawner, Assembly-CSharp
-        m_MethodName: InitContainers
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1685487601}
-        m_TargetAssemblyTypeName: Blockstacker.Gameplay.PieceSpawner, Assembly-CSharp
-        m_MethodName: PrespawnPieces
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  GameReinitialized:
-    m_PersistentCalls:
-      m_Calls:
       - m_Target: {fileID: 1815941595}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -9952,7 +9903,7 @@ MonoBehaviour:
           m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 465133845}
-        m_TargetAssemblyTypeName: Blockstacker.Gameplay.InputProcessor, Assembly-CSharp
+        m_TargetAssemblyTypeName: Blockstacker.Gameplay.InputProcessor, Blockstacker.Gameplay
         m_MethodName: ResetProcessor
         m_Mode: 1
         m_Arguments:

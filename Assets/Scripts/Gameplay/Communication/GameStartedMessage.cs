@@ -2,6 +2,11 @@
 {
     public record GameStartedMessage : Message
     {
-        public int Seed;
+        public readonly int Seed;
+
+        public GameStartedMessage(int seed)
+        {
+            Seed = seed;
+        }
     }
 }

@@ -7,6 +7,5 @@ namespace Blockstacker.GameSettings.SettingGroups
     {
         public double DefaultGravity = .02d;
         public double DefaultLockDelay = .5d;
-        public string StartingLevel = "0";
     }
 }

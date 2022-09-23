@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Blockstacker.Common;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -43,10 +43,10 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
         private readonly DropdownField _typeDropdown;
         private readonly TextField _nameField;
         private readonly TextField _filenameField;
-        private readonly FloatField _positionXField;
-        private readonly FloatField _positionYField;
-        private readonly FloatField _sizeXField;
-        private readonly FloatField _sizeYField;
+        private readonly TextField _positionXField;
+        private readonly TextField _positionYField;
+        private readonly TextField _sizeXField;
+        private readonly TextField _sizeYField;
         private readonly Slider _updateIntervalSlider;
         private readonly Button _removeButton;
 
@@ -78,8 +78,8 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
 
             var positionContainer = new VisualElement();
             positionContainer.Add(new Label(POSITION_LABEL));
-            _positionXField = new FloatField();
-            _positionYField = new FloatField();
+            _positionXField = new TextField();
+            _positionYField = new TextField();
             var positionFields = new VisualElement();
             positionFields.AddToClassList(VECTOR_CONTAINER_CLASS);
             positionFields.Add(_positionXField);
@@ -88,8 +88,8 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
 
             var sizeContainer = new VisualElement();
             sizeContainer.Add(new Label(SIZE_LABEL));
-            _sizeXField = new FloatField();
-            _sizeYField = new FloatField();
+            _sizeXField = new TextField();
+            _sizeYField = new TextField();
             var sizeFields = new VisualElement();
             sizeFields.AddToClassList(VECTOR_CONTAINER_CLASS);
             sizeFields.Add(_sizeXField);
@@ -131,10 +131,10 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
             
             _nameField.SetValueWithoutNotify(Value.Name);
             _filenameField.SetValueWithoutNotify(Value.Filename);
-            _positionXField.SetValueWithoutNotify(Value.Position.x);
-            _positionYField.SetValueWithoutNotify(Value.Position.y);
-            _sizeXField.SetValueWithoutNotify(Value.Size.x);
-            _sizeYField.SetValueWithoutNotify(Value.Size.y);
+            _positionXField.SetValueWithoutNotify(Value.Position.x.ToString(CultureInfo.InvariantCulture));
+            _positionYField.SetValueWithoutNotify(Value.Position.y.ToString(CultureInfo.InvariantCulture));
+            _sizeXField.SetValueWithoutNotify(Value.Size.x.ToString(CultureInfo.InvariantCulture));
+            _sizeYField.SetValueWithoutNotify(Value.Size.y.ToString(CultureInfo.InvariantCulture));
             _updateIntervalSlider.SetValueWithoutNotify(Value.UpdateInterval);
         }
 
@@ -173,7 +173,7 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
                     Value.Script = "";
                     Value.Position = new Vector2();
                     Value.Size = new Vector2();
-                    Value.UpdateInterval = float.PositiveInfinity;
+                    Value.UpdateInterval = 0;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -198,31 +198,56 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
             Value.Script = File.ReadAllText(scriptFilePath);
         }
 
-        private void OnPositionXChanged(float positionX)
+        private void OnPositionXChanged(string posXstr)
         {
-            _value.Position.x = positionX;
+            if (!float.TryParse(posXstr, out var posX))
+            {
+                _positionXField.SetValueWithoutNotify(_value.Position.x.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                _value.Position.x = posX;
+            }
         }
 
-        private void OnPositionYChanged(float positionY)
+        private void OnPositionYChanged(string posYstr)
         {
-            _value.Position.y = positionY;
+            if (!float.TryParse(posYstr, out var posY))
+            {
+                _positionYField.SetValueWithoutNotify(_value.Position.y.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                _value.Position.y = posY;
+            }
         }
 
-        private void OnSizeXChanged(float sizeX)
+        private void OnSizeXChanged(string sizeXstr)
         {
-            _value.Size.x = sizeX;
+            if (!float.TryParse(sizeXstr, out var sizeX))
+            {
+                _sizeXField.SetValueWithoutNotify(_value.Size.x.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                _value.Size.x = sizeX;
+            }
         }
 
-        private void OnSizeYChanged(float sizeY)
+        private void OnSizeYChanged(string sizeYstr)
         {
-            _value.Size.y = sizeY;
+            if (!float.TryParse(sizeYstr, out var sizeY))
+            {
+                _sizeYField.SetValueWithoutNotify(_value.Size.y.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                _value.Size.y = sizeY;
+            }
         }
 
         private void OnUpdateIntervalChanged(float updateInterval)
         {
-            if (Mathf.Abs(updateInterval - _updateIntervalSlider.highValue) < .1f)
-                updateInterval = float.PositiveInfinity;
-
             _value.UpdateInterval = Mathf.Max(updateInterval, 0);
             _updateIntervalSlider.SetValueWithoutNotify(_value.UpdateInterval);
         }

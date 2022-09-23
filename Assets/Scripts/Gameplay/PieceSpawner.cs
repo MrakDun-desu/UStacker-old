@@ -21,22 +21,23 @@ namespace Blockstacker.Gameplay
         [SerializeField] private WarningPiece _warningPiece;
 
         public IRandomizer Randomizer;
-        public List<PieceContainer> PreviewContainers = new();
-
+        
+        private List<PieceContainer> _previewContainers;
         private PiecePreviews _previews;
         private readonly Dictionary<string, ObjectPool<Piece>> _piecePools = new();
         private int _defaultPoolCapacity;
 
         private bool _containersEmpty = true;
 
-        public void InitContainers()
+        public void SetPreviewContainers(List<PieceContainer> previewContainers)
         {
-            _previews = new PiecePreviews(PreviewContainers);
+            _previewContainers = previewContainers;
+            _previews = new PiecePreviews(_previewContainers);
         }
 
         public void PrespawnPieces()
         {
-            foreach (var nextPieceType in PreviewContainers.Select(_ => Randomizer.GetNextPiece()))
+            foreach (var nextPieceType in _previewContainers.Select(_ => Randomizer.GetNextPiece()))
             {
                 var nextPiece = _piecePools[nextPieceType].Get();
                 nextPiece.SetBoard(_board);
@@ -85,10 +86,7 @@ namespace Blockstacker.Gameplay
 
             var nextPiece = AppSettings.Sound.HearNextPieces ? _previews.GetFirstPieceType() : "";
 
-            _mediator.Send(new PieceSpawnedMessage
-            {
-                SpawnedPiece = piece.Type, NextPiece = nextPiece, Time = spawnTime
-            });
+            _mediator.Send(new PieceSpawnedMessage(piece.Type, nextPiece, spawnTime));
 
             if (!_board.CanPlace(piece))
                 _manager.LoseGame();
@@ -96,7 +94,7 @@ namespace Blockstacker.Gameplay
 
         public void EmptyAllContainers()
         {
-            foreach (var piece in PreviewContainers.Select(container => container.SwapPiece(null))
+            foreach (var piece in _previewContainers.Select(container => container.SwapPiece(null))
                          .Where(piece => piece != null)) piece.ReleaseFromPool();
 
             _containersEmpty = true;

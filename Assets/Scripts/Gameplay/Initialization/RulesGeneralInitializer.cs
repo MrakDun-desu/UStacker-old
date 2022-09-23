@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Blockstacker.Common;
@@ -104,6 +105,7 @@ namespace Blockstacker.Gameplay.Initialization
 
         private void InitializePieceContainers()
         {
+            var previewContainers = new List<PieceContainer>();
             for (var i = 0; i < _gameSettings.Rules.General.NextPieceCount; i++)
             {
                 var pieceContainer = Object.Instantiate(_pieceContainerPrefab, _board.transform);
@@ -111,8 +113,9 @@ namespace Blockstacker.Gameplay.Initialization
                     (int) _board.Width,
                     (int) _board.Height - PieceContainer.Height * (i + 1)
                 );
-                _spawner.PreviewContainers.Add(pieceContainer);
+                previewContainers.Add(pieceContainer);
             }
+            _spawner.SetPreviewContainers(previewContainers);
         }
 
         private void InitializePieceHolder()

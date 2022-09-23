@@ -5,6 +5,7 @@ namespace Blockstacker.Gameplay.Stats
     [Serializable]
     public record StatContainer
     {
+        public long Score;
         public uint LinesCleared;
         public uint PiecesPlaced;
         public uint KeysPressed;

@@ -28,7 +28,7 @@ namespace Blockstacker.Gameplay
 
         private Piece _activePiece;
         private double _arrTimer = double.PositiveInfinity;
-        private double _dasDelay;
+        private double _dasDelay = 0;
         private bool _dasLeftActive;
         private double _dasLeftStart;
         private double _dasLeftTimer;
@@ -39,7 +39,8 @@ namespace Blockstacker.Gameplay
 
         private double _dropDisabledUntil;
         private double _dropTimer;
-        private double _effectiveDropTime;
+        private double _dropTime;
+        private bool _holdingSoftDrop;
 
         private HandlingSettings _handling;
         private double _hardLockAmount = double.PositiveInfinity;
@@ -49,7 +50,6 @@ namespace Blockstacker.Gameplay
         private double _holdingRightTimer;
 
         private double _lockTime = double.PositiveInfinity;
-        private double _normalDropTime;
         private bool _pieceIsNull = true;
         private bool _pieceLocking;
 
@@ -57,6 +57,7 @@ namespace Blockstacker.Gameplay
         private bool _usedHold;
 
         private double _currentGravity;
+        private double _normalGravity;
 
         private bool _lastWasSpin;
         private SpinResult _lastSpinResult;
@@ -83,17 +84,6 @@ namespace Blockstacker.Gameplay
             }
         }
 
-        private void Awake()
-        {
-            _normalDropTime = 1 / 60d / _settings.Rules.Gravity.DefaultGravity;
-            _currentGravity = _settings.Rules.Gravity.DefaultGravity;
-            _effectiveDropTime = _normalDropTime;
-            _dropTimer = _normalDropTime;
-            _handling = _settings.Rules.Controls.Handling;
-            _dropDisabledUntil = 0;
-            _dasDelay = 0;
-        }
-
         public void DeleteActivePiece()
         {
             enabled = false;
@@ -110,7 +100,14 @@ namespace Blockstacker.Gameplay
 
         public void ResetProcessor()
         {
-            Awake();
+            _handling = _settings.Rules.Controls.Handling;
+            _normalGravity = _settings.Rules.Gravity.DefaultGravity;
+            _currentGravity = _normalGravity;
+            _dropTime = ComputeDroptimeFromGravity();
+            _dropTimer = _dropTime;
+            _dropDisabledUntil = 0;
+            _dasDelay = 0;
+            _arrTimer = double.PositiveInfinity;
             enabled = true;
         }
 
@@ -130,20 +127,13 @@ namespace Blockstacker.Gameplay
 
             if (sendMessage)
             {
-                var wasSoftDrop = !wasHardDrop && _effectiveDropTime < _normalDropTime;
+                var wasSoftDrop = !wasHardDrop && _holdingSoftDrop;
 
                 var hitWall = moveVector.x != 0 && (!_board.CanPlace(ActivePiece, Vector2Int.left) ||
                               !_board.CanPlace(ActivePiece, Vector2Int.right));
 
-                _mediator.Send(new PieceMovedMessage
-                {
-                    Time = time,
-                    X = moveVector.x,
-                    Y = moveVector.y,
-                    WasHardDrop = wasHardDrop,
-                    WasSoftDrop = wasSoftDrop,
-                    HitWall = hitWall
-                });
+                _mediator.Send(new PieceMovedMessage(moveVector.x, moveVector.y,
+                    wasHardDrop, wasSoftDrop, hitWall, time));
             }
 
             _lastWasSpin = false;
@@ -203,100 +193,82 @@ namespace Blockstacker.Gameplay
 
             return (RotationState) (output % 360);
         }
+        
+        private double ComputeDroptimeFromGravity() => 1d / 60d / _currentGravity;
 
         #region Input event handling
 
         public void OnMovePieceLeft(InputAction.CallbackContext ctx)
         {
             if (!enabled) return;
-            if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeVertical &&
-                _effectiveDropTime < _normalDropTime)
+            if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeVertical && _holdingSoftDrop)
                 return;
 
             Update();
             var actionTime = ctx.time - _timer.EffectiveStartTime;
-            var inputMessage = new InputActionMessage
-            {
-                ActionType = ActionType.MoveLeft, Time = actionTime
-            };
 
-            if (ctx.performed)
-            {
-                _mediator.Send(inputMessage with
-                {
-                    KeyActionType = KeyActionType.KeyDown
-                });
-                _holdingLeftStart = actionTime;
-                _dasLeftStart = actionTime;
-                if (_handling.AntiDasBehavior != AntiDasBehavior.DontCancel)
-                {
-                    _dasRightActive = false;
-                    _dasRightStart = actionTime;
-                }
-
-                if (_pieceIsNull) return;
-                if (!_board.CanPlace(ActivePiece, Vector2Int.left)) return;
-                MovePiece(Vector2Int.left, true, actionTime);
-                UpdatePiecePlacementVars(actionTime);
-            }
-            else if (ctx.canceled)
+            if (ctx.canceled)
             {
                 _holdingLeftStart = double.PositiveInfinity;
                 _dasLeftStart = double.PositiveInfinity;
                 _dasLeftActive = false;
+                _dasRightStart = actionTime;
 
-                _mediator.Send(inputMessage with
-                {
-                    KeyActionType = KeyActionType.KeyUp
-                });
+                _mediator.Send(new InputActionMessage(ActionType.MoveLeft, KeyActionType.KeyUp, actionTime));
             }
+
+            if (!ctx.performed) return;
+            
+            _mediator.Send(new InputActionMessage(ActionType.MoveLeft, KeyActionType.KeyDown, actionTime));
+            _holdingLeftStart = actionTime;
+            _dasLeftStart = actionTime;
+            if (_handling.AntiDasBehavior != AntiDasBehavior.DontCancel)
+            {
+                _dasRightActive = false;
+                _dasRightStart = actionTime;
+            }
+
+            if (_pieceIsNull) return;
+            if (!_board.CanPlace(ActivePiece, Vector2Int.left)) return;
+            MovePiece(Vector2Int.left, true, actionTime);
+            UpdatePiecePlacementVars(actionTime);
         }
 
         public void OnMovePieceRight(InputAction.CallbackContext ctx)
         {
             if (!enabled) return;
-            if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeVertical &&
-                _effectiveDropTime < _normalDropTime)
+            if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeVertical && _holdingSoftDrop)
                 return;
 
             Update();
             var actionTime = ctx.time - _timer.EffectiveStartTime;
-            var inputMessage = new InputActionMessage
-            {
-                ActionType = ActionType.MoveRight, Time = actionTime
-            };
-
-            if (ctx.performed)
-            {
-                _mediator.Send(inputMessage with
-                {
-                    KeyActionType = KeyActionType.KeyDown
-                });
-
-                _holdingRightStart = actionTime;
-                _dasRightStart = actionTime;
-                if (_handling.AntiDasBehavior != AntiDasBehavior.DontCancel)
-                {
-                    _dasLeftActive = false;
-                    _dasLeftStart = actionTime;
-                }
-
-                if (_pieceIsNull) return;
-                if (!_board.CanPlace(ActivePiece, Vector2Int.right)) return;
-                MovePiece(Vector2Int.right, true, actionTime);
-                UpdatePiecePlacementVars(actionTime);
-            }
-            else if (ctx.canceled)
+            
+            if (ctx.canceled)
             {
                 _holdingRightStart = double.PositiveInfinity;
                 _dasRightStart = double.PositiveInfinity;
                 _dasRightActive = false;
+                _dasLeftStart = actionTime;
 
-                _mediator.Send(inputMessage with
-                {
-                    KeyActionType = KeyActionType.KeyUp
-                });
+                _mediator.Send(new InputActionMessage(ActionType.MoveRight, KeyActionType.KeyUp, actionTime));
             }
+
+            if (!ctx.performed) return;
+            
+            _mediator.Send(new InputActionMessage(ActionType.MoveRight, KeyActionType.KeyDown, actionTime));
+
+            _holdingRightStart = actionTime;
+            _dasRightStart = actionTime;
+            if (_handling.AntiDasBehavior != AntiDasBehavior.DontCancel)
+            {
+                _dasLeftActive = false;
+                _dasLeftStart = actionTime;
+            }
+
+            if (_pieceIsNull) return;
+            if (!_board.CanPlace(ActivePiece, Vector2Int.right)) return;
+            MovePiece(Vector2Int.right, true, actionTime);
+            UpdatePiecePlacementVars(actionTime);
         }
 
         public void OnSoftDrop(InputAction.CallbackContext ctx)
@@ -305,42 +277,36 @@ namespace Blockstacker.Gameplay
             var actionTime = ctx.time - _timer.EffectiveStartTime;
             Update();
 
-            var inputMessage = new InputActionMessage
+            if (ctx.canceled)
             {
-                ActionType = ActionType.Softdrop, Time = actionTime
-            };
-
-            if (ctx.performed)
-            {
-                _mediator.Send(inputMessage with
-                {
-                    KeyActionType = KeyActionType.KeyDown
-                });
-
-                if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeHorizontal &&
-                    (_holdingLeftStart < actionTime ||
-                     _holdingRightStart < actionTime)) return;
-
-                if (_currentGravity <= 0d)
-                {
-                    const double normalDropTimeWithZeroGravity = 1d / 60d / .02d;
-                    _effectiveDropTime = normalDropTimeWithZeroGravity / _handling.SoftDropFactor;
-                }
-                else
-                {
-                    _effectiveDropTime = _normalDropTime / _handling.SoftDropFactor;
-                }
-
-                _dropTimer = actionTime;
+                _holdingSoftDrop = false;
+                _currentGravity = _normalGravity;
+                _dropTime = ComputeDroptimeFromGravity();
+                _mediator.Send(new InputActionMessage(ActionType.Softdrop, KeyActionType.KeyUp, actionTime));
             }
-            else if (ctx.canceled)
+
+            if (!ctx.performed) return;
+
+            _holdingSoftDrop = true;
+            _mediator.Send(new InputActionMessage(ActionType.Softdrop, KeyActionType.KeyDown, actionTime));
+
+            if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeHorizontal &&
+                (_holdingLeftStart < actionTime ||
+                 _holdingRightStart < actionTime)) return;
+
+            if (_currentGravity <= 0d)
             {
-                _effectiveDropTime = _normalDropTime;
-                _mediator.Send(inputMessage with
-                {
-                    KeyActionType = KeyActionType.KeyUp
-                });
+                const double zeroGravityReplacement = .02d;
+                _currentGravity = zeroGravityReplacement * _handling.SoftDropFactor;
+                _dropTime = ComputeDroptimeFromGravity();
             }
+            else
+            {
+                _currentGravity = _normalGravity * _handling.SoftDropFactor;
+                _dropTime = ComputeDroptimeFromGravity();
+            }
+
+            _dropTimer = actionTime;
         }
 
         public void OnHardDrop(InputAction.CallbackContext ctx)
@@ -351,22 +317,12 @@ namespace Blockstacker.Gameplay
 
             Update();
             var actionTime = ctx.time - _timer.EffectiveStartTime;
-            var inputMessage = new InputActionMessage
-            {
-                ActionType = ActionType.Harddrop, Time = actionTime
-            };
             if (ctx.canceled)
-                _mediator.Send(inputMessage with
-                {
-                    KeyActionType = KeyActionType.KeyUp
-                });
+                _mediator.Send(new InputActionMessage(ActionType.Harddrop, KeyActionType.KeyUp, actionTime));
 
             if (!ctx.performed) return;
 
-            _mediator.Send(inputMessage with
-            {
-                KeyActionType = KeyActionType.KeyDown
-            });
+            _mediator.Send(new InputActionMessage(ActionType.Harddrop, KeyActionType.KeyDown, actionTime));
 
             if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeHorizontal &&
                 (_holdingLeftStart < actionTime ||
@@ -389,23 +345,14 @@ namespace Blockstacker.Gameplay
                 _ => throw new ArgumentOutOfRangeException()
             };
             var actionTime = ctx.time - _timer.EffectiveStartTime;
-            var inputMessage = new InputActionMessage
-            {
-                ActionType = actionType, Time = actionTime
-            };
             if (ctx.canceled)
-                _mediator.Send(inputMessage with
-                {
-                    KeyActionType = KeyActionType.KeyUp
-                });
+                _mediator.Send(new InputActionMessage(actionType, KeyActionType.KeyUp, actionTime));
+            
             Update();
 
             if (!ctx.performed) return;
 
-            _mediator.Send(inputMessage with
-            {
-                KeyActionType = KeyActionType.KeyDown
-            });
+            _mediator.Send(new InputActionMessage(actionType, KeyActionType.KeyDown, actionTime));
 
             ActivePiece.Rotate(rotationAngle);
             if (!SpinHandler.TryKick(
@@ -418,27 +365,28 @@ namespace Blockstacker.Gameplay
                 return;
             }
 
-            var rotatedMessage = new PieceRotatedMessage
-            {
-                PieceType = ActivePiece.Type,
-                Time = actionTime,
-                WasSpinRaw = _lastSpinResult.WasSpinRaw,
-                WasSpinMiniRaw = _lastSpinResult.WasSpinMiniRaw,
-                WasSpin = _lastSpinResult.WasSpin,
-                WasSpinMini = _lastSpinResult.WasSpinMini,
-                StartRotation = ActivePiece.RotationState
-            };
-
+            var startRotation = ActivePiece.RotationState;
             ActivePiece.RotationState = ChangeRotationState(ActivePiece.RotationState, rotationAngle);
-            rotatedMessage.EndRotation = ActivePiece.RotationState;
 
-            _mediator.Send(rotatedMessage);
+            _mediator.Send(new PieceRotatedMessage(
+                ActivePiece.Type, 
+                startRotation, 
+                ActivePiece.RotationState,
+                _lastSpinResult.WasSpin, 
+                _lastSpinResult.WasSpinMini, 
+                _lastSpinResult.WasSpinRaw,
+                _lastSpinResult.WasSpinMiniRaw, 
+                actionTime));
 
             MovePiece(_lastSpinResult.Kick, false, actionTime);
             _lastWasSpin = true;
 
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Rotation))
-                _dasDelay = actionTime + _handling.DasCutDelay;
+            {
+                _arrTimer = actionTime + _handling.DasCutDelay;
+                if (!_handling.CancelDelayWithMovement)
+                    _dasDelay = _arrTimer;
+            }
 
             UpdatePiecePlacementVars(actionTime);
         }
@@ -458,38 +406,23 @@ namespace Blockstacker.Gameplay
             if (_pieceIsNull) return;
 
             var actionTime = ctx.time - _timer.EffectiveStartTime;
-            var inputMessage = new InputActionMessage
-            {
-                ActionType = ActionType.Hold, Time = actionTime
-            };
             if (ctx.canceled)
-                _mediator.Send(inputMessage with
-                {
-                    KeyActionType = KeyActionType.KeyUp
-                });
+                _mediator.Send(new InputActionMessage(ActionType.Hold, KeyActionType.KeyUp, actionTime));
+                
             Update();
 
             if (!ctx.performed) return;
             if (!_settings.Rules.Controls.AllowHold) return;
 
-            _mediator.Send(inputMessage with
-            {
-                KeyActionType = KeyActionType.KeyDown
-            });
+            _mediator.Send(new InputActionMessage(ActionType.Hold, KeyActionType.KeyDown, actionTime));
 
             if (_usedHold && !_settings.Rules.Controls.UnlimitedHold)
             {
-                _mediator.Send(new HoldUsedMessage
-                {
-                    Time = actionTime, WasSuccessful = false
-                });
+                _mediator.Send(new HoldUsedMessage(false, actionTime));
                 return;
             }
 
-            _mediator.Send(new HoldUsedMessage
-            {
-                Time = actionTime, WasSuccessful = true
-            });
+            _mediator.Send(new HoldUsedMessage(true, actionTime));
 
             var newPiece = PieceHolder.SwapPiece(ActivePiece);
             if (!_settings.Rules.Controls.UnlimitedHold)
@@ -500,7 +433,7 @@ namespace Blockstacker.Gameplay
             else
                 _spawner.SpawnPiece(newPiece, actionTime);
 
-            _dropTimer = actionTime + _effectiveDropTime;
+            _dropTimer = actionTime + _dropTime;
             _lockTime = double.PositiveInfinity;
             _pieceLocking = false;
             _hardLockAmount = double.PositiveInfinity;
@@ -522,7 +455,10 @@ namespace Blockstacker.Gameplay
         private void HandleDas()
         {
             var functionStartTime = _timer.CurrentTime;
-            if (_holdingLeftStart < functionStartTime && _dasLeftTimer < functionStartTime)
+
+            if (_dasDelay > functionStartTime) return;
+            
+            if (_holdingLeftStart < functionStartTime)
             {
                 _dasLeftTimer = functionStartTime - _dasLeftStart;
                 _holdingLeftTimer = functionStartTime - _holdingLeftStart;
@@ -532,7 +468,7 @@ namespace Blockstacker.Gameplay
                 _dasLeftTimer = 0;
             }
 
-            if (_holdingRightStart < functionStartTime && _dasRightStart < functionStartTime)
+            if (_holdingRightStart < functionStartTime)
             {
                 _dasRightTimer = functionStartTime - _dasRightStart;
                 _holdingRightTimer = functionStartTime - _holdingRightStart;
@@ -543,7 +479,6 @@ namespace Blockstacker.Gameplay
             }
 
             if (_pieceIsNull) return;
-            if (_dasDelay > functionStartTime) return;
 
             var dasRightCondition = _handling.AntiDasBehavior switch
             {
@@ -562,7 +497,7 @@ namespace Blockstacker.Gameplay
             {
                 _dasRightActive = true;
                 _dasLeftActive = false;
-                _arrTimer = functionStartTime + _handling.AutomaticRepeatRate;
+                _arrTimer = _dasRightStart + _handling.DelayedAutoShift;
             }
 
             if (!_dasLeftActive && _dasLeftTimer > _handling.DelayedAutoShift &&
@@ -570,22 +505,23 @@ namespace Blockstacker.Gameplay
             {
                 _dasLeftActive = true;
                 _dasRightActive = false;
-                _arrTimer = functionStartTime + _handling.AutomaticRepeatRate;
+                _arrTimer = _dasLeftStart + _handling.DelayedAutoShift;
             }
+
+            if (_arrTimer > functionStartTime) return;
 
             if (_dasRightActive)
             {
                 var movementVector = Vector2Int.zero;
                 while (_arrTimer < functionStartTime)
                 {
-                    _arrTimer += _handling.AutomaticRepeatRate;
                     if (_board.CanPlace(ActivePiece, movementVector + Vector2Int.right))
                     {
+                        _arrTimer += _handling.AutomaticRepeatRate;
                         movementVector += Vector2Int.right;
                     }
                     else
                     {
-                        _arrTimer = functionStartTime + _handling.AutomaticRepeatRate;
                         break;
                     }
                 }
@@ -599,14 +535,13 @@ namespace Blockstacker.Gameplay
                 var movementVector = Vector2Int.zero;
                 while (_arrTimer < functionStartTime)
                 {
-                    _arrTimer += _handling.AutomaticRepeatRate;
                     if (_board.CanPlace(ActivePiece, movementVector + Vector2Int.left))
                     {
+                        _arrTimer += _handling.AutomaticRepeatRate;
                         movementVector += Vector2Int.left;
                     }
                     else
                     {
-                        _arrTimer = functionStartTime + _handling.AutomaticRepeatRate;
                         break;
                     }
                 }
@@ -625,7 +560,7 @@ namespace Blockstacker.Gameplay
 
             while (_dropTimer < functionStartTime)
             {
-                _dropTimer += _effectiveDropTime;
+                _dropTimer += _dropTime;
 
                 if (_board.CanPlace(ActivePiece, movementVector + Vector2Int.down))
                 {
@@ -633,7 +568,7 @@ namespace Blockstacker.Gameplay
                     continue;
                 }
 
-                var touchGroundTime = _dropTimer - _effectiveDropTime;
+                var touchGroundTime = _dropTimer - _dropTime;
 
                 if (!_pieceLocking)
                 {
@@ -658,7 +593,7 @@ namespace Blockstacker.Gameplay
                 break;
             }
 
-            var lastDropTime = _dropTimer - _effectiveDropTime;
+            var lastDropTime = _dropTimer - _dropTime;
 
             if (movementVector != Vector2Int.zero)
                 MovePiece(movementVector, true, lastDropTime, false);
@@ -683,9 +618,15 @@ namespace Blockstacker.Gameplay
             _hardLockAmount = double.PositiveInfinity;
             if (!_spawner.SpawnPiece(_pieceSpawnTime))
                 return;
-            _dropTimer = _pieceSpawnTime + _effectiveDropTime;
+            _dropTimer = _pieceSpawnTime + _dropTime;
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Placement))
-                _dasDelay = _pieceSpawnTime + _handling.DasCutDelay;
+            {
+                _arrTimer = _pieceSpawnTime + _handling.DasCutDelay;
+                if (!_handling.CancelDelayWithMovement)
+                    _dasDelay = _arrTimer;
+            }
+            else
+                _arrTimer = _pieceSpawnTime;
             
             // after piece spawn, game needs to update one more time to catch up with gravity
             Update();

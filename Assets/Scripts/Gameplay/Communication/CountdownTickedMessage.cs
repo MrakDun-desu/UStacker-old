@@ -2,6 +2,11 @@
 {
     public record CountdownTickedMessage : Message
     {
-        public uint RemainingTicks;
+        public readonly uint RemainingTicks;
+
+        public CountdownTickedMessage(uint remainingTicks)
+        {
+            RemainingTicks = remainingTicks;
+        }
     }
 }

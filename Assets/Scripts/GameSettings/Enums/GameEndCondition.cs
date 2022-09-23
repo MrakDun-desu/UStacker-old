@@ -6,6 +6,7 @@ namespace Blockstacker.GameSettings.Enums
         LinesCleared,
         GarbageLinesCleared,
         PiecesPlaced,
+        Score,
         None
     }
 }

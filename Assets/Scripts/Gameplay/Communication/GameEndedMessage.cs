@@ -2,6 +2,12 @@
 {
     public record GameEndedMessage : Message
     {
-        public double EndTime;
+        public readonly double EndTime;
+
+        public GameEndedMessage(double endTime)
+        {
+            EndTime = endTime;
+        }
+
     }
 }

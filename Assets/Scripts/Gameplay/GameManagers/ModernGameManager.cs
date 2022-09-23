@@ -1,6 +1,8 @@
-namespace Blockstacker.Gameplay.Levelling
+using UnityEngine;
+
+namespace Blockstacker.Gameplay.GameManagers
 {
-    public class GuidelineLevellingSystem
+    public class ModernGameManager : MonoBehaviour
     {
         private int _currentCombo;
         private uint _currentLevel;

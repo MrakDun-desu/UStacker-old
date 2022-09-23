@@ -42,7 +42,7 @@ namespace Blockstacker.Gameplay
             if (_gameLost || _gameEnded)
                 GameRestartAfterEnd();
             GameRunning = true;
-            _mediator.Send(new GameStartedMessage {Seed = _settings.Rules.General.ActiveSeed});
+            _mediator.Send(new GameStartedMessage(_settings.Rules.General.ActiveSeed));
             GameStarted.Invoke();
         }
 
@@ -106,7 +106,7 @@ namespace Blockstacker.Gameplay
             Replay.Stats = _statCounterManager.Stats;
             Replay.GameLength = gameEndTime;
             GameEnded.Invoke();
-            _mediator.Send(new GameEndedMessage {EndTime = gameEndTime});
+            _mediator.Send(new GameEndedMessage(gameEndTime));
         }
 
         public void TogglePause(InputAction.CallbackContext ctx)

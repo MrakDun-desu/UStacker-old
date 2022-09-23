@@ -110,10 +110,10 @@ namespace Blockstacker.Gameplay
             BoardVisibilityApplier.VisibilityChanged += ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged += ChangeBoardZoom;
             WarningPieceTreshholdApplier.TreshholdChanged += ChangeWarningPieceTreshhold;
-            
+
             _mediator.Register<GameStartedMessage>(OnGameStarted);
         }
-        
+
         private void Update()
         {
             HandleBoardZooming();
@@ -125,7 +125,7 @@ namespace Blockstacker.Gameplay
             BackgroundVisibilityApplier.VisibilityChanged -= ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged -= ChangeBoardZoom;
             WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
-            
+
             _mediator.Unregister<GameStartedMessage>(OnGameStarted);
         }
 
@@ -272,11 +272,14 @@ namespace Blockstacker.Gameplay
             cheeseLinesCleared = cheeseHeightStart - GarbageHeight;
         }
 
-        private void SendPlacementMessage(PiecePlacedMessage midgameMessage)
+        private void SendPlacementMessage(uint linesCleared, uint garbageLinesCleared, bool wasAllClear,
+            double placementTime, SpinResult lastResult, string pieceType)
         {
-            if (midgameMessage.LinesCleared > 0)
+            var brokenBtb = false;
+            var brokenCombo = false;
+            if (linesCleared > 0)
             {
-                if (midgameMessage.WasSpin || midgameMessage.WasSpinMini || midgameMessage.LinesCleared >= 4)
+                if (lastResult.WasSpin || lastResult.WasSpinMini || linesCleared >= 4)
                 {
                     if (_backToBackActive)
                         _currentBackToBack++;
@@ -285,7 +288,7 @@ namespace Blockstacker.Gameplay
                 else
                 {
                     if (_currentBackToBack > 0)
-                        midgameMessage.BrokenBackToBack = true;
+                        brokenBtb = true;
                     _backToBackActive = false;
                     _currentBackToBack = 0;
                 }
@@ -297,16 +300,18 @@ namespace Blockstacker.Gameplay
             else
             {
                 if (_currentCombo > 0)
-                    midgameMessage.BrokenCombo = true;
+                    brokenCombo = true;
                 _currentCombo = 0;
                 _comboActive = false;
             }
 
-            midgameMessage.CurrentCombo = _currentCombo;
-            midgameMessage.CurrentBackToBack = _currentBackToBack;
-
-            _mediator.Send(midgameMessage);
-            GarbageGenerator?.GenerateGarbage(_settings.Objective.GarbageHeight - GarbageHeight, midgameMessage);
+            var newMessage = new PiecePlacedMessage(linesCleared, garbageLinesCleared,
+                _currentCombo, _currentBackToBack,
+                pieceType, wasAllClear, lastResult.WasSpin,
+                lastResult.WasSpinMini, lastResult.WasSpinRaw, lastResult.WasSpinMiniRaw,
+                brokenCombo, brokenBtb, placementTime);
+            _mediator.Send(newMessage);
+            GarbageGenerator?.GenerateGarbage(_settings.Objective.GarbageHeight - GarbageHeight, newMessage);
         }
 
         public Vector2Int WorldSpaceToBoardPosition(Vector3 worldSpacePos)
@@ -373,18 +378,10 @@ namespace Blockstacker.Gameplay
             var linesWereCleared = linesCleared > 0;
             var wasAllClear = Blocks.Count == 0;
 
-            var piecePlacedMsg =
-                new PiecePlacedMessage
-                {
-                    LinesCleared = linesCleared, GarbageLinesCleared = cheeseLinesCleared, WasAllClear = wasAllClear,
-                    Time = placementTime, WasSpin = lastSpinResult.WasSpin, WasSpinMini = lastSpinResult.WasSpinMini,
-                    WasSpinRaw = lastSpinResult.WasSpinRaw, WasSpinMiniRaw = lastSpinResult.WasSpinMiniRaw,
-                    PieceType = piece.Type
-                };
-
             HandleWarningPiece();
 
-            SendPlacementMessage(piecePlacedMsg);
+            SendPlacementMessage(linesCleared, cheeseLinesCleared, wasAllClear, placementTime, lastSpinResult,
+                piece.Type);
 
             if (_settings.Rules.BoardDimensions.AllowClutchClears && linesWereCleared) return true;
 
@@ -430,8 +427,8 @@ namespace Blockstacker.Gameplay
 
         public void AddGarbageLayer(IList<List<bool>> slots, bool addToLast)
         {
-            var newGarbageLayer = addToLast && _lastGarbageLayer is not null 
-                ? _lastGarbageLayer 
+            var newGarbageLayer = addToLast && _lastGarbageLayer is not null
+                ? _lastGarbageLayer
                 : _garbageLayerPool.Get();
 
             var height = 0;
@@ -481,7 +478,7 @@ namespace Blockstacker.Gameplay
             {
                 Place(block);
             }
-            
+
             newGarbageLayer.TriggerBlocksAdded();
         }
 
@@ -505,6 +502,5 @@ namespace Blockstacker.Gameplay
                 (int) (_height * _width / 2u),
                 (int) (_height * _width));
         }
-
     }
 }

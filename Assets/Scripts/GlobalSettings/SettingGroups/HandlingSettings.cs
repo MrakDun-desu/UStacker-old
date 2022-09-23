@@ -12,6 +12,7 @@ namespace Blockstacker.GlobalSettings.Groups
         public double DasCutDelay;
         public double DoubleDropPreventionInterval;
         public DelayDasOn DelayDasOn = DelayDasOn.Nothing;
+        public bool CancelDelayWithMovement = true;
         public AntiDasBehavior AntiDasBehavior = AntiDasBehavior.CancelFirstDirection;
         public DiagonalLockBehavior DiagonalLockBehavior = DiagonalLockBehavior.DontLock;
     }
