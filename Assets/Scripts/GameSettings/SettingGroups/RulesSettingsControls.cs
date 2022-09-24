@@ -17,8 +17,8 @@ namespace Blockstacker.GameSettings.SettingGroups
         public RotationSystem ActiveRotationSystem;
         public double PiecePlacedDelay;
         public double LineClearDelay;
-        public OnTouchGround OnTouchGround = OnTouchGround.LimitedTime;
-        public double OnTouchGroundAmount = 5;
+        public HardLockType HardLockType = HardLockType.LimitedTime;
+        public double HardLockAmount = 5;
         public bool OverrideHandling;
         public HandlingSettings Handling = new();
     }

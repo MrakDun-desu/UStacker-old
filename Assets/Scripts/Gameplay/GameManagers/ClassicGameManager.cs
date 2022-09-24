@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Blockstacker.Gameplay.GameManagers
 {
-    public class ClassicGameManager : MonoBehaviour
+    public class ClassicGameManager : MonoBehaviour, IGameManager
     {
         // nes tetris framerate / reference frame rate = 60.0988 / 60
         private const double GRAVITY_MULTIPLIER = 1.001646666666666666;
@@ -69,12 +69,12 @@ namespace Blockstacker.Gameplay.GameManagers
             140u
         };
 
-        private readonly MediatorSO _mediator;
+        private MediatorSO _mediator;
         private uint _currentLevel;
         private uint _linesToNextLevel;
         private long _currentScore;
 
-        public ClassicGameManager(uint startingLevel, MediatorSO mediator)
+        public void Initialize(uint startingLevel, MediatorSO mediator)
         {
             _currentLevel = (uint) Mathf.Min(startingLevel, 29);
             var linesToNextIndex = startingLevel > 19 ? 0 : startingLevel;

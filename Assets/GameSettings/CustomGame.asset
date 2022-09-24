@@ -22,7 +22,7 @@ MonoBehaviour:
         AllowedSpins: 2
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: 177832115
+        ActiveSeed: 1979224641
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
@@ -96,14 +96,14 @@ MonoBehaviour:
             - {x: 0, y: 0}
         PiecePlacedDelay: 0
         LineClearDelay: 0
-        OnTouchGround: 0
-        OnTouchGroundAmount: 5
+        HardLockType: 0
+        HardLockAmount: 5
         OverrideHandling: 0
         Handling:
-          DelayedAutoShift: 0.0833333358168602
+          DelayedAutoShift: 0.09000000357627869
           AutomaticRepeatRate: 0
           SoftDropFactor: Infinity
-          DasCutDelay: 0.01666666753590107
+          DasCutDelay: 0.03333333507180214
           DoubleDropPreventionInterval: 0.03333333507180214
           DelayDasOn: 1
           CancelDelayWithMovement: 1
@@ -112,6 +112,7 @@ MonoBehaviour:
       Gravity:
         DefaultGravity: 0.02
         DefaultLockDelay: 0.5
+        LockDelayType: 1
       BoardDimensions:
         BoardHeight: 20
         BoardWidth: 10
@@ -130,12 +131,12 @@ MonoBehaviour:
       StartingLevel: 0
       GameManagerType: 0
       CustomGameManagerName: 
-      CUstomGameManagerScript: 
+      CustomGameManagerScript: 
       UseCustomGarbageScript: 0
       CustomGarbageScriptName: 
       CustomGarbageScript: 
     Presentation:
-      Title: Sprint 40L
+      Title: Custom game
       UseCountdown: 1
       CountdownInterval: 0.5
       CountdownCount: 3

@@ -16,8 +16,8 @@ MonoBehaviour:
     Name: Stopwatch
     Type: 0
     Filename: 
-    Script: "function OnUpdated()\n\treturn \"Time: \" .. StatUtility:GetFormattedTime()\nend\nreturn
-      {\n\t[\"CounterUpdated\"] = OnUpdated\n}"
+    Script: "function OnUpdated()\n\treturn \"Time: \" .. StatUtility:GetFormattedTime()\nend\nSetText(\"Time:
+      \" .. StatUtility:FormatTime(0))\nreturn {\n\t[\"CounterUpdated\"] = OnUpdated\n}"
     Position: {x: -6, y: 0}
     Size: {x: 6, y: 2}
     UpdateInterval: 0.01

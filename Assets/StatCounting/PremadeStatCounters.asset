@@ -19,30 +19,29 @@ MonoBehaviour:
     - Name: Stopwatch
       Type: 0
       Filename: 
-      Script: "function OnUpdated()\n\treturn \"Time: \" .. StatUtility:GetFormattedTime()\nend\nreturn
-        {\n\t[\"CounterUpdated\"] = OnUpdated\n}"
+      Script: "function OnUpdated()\n\treturn \"Time: \" .. StatUtility:GetFormattedTime()\nend\nSetText(\"Time:
+        \" .. StatUtility:FormatTime(0))\nreturn {\n\t[\"CounterUpdated\"] = OnUpdated\n}"
       Position: {x: -6, y: 0}
       Size: {x: 6, y: 2}
       UpdateInterval: 0.01
     - Name: Pieces
       Type: 0
       Filename: 
-      Script: "function ResetPiecesPlaced()\n\tPiecesPlaced = 0\nend\nfunction OnPiecePlaced()\n\tPiecesPlaced
+      Script: "function Reset()\n\tPiecesPlaced = 0\nend\nfunction OnPiecePlaced()\n\tPiecesPlaced
         = PiecesPlaced + 1\nend\nfunction OnUpdated()\n\tlocal pps = Stats.PiecesPerSecond\n\treturn
-        \"Pieces: \" .. PiecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\nend\nResetPiecesPlaced()\nreturn
-        {\n\t[\"CounterUpdated\"] = OnUpdated,\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStarted\"]
-        = ResetPiecesPlaced,\n\t[\"GameRestarted\"] = ResetPiecesPlaced\n}"
-      Position: {x: -6, y: 3}
+        \"Pieces: \" .. PiecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\nend\nReset()\nSetText(\"Pieces:
+        0\\nPPS: 0\")\nreturn {\n\t[\"CounterUpdated\"] = OnUpdated,\n\t[\"PiecePlaced\"]
+        = OnPiecePlaced,\n\t[\"GameStarted\"] = Reset,\n\t[\"GameRestarted\"] = Reset\n}"
+      Position: {x: -6, y: 5}
       Size: {x: 6, y: 4}
       UpdateInterval: 0.1
     - Name: Lines cleared
       Type: 0
       Filename: 
-      Script: "function ResetLinesCleared()\n\tLinesCleared = 0\n\treturn \"Lines
-        cleared: 0\"\nend\nfunction OnPiecePlaced(message)\n\tLinesCleared = LinesCleared
-        + message.LinesCleared\n\treturn \"Lines cleared: \" .. LinesCleared\nend\nResetLinesCleared()\nreturn
-        {\n\t[\"GameStarted\"] = ResetLinesCleared,\n\t[\"GameRestarted\"] = ResetLinesCleared,\n\t[\"PiecePlaced\"]
-        = OnPiecePlaced\n}"
-      Position: {x: -8, y: 8}
+      Script: "function Reset()\n\tLinesCleared = 0\n\treturn \"Lines cleared: 0\"\nend\nfunction
+        OnPiecePlaced(message)\n\tLinesCleared = LinesCleared + message.LinesCleared\n\treturn
+        \"Lines cleared: \" .. LinesCleared\nend\nSetText(Reset())\nreturn {\n\t[\"GameStarted\"]
+        = Reset,\n\t[\"GameRestarted\"] = Reset,\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
+      Position: {x: -8, y: 9}
       Size: {x: 8, y: 2}
       UpdateInterval: 0

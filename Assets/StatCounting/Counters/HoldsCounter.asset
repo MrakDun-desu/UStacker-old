@@ -18,7 +18,7 @@ MonoBehaviour:
     Filename: 
     Script: "function Reset()\n\tHolds = 0\n\treturn \"Holds: \" .. Holds\nend\nfunction
       OnHold(message)\n\tif message.WasSuccessful then\n\t\tHolds = Holds + 1\n\tend\n\treturn
-      \"Holds: \" .. Holds\nend\nReset()\nreturn {\n\t[\"HoldUsed\"] = OnHold,\n\t[\"GameStarted\"]
+      \"Holds: \" .. Holds\nend\nSetText(Reset())\nreturn {\n\t[\"HoldUsed\"] = OnHold,\n\t[\"GameStarted\"]
       = Reset,\n\t[\"GameRestarted\"] = Reset\n}"
     Position: {x: -6, y: 13}
     Size: {x: 6, y: 2}

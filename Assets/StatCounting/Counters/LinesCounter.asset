@@ -18,7 +18,7 @@ MonoBehaviour:
     Filename: 
     Script: "function Reset()\n\tLinesCleared = 0\n\treturn \"Lines cleared: 0\"\nend\nfunction
       OnPiecePlaced(message)\n\tLinesCleared = LinesCleared + message.LinesCleared\n\treturn
-      \"Lines cleared: \" .. LinesCleared\nend\nReset()\nreturn {\n\t[\"GameStarted\"]
+      \"Lines cleared: \" .. LinesCleared\nend\nSetText(Reset())\nreturn {\n\t[\"GameStarted\"]
       = Reset,\n\t[\"GameRestarted\"] = Reset,\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
     Position: {x: -8, y: 9}
     Size: {x: 8, y: 2}

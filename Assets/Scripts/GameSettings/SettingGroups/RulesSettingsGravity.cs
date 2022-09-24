@@ -1,4 +1,5 @@
 using System;
+using Blockstacker.GameSettings.Enums;
 
 namespace Blockstacker.GameSettings.SettingGroups
 {
@@ -7,5 +8,6 @@ namespace Blockstacker.GameSettings.SettingGroups
     {
         public double DefaultGravity = .02d;
         public double DefaultLockDelay = .5d;
+        public LockDelayType LockDelayType = LockDelayType.OnTouchGround;
     }
 }

@@ -15,7 +15,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         public uint StartingLevel;
         public GameManagerType GameManagerType = GameManagerType.None;
         public string CustomGameManagerName = "";
-        public string CUstomGameManagerScript = "";
+        public string CustomGameManagerScript = "";
         public bool UseCustomGarbageScript;
         public string CustomGarbageScriptName = "";
         public string CustomGarbageScript = "";

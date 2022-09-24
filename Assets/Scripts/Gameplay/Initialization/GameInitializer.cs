@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 using Blockstacker.Gameplay.Blocks;
@@ -35,6 +34,7 @@ namespace Blockstacker.Gameplay.Initialization
         [Header("Others")] [SerializeField] private GameCountdown _countdown;
         [SerializeField] private TMP_Text _gameTitle;
         [SerializeField] private GameObject _loadingOverlay;
+        [SerializeField] private MediatorSO _mediator;
 
         [Header("Events")] public UnityEvent GameInitialized;
         public UnityEvent<string> GameFailedToInitialize;
@@ -101,7 +101,10 @@ namespace Blockstacker.Gameplay.Initialization
                     errorBuilder, _gameSettingsAsset,
                     _gameTitle,
                     _countdown
-                )
+                ),
+                new ObjectiveInitializer(
+                    errorBuilder, _gameSettingsAsset,
+                    _mediator)
             };
 
             foreach (var initializer in initializers) initializer.Execute();
@@ -121,17 +124,6 @@ namespace Blockstacker.Gameplay.Initialization
                     _pieceContainerPrefab,
                     _inputProcessor,
                     true),
-                new RulesHandlingInitializer(errorBuilder, _gameSettingsAsset),
-                new RulesControlsInitializer(
-                    errorBuilder, _gameSettingsAsset,
-                    _srsRotationSystemSo.RotationSystem,
-                    _srsPlusRotationSystemSo.RotationSystem,
-                    _inputProcessor),
-                new PresentationInitializer(
-                    errorBuilder, _gameSettingsAsset,
-                    _gameTitle,
-                    _countdown
-                )
             };
 
             foreach (var initializer in initializers) initializer.Execute();
