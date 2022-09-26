@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Enums;
 using Blockstacker.GameSettings;
@@ -17,35 +19,60 @@ namespace Blockstacker.Gameplay.Stats
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private GameTimer _timer;
         [SerializeField] private StatContainer _stats = new();
+        [SerializeField] private GameManager _gameStateManager;
 
         public ReadonlyStatContainer Stats;
-        private bool _gameRunning;
 
         private void Start()
         {
             Stats = new ReadonlyStatContainer(_stats);
             _mediator.Register<InputActionMessage>(OnInputAction, true);
             _mediator.Register<PiecePlacedMessage>(OnPiecePlaced, true);
-            _mediator.Register<GameStartedMessage>(OnGameStarted, true);
-            _mediator.Register<GameEndedMessage>(OnGameEnded, true);
             _mediator.Register<GameRestartedMessage>(OnGameRestarted, true);
+            _mediator.Register<ScoreChangedMessage>(OnScoreChanged, true);
+            _mediator.Register<LevelChangedMessage>(OnLevelChanged, true);
             CreateStatCounters();
+        }
+
+        private void OnDestroy()
+        {
+            _mediator.Unregister<InputActionMessage>(OnInputAction);
+            _mediator.Unregister<PiecePlacedMessage>(OnPiecePlaced);
+            _mediator.Unregister<GameRestartedMessage>(OnGameRestarted);
+            _mediator.Unregister<ScoreChangedMessage>(OnScoreChanged);
+            _mediator.Unregister<LevelChangedMessage>(OnLevelChanged);
         }
 
         private void CreateStatCounters()
         {
+            var counterGroups = AppSettings.StatCounting.StatCounterGroups;
+            counterGroups ??= new Dictionary<Guid, StatCounterGroup>();
+            if (counterGroups.Count <= 0) return;
+
+            AppSettings.StatCounting.GameStatCounterDictionary ??= new Dictionary<string, Guid>();
+            
             var statUtility = new StatUtility(_timer);
             var gameName = _gameSettings.GameType.Value;
-            StatCounterGroup counterGroup;
+            StatCounterGroup counterGroup = null;
             if (AppSettings.StatCounting.GameStatCounterDictionary.TryGetValue(gameName, out var groupId))
             {
                 if (!AppSettings.StatCounting.StatCounterGroups.TryGetValue(groupId, out counterGroup)) return;
             }
             else
             {
-                var (groupKey, group) = AppSettings.StatCounting.StatCounterGroups.First();
-                AppSettings.StatCounting.GameStatCounterDictionary[gameName] = groupKey;
-                counterGroup = group;
+                foreach (var (groupKey, group) in counterGroups)
+                {
+                    if (group.Name != gameName) continue;
+                    AppSettings.StatCounting.GameStatCounterDictionary[gameName] = groupKey;
+                    counterGroup = group;
+                }
+
+                if (counterGroup == null)
+                {
+                    var (groupKey, group) = counterGroups.First();
+                    AppSettings.StatCounting.GameStatCounterDictionary[gameName] = groupKey;
+                    counterGroup = group;
+                }
             }
 
 
@@ -57,15 +84,6 @@ namespace Blockstacker.Gameplay.Stats
             }
         }
 
-        private void OnDestroy()
-        {
-            _mediator.Unregister<InputActionMessage>(OnInputAction);
-            _mediator.Unregister<PiecePlacedMessage>(OnPiecePlaced);
-            _mediator.Unregister<GameStartedMessage>(OnGameStarted);
-            _mediator.Unregister<GameEndedMessage>(OnGameEnded);
-            _mediator.Unregister<GameRestartedMessage>(OnGameRestarted);
-        }
-
         private void OnInputAction(InputActionMessage message)
         {
             if (message.KeyActionType == KeyActionType.KeyDown) _stats.KeysPressed++;
@@ -74,18 +92,7 @@ namespace Blockstacker.Gameplay.Stats
 
         private void OnGameRestarted(GameRestartedMessage _)
         {
-            _gameRunning = false;
             _stats.Reset();
-        }
-
-        private void OnGameStarted(GameStartedMessage _)
-        {
-            _gameRunning = true;
-        }
-
-        private void OnGameEnded(GameEndedMessage _)
-        {
-            _gameRunning = false;
         }
 
         private void OnPiecePlaced(PiecePlacedMessage message)
@@ -144,9 +151,19 @@ namespace Blockstacker.Gameplay.Stats
             }
         }
 
+        private void OnScoreChanged(ScoreChangedMessage message)
+        {
+            _stats.Score = message.Score;
+        }
+
+        private void OnLevelChanged(LevelChangedMessage message)
+        {
+            _stats.Level = message.Level;
+        }
+
         private void Update()
         {
-            if (!_gameRunning) return;
+            if (!_gameStateManager.GameRunning) return;
             
             _stats.LinesPerMinute = _stats.LinesCleared / _timer.CurrentTime;
             _stats.PiecesPerSecond = _stats.PiecesPlaced / _timer.CurrentTime;

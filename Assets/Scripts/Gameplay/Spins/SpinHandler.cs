@@ -44,7 +44,7 @@ namespace Blockstacker.Gameplay.Spins
                 else
                     result.WasSpinMiniRaw = true;
 
-                result = CheckSpinResult(result, piece.Type);
+                CheckSpinResult(result, piece.Type);
                 
                 return true;
             }
@@ -52,22 +52,22 @@ namespace Blockstacker.Gameplay.Spins
             return false;
         }
         
-        private SpinResult CheckSpinResult(SpinResult formerResult, string pieceType)
+        private void CheckSpinResult(SpinResult formerResult, string pieceType)
         {
             switch (_allowedSpins)
             {
                 case AllowedSpins.All:
                     formerResult.WasSpin = formerResult.WasSpinRaw;
                     formerResult.WasSpinMini = formerResult.WasSpinMiniRaw;
-                    return formerResult;
+                    return;
                 case AllowedSpins.Stupid:
                     formerResult.WasSpin = true;
                     formerResult.WasSpinMini = false;
-                    return formerResult;
+                    return;
                 case AllowedSpins.None:
                     formerResult.WasSpin = false;
                     formerResult.WasSpinMini = false;
-                    return formerResult;
+                    return;
                 case AllowedSpins.ISpins:
                 case AllowedSpins.TSpins:
                 case AllowedSpins.LSpins:
@@ -83,12 +83,10 @@ namespace Blockstacker.Gameplay.Spins
             {
                 formerResult.WasSpin = formerResult.WasSpinRaw;
                 formerResult.WasSpinMini = formerResult.WasSpinMiniRaw;
-                return formerResult;
+                return;
             }
             formerResult.WasSpin = false;
             formerResult.WasSpinMini = false;
-
-            return formerResult;
         }
 
         private bool CheckSpinValidity(string pieceType)

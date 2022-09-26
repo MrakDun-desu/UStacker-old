@@ -31,6 +31,8 @@ namespace Blockstacker.Gameplay
         private bool _gameLost;
         private bool _gameStarted;
 
+        private double _lastSentTimeCondition;
+
         public bool GameRunning { get; private set; }
 
         #region Game event management
@@ -43,6 +45,11 @@ namespace Blockstacker.Gameplay
                 GameRestartAfterEnd();
             GameRunning = true;
             _mediator.Send(new GameStartedMessage(_settings.Rules.General.ActiveSeed));
+            _mediator.Send(new GameEndConditionChangedMessage(
+                0, 
+                _settings.Objective.EndConditionCount, 
+                0,
+                _settings.Objective.GameEndCondition.ToString()));
             GameStarted.Invoke();
         }
 
@@ -128,12 +135,27 @@ namespace Blockstacker.Gameplay
         private void Awake()
         {
             _mediator.Register<PiecePlacedMessage>(OnPiecePlaced);
+            _mediator.Register<ScoreChangedMessage>(OnScoreChanged);
         }
 
         private void Update()
         {
-            if (_settings.Objective.GameEndCondition == GameEndCondition.Time &&
-                _timer.CurrentTime > _settings.Objective.EndConditionCount)
+            if (_settings.Objective.GameEndCondition != GameEndCondition.Time) return;
+
+            var functionStartTime = _timer.CurrentTime;
+
+            double currentTimeRounded = (int) functionStartTime;
+            if (_lastSentTimeCondition < currentTimeRounded)
+            {
+                _lastSentTimeCondition = currentTimeRounded;
+                _mediator.Send(new GameEndConditionChangedMessage(
+                    functionStartTime,
+                    _settings.Objective.EndConditionCount,
+                    currentTimeRounded,
+                    _settings.Objective.GameEndCondition.ToString()));
+            }
+
+            if (_timer.CurrentTime > _settings.Objective.EndConditionCount)
                 EndGame();
         }
 
@@ -142,29 +164,64 @@ namespace Blockstacker.Gameplay
             _mediator.Clear();
         }
 
-        private void OnPiecePlaced(PiecePlacedMessage _)
+        private void OnPiecePlaced(PiecePlacedMessage message)
         {
-            switch (_settings.Objective.GameEndCondition)
+            var endCondition = _settings.Objective.GameEndCondition;
+            var endConditionCount = _settings.Objective.EndConditionCount;
+            switch (endCondition)
             {
                 case GameEndCondition.Time:
                     break;
                 case GameEndCondition.LinesCleared:
-                    if (_statCounterManager.Stats.LinesCleared >= _settings.Objective.EndConditionCount)
+                    var linesCleared = _statCounterManager.Stats.LinesCleared;
+                    _mediator.Send(new GameEndConditionChangedMessage(
+                        message.Time, 
+                        endConditionCount, 
+                        linesCleared,
+                        endCondition.ToString()));
+                    if (linesCleared >= _settings.Objective.EndConditionCount)
                         EndGame();
                     break;
                 case GameEndCondition.GarbageLinesCleared:
-                    if (_statCounterManager.Stats.GarbageLinesCleared >= _settings.Objective.EndConditionCount)
+                    var garbageLinesCleared = _statCounterManager.Stats.GarbageLinesCleared;
+                    _mediator.Send(new GameEndConditionChangedMessage(
+                        message.Time, 
+                        endConditionCount,
+                        garbageLinesCleared, 
+                        endCondition.ToString()));
+                    if (garbageLinesCleared >= _settings.Objective.EndConditionCount)
                         EndGame();
                     break;
                 case GameEndCondition.PiecesPlaced:
-                    if (_statCounterManager.Stats.PiecesPlaced >= _settings.Objective.EndConditionCount)
+                    var piecesPlaced = _statCounterManager.Stats.PiecesPlaced;
+                    _mediator.Send(new GameEndConditionChangedMessage(
+                        message.Time, 
+                        endConditionCount, 
+                        piecesPlaced,
+                        endCondition.ToString()));
+                    if (piecesPlaced >= _settings.Objective.EndConditionCount)
                         EndGame();
                     break;
+                case GameEndCondition.Score:
                 case GameEndCondition.None:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private void OnScoreChanged(ScoreChangedMessage message)
+        {
+            if (_settings.Objective.GameEndCondition != GameEndCondition.Score) return;
+
+            _mediator.Send(new GameEndConditionChangedMessage(
+                message.Time,
+                _settings.Objective.EndConditionCount, 
+                message.Score,
+                _settings.Objective.GameEndCondition.ToString()));
+
+            if (message.Score >= _settings.Objective.EndConditionCount)
+                EndGame();
         }
 
         #endregion

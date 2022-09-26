@@ -12,115 +12,143 @@ namespace Blockstacker.Gameplay.GameManagers
         // frames per row - taken from https://tetris.wiki/Tetris_(NES,_Nintendo)
         private static readonly double[] _levelGravities =
         {
-            GRAVITY_MULTIPLIER / 48d,
-            GRAVITY_MULTIPLIER / 43d,
-            GRAVITY_MULTIPLIER / 38d,
-            GRAVITY_MULTIPLIER / 33d,
-            GRAVITY_MULTIPLIER / 28d,
-            GRAVITY_MULTIPLIER / 23d,
-            GRAVITY_MULTIPLIER / 18d,
-            GRAVITY_MULTIPLIER / 13d,
-            GRAVITY_MULTIPLIER / 8d,
-            GRAVITY_MULTIPLIER / 6d,
-            GRAVITY_MULTIPLIER / 5d,
-            GRAVITY_MULTIPLIER / 5d,
-            GRAVITY_MULTIPLIER / 5d,
-            GRAVITY_MULTIPLIER / 4d,
-            GRAVITY_MULTIPLIER / 4d,
-            GRAVITY_MULTIPLIER / 4d,
-            GRAVITY_MULTIPLIER / 3d,
-            GRAVITY_MULTIPLIER / 3d,
-            GRAVITY_MULTIPLIER / 3d,
-            GRAVITY_MULTIPLIER / 2d,
-            GRAVITY_MULTIPLIER / 2d,
-            GRAVITY_MULTIPLIER / 2d,
-            GRAVITY_MULTIPLIER / 2d,
-            GRAVITY_MULTIPLIER / 2d,
-            GRAVITY_MULTIPLIER / 2d,
-            GRAVITY_MULTIPLIER / 2d,
-            GRAVITY_MULTIPLIER / 2d,
-            GRAVITY_MULTIPLIER / 2d,
-            GRAVITY_MULTIPLIER / 2d,
-            GRAVITY_MULTIPLIER / 1d
+            GRAVITY_MULTIPLIER / 48d, // level 0
+            GRAVITY_MULTIPLIER / 43d, // level 1
+            GRAVITY_MULTIPLIER / 38d, // level 2
+            GRAVITY_MULTIPLIER / 33d, // level 3
+            GRAVITY_MULTIPLIER / 28d, // level 4
+            GRAVITY_MULTIPLIER / 23d, // level 5
+            GRAVITY_MULTIPLIER / 18d, // level 6
+            GRAVITY_MULTIPLIER / 13d, // level 7
+            GRAVITY_MULTIPLIER / 8d,  // level 8
+            GRAVITY_MULTIPLIER / 6d,  // level 9
+            GRAVITY_MULTIPLIER / 5d,  // level 10
+            GRAVITY_MULTIPLIER / 5d,  // level 11
+            GRAVITY_MULTIPLIER / 5d,  // level 12
+            GRAVITY_MULTIPLIER / 4d,  // level 13
+            GRAVITY_MULTIPLIER / 4d,  // level 14
+            GRAVITY_MULTIPLIER / 4d,  // level 15
+            GRAVITY_MULTIPLIER / 3d,  // level 16
+            GRAVITY_MULTIPLIER / 3d,  // level 17
+            GRAVITY_MULTIPLIER / 3d,  // level 18
+            GRAVITY_MULTIPLIER / 2d,  // level 19
+            GRAVITY_MULTIPLIER / 2d,  // level 20
+            GRAVITY_MULTIPLIER / 2d,  // level 21
+            GRAVITY_MULTIPLIER / 2d,  // level 22
+            GRAVITY_MULTIPLIER / 2d,  // level 23
+            GRAVITY_MULTIPLIER / 2d,  // level 24
+            GRAVITY_MULTIPLIER / 2d,  // level 25
+            GRAVITY_MULTIPLIER / 2d,  // level 26
+            GRAVITY_MULTIPLIER / 2d,  // level 27
+            GRAVITY_MULTIPLIER / 2d,  // level 28
+            GRAVITY_MULTIPLIER / 1d   // level 29
         };
 
         // used only with the first set level, taken from https://listfist.com/list-of-tetris-levels-by-lines-nes
-        private static readonly uint[] _linesToLevelIncrease =
+        private static readonly int[] _linesToLevelIncrease =
         {
-            10u,
-            20u,
-            30u,
-            40u,
-            50u,
-            60u,
-            70u,
-            80u,
-            90u,
-            100u,
-            100u,
-            100u,
-            100u,
-            100u,
-            100u,
-            100u,
-            110u,
-            120u,
-            130u,
-            140u
+            10,  // level 0 start
+            20,  // level 1 start
+            30,  // level 2 start
+            40,  // level 3 start
+            50,  // level 4 start
+            60,  // level 5 start
+            70,  // level 6 start
+            80,  // level 7 start
+            90,  // level 8 start
+            100, // level 9 start
+            100, // level 10 start
+            100, // level 11 start
+            100, // level 12 start
+            100, // level 13 start
+            100, // level 14 start
+            100, // level 15 start
+            110, // level 16 start
+            120, // level 17 start
+            130, // level 18 start
+            140  // level 19 start
         };
 
         private MediatorSO _mediator;
         private uint _currentLevel;
-        private uint _linesToNextLevel;
+        private int _linesToNextLevel;
+        private int _totalLinesToNextLevel;
+        private int _linesClearedThisLevel => _totalLinesToNextLevel - _linesToNextLevel;
         private long _currentScore;
+        private uint _startingLevel;
+
+        private const string LEVELUP_CONDITION_NAME = "Lines";
 
         public void Initialize(uint startingLevel, MediatorSO mediator)
         {
-            _currentLevel = (uint) Mathf.Min(startingLevel, 29);
-            var linesToNextIndex = startingLevel > 19 ? 0 : startingLevel;
-            _linesToNextLevel = _linesToLevelIncrease[linesToNextIndex];
+            _startingLevel = startingLevel;
             _mediator = mediator;
-
             _mediator.Register<PiecePlacedMessage>(HandlePiecePlaced);
             _mediator.Register<PieceMovedMessage>(HandlePieceMoved);
-
-            var newGravity = new GravityChangedMessage(CalculateGravity(), 0);
-            var newLevel = new LevelChangedMessage(_currentLevel, 0);
-            var newLockDelay = new LockDelayChangedMessage(0, 0);
-            _mediator.Send(newGravity);
-            _mediator.Send(newLevel);
-            _mediator.Send(newLockDelay);
+            _mediator.Register<GameStartedMessage>(OnGameStarted);
         }
 
-        private void HandlePiecePlaced(PiecePlacedMessage piecePlaced)
+        private void OnDestroy()
         {
-            long scoreAddition = piecePlaced.LinesCleared switch
+            _mediator.Unregister<PiecePlacedMessage>(HandlePiecePlaced);
+            _mediator.Unregister<PieceMovedMessage>(HandlePieceMoved);
+            _mediator.Unregister<GameStartedMessage>(OnGameStarted);
+        }
+
+        private void OnGameStarted(GameStartedMessage _)
+        {
+            _currentLevel = (uint) Mathf.Min(_startingLevel, _levelGravities.Length - 1);
+            var linesToNextIndex = _currentLevel > _linesToLevelIncrease.Length - 1 ? 0 : _currentLevel;
+            _totalLinesToNextLevel = _linesToLevelIncrease[linesToNextIndex];
+            _linesToNextLevel = _totalLinesToNextLevel;
+
+            _currentScore = 0;
+            _mediator.Send(new ScoreChangedMessage(0, 0));
+            _mediator.Send(new GravityChangedMessage(CalculateGravity(), 0));
+            _mediator.Send(new LevelChangedMessage(_currentLevel, 0));
+            _mediator.Send(new LockDelayChangedMessage(0, 0));
+            _mediator.Send(new LevelUpConditionChangedMessage(0, _totalLinesToNextLevel, _linesClearedThisLevel, LEVELUP_CONDITION_NAME));
+        }
+
+        private void HandlePiecePlaced(PiecePlacedMessage message)
+        {
+            var scoreAddition = message.LinesCleared switch
             {
                 1 => 40,
                 2 => 100,
                 3 => 300,
                 4 => 1200,
                 _ => 0
-            };
-            _linesToNextLevel -= piecePlaced.LinesCleared;
+            } * (_currentLevel + 1);
             _currentScore += scoreAddition;
-            _mediator.Send(new ScoreChangedMessage(_currentScore, piecePlaced.Time));
+            _mediator.Send(new ScoreChangedMessage(_currentScore, message.Time));
+            _linesToNextLevel -= (int)message.LinesCleared;
 
-            if (_linesToNextLevel > 0) return;
-            _linesToNextLevel += 10;
-            _currentLevel += 1;
+            if (_linesToNextLevel <= 0)
+            {
+                while (_linesToNextLevel <= 0)
+                {
+                    _linesToNextLevel += 10;
+                    _totalLinesToNextLevel = 10;
+                    _currentLevel++;
+                }
 
-            var newGravity = new GravityChangedMessage(CalculateGravity(), piecePlaced.Time);
-            var newLevel = new LevelChangedMessage(_currentLevel, piecePlaced.Time);
-            _mediator.Send(newGravity);
-            _mediator.Send(newLevel);
+                _mediator.Send(new LevelUpConditionChangedMessage(message.Time, _totalLinesToNextLevel,
+                    _linesClearedThisLevel, LEVELUP_CONDITION_NAME));
+                _mediator.Send(new GravityChangedMessage(CalculateGravity(), message.Time));
+                _mediator.Send(new LevelChangedMessage(_currentLevel, message.Time));
+            }
+            else if (message.LinesCleared > 0)
+            {
+                _mediator.Send(new LevelUpConditionChangedMessage(message.Time, _totalLinesToNextLevel, _linesClearedThisLevel, LEVELUP_CONDITION_NAME));
+            }
         }
 
         private void HandlePieceMoved(PieceMovedMessage pieceMoved)
         {
             if (!pieceMoved.WasSoftDrop) return;
 
-            _currentScore += -(long) pieceMoved.Y;
+            _currentScore += -pieceMoved.Y;
             _mediator.Send(new ScoreChangedMessage(_currentScore, pieceMoved.Time));
         }
 

@@ -166,7 +166,10 @@ namespace Blockstacker.Gameplay
                     wasHardDrop, wasSoftDrop, hitWall, time));
             }
 
-            _lastWasRotation = isRotation;
+            if (isRotation)
+                _lastWasRotation = true;
+            else if (moveVector != Vector2Int.zero)
+                _lastWasRotation = false;
 
             var dropPieceAfterMovement = false;
             if (_settings.Rules.Controls.HardLockType == HardLockType.LimitedMoves)
@@ -210,7 +213,7 @@ namespace Blockstacker.Gameplay
                 _ghostPiece.Render();
         }
 
-        private void HandlePiecePlacement(double placementTime)
+        private void HandlePiecePlacement(double placementTime, bool wasHarddrop = false)
         {
             if (_dropDisabledUntil > placementTime) return;
             if (_pieceIsNull) return;
@@ -220,7 +223,7 @@ namespace Blockstacker.Gameplay
             while (_board.CanPlace(ActivePiece, movementVector)) movementVector += Vector2Int.down;
 
             movementVector -= Vector2Int.down;
-            MovePiece(movementVector, true, placementTime, false);
+            MovePiece(movementVector, true, placementTime, false, wasHarddrop);
 
             var linesCleared = _lastWasRotation
                 ? _board.Place(ActivePiece, placementTime, _lastSpinResult)
@@ -397,7 +400,7 @@ namespace Blockstacker.Gameplay
                 (_holdingLeftStart < actionTime ||
                  _holdingRightStart < actionTime)) return;
 
-            HandlePiecePlacement(actionTime);
+            HandlePiecePlacement(actionTime, true);
         }
 
         private void HandlePieceRotation(InputAction.CallbackContext ctx, int rotationAngle, RotateDirection direction)
@@ -447,7 +450,7 @@ namespace Blockstacker.Gameplay
                 _lastSpinResult.WasSpinMiniRaw,
                 actionTime));
 
-            MovePiece(_lastSpinResult.Kick, false, actionTime);
+            MovePiece(_lastSpinResult.Kick, false, actionTime, true, false, true);
 
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Rotation))
             {

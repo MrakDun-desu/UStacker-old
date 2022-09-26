@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using JetBrains.Annotations;
+using UnityEngine;
 
 namespace Blockstacker.Gameplay.Stats
 {
@@ -46,7 +47,18 @@ namespace Blockstacker.Gameplay.Stats
         [UsedImplicitly]
         public string FormatNumber(double num, int decimals = 2)
         {
+            const string infinityString = "INF";
+            if (double.IsInfinity(num)) return infinityString;
+
+            const int MIN_ROUNDABLE_DECIMALS = 0;
+            const int MAX_ROUNDABLE_DECIMALS = 15;
+            
+            decimals = Mathf.Clamp(decimals, MIN_ROUNDABLE_DECIMALS, MAX_ROUNDABLE_DECIMALS);
+            
+            if (double.IsNaN(num)) num = 0;
             var output = Math.Round(num, decimals).ToString(CultureInfo.InvariantCulture);
+
+            if (decimals == 0) return output;
 
             var dotIndex = output.LastIndexOfAny(new[] {'.', ','});
             int missingZeroes;

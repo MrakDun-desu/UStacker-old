@@ -32,11 +32,12 @@ namespace Blockstacker.Gameplay.Initialization
                 _gameSettings.Objective.CustomGameManagerScript = File.ReadAllText(gameManagerPath);
             }
 
-            var managerObject = new GameObject();
+            var managerObject = new GameObject("GameManager");
             IGameManager manager = _gameSettings.Objective.GameManagerType switch
             {
                 GameManagerType.None => null,
-                GameManagerType.Modern => managerObject.AddComponent<ModernGameManager>(),
+                GameManagerType.ModernWithLevelling => managerObject.AddComponent<ModernGameManagerWithLevelling>(),
+                GameManagerType.ModernWithoutLevelling => managerObject.AddComponent<ModernGameManagerWithoutLevelling>(),
                 GameManagerType.Classic => managerObject.AddComponent<ClassicGameManager>(),
                 GameManagerType.Custom => managerObject.AddComponent<CustomGameManager>(),
                 _ => throw new ArgumentOutOfRangeException()

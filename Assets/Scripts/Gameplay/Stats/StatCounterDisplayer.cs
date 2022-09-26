@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
 using Blockstacker.Common.Alerts;
 using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
@@ -21,23 +19,6 @@ namespace Blockstacker.Gameplay.Stats
         [SerializeField] private RectTransform _moveHandle;
         [SerializeField] private RectTransform _sizeHandle;
 
-        private static readonly Dictionary<string, Type> RegisterableEvents = new()
-        {
-            {"CountdownTicked", typeof(CountdownTickedMessage)},
-            {"GameEnded", typeof(GameEndedMessage)},
-            {"GameLost", typeof(GameLostMessage)},
-            {"GamePaused", typeof(GamePausedMessage)},
-            {"GameRestarted", typeof(GameRestartedMessage)},
-            {"GameResumed", typeof(GameResumedMessage)},
-            {"GameStarted", typeof(GameStartedMessage)},
-            {"HoldUsed", typeof(HoldUsedMessage)},
-            {"InputAction", typeof(InputActionMessage)},
-            {"PieceMoved", typeof(PieceMovedMessage)},
-            {"PiecePlaced", typeof(PiecePlacedMessage)},
-            {"PieceRotated", typeof(PieceRotatedMessage)},
-            {"PieceSpawned", typeof(PieceSpawnedMessage)},
-        };
-
         private const string UPDATED_KEY = "CounterUpdated";
         private const string UTILITY_NAME = "StatUtility";
         private const string BOARD_INTERFACE_NAME = "Board";
@@ -54,15 +35,11 @@ namespace Blockstacker.Gameplay.Stats
         private StatCounterRecord _statCounter;
         private StatUtility _statUtility;
 
-        private Vector2 moveHandlePosition => _moveHandle.position;
-        private Vector2 moveHandleSize => _moveHandle.sizeDelta;
-        private Vector2 sizeHandlePosition => _sizeHandle.position;
-        private Vector2 sizeHandleSize => _sizeHandle.sizeDelta;
-
         private Vector3 _dragStartPosition;
         private Vector3 _dragStartTransformPosition;
         private bool _isDraggingPosition;
         private bool _isDraggingSize;
+        private static StatCounterDisplayer _currentlyUnderMouse;
 
         private void RefreshStatCounter()
         {
@@ -99,7 +76,7 @@ namespace Blockstacker.Gameplay.Stats
 
             if (events is null) return;
 
-            foreach (var entry in RegisterableEvents)
+            foreach (var entry in RegisterableMessages.Default)
             {
                 if (events[entry.Key] is not LuaFunction function) continue;
 
@@ -168,18 +145,34 @@ namespace Blockstacker.Gameplay.Stats
 
         private void Update()
         {
-            var mousePos = _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            HandlePositionDrag(mousePos);
-            HandleSizeDrag(mousePos);
+            Vector2 mousePos = _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            if (_currentlyUnderMouse is null)
+            {
+                if (_textContainer.GetWorldSpaceRect().Contains(mousePos))
+                {
+                    _currentlyUnderMouse = this;
+                    _moveHandle.gameObject.SetActive(true);
+                    _sizeHandle.gameObject.SetActive(true);
+                }
+            }
+
+            if (_currentlyUnderMouse != this) return;
+
+            if (_textContainer.GetWorldSpaceRect().Contains(mousePos) || _isDraggingPosition || _isDraggingSize)
+            {
+                HandlePositionDrag(mousePos);
+                HandleSizeDrag(mousePos);
+                return;
+            }
+            
+            _currentlyUnderMouse = null;
+            _moveHandle.gameObject.SetActive(false);
+            _sizeHandle.gameObject.SetActive(false);
         }
 
         private void HandlePositionDrag(Vector2 mousePos)
         {
-            if (Mouse.current.leftButton.wasPressedThisFrame &&
-                mousePos.IsInside(moveHandlePosition,
-                    new Vector2(moveHandlePosition.x + moveHandleSize.x,
-                        moveHandlePosition.y + moveHandleSize.y)))
-
+            if (Mouse.current.leftButton.wasPressedThisFrame && _moveHandle.GetWorldSpaceRect().Contains(mousePos))
             {
                 _dragStartPosition = mousePos;
                 _dragStartTransformPosition = _textContainer.localPosition;
@@ -202,9 +195,7 @@ namespace Blockstacker.Gameplay.Stats
 
         private void HandleSizeDrag(Vector2 mousePos)
         {
-            if (mousePos.IsInside(sizeHandlePosition,
-                    new Vector2(sizeHandlePosition.x - sizeHandleSize.x, sizeHandlePosition.y - sizeHandleSize.y)) &&
-                Mouse.current.leftButton.wasPressedThisFrame)
+            if (Mouse.current.leftButton.wasPressedThisFrame && _sizeHandle.GetWorldSpaceRect().Contains(mousePos))
             {
                 _isDraggingSize = true;
             }

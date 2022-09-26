@@ -3,7 +3,8 @@
     public enum GameManagerType
     {
         None,
-        Modern,
+        ModernWithLevelling,
+        ModernWithoutLevelling,
         Classic,
         Custom
     }

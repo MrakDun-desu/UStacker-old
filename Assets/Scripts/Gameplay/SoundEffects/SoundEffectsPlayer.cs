@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Blockstacker.Common.Alerts;
 using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
@@ -18,23 +17,6 @@ namespace Blockstacker.Gameplay.SoundEffects
 
         private AudioSource _audioSource;
         private Lua _luaState;
-
-        private readonly Dictionary<string, Type> RegisterableEvents = new()
-        {
-            {"CountdownTicked", typeof(CountdownTickedMessage)},
-            {"GameEnded", typeof(GameEndedMessage)},
-            {"GameLost", typeof(GameLostMessage)},
-            {"GamePaused", typeof(GamePausedMessage)},
-            {"GameRestarted", typeof(GameRestartedMessage)},
-            {"GameResumed", typeof(GameResumedMessage)},
-            {"GameStarted", typeof(GameStartedMessage)},
-            {"HoldUsed", typeof(HoldUsedMessage)},
-            {"InputAction", typeof(InputActionMessage)},
-            {"PieceMoved", typeof(PieceMovedMessage)},
-            {"PiecePlaced", typeof(PiecePlacedMessage)},
-            {"PieceRotated", typeof(PieceRotatedMessage)},
-            {"PieceSpawned", typeof(PieceSpawnedMessage)},
-        };
 
         private void Awake()
         {
@@ -88,7 +70,7 @@ namespace Blockstacker.Gameplay.SoundEffects
 
             if (events is null) return false;
 
-            foreach (var entry in RegisterableEvents)
+            foreach (var entry in RegisterableMessages.Default)
             {
                 if (events[entry.Key] is not LuaFunction function) continue;
 

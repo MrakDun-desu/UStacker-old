@@ -2053,6 +2053,7 @@ MonoBehaviour:
   _timer: {fileID: 139450738}
   _stats:
     Score: 0
+    Level: 0
     LinesCleared: 0
     PiecesPlaced: 0
     KeysPressed: 0
@@ -2079,6 +2080,7 @@ MonoBehaviour:
     KeysPerPiece: 0
     KeysPerSecond: 0
     LinesPerMinute: 0
+  _gameStateManager: {fileID: 1579597091}
 --- !u!4 &557688172
 Transform:
   m_ObjectHideFlags: 0
@@ -7448,8 +7450,8 @@ MonoBehaviour:
               - {x: 0, y: 0}
           PiecePlacedDelay: 0
           LineClearDelay: 0
-          OnTouchGround: 0
-          OnTouchGroundAmount: 5
+          HardLockType: 0
+          HardLockAmount: 5
           OverrideHandling: 0
           Handling:
             DelayedAutoShift: 0.125
@@ -7458,11 +7460,13 @@ MonoBehaviour:
             DasCutDelay: 0
             DoubleDropPreventionInterval: 0
             DelayDasOn: 0
+            CancelDelayWithMovement: 1
             AntiDasBehavior: 1
             DiagonalLockBehavior: 0
         Gravity:
           DefaultGravity: 0.02
           DefaultLockDelay: 0.5
+          LockDelayType: 0
         BoardDimensions:
           BoardHeight: 22
           BoardWidth: 10
@@ -7481,7 +7485,7 @@ MonoBehaviour:
         StartingLevel: 0
         GameManagerType: 0
         CustomGameManagerName: 
-        CUstomGameManagerScript: 
+        CustomGameManagerScript: 
         UseCustomGarbageScript: 0
         CustomGarbageScriptName: 
         CustomGarbageScript: 
@@ -7492,6 +7496,7 @@ MonoBehaviour:
         CountdownCount: 3
     Stats:
       Score: 0
+      Level: 0
       LinesCleared: 0
       PiecesPlaced: 0
       KeysPressed: 0
@@ -9850,6 +9855,7 @@ MonoBehaviour:
   _countdown: {fileID: 1815941597}
   _gameTitle: {fileID: 1879527632}
   _loadingOverlay: {fileID: 645985881}
+  _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   GameInitialized:
     m_PersistentCalls:
       m_Calls:
@@ -10985,10 +10991,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SoundEffectsPlayer
       objectReference: {fileID: 0}
-    - target: {fileID: 8524916289635684596, guid: 91ec43de18723474a858a6c331cbf576, type: 3}
-      propertyPath: _timer
-      value: 
-      objectReference: {fileID: 139450738}
     - target: {fileID: 8524916289635684598, guid: 91ec43de18723474a858a6c331cbf576, type: 3}
       propertyPath: m_RootOrder
       value: 22

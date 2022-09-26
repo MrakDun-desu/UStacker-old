@@ -22,7 +22,7 @@ MonoBehaviour:
         AllowedSpins: 2
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: 1979224641
+        ActiveSeed: -65255911
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
@@ -100,18 +100,18 @@ MonoBehaviour:
         HardLockAmount: 5
         OverrideHandling: 0
         Handling:
-          DelayedAutoShift: 0.09000000357627869
+          DelayedAutoShift: 0.08500000089406967
           AutomaticRepeatRate: 0
           SoftDropFactor: Infinity
-          DasCutDelay: 0.03333333507180214
-          DoubleDropPreventionInterval: 0.03333333507180214
+          DasCutDelay: 0.03
+          DoubleDropPreventionInterval: 0.03
           DelayDasOn: 1
           CancelDelayWithMovement: 1
           AntiDasBehavior: 2
           DiagonalLockBehavior: 0
       Gravity:
         DefaultGravity: 0.02
-        DefaultLockDelay: 0.5
+        DefaultLockDelay: 10
         LockDelayType: 1
       BoardDimensions:
         BoardHeight: 20
@@ -129,7 +129,7 @@ MonoBehaviour:
       GarbageGeneration: 0
       GarbageHeight: 10
       StartingLevel: 0
-      GameManagerType: 0
+      GameManagerType: 2
       CustomGameManagerName: 
       CustomGameManagerScript: 
       UseCustomGarbageScript: 0
