@@ -22,7 +22,7 @@ MonoBehaviour:
         AllowedSpins: 2
         UseRandomSeed: 1
         SpecificSeed: 0
-        ActiveSeed: -65255911
+        ActiveSeed: -1494205002
         NextPieceCount: 5
       Controls:
         Allow180Spins: 1
@@ -111,14 +111,14 @@ MonoBehaviour:
           DiagonalLockBehavior: 0
       Gravity:
         DefaultGravity: 0.02
-        DefaultLockDelay: 10
+        DefaultLockDelay: 0.5
         LockDelayType: 1
       BoardDimensions:
         BoardHeight: 20
         BoardWidth: 10
         LethalHeight: 20
         PieceSpawnHeight: 21
-        TopoutCondition: 2
+        TopoutCondition: 0
         AllowClutchClears: 1
         BoardPadding: 5
     Objective:
@@ -129,7 +129,7 @@ MonoBehaviour:
       GarbageGeneration: 0
       GarbageHeight: 10
       StartingLevel: 0
-      GameManagerType: 2
+      GameManagerType: 0
       CustomGameManagerName: 
       CustomGameManagerScript: 
       UseCustomGarbageScript: 0

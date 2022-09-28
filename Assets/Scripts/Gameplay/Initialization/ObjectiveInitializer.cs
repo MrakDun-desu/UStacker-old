@@ -14,11 +14,19 @@ namespace Blockstacker.Gameplay.Initialization
     public class ObjectiveInitializer : InitializerBase
     {
         private readonly MediatorSO _mediator;
+        private readonly GameStateManager _stateManager;
+        private readonly Board _board;
 
-        public ObjectiveInitializer(StringBuilder errorBuilder, GameSettingsSO gameSettings, MediatorSO mediator) :
+        public ObjectiveInitializer(
+            StringBuilder errorBuilder, GameSettingsSO gameSettings,
+            MediatorSO mediator,
+            GameStateManager stateManager,
+            Board board) :
             base(errorBuilder, gameSettings)
         {
             _mediator = mediator;
+            _stateManager = stateManager;
+            _board = board;
         }
 
         public override void Execute()
@@ -37,19 +45,23 @@ namespace Blockstacker.Gameplay.Initialization
             {
                 GameManagerType.None => null,
                 GameManagerType.ModernWithLevelling => managerObject.AddComponent<ModernGameManagerWithLevelling>(),
-                GameManagerType.ModernWithoutLevelling => managerObject.AddComponent<ModernGameManagerWithoutLevelling>(),
+                GameManagerType.ModernWithoutLevelling =>
+                    managerObject.AddComponent<ModernGameManagerWithoutLevelling>(),
                 GameManagerType.Classic => managerObject.AddComponent<ClassicGameManager>(),
                 GameManagerType.Custom => managerObject.AddComponent<CustomGameManager>(),
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-            if (manager is null)
+            if (manager == null)
             {
                 Object.Destroy(managerObject.gameObject);
                 return;
             }
-
+            
             manager.Initialize(_gameSettings.Objective.StartingLevel, _mediator);
+            
+            if (manager is CustomGameManager custom)
+                custom.CustomInitialize(_stateManager, _board, _gameSettings.Objective.CustomGameManagerScript);
         }
     }
 }

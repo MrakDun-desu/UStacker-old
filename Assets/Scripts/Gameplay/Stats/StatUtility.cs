@@ -45,7 +45,7 @@ namespace Blockstacker.Gameplay.Stats
         }
 
         [UsedImplicitly]
-        public string FormatNumber(double num, int decimals = 2)
+        public string FormatNumberInternal(double num, int decimals)
         {
             const string infinityString = "INF";
             if (double.IsInfinity(num)) return infinityString;
@@ -71,6 +71,13 @@ namespace Blockstacker.Gameplay.Stats
                 missingZeroes = -(output.Length - decimals - dotIndex - 1);
 
             return output.PadRight(output.Length + missingZeroes, '0');
+        }
+
+        [UsedImplicitly]
+        public string FormatNumber(object num, object decimals = null)
+        {
+            var number = Convert.ToDouble(num);
+            return FormatNumberInternal(number, decimals is null ? 2 : Convert.ToInt32(decimals));
         }
 
         [UsedImplicitly]

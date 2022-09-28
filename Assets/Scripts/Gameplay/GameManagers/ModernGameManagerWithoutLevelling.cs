@@ -17,17 +17,11 @@ namespace Blockstacker.Gameplay.GameManagers
 
             _mediator.Register<PiecePlacedMessage>(HandlePiecePlaced);
             _mediator.Register<PieceMovedMessage>(HandlePieceMoved);
-            _mediator.Register<GameStartedMessage>(OnGameStarted);
+            _mediator.Register<GameStartedMessage>(_ => ResetGameManager());
+            _mediator.Register<GameRestartedMessage>(_ => ResetGameManager());
         }
 
-        public void OnDestroy()
-        {
-            _mediator.Unregister<PiecePlacedMessage>(HandlePiecePlaced);
-            _mediator.Unregister<PieceMovedMessage>(HandlePieceMoved);
-            _mediator.Unregister<GameStartedMessage>(OnGameStarted);
-        }
-
-        private void OnGameStarted(GameStartedMessage _)
+        private void ResetGameManager()
         {
             _currentScore = 0;
             _mediator.Send(new ScoreChangedMessage(0, 0));

@@ -35,6 +35,7 @@ namespace Blockstacker.Gameplay.Initialization
         [SerializeField] private TMP_Text _gameTitle;
         [SerializeField] private GameObject _loadingOverlay;
         [SerializeField] private MediatorSO _mediator;
+        [SerializeField] private GameStateManager _stateManager;
 
         [Header("Events")] public UnityEvent GameInitialized;
         public UnityEvent<string> GameFailedToInitialize;
@@ -104,7 +105,9 @@ namespace Blockstacker.Gameplay.Initialization
                 ),
                 new ObjectiveInitializer(
                     errorBuilder, _gameSettingsAsset,
-                    _mediator)
+                    _mediator,
+                    _stateManager,
+                    _board)
             };
 
             foreach (var initializer in initializers) initializer.Execute();

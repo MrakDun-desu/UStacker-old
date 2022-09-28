@@ -8,6 +8,7 @@ using Blockstacker.GameSettings;
 using Blockstacker.GlobalSettings;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.Serialization;
 
 namespace Blockstacker.Gameplay
 {
@@ -16,7 +17,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private Board _board;
         [SerializeField] private InputProcessor _inputProcessor;
-        [SerializeField] private GameManager _manager;
+        [FormerlySerializedAs("_manager")] [SerializeField] private GameStateManager _stateManager;
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private WarningPiece _warningPiece;
 
@@ -51,7 +52,7 @@ namespace Blockstacker.Gameplay
 
         public bool SpawnPiece(double spawnTime)
         {
-            if (!_manager.GameRunning || _containersEmpty) return false;
+            if (!_stateManager.GameRunning || _containersEmpty) return false;
             
             var nextPieceType = Randomizer.GetNextPiece();
             var swappedPiece = _piecePools[nextPieceType].Get();
@@ -89,7 +90,7 @@ namespace Blockstacker.Gameplay
             _mediator.Send(new PieceSpawnedMessage(piece.Type, nextPiece, spawnTime));
 
             if (!_board.CanPlace(piece))
-                _manager.LoseGame();
+                _stateManager.LoseGame(spawnTime);
         }
 
         public void EmptyAllContainers()

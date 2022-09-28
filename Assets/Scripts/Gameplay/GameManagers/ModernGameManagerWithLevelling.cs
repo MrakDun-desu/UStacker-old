@@ -32,17 +32,11 @@ namespace Blockstacker.Gameplay.GameManagers
 
             _mediator.Register<PiecePlacedMessage>(HandlePiecePlaced);
             _mediator.Register<PieceMovedMessage>(HandlePieceMoved);
-            _mediator.Register<GameStartedMessage>(OnGameStarted);
+            _mediator.Register<GameStartedMessage>(_ => ResetGameManager());
+            _mediator.Register<GameRestartedMessage>(_ => ResetGameManager());
         }
 
-        public void OnDestroy()
-        {
-            _mediator.Unregister<PiecePlacedMessage>(HandlePiecePlaced);
-            _mediator.Unregister<PieceMovedMessage>(HandlePieceMoved);
-            _mediator.Unregister<GameStartedMessage>(OnGameStarted);
-        }
-
-        private void OnGameStarted(GameStartedMessage _)
+        private void ResetGameManager()
         {
             _currentLevel = Math.Clamp(_startingLevel, MIN_LEVEL, MAX_LEVEL);
             _currentScore = 0;
@@ -151,5 +145,6 @@ namespace Blockstacker.Gameplay.GameManagers
             _totalLinesToNextLevel = (int) _currentLevel * LINES_PER_LEVEL_INCREASE;
             _linesToNextLevel += _totalLinesToNextLevel;
         }
+
     }
 }

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f7b19afc3ad4ed2bb249b321cca5777, type: 3}
+  m_Name: LevelCounter
+  m_EditorClassIdentifier: 
+  Value:
+    Name: Level
+    Type: 0
+    Filename: 
+    Script: "Name = \"\"\nCurrent = \"\"\nTotal = \"\"\nLevel = \"0\"\nfunction OnConditionChange(message)\n\tName
+      = message.ConditionName\n\tif Name == nil or Name == \"None\" or Name == \"\"
+      then\n\t\treturn \"\"\n\tend\n\tCurrent = StatUtility:FormatNumber(message.CurrentCount,
+      0)\n\tTotal = StatUtility:FormatNumber(message.TotalCount, 0)\n\treturn FormatOutput()\nend\nfunction
+      OnLevelChange(message)\n\tLevel = StatUtility:FormatNumber(message.Level, 0)\n\treturn
+      FormatOutput()\nend\nfunction FormatOutput()\n\treturn \"Level \" .. Level
+      .. \"\\n\" .. Current .. \"/\" .. Total .. \" \" .. Name .. \" to next\"\nend\nSetText(\"\")\nreturn
+      {\n\t[\"LevelUpConditionChanged\"] = OnConditionChange,\n\t[\"LevelChanged\"]
+      = OnLevelChange\n}"
+    Position: {x: 0, y: -3}
+    Size: {x: 10, y: 3}
+    UpdateInterval: 0.01

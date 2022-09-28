@@ -19,7 +19,7 @@ namespace Blockstacker.Gameplay.Stats
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private GameTimer _timer;
         [SerializeField] private StatContainer _stats = new();
-        [SerializeField] private GameManager _gameStateManager;
+        [SerializeField] private GameStateManager _gameStateManager;
 
         public ReadonlyStatContainer Stats;
 
@@ -80,7 +80,7 @@ namespace Blockstacker.Gameplay.Stats
             {
                 var newCounter = Instantiate(_displayerPrefab, _statCountersCanvas.transform);
                 
-                newCounter.SetRequiredFields(_mediator, new StatBoardInterface(_board), Stats, statUtility, statCounter);
+                newCounter.Initialize(_mediator, new StatBoardInterface(_board), Stats, statUtility, statCounter);
             }
         }
 

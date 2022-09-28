@@ -15,6 +15,7 @@ using Blockstacker.GlobalSettings.Appliers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
+using UnityEngine.Serialization;
 
 namespace Blockstacker.Gameplay
 {
@@ -22,7 +23,7 @@ namespace Blockstacker.Gameplay
     {
         [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private Transform _helperTransform;
-        [SerializeField] private GameManager _manager;
+        [FormerlySerializedAs("_manager")] [SerializeField] private GameStateManager _stateManager;
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private SpriteRenderer _backgroundRenderer;
         [SerializeField] private Camera _camera;
@@ -391,11 +392,11 @@ namespace Blockstacker.Gameplay
                     break;
                 case TopoutCondition.OneBlockAboveLethal:
                     if (!isCompletelyBelowLethal)
-                        _manager.LoseGame();
+                        _stateManager.LoseGame(placementTime);
                     break;
                 case TopoutCondition.AllBlocksAboveLethal:
                     if (!isPartlyBelowLethal)
-                        _manager.LoseGame();
+                        _stateManager.LoseGame(placementTime);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -10,7 +10,7 @@ using UnityEngine.InputSystem;
 
 namespace Blockstacker.Gameplay
 {
-    public class GameManager : MonoBehaviour
+    public class GameStateManager : MonoBehaviour
     {
         [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private MediatorSO _mediator;
@@ -18,8 +18,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private StatCounterManager _statCounterManager;
         [SerializeField] private GameRecorder _gameRecorder;
 
-        [Space] [SerializeField] private UnityEvent GameStartedFirstTime;
-        [SerializeField] private UnityEvent GameRestartedAfterEnd;
+        [Space] 
         [SerializeField] private UnityEvent GameStarted;
         [SerializeField] private UnityEvent GamePaused;
         [SerializeField] private UnityEvent GameResumed;
@@ -46,8 +45,8 @@ namespace Blockstacker.Gameplay
             GameRunning = true;
             _mediator.Send(new GameStartedMessage(_settings.Rules.General.ActiveSeed));
             _mediator.Send(new GameEndConditionChangedMessage(
-                0, 
-                _settings.Objective.EndConditionCount, 
+                0,
+                _settings.Objective.EndConditionCount,
                 0,
                 _settings.Objective.GameEndCondition.ToString()));
             GameStarted.Invoke();
@@ -57,14 +56,12 @@ namespace Blockstacker.Gameplay
         {
             _gameStarted = true;
             Replay.GameSettings = _settings.Settings with { };
-            GameStartedFirstTime.Invoke();
         }
 
         private void GameRestartAfterEnd()
         {
             _gameLost = false;
             _gameEnded = false;
-            GameRestartedAfterEnd.Invoke();
         }
 
         public void TogglePause()
@@ -89,13 +86,18 @@ namespace Blockstacker.Gameplay
         {
             GameRestarted.Invoke();
             _mediator.Send(new GameRestartedMessage());
+            _mediator.Send(new GameEndConditionChangedMessage(
+                0, 
+                _settings.Objective.EndConditionCount, 
+                0,
+                _settings.Objective.GameEndCondition.ToString()));
         }
 
-        public void LoseGame()
+        public void LoseGame(double loseTime)
         {
             _gameEnded = true;
             if (_settings.Objective.ToppingOutIsOkay)
-                EndGame();
+                EndGame(loseTime);
             else
             {
                 _gameLost = true;
@@ -104,16 +106,15 @@ namespace Blockstacker.Gameplay
             }
         }
 
-        public void EndGame()
+        public void EndGame(double endTime)
         {
             _gameEnded = true;
-            var gameEndTime = _timer.CurrentTime;
             Replay.ActionList = new List<InputActionMessage>();
             Replay.ActionList.AddRange(_gameRecorder.ActionList);
             Replay.Stats = _statCounterManager.Stats;
-            Replay.GameLength = gameEndTime;
+            Replay.GameLength = endTime;
             GameEnded.Invoke();
-            _mediator.Send(new GameEndedMessage(gameEndTime));
+            _mediator.Send(new GameEndedMessage(endTime));
         }
 
         public void TogglePause(InputAction.CallbackContext ctx)
@@ -155,8 +156,8 @@ namespace Blockstacker.Gameplay
                     _settings.Objective.GameEndCondition.ToString()));
             }
 
-            if (_timer.CurrentTime > _settings.Objective.EndConditionCount)
-                EndGame();
+            if (functionStartTime > _settings.Objective.EndConditionCount)
+                EndGame(_settings.Objective.EndConditionCount);
         }
 
         private void OnDestroy()
@@ -175,32 +176,32 @@ namespace Blockstacker.Gameplay
                 case GameEndCondition.LinesCleared:
                     var linesCleared = _statCounterManager.Stats.LinesCleared;
                     _mediator.Send(new GameEndConditionChangedMessage(
-                        message.Time, 
-                        endConditionCount, 
+                        message.Time,
+                        endConditionCount,
                         linesCleared,
                         endCondition.ToString()));
                     if (linesCleared >= _settings.Objective.EndConditionCount)
-                        EndGame();
+                        EndGame(message.Time);
                     break;
                 case GameEndCondition.GarbageLinesCleared:
                     var garbageLinesCleared = _statCounterManager.Stats.GarbageLinesCleared;
                     _mediator.Send(new GameEndConditionChangedMessage(
-                        message.Time, 
+                        message.Time,
                         endConditionCount,
-                        garbageLinesCleared, 
+                        garbageLinesCleared,
                         endCondition.ToString()));
                     if (garbageLinesCleared >= _settings.Objective.EndConditionCount)
-                        EndGame();
+                        EndGame(message.Time);
                     break;
                 case GameEndCondition.PiecesPlaced:
                     var piecesPlaced = _statCounterManager.Stats.PiecesPlaced;
                     _mediator.Send(new GameEndConditionChangedMessage(
-                        message.Time, 
-                        endConditionCount, 
+                        message.Time,
+                        endConditionCount,
                         piecesPlaced,
                         endCondition.ToString()));
                     if (piecesPlaced >= _settings.Objective.EndConditionCount)
-                        EndGame();
+                        EndGame(message.Time);
                     break;
                 case GameEndCondition.Score:
                 case GameEndCondition.None:
@@ -216,12 +217,12 @@ namespace Blockstacker.Gameplay
 
             _mediator.Send(new GameEndConditionChangedMessage(
                 message.Time,
-                _settings.Objective.EndConditionCount, 
+                _settings.Objective.EndConditionCount,
                 message.Score,
                 _settings.Objective.GameEndCondition.ToString()));
 
             if (message.Score >= _settings.Objective.EndConditionCount)
-                EndGame();
+                EndGame(message.Time);
         }
 
         #endregion

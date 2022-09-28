@@ -23,7 +23,6 @@ namespace Blockstacker.Gameplay.Stats
         private const string UTILITY_NAME = "StatUtility";
         private const string BOARD_INTERFACE_NAME = "Board";
         private const string STAT_CONTAINER_NAME = "Stats";
-        private const string SET_TEXT_NAME = "SetText";
 
         private Lua _luaState;
         private LuaFunction _updateFunction;
@@ -52,7 +51,7 @@ namespace Blockstacker.Gameplay.Stats
             _luaState[UTILITY_NAME] = _statUtility;
             _luaState[STAT_CONTAINER_NAME] = _statContainer;
             _luaState[BOARD_INTERFACE_NAME] = _boardInterface;
-            _luaState.RegisterFunction(SET_TEXT_NAME, this, GetType().GetMethod(nameof(SetText)));
+            _luaState.RegisterFunction(nameof(SetText), this, GetType().GetMethod(nameof(SetText)));
             LuaTable events = null;
             try
             {
@@ -219,7 +218,7 @@ namespace Blockstacker.Gameplay.Stats
             _displayText.text = text;
         }
 
-        public void SetRequiredFields(MediatorSO mediator, StatBoardInterface board,
+        public void Initialize(MediatorSO mediator, StatBoardInterface board,
             ReadonlyStatContainer statContainer, StatUtility statUtility,
             StatCounterRecord statCounter)
         {
