@@ -794,8 +794,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 7482667652216324306, guid: 92cb385cce81cd745bde90973e19d5c1, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -825,10 +825,10 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_NormalColor: {r: 0.6784314, g: 0.6784314, b: 0.6784314, a: 1}
+    m_HighlightedColor: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}
+    m_PressedColor: {r: 0.6784314, g: 0.6784314, b: 0.6784314, a: 1}
+    m_SelectedColor: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1257,8 +1257,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 7482667652216324306, guid: 92cb385cce81cd745bde90973e19d5c1, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1288,10 +1288,10 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_NormalColor: {r: 0.6784314, g: 0.6784314, b: 0.6784314, a: 1}
+    m_HighlightedColor: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}
+    m_PressedColor: {r: 0.6784314, g: 0.6784314, b: 0.6784314, a: 1}
+    m_SelectedColor: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1405,6 +1405,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff5f5149a0c72ff43893739cefe16595, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _loadingStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  _loadingFinished:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1996755989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1492,6 +1498,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9488fe584466764f851e7d78864e78e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _loadingStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  _loadingFinished:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1996755982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1504,6 +1516,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 550c16d38db400d44858b05a49314ba1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _loadingStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  _loadingFinished:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1996755981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1863,7 +1881,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2730135703713002561, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -464.99982
+      value: -465
       objectReference: {fileID: 0}
     - target: {fileID: 2994506421734062918, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
       propertyPath: m_Name
@@ -1891,7 +1909,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7742643563894403970, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
       propertyPath: m_Size
-      value: 1
+      value: 0.99964607
       objectReference: {fileID: 0}
     - target: {fileID: 7742643563894403970, guid: c9bb82645a1152243ac460803bbf0695, type: 3}
       propertyPath: m_Value

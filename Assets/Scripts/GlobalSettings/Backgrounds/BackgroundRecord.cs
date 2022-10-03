@@ -1,25 +1,31 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Backgrounds
 {
+    [Serializable]
     public record BackgroundRecord
     {
-        
-        [CanBeNull] private string _videoName;
-        [CanBeNull] private Texture2D _texture;
-        
-        public BackgroundType Type { get; }
+        [CanBeNull] [SerializeField] private string _videoPath;
+        [CanBeNull] [SerializeField] private Texture2D _texture;
+        [SerializeField] private BackgroundType _type;
+
+        public BackgroundType Type
+        {
+            get => _type;
+            private set => _type = value;
+        }
 
         [CanBeNull]
         public string VideoPath
         {
             get => Type switch
             {
-                BackgroundType.Video => _videoName,
+                BackgroundType.Video => _videoPath,
                 _ => null
             };
-            private set => _videoName = value;
+            private set => _videoPath = value;
         }
 
         [CanBeNull]
@@ -44,11 +50,11 @@ namespace Blockstacker.GlobalSettings.Backgrounds
             Texture = texture;
             Type = BackgroundType.Texture;
         }
-
     }
+
     public enum BackgroundType : byte
     {
-        Video,
-        Texture
+        Texture,
+        Video
     }
 }
