@@ -1,0 +1,195 @@
+#MainMenuContainer {
+    width: 100%;
+    height: 100%;
+}
+
+#MainMenu {
+    width: 33.33333%;
+    background-color: rgb(6, 18, 34);
+    border-right-color: rgb(255, 228, 77);
+    border-right-width: 5px;
+    align-items: center;
+    justify-content: center;
+    min-width: 450px;
+}
+
+#MainMenuSide {
+    width: 66.66666%;
+}
+
+#TitlePartOne {
+    margin-bottom: -18px;
+}
+
+#TitlePartTwo {
+    color: rgb(255, 228, 77);
+    margin-bottom: 10%;
+}
+
+.title {
+    color: rgb(255, 255, 255);
+    font-size: 75px;
+    -unity-font-definition: url('project://database/Assets/Fonts/SquareFont.asset?fileID=11400000&guid=983f826426792744d8db8759fece06ac&type=2#SquareFont');
+}
+
+.title.unity-label {
+    margin: 0;
+    padding: 0;
+}
+
+#MainMenu .unity-button {
+    width: 400px;
+    height: 100px;
+    margin-bottom: 8%;
+    -unity-font-definition: url('project://database/Assets/Fonts/Molot.asset?fileID=11400000&guid=7e04c164d88405a4fb3dd3c2799ec9cb&type=2#Molot');
+    font-size: 45px;
+    color: rgb(255, 228, 77);
+    background-color: rgb(23, 23, 23);
+    border-left-color: rgb(255, 228, 77);
+    border-right-color: rgb(255, 228, 77);
+    border-top-color: rgb(255, 228, 77);
+    border-bottom-color: rgb(255, 228, 77);
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    max-width: 90%;
+    max-height: 10%;
+}
+
+#MainMenuContainer .unity-button {
+    transition-duration: 0.2s;
+}
+
+#MainMenuContainer .unity-button:hover:enabled {
+    background-color: rgb(75, 75, 75);
+    scale: 1.1 1.1;
+}
+
+#MainMenuSide .unity-button:hover:enabled {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+#MainMenuContainer .unity-button:focus {
+    background-color: rgb(75, 75, 75);
+    scale: 1.1 1.1;
+}
+
+#MainMenuSide .unity-button:focus {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+#MainMenuContainer .unity-button:active:hover {
+    background-color: rgb(31, 31, 31);
+    transition-duration: 0s;
+}
+
+#MainMenuContainer .unity-button:disabled {
+    border-left-color: rgb(50, 50, 50);
+    border-right-color: rgb(50, 50, 50);
+    border-top-color: rgb(50, 50, 50);
+    border-bottom-color: rgb(50, 50, 50);
+    color: rgb(50, 50, 50);
+    -unity-background-image-tint-color: rgb(50, 50, 50);
+}
+
+#MiniButtonsContainer {
+    flex-direction: row;
+    max-width: 90%;
+}
+
+#MiniButtonsContainer .unity-button {
+    width: 100px;
+    height: 100px;
+    margin: 0 0 0 50px;
+    padding: 0;
+    max-width: 25%;
+    max-height: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: 50px;
+}
+
+#MiniButtonsContainer .unity-button VisualElement {
+    width: 100%;
+    height: 100%;
+}
+
+#SettingsButton.unity-button {
+    margin-left: 0;
+}
+
+#CommunityLinks {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-right: 100px;
+    -unity-font-definition: url('project://database/Assets/Fonts/Molot.asset?fileID=11400000&guid=7e04c164d88405a4fb3dd3c2799ec9cb&type=2#Molot');
+    font-size: 28px;
+    -unity-text-align: upper-center;
+}
+
+#LinksContainer {
+    width: 250px;
+    height: 100px;
+    background-color: rgb(6, 18, 34);
+    border-left-color: rgb(255, 228, 77);
+    border-right-color: rgb(255, 228, 77);
+    border-top-color: rgb(255, 228, 77);
+    border-bottom-color: rgb(255, 228, 77);
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-top-width: 0;
+    border-bottom-width: 3px;
+    flex-direction: row;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+#CommunityLabel1 {
+    color: rgb(255, 255, 255);
+}
+
+#CommunityLabel2 {
+    font-size: 35px;
+    margin: -8px 0 0;
+    padding: 0;
+    color: rgb(255, 228, 77);
+}
+
+#LinksContainer .unity-button {
+    width: 65px;
+    margin: 0;
+    padding: 0;
+    height: 65px;
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
+}
+
+#ItchIoButton.unity-button {
+    margin-right: 25px;
+    background-image: url('project://database/Assets/Sprites/Icons/itchIoIcon.png?fileID=2800000&guid=0bf6d22a9092d404f845fa78b287e629&type=3#itchIoIcon');
+}
+
+#DiscordButton.unity-button {
+    background-image: url('project://database/Assets/Sprites/Icons/discordIcon.png?fileID=2800000&guid=69381f5f819dee44c9f77b5f27469eaf&type=3#discordIcon');
+}
+
+#SettingsButton {
+    background-image: url('project://database/Assets/Sprites/Icons/settingsIcon.png?fileID=2800000&guid=dc2650f977f05c14886f4cca835cc5e7&type=3#settingsIcon');
+}
+
+#CreditsButton {
+    background-image: url('project://database/Assets/Sprites/Icons/creditsIcon.png?fileID=2800000&guid=a06e61d05c43e8747b29d504b2bb2e80&type=3#creditsIcon');
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+#ExitButton {
+    background-image: url('project://database/Assets/Sprites/Icons/exitIcon.png?fileID=2800000&guid=225e9fa23da16884ba376ab66aca23fd&type=3#exitIcon');
+}

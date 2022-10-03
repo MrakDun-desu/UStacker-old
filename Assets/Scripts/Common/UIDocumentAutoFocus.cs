@@ -5,28 +5,14 @@ using UnityEngine.UIElements;
 namespace Blockstacker.Common
 {
     [RequireComponent(typeof(UIDocument))]
-    public class UiDocumentController : MonoBehaviour
+    public class UIDocumentAutoFocus : MonoBehaviour
     {
         [SerializeField] private UIDocument _document;
-        [SerializeField] private ButtonDictionary _buttonEvents;
 
-        private const string FIRST_FOCUSED_NAME = "first-focused";
+        private const string FIRST_FOCUSED_NAME = "firstFocused";
         private VisualElement _root;
         private VisualElement _firstFocused;
         private bool _hasStarted;
-
-        [ContextMenu("Search for buttons")]
-        private void SearchForButtons()
-        {
-            _buttonEvents.Clear();
-            
-            if (_document == null)
-                return;
-
-            _root = _document.rootVisualElement;
-
-            _root.Query<Button>().ForEach(button => { _buttonEvents.Add(button.name, new UnityEvent()); });
-        }
 
         private void Start()
         {
@@ -46,10 +32,6 @@ namespace Blockstacker.Common
                 _firstFocused = allElements.Find(el => el.canGrabFocus);
             }
 
-            foreach (var buttonEvent in _buttonEvents)
-            {
-                _root.Q<Button>(buttonEvent.Key).clicked += buttonEvent.Value.Invoke;
-            }
             if (_hasStarted)
                 _firstFocused.Focus();
         }

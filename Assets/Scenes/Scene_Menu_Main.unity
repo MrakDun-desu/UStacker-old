@@ -263,6 +263,7 @@ GameObject:
   - component: {fileID: 2111670597}
   - component: {fileID: 2111670596}
   - component: {fileID: 2111670598}
+  - component: {fileID: 2111670599}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -415,6 +416,19 @@ MonoBehaviour:
             m_StringArgument: https://discord.com/invite/2KQVs9TQ9M
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &2111670599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111670595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e34634dbc98dce4f870ed4c8eeac4b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _document: {fileID: 2111670596}
 --- !u!1001 &6203196272078392141
 PrefabInstance:
   m_ObjectHideFlags: 0
