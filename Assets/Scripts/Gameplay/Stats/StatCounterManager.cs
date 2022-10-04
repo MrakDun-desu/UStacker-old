@@ -32,6 +32,7 @@ namespace Blockstacker.Gameplay.Stats
             _mediator.Register<ScoreChangedMessage>(OnScoreChanged, true);
             _mediator.Register<LevelChangedMessage>(OnLevelChanged, true);
             CreateStatCounters();
+            StatCounterDisplayer.ResetCurrentlyUnderMouse();
         }
 
         private void OnDestroy()

@@ -61,36 +61,29 @@
     transition-duration: 0.2s;
 }
 
-#MainMenuContainer .unity-button:hover:enabled {
-    background-color: rgb(75, 75, 75);
-    scale: 1.1 1.1;
-}
-
-#MainMenuSide .unity-button:hover:enabled {
-    background-color: rgba(0, 0, 0, 0);
-}
-
+#MainMenuContainer .unity-button:hover:enabled,
 #MainMenuContainer .unity-button:focus {
-    background-color: rgb(75, 75, 75);
+    background-color: rgba(75, 75, 75, 255);
     scale: 1.1 1.1;
 }
 
-#MainMenuSide .unity-button:focus {
-    background-color: rgba(0, 0, 0, 0);
-}
-
-#MainMenuContainer .unity-button:active:hover {
+#MainMenuContainer .unity-button:active {
     background-color: rgb(31, 31, 31);
     transition-duration: 0s;
 }
 
 #MainMenuContainer .unity-button:disabled {
-    border-left-color: rgb(50, 50, 50);
-    border-right-color: rgb(50, 50, 50);
-    border-top-color: rgb(50, 50, 50);
-    border-bottom-color: rgb(50, 50, 50);
-    color: rgb(50, 50, 50);
-    -unity-background-image-tint-color: rgb(50, 50, 50);
+    border-left-color: rgba(50, 50, 50, 255);
+    border-right-color: rgba(50, 50, 50, 255);
+    border-top-color: rgba(50, 50, 50, 255);
+    border-bottom-color: rgba(50, 50, 50, 255);
+    color: rgba(50, 50, 50, 255);
+    -unity-background-image-tint-color: rgba(50, 50, 50, 255);
+}
+
+#MainMenuSide .unity-button:hover:enabled,
+#MainMenuSide .unity-button:focus {
+    background-color: rgba(0, 0, 0, 0);
 }
 
 #MiniButtonsContainer {

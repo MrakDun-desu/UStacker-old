@@ -40,6 +40,11 @@ namespace Blockstacker.Gameplay.Stats
         private bool _isDraggingSize;
         private static StatCounterDisplayer _currentlyUnderMouse;
 
+        public static void ResetCurrentlyUnderMouse()
+        {
+            _currentlyUnderMouse = null;
+        }
+
         private void RefreshStatCounter()
         {
             _textContainer.localPosition =

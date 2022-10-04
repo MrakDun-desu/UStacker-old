@@ -10,8 +10,5 @@ namespace Blockstacker.GlobalSettings.Groups
         public Resolution Resolution = new();
         public float BackgroundVisibility = 1;
         public bool UseVsync;
-        
-        // Implement later
-        // public float ParticleCount = 1;
     }
 }

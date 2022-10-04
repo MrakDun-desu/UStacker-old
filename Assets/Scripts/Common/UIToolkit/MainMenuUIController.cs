@@ -2,12 +2,12 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Blockstacker.Common
+namespace Blockstacker.Common.UIToolkit
 {
-    public class MainMenuUiController : MonoBehaviour
+    public class MainMenuUIController : MonoBehaviour
     {
         [SerializeField] private UIDocument _menuDocument;
-        [SerializeField] private List<UiElementsButtonBinding> _buttonBindings;
+        [SerializeField] private List<UIElementsButtonBinding> _buttonBindings;
         
         private void OnEnable()
         {
@@ -32,7 +32,7 @@ namespace Blockstacker.Common
             foreach (var button in buttons)
             {
                 _buttonBindings.Add(
-                    new UiElementsButtonBinding(button.name));
+                    new UIElementsButtonBinding(button.name));
             }
         }
     }

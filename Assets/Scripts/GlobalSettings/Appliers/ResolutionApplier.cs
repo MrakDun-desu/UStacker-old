@@ -14,7 +14,7 @@ namespace Blockstacker.GlobalSettings.Appliers
                 newResolution.width,
                 newResolution.height,
                 Screen.fullScreenMode,
-                newResolution.refreshRate
+                newResolution.refreshRateRatio
             );
         }
     }

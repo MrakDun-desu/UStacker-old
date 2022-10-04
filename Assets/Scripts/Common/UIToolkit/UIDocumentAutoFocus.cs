@@ -1,8 +1,7 @@
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UIElements;
 
-namespace Blockstacker.Common
+namespace Blockstacker.Common.UIToolkit
 {
     [RequireComponent(typeof(UIDocument))]
     public class UIDocumentAutoFocus : MonoBehaviour
@@ -18,6 +17,7 @@ namespace Blockstacker.Common
         {
             // if not ran in start, for some reason doesn't do anything
             _firstFocused?.Focus();
+            _firstFocused?.RegisterCallback<NavigationMoveEvent>(Debug.Log);
             _hasStarted = true;
         }
 

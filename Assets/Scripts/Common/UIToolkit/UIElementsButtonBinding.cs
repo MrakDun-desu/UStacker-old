@@ -2,17 +2,17 @@
 using Blockstacker.Common.Attributes;
 using UnityEngine.Events;
 
-namespace Blockstacker.Common
+namespace Blockstacker.Common.UIToolkit
 {
     [Serializable]
-    public class UiElementsButtonBinding
+    public class UIElementsButtonBinding
     {
         [ReadOnly]
         public string ButtonName;
         public bool IsEnabled = true;
         public UnityEvent OnClick;
 
-        public UiElementsButtonBinding(string buttonName)
+        public UIElementsButtonBinding(string buttonName)
         {
             ButtonName = buttonName;
         }
