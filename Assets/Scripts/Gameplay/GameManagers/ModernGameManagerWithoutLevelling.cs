@@ -11,7 +11,7 @@ namespace Blockstacker.Gameplay.GameManagers
 
         private MediatorSO _mediator;
 
-        public void Initialize(uint startingLevel, MediatorSO mediator)
+        public void Initialize(string _, MediatorSO mediator)
         {
             _mediator = mediator;
 
@@ -26,7 +26,7 @@ namespace Blockstacker.Gameplay.GameManagers
             _currentScore = 0;
             _mediator.Send(new ScoreChangedMessage(0, 0));
             _mediator.Send(new GravityChangedMessage(GRAVITY, 0));
-            _mediator.Send(new LevelChangedMessage(0, 0));
+            _mediator.Send(new LevelChangedMessage("", 0));
             _mediator.Send(new LevelUpConditionChangedMessage(0, 0, 0, "None"));
         }
 

@@ -79,9 +79,9 @@ namespace Blockstacker.Gameplay.GameManagers
 
         private const string LEVELUP_CONDITION_NAME = "Lines";
 
-        public void Initialize(uint startingLevel, MediatorSO mediator)
+        public void Initialize(string startingLevel, MediatorSO mediator)
         {
-            _startingLevel = startingLevel;
+            uint.TryParse(startingLevel, out _startingLevel);
             _mediator = mediator;
             _mediator.Register<PiecePlacedMessage>(HandlePiecePlaced);
             _mediator.Register<PieceMovedMessage>(HandlePieceMoved);
@@ -99,7 +99,7 @@ namespace Blockstacker.Gameplay.GameManagers
             _currentScore = 0;
             _mediator.Send(new ScoreChangedMessage(0, 0));
             _mediator.Send(new GravityChangedMessage(CalculateGravity(), 0));
-            _mediator.Send(new LevelChangedMessage(_currentLevel, 0));
+            _mediator.Send(new LevelChangedMessage(_currentLevel.ToString(), 0));
             _mediator.Send(new LockDelayChangedMessage(0, 0));
             _mediator.Send(new LevelUpConditionChangedMessage(0, _totalLinesToNextLevel, _linesClearedThisLevel, LEVELUP_CONDITION_NAME));
         }
@@ -130,7 +130,7 @@ namespace Blockstacker.Gameplay.GameManagers
                 _mediator.Send(new LevelUpConditionChangedMessage(message.Time, _totalLinesToNextLevel,
                     _linesClearedThisLevel, LEVELUP_CONDITION_NAME));
                 _mediator.Send(new GravityChangedMessage(CalculateGravity(), message.Time));
-                _mediator.Send(new LevelChangedMessage(_currentLevel, message.Time));
+                _mediator.Send(new LevelChangedMessage(_currentLevel.ToString(), message.Time));
             }
             else if (message.LinesCleared > 0)
             {

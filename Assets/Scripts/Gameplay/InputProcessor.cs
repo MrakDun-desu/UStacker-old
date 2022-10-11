@@ -294,7 +294,7 @@ namespace Blockstacker.Gameplay
             _mediator.Send(new InputActionMessage(ActionType.MoveLeft, KeyActionType.KeyDown, actionTime));
             _holdingLeftStart = actionTime;
             _dasLeftStart = actionTime;
-            if (_handling.AntiDasBehavior != AntiDasBehavior.DontCancel)
+            if (_handling.SimultaneousDasBehavior != SimultaneousDasBehavior.DontCancel)
             {
                 _dasRightActive = false;
                 _dasRightStart = actionTime;
@@ -331,7 +331,7 @@ namespace Blockstacker.Gameplay
 
             _holdingRightStart = actionTime;
             _dasRightStart = actionTime;
-            if (_handling.AntiDasBehavior != AntiDasBehavior.DontCancel)
+            if (_handling.SimultaneousDasBehavior != SimultaneousDasBehavior.DontCancel)
             {
                 _dasLeftActive = false;
                 _dasLeftStart = actionTime;
@@ -549,15 +549,15 @@ namespace Blockstacker.Gameplay
 
             if (_pieceIsNull) return;
 
-            var dasRightCondition = _handling.AntiDasBehavior switch
+            var dasRightCondition = _handling.SimultaneousDasBehavior switch
             {
-                AntiDasBehavior.CancelBothDirections => false,
+                SimultaneousDasBehavior.CancelBothDirections => false,
                 _ => _holdingRightTimer < _holdingLeftTimer
             };
 
-            var dasLeftCondition = _handling.AntiDasBehavior switch
+            var dasLeftCondition = _handling.SimultaneousDasBehavior switch
             {
-                AntiDasBehavior.CancelBothDirections => false,
+                SimultaneousDasBehavior.CancelBothDirections => false,
                 _ => _holdingRightTimer > _holdingLeftTimer
             };
 

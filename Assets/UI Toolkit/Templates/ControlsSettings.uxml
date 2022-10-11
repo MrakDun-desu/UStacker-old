@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.DoubleField focusable="true" setting-path="Handling.DelayedAutoShift" label="DAS" />
+    <Blockstacker.Common.UIToolkit.DropdownField label="Hello there" choices="Choice 1,Choice 2" />
+</ui:UXML>

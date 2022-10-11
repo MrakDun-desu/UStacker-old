@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" class="settings-page-title" />
+    <ui:VisualElement name="ButtonsContainer" style="background-color: rgba(0, 0, 0, 0);">
+        <ui:Button tabindex="0" text="Refresh lists" display-tooltip-when-elided="true" name="RefreshListsButton" />
+        <ui:Button tabindex="0" text="Open skin folder" display-tooltip-when-elided="true" name="OpenSkinFolderButton" />
+        <ui:Button tabindex="0" text="Open sound folder" display-tooltip-when-elided="true" name="OpenSoundFolderButton" />
+        <ui:Button tabindex="0" text="Open background folder" display-tooltip-when-elided="true" name="OpenBackgroundFolderButton" />
+    </ui:VisualElement>
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.Dropdown focusable="true" name="SkinDropdown" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.Dropdown focusable="true" name="SoundDropdown" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.Dropdown focusable="true" name="BackgroundDropdown" />
+</ui:UXML>

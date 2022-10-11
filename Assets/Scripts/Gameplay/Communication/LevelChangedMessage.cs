@@ -5,9 +5,9 @@ namespace Blockstacker.Gameplay.Communication
     [Serializable]
     public record LevelChangedMessage : MidgameMessage
     {
-        public readonly uint Level;
+        public readonly string Level;
 
-        public LevelChangedMessage(uint level, double time) : base(time)
+        public LevelChangedMessage(string level, double time) : base(time)
         {
             Level = level;
         }

@@ -26,11 +26,12 @@ namespace Blockstacker.GlobalSettings
             set => Settings.Rebinds = value;
         }
 
+        public const char NAME_SEPARATOR = '.';
 
         public static bool TrySave(string path = null)
         {
             path ??= CustomizationPaths.GlobalSettings;
-            
+
             if (!Directory.Exists(Path.GetDirectoryName(path))) return false;
             File.WriteAllText(path, JsonConvert.SerializeObject(Settings, StaticSettings.JsonSerializerSettings));
             return true;
@@ -42,7 +43,8 @@ namespace Blockstacker.GlobalSettings
             if (!File.Exists(path))
                 return false;
 
-            Settings = JsonConvert.DeserializeObject<SettingsContainer>(File.ReadAllText(path), StaticSettings.JsonSerializerSettings);
+            Settings = JsonConvert.DeserializeObject<SettingsContainer>(File.ReadAllText(path),
+                StaticSettings.JsonSerializerSettings);
             Settings ??= new SettingsContainer();
             SettingsReloaded?.Invoke();
             return true;
@@ -110,6 +112,28 @@ namespace Blockstacker.GlobalSettings
             }
 
             return type == typeof(T);
+        }
+
+        public static bool TryGetSettingAttribute<T>(string[] path, out T output) where T : Attribute
+        {
+            output = default;
+            if (path.Length == 0) return false;
+            object obj = Settings;
+            var type = obj.GetType();
+            FieldInfo fieldInfo = null;
+            foreach (var fieldName in path)
+            {
+                fieldInfo = type.GetField(fieldName);
+                if (fieldInfo is null) return false;
+
+                obj = fieldInfo.GetValue(obj);
+                if (obj is null) return false;
+
+                type = obj.GetType();
+            }
+
+            output = fieldInfo?.GetCustomAttribute<T>(false);
+            return output is not null;
         }
 
         [Serializable]

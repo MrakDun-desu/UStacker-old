@@ -2,7 +2,7 @@
 
 namespace Blockstacker.GlobalSettings.Changers
 {
-    public class AntiDasBehaviorChanger : AppSettingEnumChanger<AntiDasBehavior>
+    public class AntiDasBehaviorChanger : AppSettingEnumChanger<SimultaneousDasBehavior>
     {
     }
 }

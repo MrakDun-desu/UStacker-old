@@ -1,0 +1,37 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="ControlsSettings" src="project://database/Assets/UI%20Toolkit/Templates/ControlsSettings.uxml?fileID=9197481963319205126&amp;guid=bb1560c4757e2eb4fae9409b71a904e4&amp;type=3#ControlsSettings" />
+    <ui:Template name="HandlingSettings" src="project://database/Assets/UI%20Toolkit/Templates/HandlingSettings.uxml?fileID=9197481963319205126&amp;guid=4739d012d629d274493d4fb583ecca91&amp;type=3#HandlingSettings" />
+    <ui:Template name="GameplaySetting" src="project://database/Assets/UI%20Toolkit/Templates/GameplaySettings.uxml?fileID=9197481963319205126&amp;guid=211307ceaf81e1249b5139abef14d692&amp;type=3#GameplaySettings" />
+    <ui:Template name="AudioSettings" src="project://database/Assets/UI%20Toolkit/Templates/AudioSettings.uxml?fileID=9197481963319205126&amp;guid=4968f0f042ca0b1489d78a84d2514d58&amp;type=3#AudioSettings" />
+    <ui:Template name="VideoSettings" src="project://database/Assets/UI%20Toolkit/Templates/VideoSettings.uxml?fileID=9197481963319205126&amp;guid=ce01b1e2bb517f746b190cea556eaa65&amp;type=3#VideoSettings" />
+    <ui:Template name="StatCountingSettings" src="project://database/Assets/UI%20Toolkit/Templates/StatCountingSettings.uxml?fileID=9197481963319205126&amp;guid=db24140e383e9154496a6383724d7f4c&amp;type=3#StatCountingSettings" />
+    <ui:Template name="CustomizationSettings" src="project://database/Assets/UI%20Toolkit/Templates/CustomizationSettings.uxml?fileID=9197481963319205126&amp;guid=21d8d0217a22baf43b148eea3cd3388d&amp;type=3#CustomizationSettings" />
+    <ui:Template name="ExportImportSettings" src="project://database/Assets/UI%20Toolkit/Templates/ExportImportSettings.uxml?fileID=9197481963319205126&amp;guid=68e5909c720ecaa40b6c383edad9668c&amp;type=3#ExportImportSettings" />
+    <ui:Template name="OtherSettings" src="project://database/Assets/UI%20Toolkit/Templates/OtherSettings.uxml?fileID=9197481963319205126&amp;guid=dc868beb77b8b344db647b27fdd73126&amp;type=3#OtherSettings" />
+    <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/appSettings.uss?fileID=7433441132597879392&amp;guid=1ac45fe22040dc94388ee7005dc36e10&amp;type=3#appSettings" />
+    <ui:VisualElement name="AppSettingsContainer" style="height: 100%;">
+        <ui:VisualElement name="AppSettingsIcons">
+            <ui:Button display-tooltip-when-elided="true" tabindex="0" name="ControlsButton" class="app-settings-icon" />
+            <ui:Button display-tooltip-when-elided="true" tabindex="0" name="HandlingButton" class="app-settings-icon" />
+            <ui:Button display-tooltip-when-elided="true" tabindex="0" name="GameplayButton" class="app-settings-icon" />
+            <ui:Button display-tooltip-when-elided="true" tabindex="0" name="AudioButton" class="app-settings-icon" />
+            <ui:Button display-tooltip-when-elided="true" tabindex="0" name="VideoButton" class="app-settings-icon" />
+            <ui:Button display-tooltip-when-elided="true" tabindex="0" name="StatCountingButton" class="app-settings-icon" />
+            <ui:Button display-tooltip-when-elided="true" tabindex="0" name="CustomizationButton" class="app-settings-icon" />
+            <ui:Button display-tooltip-when-elided="true" tabindex="0" name="ExportImportButton" class="app-settings-icon" />
+            <ui:Button display-tooltip-when-elided="true" tabindex="0" name="OthersButton" class="app-settings-icon" />
+        </ui:VisualElement>
+        <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="AppSettings" style="right: 0;">
+            <ui:Label tabindex="-1" text="Settings" display-tooltip-when-elided="true" name="SettingsTitle" style="-unity-font-definition: url(&apos;project://database/Assets/Fonts/Molot.asset?fileID=11400000&amp;guid=7e04c164d88405a4fb3dd3c2799ec9cb&amp;type=2#Molot&apos;); color: rgb(255, 255, 255); font-size: 34px;" />
+            <ui:Instance template="ControlsSettings" name="ControlsSettings" />
+            <ui:Instance template="HandlingSettings" name="HandlingSettings" />
+            <ui:Instance template="GameplaySetting" name="GameplaySettings" />
+            <ui:Instance template="AudioSettings" name="AudioSettings" />
+            <ui:Instance template="VideoSettings" name="VideoSettings" />
+            <ui:Instance template="StatCountingSettings" name="StatCountingSettings" />
+            <ui:Instance template="CustomizationSettings" name="CustomizationSettings" />
+            <ui:Instance template="ExportImportSettings" name="ExportImportSettings" />
+            <ui:Instance template="OtherSettings" name="OtherSettings" />
+        </ui:ScrollView>
+    </ui:VisualElement>
+</ui:UXML>

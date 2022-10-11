@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.Slider focusable="true" name="SdfSlider" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.SliderWithFrameField focusable="true" name="DasSlider" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.SliderWithFrameField focusable="true" name="ArrSlider" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.SliderWithFrameField focusable="true" name="DasDelaySlider" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.SliderWithFrameField focusable="true" name="DoubleDropPreventionSlider" />
+</ui:UXML>

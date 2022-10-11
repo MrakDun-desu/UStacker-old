@@ -4,6 +4,6 @@ namespace Blockstacker.Gameplay.GameManagers
 {
     public interface IGameManager
     {
-        void Initialize(uint startingLevel, MediatorSO mediator);
+        void Initialize(string startingLevel, MediatorSO mediator);
     }
 }

@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.Slider focusable="true" name="GridVisibilitySlider" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.Slider focusable="true" name="BoardVisibilitySlider" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.Slider focusable="true" name="GhostPieceVisibilitySlider" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.Slider focusable="true" name="BoardZoomSlider" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.Slider focusable="true" name="WarningPieceTreshholdSlider" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.Toggle focusable="true" name="BoardZoomScrollToggle" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.Toggle focusable="true" name="DragToRepositionToggle" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.Toggle focusable="true" name="ColorGhostPieceToggle" />
+</ui:UXML>
