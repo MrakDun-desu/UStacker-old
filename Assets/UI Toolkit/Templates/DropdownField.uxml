@@ -2,6 +2,7 @@
     <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/customDropdown.uss?fileID=7433441132597879392&amp;guid=82ac21930bc872444a529370c43ce628&amp;type=3#customDropdown" />
     <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/variables.uss?fileID=7433441132597879392&amp;guid=bc2ff6f8f73fa9d45bac96845697a6e7&amp;type=3#variables" />
     <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSetingDelayDasOnToggleGroup setting-path="Handling.DelayDasOn" />
-    <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSettingDoubleSlider focusable="true" label="SETTING NOT FOUND" setting-path="Handling.DelayedAutoShift" />
-    <Blockstacker.Common.UIToolkit.BsDropdownField label="My label" choices-string="Choice 1,Choice 2,Choice 3" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSettingDoubleSlider focusable="true" label="SETTING NOT FOUND" setting-path="Handling.DelayedAutoShift" step-count="190" multiplier="1000" show-frame-field="true" unit-label="ms" />
+    <Blockstacker.Common.UIToolkit.BsDropdownField label="Dropdown" choices-string="Choice 1,Choice 2,Choice 3,hello there" searchable="true" tooltip="Hello there" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.DiagonalLockBehaviorDropdown label="DiagonalLockBehavior" setting-path="Handling.DiagonalLockBehavior" />
 </ui:UXML>
