@@ -3,4 +3,5 @@
     <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/variables.uss?fileID=7433441132597879392&amp;guid=bc2ff6f8f73fa9d45bac96845697a6e7&amp;type=3#variables" />
     <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSetingDelayDasOnToggleGroup setting-path="Handling.DelayDasOn" />
     <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSettingDoubleSlider focusable="true" label="SETTING NOT FOUND" setting-path="Handling.DelayedAutoShift" />
+    <Blockstacker.Common.UIToolkit.BsDropdownField label="My label" choices-string="Choice 1,Choice 2,Choice 3" />
 </ui:UXML>
