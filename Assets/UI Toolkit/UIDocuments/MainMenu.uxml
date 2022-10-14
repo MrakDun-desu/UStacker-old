@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/globalStyle.uss?fileID=7433441132597879392&amp;guid=3c935a56bb51ec548b9ae6c77a5bd9fb&amp;type=3#globalStyle" />
     <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/mainMenu.uss?fileID=7433441132597879392&amp;guid=9755b7c0bbeaeeb48868b8b75fce2d75&amp;type=3#mainMenu" />
     <ui:VisualElement name="MainMenuContainer" style="flex-direction: row;">
         <ui:VisualElement name="MainMenu">

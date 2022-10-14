@@ -1,0 +1,11 @@
+:root {
+    -unity-font-definition: url('project://database/Assets/Fonts/Molot.asset?fileID=11400000&guid=7e04c164d88405a4fb3dd3c2799ec9cb&type=2#Molot');
+    --primary-color: rgb(255, 228, 77);
+    --secondary-color: rgb(255, 255, 255);
+    --button-background-color: rgb(23, 23, 23);
+    --button-focus-color: rgb(75, 75, 75);
+    --disabled-color: rgb(50, 50, 50);
+    --background-color: rgb(6, 18, 34);
+    --main-font: url('project://database/Assets/Fonts/Molot.asset?fileID=11400000&guid=7e04c164d88405a4fb3dd3c2799ec9cb&type=2#Molot');
+    --title-font: url('project://database/Assets/Fonts/SquareFont.asset?fileID=11400000&guid=983f826426792744d8db8759fece06ac&type=2#SquareFont')
+}

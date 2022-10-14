@@ -5,12 +5,12 @@
 
 #MainMenu {
     width: 33.33333%;
-    background-color: rgb(6, 18, 34);
-    border-right-color: rgb(255, 228, 77);
+    border-right-color: var(--primary-color);
     border-right-width: 5px;
     align-items: center;
     justify-content: center;
     min-width: 450px;
+    background-color: var(--background-color);
 }
 
 #MainMenuSide {
@@ -19,17 +19,17 @@
 
 #TitlePartOne {
     margin-bottom: -18px;
+    color: var(--secondary-color);
 }
 
 #TitlePartTwo {
-    color: rgb(255, 228, 77);
+    color: var(--primary-color);
     margin-bottom: 10%;
 }
 
 .title {
-    color: rgb(255, 255, 255);
     font-size: 75px;
-    -unity-font-definition: url('project://database/Assets/Fonts/SquareFont.asset?fileID=11400000&guid=983f826426792744d8db8759fece06ac&type=2#SquareFont');
+    -unity-font-definition: var(--title-font);
 }
 
 .title.unity-label {
@@ -41,18 +41,11 @@
     width: 400px;
     height: 100px;
     margin-bottom: 8%;
-    -unity-font-definition: url('project://database/Assets/Fonts/Molot.asset?fileID=11400000&guid=7e04c164d88405a4fb3dd3c2799ec9cb&type=2#Molot');
     font-size: 45px;
-    color: rgb(255, 228, 77);
-    background-color: rgb(23, 23, 23);
-    border-left-color: rgb(255, 228, 77);
-    border-right-color: rgb(255, 228, 77);
-    border-top-color: rgb(255, 228, 77);
-    border-bottom-color: rgb(255, 228, 77);
-    border-left-width: 3px;
-    border-right-width: 3px;
-    border-top-width: 3px;
-    border-bottom-width: 3px;
+    color: var(--primary-color);
+    background-color: var(--button-background-color);
+    border-color: var(--primary-color);
+    border-width: 3px;
     max-width: 90%;
     max-height: 10%;
 }
@@ -61,29 +54,38 @@
     transition-duration: 0.2s;
 }
 
-#MainMenuContainer .unity-button:hover:enabled,
+#MainMenuContainer .unity-button:hover:enabled {
+    background-color: var(--button-focus-color);
+}
+
 #MainMenuContainer .unity-button:focus {
-    background-color: rgba(75, 75, 75, 255);
-    scale: 1.1 1.1;
+    background-color: var(--button-focus-color);
 }
 
 #MainMenuContainer .unity-button:active {
-    background-color: rgb(31, 31, 31);
+    background-color: var(--button-background-color);
+    transition-duration: 0s;
+}
+
+#MainMenuContainer .unity-button:hover:active {
+    background-color: var(--button-background-color);
     transition-duration: 0s;
 }
 
 #MainMenuContainer .unity-button:disabled {
-    border-left-color: rgba(50, 50, 50, 255);
-    border-right-color: rgba(50, 50, 50, 255);
-    border-top-color: rgba(50, 50, 50, 255);
-    border-bottom-color: rgba(50, 50, 50, 255);
-    color: rgba(50, 50, 50, 255);
-    -unity-background-image-tint-color: rgba(50, 50, 50, 255);
+    border-color: var(--disabled-color);
+    color: var(--disabled-color);
+    -unity-background-image-tint-color: var(--disabled-color);
 }
 
-#MainMenuSide .unity-button:hover:enabled,
+#MainMenuSide .unity-button:hover:enabled {
+    background-color: rgba(0, 0, 0, 0);
+    scale: 1.1 1.1;
+}
+
 #MainMenuSide .unity-button:focus {
     background-color: rgba(0, 0, 0, 0);
+    scale: 1.1 1.1;
 }
 
 #MiniButtonsContainer {
@@ -95,13 +97,9 @@
     width: 100px;
     height: 100px;
     margin: 0 0 0 50px;
-    padding: 0;
+    padding: 10px;
     max-width: 25%;
     max-height: 100%;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
     margin-left: 50px;
 }
 
@@ -119,7 +117,6 @@
     top: 0;
     right: 0;
     margin-right: 100px;
-    -unity-font-definition: url('project://database/Assets/Fonts/Molot.asset?fileID=11400000&guid=7e04c164d88405a4fb3dd3c2799ec9cb&type=2#Molot');
     font-size: 28px;
     -unity-text-align: upper-center;
 }
@@ -128,29 +125,24 @@
     width: 250px;
     height: 100px;
     background-color: rgb(6, 18, 34);
-    border-left-color: rgb(255, 228, 77);
-    border-right-color: rgb(255, 228, 77);
-    border-top-color: rgb(255, 228, 77);
-    border-bottom-color: rgb(255, 228, 77);
-    border-left-width: 3px;
-    border-right-width: 3px;
+    border-width: 3px;
     border-top-width: 0;
-    border-bottom-width: 3px;
     flex-direction: row;
     padding: 10px;
     justify-content: center;
     align-items: center;
+    border-color: var(--primary-color);
 }
 
 #CommunityLabel1 {
-    color: rgb(255, 255, 255);
+    color: var(--secondary-color);
 }
 
 #CommunityLabel2 {
     font-size: 35px;
     margin: -8px 0 0;
     padding: 0;
-    color: rgb(255, 228, 77);
+    color: var(--primary-color);
 }
 
 #LinksContainer .unity-button {
@@ -158,11 +150,8 @@
     margin: 0;
     padding: 0;
     height: 65px;
-    border-left-color: rgba(0, 0, 0, 0);
-    border-right-color: rgba(0, 0, 0, 0);
-    border-top-color: rgba(0, 0, 0, 0);
-    border-bottom-color: rgba(0, 0, 0, 0);
-    background-color: rgba(0, 0, 0, 0);
+    background-color: var(--background-color);
+    border-width: 0;
 }
 
 #ItchIoButton.unity-button {

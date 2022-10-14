@@ -8,7 +8,6 @@
     <ui:Template name="CustomizationSettings" src="project://database/Assets/UI%20Toolkit/Templates/CustomizationSettings.uxml?fileID=9197481963319205126&amp;guid=21d8d0217a22baf43b148eea3cd3388d&amp;type=3#CustomizationSettings" />
     <ui:Template name="ExportImportSettings" src="project://database/Assets/UI%20Toolkit/Templates/ExportImportSettings.uxml?fileID=9197481963319205126&amp;guid=68e5909c720ecaa40b6c383edad9668c&amp;type=3#ExportImportSettings" />
     <ui:Template name="OtherSettings" src="project://database/Assets/UI%20Toolkit/Templates/OtherSettings.uxml?fileID=9197481963319205126&amp;guid=dc868beb77b8b344db647b27fdd73126&amp;type=3#OtherSettings" />
-    <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/appSettings.uss?fileID=7433441132597879392&amp;guid=1ac45fe22040dc94388ee7005dc36e10&amp;type=3#appSettings" />
     <ui:VisualElement name="AppSettingsContainer" style="height: 100%;">
         <ui:VisualElement name="AppSettingsIcons">
             <ui:Button display-tooltip-when-elided="true" tabindex="0" name="ControlsButton" class="app-settings-icon" />
