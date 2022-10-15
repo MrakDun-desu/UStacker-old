@@ -78,6 +78,7 @@ namespace Blockstacker.GlobalSettings.ChangersUIToolkit
 
         public AppSettingFloatField()
         {
+            AddToClassList(StaticChangerData.SETTING_CHANGER_CLASS);
             this.RegisterValueChangedCallback(OnValueChanged);
             AppSettings.SettingsReloaded += () => SetValueWithoutNotify(AppSettings.GetValue<float>(_splitPath));
         }

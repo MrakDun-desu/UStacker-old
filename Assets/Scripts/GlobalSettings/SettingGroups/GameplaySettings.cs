@@ -26,14 +26,15 @@ namespace Blockstacker.GlobalSettings.Groups
         public float BoardZoom = 1;
         
         [MinRestraint(0, true)]
-        [MaxRestraint(1, true)]
+        [MaxRestraint(10, true)]
         [Tooltip("How many blocks under lethal height to start showing warning piece")]
         public float WarningPieceTreshhold = 2;
         
         [Description("Control + Scroll to change Board Zoom")]
         [Tooltip("If set, you can change board zoom while playing the game")]
         public bool CtrlScrollToChangeBoardZoom;
-        
+       
+        // Not yet implemented
         [Description("Scroll to change Volume")]
         [Tooltip("If set, you can change volume while playing the game")]
         public bool ScrollToChangeVolume = true;

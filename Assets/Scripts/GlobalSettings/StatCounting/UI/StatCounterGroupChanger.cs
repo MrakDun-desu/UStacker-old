@@ -12,8 +12,9 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
 
         private const string SELF_CLASS = "stat-counter-group-changer";
         private const string COUNTERS_CONTAINER_CLASS = "counters-container";
-        private const string NAME_CONTAINER_CLASS = "name-container";
         private const string BUTTON_CONTAINER_CLASS = "button-container";
+        private const string HEADER_CLASS = "group-header";
+        private const string MINIMIZED_CLASS = "minimized";
 
         private const string REMOVE_BUTTON_TEXT = "Remove group";
         private const string ADD_BUTTON_TEXT = "Add stat counter";
@@ -47,12 +48,13 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
         public StatCounterGroupChanger(StatCounterSO[] premadeCounterTypes)
         {
             _premadeCounterTypes = premadeCounterTypes;
-            
-            var nameContainer = new VisualElement();
-            nameContainer.AddToClassList(NAME_CONTAINER_CLASS);
-            _nameField = new TextField();
-            _nameField.SetValueWithoutNotify("Group name");
-            nameContainer.Add(_nameField);
+
+            var header = new VisualElement();
+            header.AddToClassList(HEADER_CLASS);
+            _nameField = new TextField("Group name");
+            var minimizeButton = new Button(MinimizeButtonClicked) { text = string.Empty };
+            header.Add(_nameField);
+            header.Add(minimizeButton);
 
             _counterChangersContainer = new VisualElement();
             _counterChangersContainer.AddToClassList(COUNTERS_CONTAINER_CLASS);
@@ -65,7 +67,7 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
             buttonContainer.Add(addButton);
 
             AddToClassList(SELF_CLASS);
-            Add(nameContainer);
+            Add(header);
             Add(_counterChangersContainer);
             Add(buttonContainer);
 
@@ -88,6 +90,11 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
             {
                 AddStatCounter(counter);
             }
+        }
+
+        private void MinimizeButtonClicked()
+        {
+            ToggleInClassList(MINIMIZED_CLASS);
         }
 
         private void AddStatCounter(StatCounterRecord newCounter, bool addToValue = false)

@@ -125,12 +125,14 @@ namespace Blockstacker.GlobalSettings.ChangersUIToolkit
         private bool _validateMax;
         private const double FPS = 60;
 
-        private const string DISPLAY_FIELD_CLASS = "DISPLAY_FIELD";
-        private const string FRAME_FIELD_CLASS = "FRAME_FIELD";
-        private const string UNIT_LABEL_CLASS = "UNIT_LABEL";
+        private const string DISPLAY_FIELD_CLASS = "display-field";
+        private const string FRAME_FIELD_CLASS = "frame-field";
+        private const string UNIT_LABEL_CLASS = "unit-label";
 
         public AppSettingDoubleSlider()
         {
+            AddToClassList(StaticChangerData.SETTING_CHANGER_CLASS);
+            
             _displayField = new DoubleField();
             _unitLabel = new Label();
             _frameField = new DoubleField();
@@ -188,9 +190,10 @@ namespace Blockstacker.GlobalSettings.ChangersUIToolkit
             _displayField.SetValueWithoutNotify(Math.Round(newValue * Multiplier, 2));
             _frameField.SetValueWithoutNotify(Math.Round(newValue * FPS, 2));
 
-            if (Math.Abs(newValue - AppSettings.GetValue<double>(_splitPath)) > .1 &&
-                !double.IsPositiveInfinity(newValue))
+            if (!double.IsPositiveInfinity(newValue))
                 SetValueWithoutNotify((int) ((newValue - MinValue) * StepCount / (MaxValue - MinValue)));
+            else
+                SetValueWithoutNotify(highValue);
 
             AppSettings.TrySetValue(newValue, _splitPath);
             Changed?.Invoke();

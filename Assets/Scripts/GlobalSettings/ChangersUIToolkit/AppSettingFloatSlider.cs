@@ -107,11 +107,13 @@ namespace Blockstacker.GlobalSettings.ChangersUIToolkit
         private bool _validateMin;
         private bool _validateMax;
 
-        private const string DISPLAY_FIELD_CLASS = "DISPLAY_FIELD";
-        private const string UNIT_LABEL_CLASS = "UNIT_LABEL";
+        private const string DISPLAY_FIELD_CLASS = "display-field";
+        private const string UNIT_LABEL_CLASS = "unit-label";
 
         public AppSettingFloatSlider()
         {
+            AddToClassList(StaticChangerData.SETTING_CHANGER_CLASS);
+            
             _displayField = new FloatField();
             _unitLabel = new Label();
 
@@ -154,9 +156,10 @@ namespace Blockstacker.GlobalSettings.ChangersUIToolkit
 
             _displayField.SetValueWithoutNotify((float)Math.Round(newValue * Multiplier, 2));
 
-            if (Math.Abs(newValue - AppSettings.GetValue<float>(_splitPath)) > .1 &&
-                !float.IsPositiveInfinity(newValue))
+            if (!float.IsPositiveInfinity(newValue))
                 SetValueWithoutNotify((int) ((newValue - MinValue) * StepCount / (MaxValue - MinValue)));
+            else
+                SetValueWithoutNotify(highValue);
 
             AppSettings.TrySetValue(newValue, _splitPath);
             Changed?.Invoke();

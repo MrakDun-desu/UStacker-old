@@ -37,7 +37,10 @@ namespace Blockstacker.GlobalSettings.ChangersUIToolkit
             {
                 _settingPath = value;
                 if (!AppSettings.SettingExists<T>(_splitPath))
+                {
                     label = "SETTING NOT FOUND";
+                    return;
+                }
 
                 if (AppSettings.TryGetSettingAttribute<TooltipAttribute>(_splitPath, out var tooltipAttr))
                 {
@@ -67,6 +70,7 @@ namespace Blockstacker.GlobalSettings.ChangersUIToolkit
         protected AppSettingEnumDropdown()
         {
             AddToClassList(SELF_CLASS);
+            AddToClassList(StaticChangerData.SETTING_CHANGER_CLASS);
             var enumType = typeof(T);
 
             Choices.Clear();
@@ -87,6 +91,16 @@ namespace Blockstacker.GlobalSettings.ChangersUIToolkit
             }
 
             this.RegisterValueChangedCallback(OnValueChanged);
+            AppSettings.SettingsReloaded += OnSettingsReloaded;
+        }
+
+        private void OnSettingsReloaded()
+        {
+            var newValue = AppSettings.GetValue<T>(_splitPath);
+            var shownValue = typeof(T).GetMember(newValue.ToString())[0]
+                .GetCustomAttribute<DescriptionAttribute>(false)
+                ?.Description;
+            SetValueWithoutNotify(shownValue);
         }
 
         private void OnValueChanged(ChangeEvent<string> _)

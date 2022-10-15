@@ -3,13 +3,13 @@ using UnityEngine.UIElements;
 
 namespace Blockstacker.GlobalSettings.ChangersUIToolkit
 {
-    public class AppSetingDelayDasOnToggleGroup : AppSettingToggleGroup<DelayDasOn>
+    public class AppSettingDelayDasOnToggleGroup : AppSettingToggleGroup<DelayDasOn>
     {
         public new class UxmlTraits : AppSettingToggleGroup<DelayDasOn>.UxmlTraits
         {
         }
 
-        public new class UxmlFactory : UxmlFactory<AppSetingDelayDasOnToggleGroup, UxmlTraits>
+        public new class UxmlFactory : UxmlFactory<AppSettingDelayDasOnToggleGroup, UxmlTraits>
         {
         }
     }

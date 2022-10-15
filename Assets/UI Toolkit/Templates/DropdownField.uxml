@@ -1,6 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSetingDelayDasOnToggleGroup setting-path="Handling.DelayDasOn" />
-    <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSettingDoubleSlider focusable="true" label="SETTING NOT FOUND" setting-path="Handling.DelayedAutoShift" step-count="190" multiplier="1000" show-frame-field="true" unit-label="ms" />
-    <Blockstacker.Common.UIToolkit.BsDropdownField label="Dropdown" choices-string="Choice 1,Choice 2,Choice 3,hello there" searchable="true" tooltip="Hello there" />
-    <Blockstacker.GlobalSettings.ChangersUIToolkit.DiagonalLockBehaviorDropdown label="DiagonalLockBehavior" setting-path="Handling.DiagonalLockBehavior" />
-</ui:UXML>

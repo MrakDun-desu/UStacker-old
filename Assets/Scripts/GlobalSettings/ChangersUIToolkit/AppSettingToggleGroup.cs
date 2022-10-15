@@ -38,7 +38,10 @@ namespace Blockstacker.GlobalSettings.ChangersUIToolkit
             {
                 _settingPath = value;
                 if (!AppSettings.SettingExists<T>(_splitPath))
+                {
                     label = "SETTING NOT FOUND";
+                    return;
+                }
 
                 if (AppSettings.TryGetSettingAttribute<TooltipAttribute>(_splitPath, out var tooltipAttr))
                 {
@@ -62,6 +65,7 @@ namespace Blockstacker.GlobalSettings.ChangersUIToolkit
         protected AppSettingToggleGroup() : base(string.Empty, new VisualElement())
         {
             AddToClassList(SELF_CLASS);
+            AddToClassList(StaticChangerData.SETTING_CHANGER_CLASS);
             var enumType = typeof(T);
             foreach (var enumName in Enum.GetNames(enumType))
             {

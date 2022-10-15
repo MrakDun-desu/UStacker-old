@@ -37,6 +37,7 @@ namespace Blockstacker.Common.UIToolkit
             {
                 foreach (var choiceStr in value.Split(','))
                 {
+                    if (string.IsNullOrEmpty(choiceStr)) continue;
                     if (Choices.All(choice => choice.Value != choiceStr))
                         Choices.Add(new ChoiceWithTooltip(choiceStr));
                 }
@@ -110,15 +111,19 @@ namespace Blockstacker.Common.UIToolkit
         private const string CHOICE_CLASS = "dropdown-choice";
         private const string SELECTED_CLASS = "selected";
         private const string FOCUSED_CLASS = "focused";
+        private const string ARROW_CLASS = "dropdown-arrow";
 
         private BsDropdownField(string label, VisualElement visualInput) : base(label, visualInput)
         {
             _searchField = new TextField();
             _choicesView = new ScrollView {style = {display = DisplayStyle.None}};
+            var dropdownArrow = new VisualElement();
+            dropdownArrow.AddToClassList(ARROW_CLASS);
 
             visualInput.Add(_searchField);
             visualInput.Add(_choicesView);
             _searchField.AddToClassList(INPUT_CLASS);
+            _searchField.Add(dropdownArrow);
             _searchField.isDelayed = false;
 
             AddToClassList(SELF_CLASS);
@@ -130,6 +135,10 @@ namespace Blockstacker.Common.UIToolkit
             Choices.CollectionChanged += (_, _) => OnChoicesChanged();
         }
 
+        public BsDropdownField(string label) : this(label, new VisualElement())
+        {
+        }
+        
         public BsDropdownField() : this("Label", new VisualElement())
         {
         }

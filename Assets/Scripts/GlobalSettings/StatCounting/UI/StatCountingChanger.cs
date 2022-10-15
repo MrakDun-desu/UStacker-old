@@ -13,12 +13,8 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
 
         private const string SELF_CLASS = "stat-counting-changer";
         private const string BUTTON_CONTAINER_CLASS = "button-container";
-        private const string TITLE_CONTAINER_CLASS = "title-container";
-        private const string BACK_BUTTON_CLASS = "back-btn";
 
         private const string ADD_GROUP_BUTTON_TEXT = "Add new group";
-        private const string TITLE_TEXT = "Stat counting";
-        private const string BACK_BUTTON_TEXT = "Back";
         public const string BACK_BUTTON_NAME = "Back";
 
         private readonly VisualElement _groupsContainer = new();
@@ -35,24 +31,11 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
         {
             _premadeCounterTypes = premadeCounterTypes;
 
-            var titleContainer = new VisualElement();
-            var title = new Label(TITLE_TEXT);
-            titleContainer.AddToClassList(TITLE_CONTAINER_CLASS);
-            titleContainer.Add(title);
-            var backButton = new Button
-            {
-                text = BACK_BUTTON_TEXT,
-                name = BACK_BUTTON_NAME
-            };
-            backButton.AddToClassList(BACK_BUTTON_CLASS);
-            titleContainer.Add(backButton);
-
             var buttonContainer = new VisualElement();
             buttonContainer.AddToClassList(BUTTON_CONTAINER_CLASS);
             buttonContainer.Add(new Button(OnGroupAdded){text = ADD_GROUP_BUTTON_TEXT});
 
             AddToClassList(SELF_CLASS);
-            Add(titleContainer);
             Add(_groupsContainer);
             Add(buttonContainer);
 

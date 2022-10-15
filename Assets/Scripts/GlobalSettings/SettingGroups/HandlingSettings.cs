@@ -23,8 +23,8 @@ namespace Blockstacker.GlobalSettings.Groups
         public double AutomaticRepeatRate;
         
         [Tooltip("How many times Soft Drop increases fall speed")]
-        [MinRestraint(1, true)]
-        [MaxRestraint(40, false)]
+        [MinRestraint(2, true)]
+        [MaxRestraint(41, false)]
         [Description("Soft Drop Factor")]
         public double SoftDropFactor = double.PositiveInfinity;
         

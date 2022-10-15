@@ -1,7 +1,13 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Blockstacker.GlobalSettings.ChangersUIToolkit.Slider focusable="true" name="SdfSlider" />
-    <Blockstacker.GlobalSettings.ChangersUIToolkit.SliderWithFrameField focusable="true" name="DasSlider" />
-    <Blockstacker.GlobalSettings.ChangersUIToolkit.SliderWithFrameField focusable="true" name="ArrSlider" />
-    <Blockstacker.GlobalSettings.ChangersUIToolkit.SliderWithFrameField focusable="true" name="DasDelaySlider" />
-    <Blockstacker.GlobalSettings.ChangersUIToolkit.SliderWithFrameField focusable="true" name="DoubleDropPreventionSlider" />
+    <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/globalStyle.uss?fileID=7433441132597879392&amp;guid=3c935a56bb51ec548b9ae6c77a5bd9fb&amp;type=3#globalStyle" />
+    <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/appSettings.uss?fileID=7433441132597879392&amp;guid=1ac45fe22040dc94388ee7005dc36e10&amp;type=3#appSettings" />
+    <ui:Label tabindex="-1" text="Handling" display-tooltip-when-elided="true" class="settings-page-title" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSettingDoubleSlider focusable="true" label="SETTING NOT FOUND" setting-path="Handling.DelayedAutoShift" multiplier="1000" step-count="190" show-frame-field="true" unit-label="ms" name="dasSlider" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSettingDoubleSlider label="SETTING NOT FOUND" setting-path="Handling.AutomaticRepeatRate" multiplier="1000" step-count="50" show-frame-field="true" unit-label="ms" name="arrSlider" max-value="0.0833333333333333" max-is-infinity="false" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSettingDoubleSlider focusable="true" label="SETTING NOT FOUND" setting-path="Handling.SoftDropFactor" multiplier="1" step-count="39" show-frame-field="false" unit-label="x" name="sdfSlider" max-is-infinity="true" max-value="40" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSettingDoubleSlider focusable="true" label="SETTING NOT FOUND" setting-path="Handling.DasCutDelay" multiplier="1000" step-count="200" show-frame-field="true" unit-label="ms" name="dcdSlider" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSettingDoubleSlider focusable="true" label="SETTING NOT FOUND" setting-path="Handling.DoubleDropPreventionInterval" multiplier="1000" step-count="200" show-frame-field="true" unit-label="ms" name="ddpSlider" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSettingDiagonalLockBehaviorDropdown setting-path="Handling.DiagonalLockBehavior" name="delayedAutoShiftDropdown" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSettingSimultaneousDasBehaviourDropdown setting-path="Handling.SimultaneousDasBehavior" name="simultaneousDasBehaviorDropdown" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSettingDelayDasOnToggleGroup setting-path="Handling.DelayDasOn" name="delayDasOnToggleGroup" />
 </ui:UXML>

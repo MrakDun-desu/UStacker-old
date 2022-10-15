@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using Blockstacker.Common;
+using Blockstacker.Common.UIToolkit;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -15,7 +15,6 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
         }
 
         private const string SELF_CLASS = "stat-counter-changer";
-        private const string VECTOR_CONTAINER_CLASS = "vector-container";
         private const string BUTTON_CONTAINER_CLASS = "button-container";
 
         private StatCounterRecord _value = new();
@@ -38,20 +37,15 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
         private const string POSITION_LABEL = "Position";
         private const string SIZE_LABEL = "Size";
         private const string UPDATE_INT_LABEL = "Update interval";
-        private const string REMOVE_BUTTON_TEXT = "Remove counter";
+        private const string REMOVE_BUTTON_TEXT = "Remove stat counter";
 
-        private readonly DropdownField _typeDropdown;
+        private readonly BsDropdownField _typeDropdown;
         private readonly TextField _nameField;
         private readonly TextField _filenameField;
-        private readonly TextField _positionXField;
-        private readonly TextField _positionYField;
-        private readonly TextField _sizeXField;
-        private readonly TextField _sizeYField;
+        private readonly Vector2Field _positionField;
+        private readonly Vector2Field _sizeField;
         private readonly Slider _updateIntervalSlider;
         private readonly Button _removeButton;
-
-        private readonly VisualElement _nameContainer;
-        private readonly VisualElement _filenameContainer;
 
         private readonly StatCounterSO[] _premadeCounterTypes;
 
@@ -61,57 +55,26 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
         {
             _premadeCounterTypes = premadeCounterTypes;
             
-            var dropdownContainer = new VisualElement();
-            dropdownContainer.Add(new Label(DROPDOWN_LABEL));
-            _typeDropdown = new DropdownField();
-            dropdownContainer.Add(_typeDropdown);
+            _typeDropdown = new BsDropdownField(DROPDOWN_LABEL);
+            _nameField = new TextField(NAME_LABEL);
+            _filenameField = new TextField(FILENAME_LABEL);
 
-            _nameContainer = new VisualElement();
-            _nameContainer.Add(new Label(NAME_LABEL));
-            _nameField = new TextField();
-            _nameContainer.Add(_nameField);
+            _positionField = new Vector2Field(POSITION_LABEL);
+            _sizeField = new Vector2Field(SIZE_LABEL);
 
-            _filenameContainer = new VisualElement();
-            _filenameContainer.Add(new Label(FILENAME_LABEL));
-            _filenameField = new TextField();
-            _filenameContainer.Add(_filenameField);
-
-            var positionContainer = new VisualElement();
-            positionContainer.Add(new Label(POSITION_LABEL));
-            _positionXField = new TextField();
-            _positionYField = new TextField();
-            var positionFields = new VisualElement();
-            positionFields.AddToClassList(VECTOR_CONTAINER_CLASS);
-            positionFields.Add(_positionXField);
-            positionFields.Add(_positionYField);
-            positionContainer.Add(positionFields);
-
-            var sizeContainer = new VisualElement();
-            sizeContainer.Add(new Label(SIZE_LABEL));
-            _sizeXField = new TextField();
-            _sizeYField = new TextField();
-            var sizeFields = new VisualElement();
-            sizeFields.AddToClassList(VECTOR_CONTAINER_CLASS);
-            sizeFields.Add(_sizeXField);
-            sizeFields.Add(_sizeYField);
-            sizeContainer.Add(sizeFields);
-
-            var updateIntervalContainer = new VisualElement();
-            updateIntervalContainer.Add(new Label(UPDATE_INT_LABEL));
-            _updateIntervalSlider = new Slider(0, 5) {showInputField = true};
-            updateIntervalContainer.Add(_updateIntervalSlider);
+            _updateIntervalSlider = new Slider(UPDATE_INT_LABEL, 0, 5) {showInputField = true};
 
             var removeButtonContainer = new VisualElement();
             removeButtonContainer.AddToClassList(BUTTON_CONTAINER_CLASS);
             removeButtonContainer.Add(new Button(() => Removed?.Invoke(this)) {text = REMOVE_BUTTON_TEXT});
 
             AddToClassList(SELF_CLASS);
-            Add(dropdownContainer);
-            Add(_nameContainer);
-            Add(_filenameContainer);
-            Add(positionContainer);
-            Add(sizeContainer);
-            Add(updateIntervalContainer);
+            Add(_typeDropdown);
+            Add(_nameField);
+            Add(_filenameField);
+            Add(_positionField);
+            Add(_sizeField);
+            Add(_updateIntervalSlider);
             Add(removeButtonContainer);
 
             RefreshValue();
@@ -121,20 +84,21 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
         private void RefreshValue(bool refreshDropdown = true)
         {
             if (refreshDropdown) {
-                _typeDropdown.choices.Clear();
-                _typeDropdown.choices.AddRange(_premadeCounterTypes.Select(value => value.Value.Name));
+                _typeDropdown.Choices.Clear();
+                foreach (var value in _premadeCounterTypes.Select(value => value.Value.Name))
+                {
+                    _typeDropdown.Choices.Add(new BsDropdownField.ChoiceWithTooltip(value));
+                }
                 _typeDropdown.SetValueWithoutNotify(Value.Type == StatCounterType.Normal ? Value.Name : "Custom");
             }
             var displayCustomFields = Value.Type == StatCounterType.Custom ? DisplayStyle.Flex : DisplayStyle.None;
-            _nameContainer.style.display = displayCustomFields;
-            _filenameContainer.style.display = displayCustomFields;
+            _nameField.style.display = displayCustomFields;
+            _filenameField.style.display = displayCustomFields;
             
             _nameField.SetValueWithoutNotify(Value.Name);
             _filenameField.SetValueWithoutNotify(Value.Filename);
-            _positionXField.SetValueWithoutNotify(Value.Position.x.ToString(CultureInfo.InvariantCulture));
-            _positionYField.SetValueWithoutNotify(Value.Position.y.ToString(CultureInfo.InvariantCulture));
-            _sizeXField.SetValueWithoutNotify(Value.Size.x.ToString(CultureInfo.InvariantCulture));
-            _sizeYField.SetValueWithoutNotify(Value.Size.y.ToString(CultureInfo.InvariantCulture));
+            _positionField.SetValueWithoutNotify(Value.Position);
+            _positionField.SetValueWithoutNotify(Value.Size);
             _updateIntervalSlider.SetValueWithoutNotify(Value.UpdateInterval);
         }
 
@@ -143,16 +107,14 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
             _typeDropdown.RegisterValueChangedCallback(_ => OnTypePicked());
             _nameField.RegisterValueChangedCallback(evt => OnNameChanged(evt.newValue));
             _filenameField.RegisterValueChangedCallback(evt => OnFilenameChanged(evt.newValue));
-            _positionXField.RegisterValueChangedCallback(evt => OnPositionXChanged(evt.newValue));
-            _positionYField.RegisterValueChangedCallback(evt => OnPositionYChanged(evt.newValue));
-            _sizeXField.RegisterValueChangedCallback(evt => OnSizeXChanged(evt.newValue));
-            _sizeYField.RegisterValueChangedCallback(evt => OnSizeYChanged(evt.newValue));
+            _positionField.RegisterValueChangedCallback(OnPositionChanged);
+            _sizeField.RegisterValueChangedCallback(OnSizeChanged);
             _updateIntervalSlider.RegisterValueChangedCallback(evt => OnUpdateIntervalChanged(evt.newValue));
         }
 
         private void OnTypePicked()
         {
-            var pickedValue = _premadeCounterTypes[_typeDropdown.index].Value;
+            var pickedValue = _premadeCounterTypes[_typeDropdown.Index].Value;
             Value.Type = pickedValue.Type;
             switch (pickedValue.Type)
             {
@@ -198,52 +160,14 @@ namespace Blockstacker.GlobalSettings.StatCounting.UI
             Value.Script = File.ReadAllText(scriptFilePath);
         }
 
-        private void OnPositionXChanged(string posXstr)
+        private void OnPositionChanged(ChangeEvent<Vector2> evt)
         {
-            if (!float.TryParse(posXstr, out var posX))
-            {
-                _positionXField.SetValueWithoutNotify(_value.Position.x.ToString(CultureInfo.InvariantCulture));
-            }
-            else
-            {
-                _value.Position.x = posX;
-            }
+            _value.Position = evt.newValue;
         }
 
-        private void OnPositionYChanged(string posYstr)
+        private void OnSizeChanged(ChangeEvent<Vector2> evt)
         {
-            if (!float.TryParse(posYstr, out var posY))
-            {
-                _positionYField.SetValueWithoutNotify(_value.Position.y.ToString(CultureInfo.InvariantCulture));
-            }
-            else
-            {
-                _value.Position.y = posY;
-            }
-        }
-
-        private void OnSizeXChanged(string sizeXstr)
-        {
-            if (!float.TryParse(sizeXstr, out var sizeX))
-            {
-                _sizeXField.SetValueWithoutNotify(_value.Size.x.ToString(CultureInfo.InvariantCulture));
-            }
-            else
-            {
-                _value.Size.x = sizeX;
-            }
-        }
-
-        private void OnSizeYChanged(string sizeYstr)
-        {
-            if (!float.TryParse(sizeYstr, out var sizeY))
-            {
-                _sizeYField.SetValueWithoutNotify(_value.Size.y.ToString(CultureInfo.InvariantCulture));
-            }
-            else
-            {
-                _value.Size.y = sizeY;
-            }
+            _value.Size = evt.newValue;
         }
 
         private void OnUpdateIntervalChanged(float updateInterval)

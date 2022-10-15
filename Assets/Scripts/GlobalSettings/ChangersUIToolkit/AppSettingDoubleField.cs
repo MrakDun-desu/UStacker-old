@@ -78,6 +78,7 @@ namespace Blockstacker.GlobalSettings.ChangersUIToolkit
 
         public AppSettingDoubleField()
         {
+            AddToClassList(StaticChangerData.SETTING_CHANGER_CLASS);
             this.RegisterValueChangedCallback(OnValueChanged);
             AppSettings.SettingsReloaded += () => SetValueWithoutNotify(AppSettings.GetValue<double>(_splitPath));
         }

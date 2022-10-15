@@ -60,6 +60,7 @@ namespace Blockstacker.GlobalSettings.ChangersUIToolkit
 
         public AppSettingToggle()
         {
+            AddToClassList(StaticChangerData.SETTING_CHANGER_CLASS);
             this.RegisterValueChangedCallback(OnValueChanged);
             AppSettings.SettingsReloaded += () => SetValueWithoutNotify(AppSettings.GetValue<bool>(_splitPath));
         }

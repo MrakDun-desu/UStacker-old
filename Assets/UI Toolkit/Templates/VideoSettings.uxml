@@ -1,9 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<engine:UXML
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:engine="UnityEngine.UIElements"
-    xmlns:editor="UnityEditor.UIElements"
-    xsi:noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd"
->
-    
-</engine:UXML>
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/globalStyle.uss?fileID=7433441132597879392&amp;guid=3c935a56bb51ec548b9ae6c77a5bd9fb&amp;type=3#globalStyle" />
+    <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/appSettings.uss?fileID=7433441132597879392&amp;guid=1ac45fe22040dc94388ee7005dc36e10&amp;type=3#appSettings" />
+    <ui:Label tabindex="-1" text="Video" display-tooltip-when-elided="true" class="settings-page-title" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSettingFloatSlider focusable="true" label="SETTING NOT FOUND" name="backgroundVisibilitySlider" setting-path="Video.BackgroundVisibility" multiplier="100" step-count="100" unit-label="%" />
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSettingToggle label="SETTING NOT FOUND" setting-path="Video.UseVsync" name="useVsyncToggle" />
+</ui:UXML>

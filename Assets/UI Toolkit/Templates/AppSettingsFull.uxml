@@ -8,8 +8,10 @@
     <ui:Template name="CustomizationSettings" src="project://database/Assets/UI%20Toolkit/Templates/CustomizationSettings.uxml?fileID=9197481963319205126&amp;guid=21d8d0217a22baf43b148eea3cd3388d&amp;type=3#CustomizationSettings" />
     <ui:Template name="ExportImportSettings" src="project://database/Assets/UI%20Toolkit/Templates/ExportImportSettings.uxml?fileID=9197481963319205126&amp;guid=68e5909c720ecaa40b6c383edad9668c&amp;type=3#ExportImportSettings" />
     <ui:Template name="OtherSettings" src="project://database/Assets/UI%20Toolkit/Templates/OtherSettings.uxml?fileID=9197481963319205126&amp;guid=dc868beb77b8b344db647b27fdd73126&amp;type=3#OtherSettings" />
-    <ui:VisualElement name="AppSettingsContainer" style="height: 100%;">
-        <ui:VisualElement name="AppSettingsIcons">
+    <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/globalStyle.uss?fileID=7433441132597879392&amp;guid=3c935a56bb51ec548b9ae6c77a5bd9fb&amp;type=3#globalStyle" />
+    <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/appSettings.uss?fileID=7433441132597879392&amp;guid=1ac45fe22040dc94388ee7005dc36e10&amp;type=3#appSettings" />
+    <ui:VisualElement name="appSettingsContainer" style="height: 100%;">
+        <ui:VisualElement name="appSettingsIcons" style="display: none;">
             <ui:Button display-tooltip-when-elided="true" tabindex="0" name="ControlsButton" class="app-settings-icon" />
             <ui:Button display-tooltip-when-elided="true" tabindex="0" name="HandlingButton" class="app-settings-icon" />
             <ui:Button display-tooltip-when-elided="true" tabindex="0" name="GameplayButton" class="app-settings-icon" />
@@ -20,17 +22,19 @@
             <ui:Button display-tooltip-when-elided="true" tabindex="0" name="ExportImportButton" class="app-settings-icon" />
             <ui:Button display-tooltip-when-elided="true" tabindex="0" name="OthersButton" class="app-settings-icon" />
         </ui:VisualElement>
-        <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="AppSettings" style="right: 0;">
-            <ui:Label tabindex="-1" text="Settings" display-tooltip-when-elided="true" name="SettingsTitle" style="-unity-font-definition: url(&apos;project://database/Assets/Fonts/Molot.asset?fileID=11400000&amp;guid=7e04c164d88405a4fb3dd3c2799ec9cb&amp;type=2#Molot&apos;); color: rgb(255, 255, 255); font-size: 34px;" />
-            <ui:Instance template="ControlsSettings" name="ControlsSettings" />
-            <ui:Instance template="HandlingSettings" name="HandlingSettings" />
-            <ui:Instance template="GameplaySetting" name="GameplaySettings" />
-            <ui:Instance template="AudioSettings" name="AudioSettings" />
-            <ui:Instance template="VideoSettings" name="VideoSettings" />
-            <ui:Instance template="StatCountingSettings" name="StatCountingSettings" />
-            <ui:Instance template="CustomizationSettings" name="CustomizationSettings" />
-            <ui:Instance template="ExportImportSettings" name="ExportImportSettings" />
-            <ui:Instance template="OtherSettings" name="OtherSettings" />
+        <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="appSettings" style="right: 0;">
+            <ui:VisualElement name="appSettingsInnerContainer">
+                <ui:Label tabindex="-1" text="Settings" display-tooltip-when-elided="true" class="settings-main-title" />
+                <ui:Instance template="ControlsSettings" name="ControlsSettings" />
+                <ui:Instance template="HandlingSettings" name="HandlingSettings" />
+                <ui:Instance template="GameplaySetting" name="GameplaySettings" />
+                <ui:Instance template="AudioSettings" name="AudioSettings" />
+                <ui:Instance template="VideoSettings" name="VideoSettings" />
+                <ui:Instance template="StatCountingSettings" name="StatCountingSettings" />
+                <ui:Instance template="CustomizationSettings" name="CustomizationSettings" />
+                <ui:Instance template="ExportImportSettings" name="ExportImportSettings" />
+                <ui:Instance template="OtherSettings" name="OtherSettings" />
+            </ui:VisualElement>
         </ui:ScrollView>
     </ui:VisualElement>
 </ui:UXML>
