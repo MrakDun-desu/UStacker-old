@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using Blockstacker.Common.Attributes;
+using Blockstacker.GlobalSettings.Enums;
 using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Groups
@@ -8,7 +9,7 @@ namespace Blockstacker.GlobalSettings.Groups
     [Serializable]
     public record VideoSettings
     {
-        public FullScreenMode FullscreenMode = FullScreenMode.FullScreenWindow;
+        public FullscreenMode FullscreenMode = FullscreenMode.Fullscreen;
         public Resolution Resolution = new();
         
         [MinRestraint(0, true)]

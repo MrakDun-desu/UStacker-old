@@ -2,10 +2,5 @@
     <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/globalStyle.uss?fileID=7433441132597879392&amp;guid=3c935a56bb51ec548b9ae6c77a5bd9fb&amp;type=3#globalStyle" />
     <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/appSettings.uss?fileID=7433441132597879392&amp;guid=1ac45fe22040dc94388ee7005dc36e10&amp;type=3#appSettings" />
     <ui:Label tabindex="-1" text="Customization" display-tooltip-when-elided="true" class="settings-page-title" />
-    <ui:VisualElement style="background-color: rgba(0, 0, 0, 0);">
-        <ui:Button tabindex="0" text="Refresh lists" display-tooltip-when-elided="true" name="refreshListsButton" />
-        <ui:Button tabindex="0" text="Open skin folder" display-tooltip-when-elided="true" name="openSkinFolderButton" />
-        <ui:Button tabindex="0" text="Open sound folder" display-tooltip-when-elided="true" name="openSoundFolderButton" />
-        <ui:Button tabindex="0" text="Open background folder" display-tooltip-when-elided="true" name="OpenBackgroundFolderButton" />
-    </ui:VisualElement>
+    <Blockstacker.GlobalSettings.ChangersUIToolkit.CustomizationChanger />
 </ui:UXML>

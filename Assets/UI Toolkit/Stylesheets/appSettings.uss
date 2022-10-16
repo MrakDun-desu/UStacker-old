@@ -8,7 +8,7 @@
 .settings-main-title {
     color: var(--secondary-color);
     font-size: 40px;
-    margin-bottom: -60px;
+    margin-left: 12px;
 }
 
 #sdfSlider .display-field {
@@ -107,4 +107,24 @@
 
 .minimized .button-container {
     display: none;
+}
+
+CustomizationChanger .unity-button {
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+AppSettingsExporter .button-container {
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+AppSettingsExporter .unity-text-field__input {
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+
+#appSettingsInnerContainer {
+    padding-left: 10px;
+    padding-right: 10px;
 }
