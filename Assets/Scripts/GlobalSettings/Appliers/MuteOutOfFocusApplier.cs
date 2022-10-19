@@ -15,7 +15,7 @@ namespace Blockstacker.GlobalSettings.Appliers
             Muter.fieldName = _fieldName;
         }
 
-        protected override void OnSettingChanged()
+        public override void OnSettingChanged()
         {
             if (AppSettings.Sound.MuteWhenOutOfFocus)
                 Application.focusChanged += Muter.MuteAudio;

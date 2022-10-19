@@ -6,7 +6,7 @@ namespace Blockstacker.GlobalSettings.Appliers
     {
         public static event Action<bool> DragMouseToRepositionBoardChanged;
 
-        protected override void OnSettingChanged()
+        public override void OnSettingChanged()
         {
             DragMouseToRepositionBoardChanged?.Invoke(AppSettings.Gameplay.DragMiddleButtonToRepositionBoard);
         }

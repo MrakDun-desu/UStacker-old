@@ -23,6 +23,6 @@ namespace Blockstacker.GlobalSettings.Appliers
             _settingChanger.SettingChanged -= OnSettingChanged;
         }
 
-        protected abstract void OnSettingChanged();
+        public abstract void OnSettingChanged();
     }
 }

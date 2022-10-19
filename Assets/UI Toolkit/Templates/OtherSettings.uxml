@@ -1,6 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/globalStyle.uss?fileID=7433441132597879392&amp;guid=3c935a56bb51ec548b9ae6c77a5bd9fb&amp;type=3#globalStyle" />
-    <Style src="project://database/Assets/UI%20Toolkit/Stylesheets/appSettings.uss?fileID=7433441132597879392&amp;guid=1ac45fe22040dc94388ee7005dc36e10&amp;type=3#appSettings" />
-    <ui:Label tabindex="-1" text="Others" display-tooltip-when-elided="true" class="settings-page-title" />
-    <Blockstacker.GlobalSettings.ChangersUIToolkit.AppSettingToggle label="SETTING NOT FOUND" name="discordActivityToggle" setting-path="Others.UseDiscordRichPresence" />
-</ui:UXML>

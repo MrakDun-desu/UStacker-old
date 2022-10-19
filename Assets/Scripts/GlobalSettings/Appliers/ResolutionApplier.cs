@@ -5,7 +5,7 @@ namespace Blockstacker.GlobalSettings.Appliers
 {
     public class ResolutionApplier : SettingApplierBase
     {
-        protected override void OnSettingChanged()
+        public override void OnSettingChanged()
         {
             var newResolution = AppSettings.Video.Resolution;
             if (newResolution.IsEqualTo(Screen.currentResolution)) return;

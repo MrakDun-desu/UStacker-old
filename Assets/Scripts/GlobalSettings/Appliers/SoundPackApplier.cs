@@ -16,7 +16,7 @@ namespace Blockstacker.GlobalSettings.Appliers
         public UnityEvent LoadingFinished => _loadingFinished;
         public string OngoingMessage => "Sound pack loading...";
 
-        protected override void OnSettingChanged()
+        public override void OnSettingChanged()
         {
             LoadingStarted.Invoke();
             _ = ReloadAndInvoke();

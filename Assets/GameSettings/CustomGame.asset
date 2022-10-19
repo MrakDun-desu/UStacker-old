@@ -16,21 +16,21 @@ MonoBehaviour:
   Settings:
     Rules:
       General:
-        RandomizerType: 6
+        RandomizerType: 0
         CustomRandomizerName: 
         AllowedSpins: 2
         UseRandomSeed: 1
         SpecificSeed: 0
         NextPieceCount: 5
         CustomRandomizerScript: 
-        ActiveSeed: -1494205002
+        ActiveSeed: -634461149
       Controls:
         Allow180Spins: 1
         AllowHardDrop: 1
         AllowHold: 1
         UnlimitedHold: 0
         ShowGhostPiece: 1
-        RotationSystem: 0
+        RotationSystem: 1
         CustomRotationSystemName: 
         PiecePlacedDelay: 0
         LineClearDelay: 0
@@ -44,63 +44,29 @@ MonoBehaviour:
           DasCutDelay: 0.03
           DelayDasOn: 1
           DoubleDropPreventionInterval: 0.03
-          SimultaneousDasBehavior: 2
+          SimultaneousDasBehavior: 1
           DiagonalLockBehavior: 0
           CancelDelayWithMovement: 1
         ActiveRotationSystem:
           DefaultTable:
             StartState: 0
-            FullSpinKicks:
-            - {x: -1, y: -2}
-            - {x: 1, y: -2}
+            FullSpinKicks: []
             ZeroToThree:
             - {x: 0, y: 0}
-            - {x: 1, y: 0}
-            - {x: 1, y: 1}
-            - {x: 0, y: -2}
-            - {x: 1, y: -2}
             ZeroToOne:
             - {x: 0, y: 0}
-            - {x: -1, y: 0}
-            - {x: -1, y: 1}
-            - {x: 0, y: -2}
-            - {x: -1, y: -2}
             OneToZero:
             - {x: 0, y: 0}
-            - {x: 1, y: 0}
-            - {x: 1, y: -1}
-            - {x: 0, y: 2}
-            - {x: 1, y: 2}
             OneToTwo:
             - {x: 0, y: 0}
-            - {x: 1, y: 0}
-            - {x: 1, y: -1}
-            - {x: 0, y: 2}
-            - {x: 1, y: 2}
             TwoToOne:
             - {x: 0, y: 0}
-            - {x: -1, y: 0}
-            - {x: -1, y: 1}
-            - {x: 0, y: -2}
-            - {x: -1, y: -2}
             TwoToThree:
             - {x: 0, y: 0}
-            - {x: 1, y: 0}
-            - {x: 1, y: 1}
-            - {x: 0, y: -2}
-            - {x: 1, y: -2}
             ThreeToTwo:
             - {x: 0, y: 0}
-            - {x: -1, y: 0}
-            - {x: -1, y: -1}
-            - {x: 0, y: 2}
-            - {x: -1, y: 2}
             ThreeToZero:
             - {x: 0, y: 0}
-            - {x: -1, y: 0}
-            - {x: -1, y: -1}
-            - {x: 0, y: 2}
-            - {x: -1, y: 2}
             ZeroToTwo:
             - {x: 0, y: 0}
             TwoToZero:

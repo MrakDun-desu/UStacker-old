@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Blockstacker.Common.Extensions;
 using Blockstacker.GlobalSettings.Backgrounds;
 using UnityEngine;
@@ -12,10 +13,10 @@ namespace Blockstacker.GlobalSettings.Appliers
     public class Background : MonoBehaviour
     {
         [SerializeField] private string _backgroundName;
+        [SerializeField] private List<BackgroundRecord> _defaultBackgrounds;
 
         private RawImage _backgroundImage;
         private VideoPlayer _videoPlayer;
-        private Texture _defaultTexture;
         private float _widthToHeightRatio = 16f / 9f;
         private float _heightToWidthRatio = 9f / 16f;
         private Camera _camera;
@@ -31,7 +32,6 @@ namespace Blockstacker.GlobalSettings.Appliers
             _myTransform = GetComponent<RectTransform>();
             _backgroundImage = GetComponent<RawImage>();
             _videoPlayer = GetComponent<VideoPlayer>();
-            _defaultTexture = _backgroundImage.texture;
         }
 
         private void OnEnable()
@@ -60,8 +60,7 @@ namespace Blockstacker.GlobalSettings.Appliers
             {
                 if (!BackgroundPackLoader.Backgrounds.TryGetValue("default", out newBackgrounds))
                 {
-                    _backgroundImage.texture = _defaultTexture;
-                    return;
+                    newBackgrounds = _defaultBackgrounds;
                 }
             }
 

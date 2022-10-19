@@ -23,10 +23,7 @@ namespace Blockstacker.Common.Alerts
         public AlertUiControl(Alert alert)
         {
             AddToClassList(SELF_CLASS);
-            var parentElement = new VisualElement();
-            parentElement.AddToClassList(ClassByType(alert.AlertType));
-            parentElement.name = "parent";
-            Add(parentElement);
+            AddToClassList(ClassByType(alert.AlertType));
             
             var titleElement = new Label(alert.Title);
             titleElement.AddToClassList(TITLE_CLASS);
@@ -36,8 +33,8 @@ namespace Blockstacker.Common.Alerts
             textElement.AddToClassList(TEXT_CLASS);
             textElement.name = "text";
             
-            parentElement.Add(titleElement);
-            parentElement.Add(textElement);
+            Add(titleElement);
+            Add(textElement);
         }
 
         private static string ClassByType(AlertType type) =>

@@ -6,7 +6,7 @@ namespace Blockstacker.GlobalSettings.Appliers
     {
         public static event Action<bool> ColorGhostPieceChanged;
 
-        protected override void OnSettingChanged()
+        public override void OnSettingChanged()
         {
             ColorGhostPieceChanged?.Invoke(AppSettings.Gameplay.ColorGhostPiece);
         }
