@@ -22,6 +22,9 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private TMP_Text _bindingName;
         [SerializeField] private TMP_Text[] _bindingTexts = new TMP_Text[3];
         private RebindingOperation _currentOperation;
+
+        [Header("Colors")] [SerializeField] private Color _defaultColor = Color.white;
+        [SerializeField] private Color _conflictColor = Color.red;
         
         private static event Action RebindChanged;
 
@@ -76,7 +79,7 @@ namespace Blockstacker.GlobalSettings.Changers
         private void CheckBindingOverlaps()
         {
             for (var i = 0; i < _bindingTexts.Length; i++)
-                _bindingTexts[i].color = IsBindingUnique(i) ? Color.black : Color.red;
+                _bindingTexts[i].color = IsBindingUnique(i) ? _defaultColor : _conflictColor;
         }
 
         private bool IsBindingUnique(int index)

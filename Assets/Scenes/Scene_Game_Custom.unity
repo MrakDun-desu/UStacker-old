@@ -7177,12 +7177,12 @@ MonoBehaviour:
         General:
           RandomizerType: 0
           CustomRandomizerName: 
-          CustomRandomizerScript: 
           AllowedSpins: 0
           UseRandomSeed: 1
           SpecificSeed: 0
-          ActiveSeed: 0
           NextPieceCount: 5
+          CustomRandomizerScript: 
+          ActiveSeed: 0
         Controls:
           Allow180Spins: 1
           AllowHardDrop: 1
@@ -7191,6 +7191,21 @@ MonoBehaviour:
           ShowGhostPiece: 1
           RotationSystem: 0
           CustomRotationSystemName: 
+          PiecePlacedDelay: 0
+          LineClearDelay: 0
+          HardLockType: 0
+          HardLockAmount: 5
+          OverrideHandling: 0
+          Handling:
+            DelayedAutoShift: 0.125
+            AutomaticRepeatRate: 0
+            SoftDropFactor: Infinity
+            DasCutDelay: 0
+            DelayDasOn: 0
+            DoubleDropPreventionInterval: 0
+            SimultaneousDasBehavior: 1
+            DiagonalLockBehavior: 0
+            CancelDelayWithMovement: 1
           ActiveRotationSystem:
             DefaultTable:
               StartState: 0
@@ -7219,21 +7234,6 @@ MonoBehaviour:
               - {x: 0, y: 0}
               ThreeToOne:
               - {x: 0, y: 0}
-          PiecePlacedDelay: 0
-          LineClearDelay: 0
-          HardLockType: 0
-          HardLockAmount: 5
-          OverrideHandling: 0
-          Handling:
-            DelayedAutoShift: 0.125
-            AutomaticRepeatRate: 0
-            SoftDropFactor: Infinity
-            DasCutDelay: 0
-            DoubleDropPreventionInterval: 0
-            DelayDasOn: 0
-            CancelDelayWithMovement: 1
-            AntiDasBehavior: 1
-            DiagonalLockBehavior: 0
         Gravity:
           DefaultGravity: 0.02
           DefaultLockDelay: 0.5
@@ -7251,15 +7251,15 @@ MonoBehaviour:
         GameEndCondition: 2
         EndConditionCount: 40
         ToppingOutIsOkay: 0
-        GarbageGeneration: 0
-        GarbageHeight: 10
         StartingLevel: 0
         GameManagerType: 0
         CustomGameManagerName: 
-        CustomGameManagerScript: 
+        GarbageGeneration: 0
+        GarbageHeight: 10
         UseCustomGarbageScript: 0
         CustomGarbageScriptName: 
         CustomGarbageScript: 
+        CustomGameManagerScript: 
       Presentation:
         Title: Custom game
         UseCountdown: 1

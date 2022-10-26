@@ -8,16 +8,8 @@ namespace Blockstacker.GlobalSettings.Appliers
     {
         public override void OnSettingChanged()
         {
-            var newMode = AppSettings.Video.FullscreenMode switch
-            {
-                FullscreenMode.Fullscreen => FullScreenMode.ExclusiveFullScreen,
-                FullscreenMode.BorderlessWindowed => FullScreenMode.FullScreenWindow,
-                FullscreenMode.Windowed => FullScreenMode.Windowed,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            
-            if (Screen.fullScreenMode == newMode) return;
-            Screen.fullScreenMode = newMode;
+            if (Screen.fullScreenMode == AppSettings.Video.FullscreenMode) return;
+            Screen.fullScreenMode = AppSettings.Video.FullscreenMode;
         }
     }
 }
