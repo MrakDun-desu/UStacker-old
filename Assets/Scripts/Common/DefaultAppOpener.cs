@@ -12,11 +12,15 @@ namespace Blockstacker.Common
             OpenFile(pathToFile);
         }
 
-        public static void OpenFile(string path)
+        private static void OpenFile(string path)
         {
             if (!Directory.Exists(path) && !File.Exists(path))
                 Directory.CreateDirectory(path);
             Process.Start(path);
         }
+
+        public void OpenBlockSkinFolder() => OpenFile(CustomizationPaths.Skins);
+        public void OpenBackgroundFolder() => OpenFile(CustomizationPaths.BackgroundPacks);
+        public void OpenSoundPackFolder() => OpenFile(CustomizationPaths.SoundPacks);
     }
 }

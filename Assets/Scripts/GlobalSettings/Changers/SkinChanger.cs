@@ -15,7 +15,6 @@ namespace Blockstacker.GlobalSettings.Changers
         {
             RefreshNames();
 
-            RefreshValue();
             AppSettings.SettingsReloaded += RefreshValue;
         }
 
@@ -39,9 +38,11 @@ namespace Blockstacker.GlobalSettings.Changers
 
             if (_dropdown.options.Count <= 1) 
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(_emptyPrompt));
+            
+            RefreshValue();
         }
 
-        public void RefreshValue()
+        private void RefreshValue()
         {
             for (var i = 0; i < _dropdown.options.Count; i++)
             {
