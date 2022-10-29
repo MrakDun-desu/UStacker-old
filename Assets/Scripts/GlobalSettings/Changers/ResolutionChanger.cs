@@ -26,14 +26,19 @@ namespace Blockstacker.GlobalSettings.Changers
                 .Distinct()
                 .OrderByDescending(rate => rate.value)
                 .ToArray();
+
             _resolutionDropdown.ClearOptions();
             foreach (var resolution in _resolutions)
                 _resolutionDropdown.options.Add(new TMP_Dropdown.OptionData($"{resolution.x} x {resolution.y}"));
             
+            _refreshRateDropdown.ClearOptions();
             foreach (var refreshRate in _refreshRates)
                 _resolutionDropdown.options.Add(new TMP_Dropdown.OptionData(refreshRate.value.ToString(CultureInfo.InvariantCulture)));
 
             RefreshValue();
+
+            _resolutionDropdown.onValueChanged.AddListener(OnResolutionPicked);
+            _refreshRateDropdown.onValueChanged.AddListener(OnRefreshRatePicked);
             AppSettings.SettingsReloaded += RefreshValue;
         }
 
@@ -60,7 +65,7 @@ namespace Blockstacker.GlobalSettings.Changers
             }
         }
 
-        public void SetResolution(int value)
+        private void OnResolutionPicked(int value)
         {
             var newVal = _resolutions[value];
             var newRes = new Resolution
@@ -72,7 +77,7 @@ namespace Blockstacker.GlobalSettings.Changers
             SetValue(newRes);
         }
 
-        public void SetRefreshRate(int value)
+        private void OnRefreshRatePicked(int value)
         {
             var newRes = new Resolution
             {

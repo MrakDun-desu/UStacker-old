@@ -113,7 +113,7 @@ MonoBehaviour:
   - 
   - 
   _title: {fileID: 7734393948807267264}
-  _autoformatName: 0
+  _autoformatName: 1
   _toggle: {fileID: 8145978221063410779}
 --- !u!1 &6770305743407649072
 GameObject:

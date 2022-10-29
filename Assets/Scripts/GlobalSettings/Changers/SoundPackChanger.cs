@@ -16,6 +16,7 @@ namespace Blockstacker.GlobalSettings.Changers
             RefreshNames();
             
             AppSettings.SettingsReloaded += RefreshValue;
+            _dropdown.onValueChanged.AddListener(OptionPicked);
         }
 
         public void RefreshNames()
@@ -43,7 +44,7 @@ namespace Blockstacker.GlobalSettings.Changers
             }
         }
 
-        public void OptionPicked(int value)
+        private void OptionPicked(int value)
         {
             var newSoundPack = _dropdown.options[value].text;
             if (newSoundPack.Equals(_emptyPrompt)) return;

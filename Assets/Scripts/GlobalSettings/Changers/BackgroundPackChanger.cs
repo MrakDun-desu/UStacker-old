@@ -16,6 +16,7 @@ namespace Blockstacker.GlobalSettings.Changers
             RefreshNames();
             
             AppSettings.SettingsReloaded += RefreshValue;
+            _dropdown.onValueChanged.AddListener(OnOptionPicked);
         }
 
         public void RefreshNames()
@@ -43,7 +44,7 @@ namespace Blockstacker.GlobalSettings.Changers
             }
         }
 
-        public void OptionPicked(int value)
+        private void OnOptionPicked(int value)
         {
             var newBackgroundFolder = _dropdown.options[value].text;
             if (newBackgroundFolder.Equals(_emptyPrompt)) return;

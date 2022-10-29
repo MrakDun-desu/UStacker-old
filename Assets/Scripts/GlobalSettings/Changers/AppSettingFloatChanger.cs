@@ -32,6 +32,9 @@ namespace Blockstacker.GlobalSettings.Changers
             OnValidate();
             
             RefreshValue();
+
+            _slider.ValueChanged += _ => OnSliderMoved();
+            _valueField.onEndEdit.AddListener(OnValueRewritten);
             AppSettings.SettingsReloaded += RefreshValue;
         }
 

@@ -22,6 +22,7 @@ namespace Blockstacker.GlobalSettings.Changers
 
             RefreshDropdownValue();
             AppSettings.SettingsReloaded += RefreshDropdownValue;
+            _dropdown.onValueChanged.AddListener(OnValuePicked);
         }
 
         private void RefreshDropdownValue()
@@ -36,7 +37,7 @@ namespace Blockstacker.GlobalSettings.Changers
             _dropdown.RefreshShownValue();
         }
 
-        public void OnValuePicked(int index)
+        private void OnValuePicked(int index)
         {
             SetValue(_values[index].Value);
         }

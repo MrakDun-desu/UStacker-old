@@ -25,11 +25,13 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private string _infinityString = "INF";
         [SerializeField] private UnityEvent<float> _valueChanged;
 
-
         private void Start()
         {
             OnValidate();
             RefreshValue();
+
+            _slider.ValueChanged += _ => OnSliderMoved();
+            _valueField.onEndEdit.AddListener(OnValueRewritten);
             AppSettings.SettingsReloaded += RefreshValue;
         }
 
@@ -56,7 +58,7 @@ namespace Blockstacker.GlobalSettings.Changers
                 : Math.Round(value * _multiplier, 2).ToString(CultureInfo.InvariantCulture).Replace('.', ',');
         }
 
-        public void OnValueRewritten(string value)
+        private void OnValueRewritten(string value)
         {
             if (string.IsNullOrEmpty(value)) value = "0";
             var newValue = double.Parse(value);
@@ -73,7 +75,7 @@ namespace Blockstacker.GlobalSettings.Changers
             InvokeSettingChanged();
         }
 
-        public void OnSliderMoved()
+        private void OnSliderMoved()
         {
             var value = (double) _slider.GetRealValue();
             if (Math.Abs(value - _maxValue) < .1f && _maxIsInfinity)

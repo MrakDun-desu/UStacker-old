@@ -48,6 +48,9 @@ namespace Blockstacker.GlobalSettings.Changers
             }
 
             RefreshValue();
+
+            _nameDropdown.onValueChanged.AddListener(OnNameSelected);
+            _typeDropdown.onValueChanged.AddListener(OnTypeSelected);
             AppSettings.SettingsReloaded += RefreshValue;
         }
 
@@ -105,7 +108,7 @@ namespace Blockstacker.GlobalSettings.Changers
             RefreshNameOptions(currentOption);
         }
 
-        public void OnTypeSelected(int index)
+        private void OnTypeSelected(int index)
         {
             if (!Enum.TryParse<OptionType>(_typeDropdown.options[index].text, out var newType))
                 return;
@@ -120,7 +123,7 @@ namespace Blockstacker.GlobalSettings.Changers
             AppSettings.TrySave();
         }
 
-        public void OnNameSelected(int index)
+        private void OnNameSelected(int index)
         {
             var newName = _nameDropdown.options[index].text;
             var optionType = ChangedOption.OptionType;

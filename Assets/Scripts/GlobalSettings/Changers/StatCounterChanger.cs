@@ -21,7 +21,7 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private TMP_InputField _sizeYField;
         [SerializeField] private TMP_InputField _updateIntervalField;
         [SerializeField] private Button _removeButton;
-        [SerializeField] private StatCounterSO[] _premadeCounters;
+        [SerializeField] private StatCounterSO[] _premadeCounters = Array.Empty<StatCounterSO>();
 
         private StatCounterRecord _value;
 
@@ -39,7 +39,6 @@ namespace Blockstacker.GlobalSettings.Changers
 
         private void Awake()
         {
-            RefreshValue();
             AddListenersToFields();
         }
 

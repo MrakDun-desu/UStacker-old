@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,10 +36,12 @@ namespace Blockstacker.GlobalSettings.Changers
         }
 
         private float RealRange => _maxValue - _minValue;
+        public event Action<float> ValueChanged;
 
         private void Awake()
         {
             _slider = GetComponent<Slider>();
+            _slider.onValueChanged.AddListener((val) => ValueChanged?.Invoke(val));
         }
 
         public float GetRealValue()

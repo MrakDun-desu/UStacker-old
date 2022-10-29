@@ -16,9 +16,10 @@ namespace Blockstacker.GlobalSettings.Changers
             RefreshNames();
 
             AppSettings.SettingsReloaded += RefreshValue;
+            _dropdown.onValueChanged.AddListener(OptionPicked);
         }
 
-        public void OptionPicked(int value)
+        private void OptionPicked(int value)
         {
             var newSkin = _dropdown.options[value].text;
             if (newSkin.Equals(_emptyPrompt)) return;
