@@ -286,25 +286,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _typeDropdown: {fileID: 84455140693470846}
+  _nameContainer: {fileID: 6139393423351147551}
+  _filenameContainer: {fileID: 5666999635061993979}
   _nameField: {fileID: 6991446836081107095}
   _filenameField: {fileID: 3557848516170809906}
   _posXField: {fileID: 5636182102421179477}
   _posYField: {fileID: 2320972848372049884}
   _sizeXField: {fileID: 4951603705358623465}
-  _sizeYField: {fileID: 2320972848372049884}
+  _sizeYField: {fileID: 8144606790010341541}
   _updateIntervalField: {fileID: 7782647779294484767}
   _removeButton: {fileID: 3234145017224640742}
   _premadeCounters:
-  - {fileID: 11400000, guid: 13b8f779672e97543a345d9ab95e9ac5, type: 2}
-  - {fileID: 11400000, guid: 28115dd982bdc66428afb1981ac411a4, type: 2}
-  - {fileID: 11400000, guid: 4a9886897f755cf4c9143a4f700abdf8, type: 2}
-  - {fileID: 11400000, guid: be038ea0a0ad71c4a9a49b55536e061d, type: 2}
-  - {fileID: 11400000, guid: a9fc146114079ad4698de12de2b720a5, type: 2}
+  - {fileID: 11400000, guid: 2077419e4bb765a4d9bc5e3f7bbc20fa, type: 2}
   - {fileID: 11400000, guid: a059b8164b4204e44b92ef546184abe2, type: 2}
   - {fileID: 11400000, guid: b8aa3efaa10821544ab1a3937865e458, type: 2}
-  - {fileID: 11400000, guid: 62d14d5b7668c504ba2065b11d6e10b6, type: 2}
   - {fileID: 11400000, guid: 7df7f198474b5174297ea76a062840b6, type: 2}
-  - {fileID: 11400000, guid: 2077419e4bb765a4d9bc5e3f7bbc20fa, type: 2}
+  - {fileID: 11400000, guid: be038ea0a0ad71c4a9a49b55536e061d, type: 2}
+  - {fileID: 11400000, guid: a9fc146114079ad4698de12de2b720a5, type: 2}
+  - {fileID: 11400000, guid: 13b8f779672e97543a345d9ab95e9ac5, type: 2}
+  - {fileID: 11400000, guid: 4a9886897f755cf4c9143a4f700abdf8, type: 2}
+  - {fileID: 11400000, guid: 62d14d5b7668c504ba2065b11d6e10b6, type: 2}
+  - {fileID: 11400000, guid: 28115dd982bdc66428afb1981ac411a4, type: 2}
 --- !u!114 &7833113578975930639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1324,6 +1326,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4097759831685032684, guid: 0c782bbca3b3c6644a0e98593b469087, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4097759831685032684, guid: 0c782bbca3b3c6644a0e98593b469087, type: 3}
+      propertyPath: m_fontSize
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 7167318321076373142, guid: 0c782bbca3b3c6644a0e98593b469087, type: 3}
       propertyPath: m_Name
       value: TypeDropdown
@@ -1475,6 +1485,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4067438773607615757, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
   m_PrefabInstance: {fileID: 3702395759980445521}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8144606790010341541 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+  m_PrefabInstance: {fileID: 3702395759980445521}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5395437413698335794
 PrefabInstance:
   m_ObjectHideFlags: 0

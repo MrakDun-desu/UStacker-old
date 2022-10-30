@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blockstacker.GlobalSettings.StatCounting;
-using JetBrains.Annotations;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +15,9 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private Button _counterAddButton;
         [SerializeField] private Button _groupRemoveButton;
         [SerializeField] private RectTransform _counterChangersContainer;
+        [SerializeField] private ContentSizeFitter _containerSizeFitter;
         [SerializeField] private StatCounterChanger _counterChangerPrefab;
+        [SerializeField] private float _statCounterSpacing = 10;
 
         public StatCounterGroup Value
         {
@@ -43,8 +43,11 @@ namespace Blockstacker.GlobalSettings.Changers
 
         private void Awake()
         {
-            _selfTransform = GetComponent<RectTransform>();
+            _selfTransform = transform as RectTransform;
+        }
 
+        private void Start()
+        {
             _nameField.SetTextWithoutNotify("Group name");
             _nameField.onValueChanged.AddListener(OnNameChanged);
             _minimizeButton.onClick.AddListener(OnMinimize);
@@ -54,16 +57,21 @@ namespace Blockstacker.GlobalSettings.Changers
             SizeChanged += ChangeHeight;
         }
 
-        private void ChangeHeight(float sizeUpdate) {
-            _selfTransform.sizeDelta = new Vector2(
-                _selfTransform.sizeDelta.x,
-                _selfTransform.sizeDelta.y + sizeUpdate
+        private void ChangeHeight(float sizeDelta)
+        {
+            var selfSizeDelta = _selfTransform.sizeDelta;
+            selfSizeDelta = new Vector2(
+                selfSizeDelta.x,
+                selfSizeDelta.y + sizeDelta
             );
+            _selfTransform.sizeDelta = selfSizeDelta;
 
-            _counterChangersContainer.position = new Vector2(
-                _counterChangersContainer.position.y,
-                _counterChangersContainer.sizeDelta.y / 2f
+            var counterChangersPos = _counterChangersContainer.anchoredPosition;
+            counterChangersPos = new Vector2(
+                counterChangersPos.x,
+                counterChangersPos.y - sizeDelta / 2f
             );
+            _counterChangersContainer.anchoredPosition = counterChangersPos;
         }
 
         private void RefreshStatCounters()
@@ -80,20 +88,29 @@ namespace Blockstacker.GlobalSettings.Changers
                 AddStatCounter(counter);
         }
 
-        private void OnMinimize() {
-            if (_isMinimized) {
+        private void OnMinimize()
+        {
+            _containerSizeFitter.enabled = _isMinimized;
+            if (_isMinimized)
+            {
                 _counterChangersContainer.sizeDelta = new Vector2(
                     _counterChangersContainer.sizeDelta.x, _formerHeight
                 );
-            } else {
-                _formerHeight = _counterChangersContainer.sizeDelta.y;
-                _counterChangersContainer.sizeDelta = new Vector2(
-                    _counterChangersContainer.sizeDelta.x, 0
+            }
+            else
+            {
+                var containerSize = _counterChangersContainer.sizeDelta;
+
+                _formerHeight = containerSize.y;
+                containerSize = new Vector2(
+                    containerSize.x, 0
                 );
+                _counterChangersContainer.sizeDelta = containerSize;
             }
 
             _isMinimized = !_isMinimized;
             _minimizeButtonText.text = _isMinimized ? "+" : "-";
+            SizeChanged?.Invoke(_formerHeight * (_isMinimized ? -1 : 1));
         }
 
         private void OnNameChanged(string newValue)
@@ -104,14 +121,19 @@ namespace Blockstacker.GlobalSettings.Changers
         private void AddStatCounter(StatCounterRecord newCounter, bool addToValue = false)
         {
             var newCounterChanger = Instantiate(_counterChangerPrefab, _counterChangersContainer);
+            newCounterChanger.Removed += DeleteStatCounter;
             newCounterChanger.Value = newCounter;
 
-            var addedSize = newCounterChanger.GetComponent<RectTransform>().sizeDelta.y;
+            _statCounterChangers.Add(newCounterChanger);
+            
+            var addedSize = ((RectTransform) newCounterChanger.transform).sizeDelta.y;
+            newCounterChanger.SizeChanged += SizeChanged;
+
+            if (_statCounterChangers.Count >= 2)
+                addedSize += _statCounterSpacing;
 
             SizeChanged?.Invoke(addedSize);
 
-            newCounterChanger.Removed += DeleteStatCounter;
-            _statCounterChangers.Add(newCounterChanger);
             if (addToValue)
                 Value.StatCounters.Add(newCounter);
         }
@@ -120,7 +142,10 @@ namespace Blockstacker.GlobalSettings.Changers
         {
             if (!_statCounterChangers.Remove(changer)) return;
 
-            var reducedSize = changer.GetComponent<RectTransform>().sizeDelta.y;
+            var reducedSize = ((RectTransform) changer.transform).sizeDelta.y;
+            if (_statCounterChangers.Count > 0)
+                reducedSize += _statCounterSpacing;
+            
             SizeChanged?.Invoke(-reducedSize);
 
             Destroy(changer.gameObject);
@@ -129,6 +154,11 @@ namespace Blockstacker.GlobalSettings.Changers
             _statCounterChangers.Remove(changer);
         }
 
-        private void OnStatCounterAdded() => AddStatCounter(new StatCounterRecord(), true);
+        private void OnStatCounterAdded()
+        {
+            AddStatCounter(new StatCounterRecord(), true);
+            if (_isMinimized) 
+                OnMinimize();
+        }
     }
 }

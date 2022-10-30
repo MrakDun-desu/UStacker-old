@@ -1861,14 +1861,6 @@ PrefabInstance:
       value: -4.9999695
       objectReference: {fileID: 0}
     - target: {fileID: 2048949211988488809, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
-      propertyPath: _maxValue
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2048949211988488809, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
-      propertyPath: _multiplier
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 2048949211988488809, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: _controlPath.Array.data[0]
       value: Gameplay
       objectReference: {fileID: 0}
@@ -2362,10 +2354,6 @@ PrefabInstance:
     - target: {fileID: 2048949211988488809, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: _maxValue
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2048949211988488809, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
-      propertyPath: _multiplier
-      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 2048949211988488809, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: _controlPath.Array.data[0]
@@ -4359,14 +4347,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 1427420481}
     m_Modifications:
     - target: {fileID: 2048949211988488809, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
-      propertyPath: _range
-      value: 200
-      objectReference: {fileID: 0}
-    - target: {fileID: 2048949211988488809, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
-      propertyPath: _maxValue
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2048949211988488809, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: _controlPath.Array.data[0]
       value: Video
       objectReference: {fileID: 0}
@@ -4472,7 +4452,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4913567396917910206, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: _maxValue
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9100049352183068561, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: m_AnchorMax.y
@@ -4562,6 +4542,8 @@ MonoBehaviour:
   _groupsContainer: {fileID: 1185941112}
   _addGroupButton: {fileID: 1535298898}
   _groupChangerPrefab: {fileID: 8702216182713117089, guid: 68bd1f957cbb1b9428538fb89206a88c, type: 3}
+  _layoutRoot: {fileID: 1283169173}
+  _groupChangerSpacing: 10
 --- !u!1001 &645393412
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8471,14 +8453,6 @@ PrefabInstance:
       value: -4.9999695
       objectReference: {fileID: 0}
     - target: {fileID: 2048949211988488809, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
-      propertyPath: _maxValue
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2048949211988488809, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
-      propertyPath: _multiplier
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 2048949211988488809, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: _controlPath.Array.data[0]
       value: Gameplay
       objectReference: {fileID: 0}
@@ -9396,7 +9370,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 420, y: -70}
+  m_AnchoredPosition: {x: 420, y: -10}
   m_SizeDelta: {x: 840, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1185941113
@@ -9733,7 +9707,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2987071467723112421, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00024414062
+      value: -0.00024414062
       objectReference: {fileID: 0}
     - target: {fileID: 4067438773607615757, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Pivot.x
@@ -9845,11 +9819,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6616534284926214280, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Size
-      value: 0.16424294
+      value: 0.16424292
       objectReference: {fileID: 0}
     - target: {fileID: 6616534284926214280, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 0.224
       objectReference: {fileID: 0}
     - target: {fileID: 7167318321076373142, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Name
@@ -18527,14 +18501,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1898287772}
     m_Modifications:
-    - target: {fileID: 2048949211988488809, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
-      propertyPath: _maxValue
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2048949211988488809, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
-      propertyPath: _multiplier
-      value: 100
-      objectReference: {fileID: 0}
     - target: {fileID: 2048949211988488809, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: _controlPath.Array.data[0]
       value: Gameplay

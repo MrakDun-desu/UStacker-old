@@ -12,6 +12,8 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private RectTransform _groupsContainer;
         [SerializeField] private Button _addGroupButton;
         [SerializeField] private StatCounterGroupChanger _groupChangerPrefab;
+        [SerializeField] private RectTransform _layoutRoot;
+        [SerializeField] private float _groupChangerSpacing = 10;
 
         private Dictionary<Guid, StatCounterGroup> _statCounterGroups;
         private readonly Dictionary<Guid, StatCounterGroupChanger> _groupChangers = new();
@@ -20,9 +22,14 @@ namespace Blockstacker.GlobalSettings.Changers
 
         private void Awake()
         {
-            _addGroupButton.onClick.AddListener(OnGroupAdded);
-            _parentTransform = transform.parent.GetComponent<RectTransform>();
+            var myTransform = transform;
+            _parentTransform = myTransform.parent as RectTransform;
+            _selfTransform = myTransform as RectTransform;
+        }
 
+        private void Start()
+        {
+            _addGroupButton.onClick.AddListener(OnGroupAdded);
             RefreshGroups();
             AppSettings.SettingsReloaded += RefreshGroups;
         }
@@ -41,21 +48,30 @@ namespace Blockstacker.GlobalSettings.Changers
         }
 
         private void OnSizeChanged(float sizeDelta) {
-            _groupsContainer.position = new Vector2(
-                _groupsContainer.position.x,
-                _groupsContainer.sizeDelta.y / 2f
+            var selfSizeDelta = _selfTransform.sizeDelta;
+            selfSizeDelta = new Vector2(
+                selfSizeDelta.x,
+                selfSizeDelta.y + sizeDelta
             );
+            _selfTransform.sizeDelta = selfSizeDelta;
 
-            _selfTransform.sizeDelta = new Vector2(
-                _selfTransform.sizeDelta.x,
-                _selfTransform.sizeDelta.y + sizeDelta
+            var parentSizeDelta = _parentTransform.sizeDelta;
+            parentSizeDelta = new Vector2(
+                parentSizeDelta.x,
+                parentSizeDelta.y + sizeDelta
             );
+            _parentTransform.sizeDelta = parentSizeDelta;
 
-            _parentTransform.sizeDelta = new Vector2(
-                _parentTransform.sizeDelta.x,
-                _parentTransform.sizeDelta.y + sizeDelta
+            var groupsContainerPos = _groupsContainer.anchoredPosition;
+            groupsContainerPos = new Vector2(
+                groupsContainerPos.x,
+                groupsContainerPos.y - sizeDelta / 2f
             );
+            _groupsContainer.anchoredPosition = groupsContainerPos;
+            LayoutRebuilder.MarkLayoutForRebuild(_layoutRoot);
+            LayoutRebuilder.MarkLayoutForRebuild(_groupsContainer);
         }
+
 
         private void AddGroup(Guid newId, StatCounterGroup newGroup, bool addToValue = false)
         {
@@ -68,9 +84,14 @@ namespace Blockstacker.GlobalSettings.Changers
             newGroupChanger.GroupRemoved += OnGroupRemoved;
             newGroupChanger.SizeChanged += OnSizeChanged;
 
+            var sizeDelta = ((RectTransform) newGroupChanger.transform).sizeDelta.y;
+            if (_groupChangers.Count >= 2)
+                sizeDelta += _groupChangerSpacing;
+            
+            OnSizeChanged(sizeDelta);
+
             if (addToValue)
                 _statCounterGroups.Add(newId, newGroup);
-
         }
 
         private void OnGroupRemoved(Guid groupId)
@@ -82,9 +103,19 @@ namespace Blockstacker.GlobalSettings.Changers
                 AppSettings.StatCounting.GameStatCounterDictionary.Remove(key);
             }
 
-            _groupChangers[groupId].GroupRemoved -= OnGroupRemoved;
-            _groupChangers[groupId].SizeChanged -= OnSizeChanged;
-            Destroy(_groupChangers[groupId].gameObject);
+            var removedChanger = _groupChangers[groupId];
+            
+            removedChanger.GroupRemoved -= OnGroupRemoved;
+            removedChanger.SizeChanged -= OnSizeChanged;
+
+            var sizeDelta = ((RectTransform) removedChanger.transform).sizeDelta.y;
+
+            if (_groupChangers.Count > 0)
+                sizeDelta += _groupChangerSpacing;
+            
+            Destroy(removedChanger.gameObject);
+            
+            OnSizeChanged(-sizeDelta);
 
             _groupChangers.Remove(groupId);
             _statCounterGroups.Remove(groupId);

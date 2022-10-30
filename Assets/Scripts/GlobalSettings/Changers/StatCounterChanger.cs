@@ -13,6 +13,8 @@ namespace Blockstacker.GlobalSettings.Changers
     public class StatCounterChanger : MonoBehaviour
     {
         [SerializeField] private TMP_Dropdown _typeDropdown;
+        [SerializeField] private GameObject _nameContainer;
+        [SerializeField] private GameObject _filenameContainer;
         [SerializeField] private TMP_InputField _nameField;
         [SerializeField] private TMP_InputField _filenameField;
         [SerializeField] private TMP_InputField _posXField;
@@ -24,6 +26,7 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private StatCounterSO[] _premadeCounters = Array.Empty<StatCounterSO>();
 
         private StatCounterRecord _value;
+        private RectTransform _selfTransform;
 
         public StatCounterRecord Value
         {
@@ -36,10 +39,26 @@ namespace Blockstacker.GlobalSettings.Changers
         }
 
         public event Action<StatCounterChanger> Removed;
+        public event Action<float> SizeChanged;
 
         private void Awake()
         {
+            _selfTransform = (RectTransform) transform;
+        }
+
+        private void Start()
+        {
             AddListenersToFields();
+        }
+
+        private void ChangeSize(float sizeDelta)
+        {
+            var selfSizeDelta= _selfTransform.sizeDelta;
+            selfSizeDelta = new Vector2(
+                selfSizeDelta.x,
+                selfSizeDelta.y + sizeDelta
+                );
+            _selfTransform.sizeDelta = selfSizeDelta;
         }
 
         private void RefreshValue(bool refreshDropdown = true)
@@ -61,8 +80,25 @@ namespace Blockstacker.GlobalSettings.Changers
             }
 
             var displayCustomFields = Value.Type == StatCounterType.Custom;
-            _nameField.gameObject.SetActive(displayCustomFields);
-            _filenameField.gameObject.SetActive(displayCustomFields);
+
+            var sizeDelta = 0f;
+            switch (displayCustomFields)
+            {
+                case true when !_nameContainer.activeSelf:
+                    sizeDelta += ((RectTransform) _nameContainer.transform).sizeDelta.y;
+                    sizeDelta += ((RectTransform) _filenameContainer.transform).sizeDelta.y;
+                    break;
+                case false when _nameContainer.activeSelf:
+                    sizeDelta -= ((RectTransform) _nameContainer.transform).sizeDelta.y;
+                    sizeDelta -= ((RectTransform) _filenameContainer.transform).sizeDelta.y;
+                    break;
+            }
+            
+            _nameContainer.SetActive(displayCustomFields);
+            _filenameContainer.SetActive(displayCustomFields);
+            
+            SizeChanged?.Invoke(sizeDelta);
+            ChangeSize(sizeDelta);
             
             _nameField.SetTextWithoutNotify(_value.Name);
             _filenameField.SetTextWithoutNotify(_value.Filename);
