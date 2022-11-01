@@ -97,7 +97,7 @@ namespace Blockstacker.GlobalSettings.Appliers
         {
             var realWidthToHeightRatio = (float) _camera.pixelWidth / _camera.pixelHeight;
 
-            if (Math.Abs(realWidthToHeightRatio - _lastFrameRatio) < 0.000000001f)
+            if (Math.Abs(realWidthToHeightRatio - _lastFrameRatio) < float.Epsilon)
                 return;
 
             _lastFrameRatio = realWidthToHeightRatio;

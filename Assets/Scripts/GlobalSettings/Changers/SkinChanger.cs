@@ -8,7 +8,6 @@ namespace Blockstacker.GlobalSettings.Changers
     {
         [Space] [SerializeField] private TMP_Dropdown _dropdown;
 
-        [SerializeField] private string _emptyPrompt = "No skin available";
         [SerializeField] private string _default = "Default";
 
         private void Start()
@@ -22,7 +21,6 @@ namespace Blockstacker.GlobalSettings.Changers
         private void OptionPicked(int value)
         {
             var newSkin = _dropdown.options[value].text;
-            if (newSkin.Equals(_emptyPrompt)) return;
 
             if (newSkin.Equals(_default))
                 newSkin = "";
@@ -34,12 +32,10 @@ namespace Blockstacker.GlobalSettings.Changers
         {
             _dropdown.ClearOptions();
             _dropdown.options.Add(new TMP_Dropdown.OptionData(_default));
+            _dropdown.SetValueWithoutNotify(0);
             foreach (var path in SkinLoader.EnumerateSkins())
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(path));
 
-            if (_dropdown.options.Count <= 1) 
-                _dropdown.options.Add(new TMP_Dropdown.OptionData(_emptyPrompt));
-            
             RefreshValue();
         }
 
@@ -50,9 +46,9 @@ namespace Blockstacker.GlobalSettings.Changers
                 if (!_dropdown.options[i].text.Equals(AppSettings.GetValue<string>(_controlPath))) continue;
                 
                 _dropdown.SetValueWithoutNotify(i);
-                _dropdown.RefreshShownValue();
-                return;
+                break;
             }
+            _dropdown.RefreshShownValue();
         }
     }
 }
