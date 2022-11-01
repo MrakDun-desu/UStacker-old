@@ -98,10 +98,9 @@ namespace Blockstacker.GlobalSettings.Changers
         {
             if (!_groupChangers.ContainsKey(groupId)) return;
 
-            foreach (var (key, _) in AppSettings.StatCounting.GameStatCounterDictionary.Where(pair => pair.Value == groupId))
-            {
+            var keysToRemove = AppSettings.StatCounting.GameStatCounterDictionary.Where(pair => pair.Value == groupId).Select(pair => pair.Key);
+            foreach (var key in keysToRemove)
                 AppSettings.StatCounting.GameStatCounterDictionary.Remove(key);
-            }
 
             var removedChanger = _groupChangers[groupId];
             

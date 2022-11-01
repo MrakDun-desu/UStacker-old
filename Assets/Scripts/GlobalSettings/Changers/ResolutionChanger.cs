@@ -33,7 +33,7 @@ namespace Blockstacker.GlobalSettings.Changers
             
             _refreshRateDropdown.ClearOptions();
             foreach (var refreshRate in _refreshRates)
-                _resolutionDropdown.options.Add(new TMP_Dropdown.OptionData(refreshRate.value.ToString(CultureInfo.InvariantCulture)));
+                _refreshRateDropdown.options.Add(new TMP_Dropdown.OptionData(refreshRate.value.ToString(CultureInfo.InvariantCulture)));
 
             RefreshValue();
 

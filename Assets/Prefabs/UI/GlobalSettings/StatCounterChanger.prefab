@@ -618,9 +618,25 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
       propertyPath: m_CharacterValidation
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 3557848516170809906}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 4951603705358623465}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_SelectOnRight
+      value: 
+      objectReference: {fileID: 2320972848372049884}
     - target: {fileID: 7167318321076373142, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
       propertyPath: m_Name
       value: PosXField
@@ -1206,9 +1222,21 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
       propertyPath: m_CharacterValidation
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 4951603705358623465}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 3234145017224640742}
     - target: {fileID: 7167318321076373142, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
       propertyPath: m_Name
       value: UpdateIntervalField
@@ -1468,9 +1496,25 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
       propertyPath: m_CharacterValidation
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 2320972848372049884}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 7782647779294484767}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_SelectOnLeft
+      value: 
+      objectReference: {fileID: 4951603705358623465}
     - target: {fileID: 7167318321076373142, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
       propertyPath: m_Name
       value: SizeYField
@@ -1939,9 +1983,25 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
       propertyPath: m_CharacterValidation
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 3557848516170809906}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 8144606790010341541}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_SelectOnLeft
+      value: 
+      objectReference: {fileID: 5636182102421179477}
     - target: {fileID: 7167318321076373142, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
       propertyPath: m_Name
       value: PosYField
@@ -2059,6 +2119,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 7782647779294484767}
     - target: {fileID: 7167318321076373142, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
       propertyPath: m_Name
       value: RemoveButton
@@ -2192,6 +2260,18 @@ PrefabInstance:
       propertyPath: m_fontSize
       value: 32.3
       objectReference: {fileID: 0}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 6991446836081107095}
+    - target: {fileID: 4784786441341695988, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 5636182102421179477}
     - target: {fileID: 7167318321076373142, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
       propertyPath: m_Name
       value: FilenameField

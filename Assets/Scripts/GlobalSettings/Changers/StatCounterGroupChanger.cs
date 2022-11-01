@@ -44,17 +44,16 @@ namespace Blockstacker.GlobalSettings.Changers
         private void Awake()
         {
             _selfTransform = transform as RectTransform;
+            SizeChanged += ChangeHeight;
+            _nameField.SetTextWithoutNotify("Group name");
         }
 
         private void Start()
         {
-            _nameField.SetTextWithoutNotify("Group name");
             _nameField.onValueChanged.AddListener(OnNameChanged);
             _minimizeButton.onClick.AddListener(OnMinimize);
             _groupRemoveButton.onClick.AddListener(() => GroupRemoved?.Invoke(Id));
             _counterAddButton.onClick.AddListener(OnStatCounterAdded);
-
-            SizeChanged += ChangeHeight;
         }
 
         private void ChangeHeight(float sizeDelta)
@@ -108,6 +107,7 @@ namespace Blockstacker.GlobalSettings.Changers
                 _counterChangersContainer.sizeDelta = containerSize;
             }
 
+            _counterChangersContainer.gameObject.SetActive(_isMinimized);
             _isMinimized = !_isMinimized;
             _minimizeButtonText.text = _isMinimized ? "+" : "-";
             SizeChanged?.Invoke(_formerHeight * (_isMinimized ? -1 : 1));
