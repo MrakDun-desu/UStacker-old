@@ -67,8 +67,8 @@ namespace Blockstacker.Gameplay
         {
             var boardTransform = _board.transform;
             var piecePos = new Vector3(
-                (int) (_settings.Rules.BoardDimensions.BoardWidth / 2u),
-                (int) _settings.Rules.BoardDimensions.PieceSpawnHeight,
+                (int) (_settings.BoardDimensions.BoardWidth / 2u),
+                (int) _settings.BoardDimensions.PieceSpawnHeight,
                 boardTransform.position.z
             );
 
@@ -79,7 +79,7 @@ namespace Blockstacker.Gameplay
 
             _inputProcessor.ActivePiece = piece;
 
-            var rotationSystem = _settings.Rules.Controls.ActiveRotationSystem;
+            var rotationSystem = _settings.Controls.ActiveRotationSystem;
             var rotation = rotationSystem.GetKickTable(piece.Type).StartState;
             piece.Rotate((int) rotation);
 
@@ -103,7 +103,7 @@ namespace Blockstacker.Gameplay
 
         public void SetAvailablePieces(PieceDictionary pieces)
         {
-            var blockCount = _settings.Rules.BoardDimensions.BoardHeight * _settings.Rules.BoardDimensions.BoardWidth;
+            var blockCount = _settings.BoardDimensions.BoardHeight * _settings.BoardDimensions.BoardWidth;
             _defaultPoolCapacity = (int) (blockCount / 25u);
             var maxSize = (int) (blockCount / 3u);
 

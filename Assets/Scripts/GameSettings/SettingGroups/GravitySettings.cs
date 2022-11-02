@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Blockstacker.GameSettings.SettingGroups
 {
     [Serializable]
-    public record RulesSettingsGravity
+    public record GravitySettings
     {
         [Tooltip("Amount of units the piece will fall in one 60th of a second. Will be used by default if not overriden by game manager")]
         [MinRestraint(0, true)]

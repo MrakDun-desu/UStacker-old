@@ -51,7 +51,7 @@ namespace Blockstacker.Gameplay.Pieces
 
         private void Start()
         {
-            if (_settings.Rules.General.NextPieceCount <= 0) 
+            if (_settings.General.NextPieceCount <= 0) 
                 _isEnabled = false;
             
             gameObject.SetActive(false);
@@ -77,8 +77,8 @@ namespace Blockstacker.Gameplay.Pieces
 
             var boardTransform = _board.transform;
             var piecePos = new Vector3(
-                (int) (_settings.Rules.BoardDimensions.BoardWidth / 2u),
-                (int) _settings.Rules.BoardDimensions.PieceSpawnHeight,
+                (int) (_settings.BoardDimensions.BoardWidth / 2u),
+                (int) _settings.BoardDimensions.PieceSpawnHeight,
                 boardTransform.position.z
             );
             transform.localPosition = piecePos + new Vector3(piece.SpawnOffset.x, piece.SpawnOffset.y);
@@ -89,7 +89,7 @@ namespace Blockstacker.Gameplay.Pieces
                 _blocks[i].transform.rotation = piece.Blocks[i].transform.rotation;
             }
 
-            var rotationSystem = _settings.Rules.Controls.ActiveRotationSystem;
+            var rotationSystem = _settings.Controls.ActiveRotationSystem;
             var rotation = rotationSystem.GetKickTable(_currentPieceType).StartState;
             transform.Rotate(Vector3.forward, (float) rotation);
 

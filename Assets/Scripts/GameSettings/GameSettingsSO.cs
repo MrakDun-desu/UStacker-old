@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using Blockstacker.Common;
 using Blockstacker.GameSettings.SettingGroups;
@@ -10,32 +12,89 @@ namespace Blockstacker.GameSettings
     [CreateAssetMenu(fileName = "GameSettings", menuName = "Blockstacker/Game settings asset")]
     public class GameSettingsSO : ScriptableObject
     {
-        [JsonIgnore]
         public StringReferenceSO GameType;
         public SettingsContainer Settings = new();
-        public RulesSettings Rules => Settings.Rules;
+        public GeneralSettings General => Settings.General;
+        public ControlsSettings Controls => Settings.Controls;
+        public BoardDimensionsSettings BoardDimensions => Settings.BoardDimensions;
+        public GravitySettings Gravity => Settings.Gravity;
         public ObjectiveSettings Objective => Settings.Objective;
         public PresentationSettings Presentation => Settings.Presentation;
 
-        public void OverrideSettings(SettingsContainer settings)
+        public event Action SettingsReloaded;
+        private const string FILENAME_EXTENSION = ".json";
+        private const char INVALID_CHAR_REPLACEMENT = '_';
+
+        public static IEnumerable<string> EnumeratePresets()
         {
-            Settings = settings;
+            if (!Directory.Exists(CustomizationPaths.GameSettingsPresets))
+                Directory.CreateDirectory(CustomizationPaths.GameSettingsPresets);
+
+            foreach (var filename in Directory.EnumerateFiles(CustomizationPaths.GameSettingsPresets))
+            {
+                yield return Path.GetFileNameWithoutExtension(filename);
+            }
+        }
+
+        public string Save(string presetName)
+        {
+            foreach (var invalidChar in Path.GetInvalidFileNameChars())
+                presetName = presetName.Replace(invalidChar, INVALID_CHAR_REPLACEMENT);
+
+            if (!Directory.Exists(CustomizationPaths.GameSettingsPresets))
+                Directory.CreateDirectory(CustomizationPaths.GameSettingsPresets);
+
+            var savePath = Path.Combine(CustomizationPaths.GameSettingsPresets, presetName);
+            var actualSavePath = savePath;
+
+            for (var i = 0; File.Exists(actualSavePath); i++)
+            {
+                actualSavePath = $"{savePath}_{i}";
+                i++;
+            }
+
+            actualSavePath += FILENAME_EXTENSION;
+
+            File.WriteAllText(actualSavePath,
+                JsonConvert.SerializeObject(Settings, StaticSettings.JsonSerializerSettings));
+            return actualSavePath;
+        }
+
+        public bool TryLoad(string presetName)
+        {
+            var path = Path.Combine(CustomizationPaths.GameSettingsPresets, presetName);
+            path += FILENAME_EXTENSION;
+            if (!File.Exists(path)) return false;
+
+            Settings = JsonConvert.DeserializeObject<SettingsContainer>(File.ReadAllText(path),
+                StaticSettings.JsonSerializerSettings);
+
+            SettingsReloaded?.Invoke();
+            return true;
         }
 
         public void SetValue<T>(T value, string[] path)
         {
             if (path.Length == 0) return;
-            FieldInfo fieldInfo = null;
+            MemberInfo memberInfo = null;
             object oldObject = null;
             object obj = Settings;
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                fieldInfo = type.GetField(fieldName);
-                if (fieldInfo == null) return;
+                var memberInfos = type.GetMember(fieldName, MemberTypes.Field | MemberTypes.Property,
+                    BindingFlags.Default);
+                if (memberInfos.Length <= 0) return;
+                memberInfo = memberInfos[0];
 
                 oldObject = obj;
-                obj = fieldInfo.GetValue(obj);
+                obj = memberInfo switch
+                {
+                    FieldInfo fieldInfo => fieldInfo.GetValue(obj),
+                    PropertyInfo propertyInfo => propertyInfo.GetValue(obj),
+                    _ => null
+                };
+
                 if (obj == null) return;
 
                 type = obj.GetType();
@@ -43,7 +102,15 @@ namespace Blockstacker.GameSettings
 
             if (type != typeof(T)) return;
 
-            if (fieldInfo != null) fieldInfo.SetValue(oldObject, value);
+            switch (memberInfo)
+            {
+                case FieldInfo fieldInfo:
+                    fieldInfo.SetValue(oldObject, value);
+                    break;
+                case PropertyInfo propertyInfo:
+                    propertyInfo.SetValue(oldObject, value);
+                    break;
+            }
         }
 
         public T GetValue<T>(string[] path)
@@ -53,10 +120,18 @@ namespace Blockstacker.GameSettings
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                var fieldInfo = type.GetField(fieldName);
-                if (fieldInfo == null) return default;
+                var memberInfos = type.GetMember(fieldName, MemberTypes.Field | MemberTypes.Property,
+                    BindingFlags.Default);
+                if (memberInfos.Length <= 0) return default;
+                var memberInfo = memberInfos[0];
 
-                obj = fieldInfo.GetValue(obj);
+                obj = memberInfo switch
+                {
+                    FieldInfo fieldInfo => fieldInfo.GetValue(obj),
+                    PropertyInfo propertyInfo => propertyInfo.GetValue(obj),
+                    _ => null
+                };
+
                 if (obj == null) return default;
 
                 type = obj.GetType();
@@ -73,10 +148,18 @@ namespace Blockstacker.GameSettings
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                var fieldInfo = type.GetField(fieldName);
-                if (fieldInfo == null) return false;
+                var memberInfos = type.GetMember(fieldName, MemberTypes.Field | MemberTypes.Property,
+                    BindingFlags.Default);
+                if (memberInfos.Length <= 0) return false;
+                var memberInfo = memberInfos[0];
 
-                obj = fieldInfo.GetValue(obj);
+                obj = memberInfo switch
+                {
+                    FieldInfo fieldInfo => fieldInfo.GetValue(obj),
+                    PropertyInfo propertyInfo => propertyInfo.GetValue(obj),
+                    _ => null
+                };
+
                 if (obj == null) return false;
 
                 type = obj.GetType();
@@ -88,7 +171,10 @@ namespace Blockstacker.GameSettings
         [Serializable]
         public record SettingsContainer
         {
-            public RulesSettings Rules = new();
+            public GeneralSettings General = new();
+            public ControlsSettings Controls = new();
+            public BoardDimensionsSettings BoardDimensions = new();
+            public GravitySettings Gravity => new();
             public ObjectiveSettings Objective = new();
             public PresentationSettings Presentation = new();
         }

@@ -16,9 +16,18 @@ namespace Blockstacker.GameSettings.Changers
             if (_minValue > _maxValue) _minValue = _maxValue;
         }
 
-        public void SetValue(string value)
+        protected override void RefreshValue()
         {
-            if (!float.TryParse(value, out var floatValue)) return;
+            _valueField.SetTextWithoutNotify(_gameSettingsSO.GetValue<float>(_controlPath).ToString(CultureInfo.InvariantCulture));
+        }
+
+        protected override void OnValueOverwritten(string value)
+        {
+            if (!float.TryParse(value, out var floatValue))
+            {
+                RefreshValue();
+                return;
+            }
             SetValue(_clampValue ? Mathf.Clamp(floatValue, _minValue, _maxValue) : floatValue);
             _valueField.SetTextWithoutNotify(floatValue.ToString(CultureInfo.InvariantCulture));
         }

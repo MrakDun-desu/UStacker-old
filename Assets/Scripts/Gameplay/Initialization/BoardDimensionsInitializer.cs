@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Blockstacker.Gameplay.Initialization
 {
-    public class RulesBoardDimensionsInitializer : InitializerBase
+    public class BoardDimensionsInitializer : InitializerBase
     {
         private readonly Board _board;
         private readonly GameObject _boardBackground;
@@ -15,7 +15,7 @@ namespace Blockstacker.Gameplay.Initialization
         private readonly BoardGrid _boardGrid;
         private readonly RectTransform _statCanvasTransform;
 
-        public RulesBoardDimensionsInitializer(
+        public BoardDimensionsInitializer(
             StringBuilder errorBuilder,
             GameSettingsSO gameSettings,
             Board board,
@@ -37,10 +37,10 @@ namespace Blockstacker.Gameplay.Initialization
 
         public override void Execute()
         {
-            var boardDimensions = _gameSettings.Rules.BoardDimensions;
-            _board.Width = _gameSettings.Rules.BoardDimensions.BoardWidth;
-            _board.Height = _gameSettings.Rules.BoardDimensions.BoardHeight;
-            _board.LethalHeight = _gameSettings.Rules.BoardDimensions.LethalHeight;
+            var boardDimensions = _gameSettings.BoardDimensions;
+            _board.Width = _gameSettings.BoardDimensions.BoardWidth;
+            _board.Height = _gameSettings.BoardDimensions.BoardHeight;
+            _board.LethalHeight = _gameSettings.BoardDimensions.LethalHeight;
             _boardBackground.transform.localScale = new Vector3(
                 boardDimensions.BoardWidth,
                 boardDimensions.BoardHeight,
@@ -71,7 +71,7 @@ namespace Blockstacker.Gameplay.Initialization
             }
 
             _camera.orthographicSize =
-                boardDimensions.BoardHeight * .5f + _gameSettings.Rules.BoardDimensions.BoardPadding;
+                boardDimensions.BoardHeight * .5f + _gameSettings.BoardDimensions.BoardPadding;
         }
     }
 }

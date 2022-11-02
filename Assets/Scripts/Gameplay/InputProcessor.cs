@@ -124,7 +124,7 @@ namespace Blockstacker.Gameplay
                 _activePiece.ReleaseFromPool();
             ActivePiece = null;
 
-            if (!_settings.Rules.Controls.AllowHold) return;
+            if (!_settings.Controls.AllowHold) return;
             var holdPiece = PieceHolder.SwapPiece(null);
             if (holdPiece == null) return;
             holdPiece.RevertType();
@@ -134,9 +134,9 @@ namespace Blockstacker.Gameplay
         public void ResetProcessor()
         {
             _lowestPosition = int.MaxValue;
-            _handling = _settings.Rules.Controls.Handling;
-            _normalGravity = _settings.Rules.Gravity.DefaultGravity;
-            _lockDelay = _settings.Rules.Gravity.DefaultLockDelay;
+            _handling = _settings.Controls.Handling;
+            _normalGravity = _settings.Gravity.DefaultGravity;
+            _lockDelay = _settings.Gravity.DefaultLockDelay;
             _currentGravity = _normalGravity;
             _dropTime = ComputeDroptimeFromGravity();
             _dropTimer = _dropTime;
@@ -172,7 +172,7 @@ namespace Blockstacker.Gameplay
                 _lastWasRotation = false;
 
             var dropPieceAfterMovement = false;
-            if (_settings.Rules.Controls.HardLockType == HardLockType.LimitedMoves)
+            if (_settings.Controls.HardLockType == HardLockType.LimitedMoves)
             {
                 if (isRotation)
                     _hardLockAmount -= 1;
@@ -229,11 +229,11 @@ namespace Blockstacker.Gameplay
                 ? _board.Place(ActivePiece, placementTime, _lastSpinResult)
                 : _board.Place(ActivePiece, placementTime);
             
-            var spawnTime = _settings.Rules.Controls.PiecePlacedDelay;
+            var spawnTime = _settings.Controls.PiecePlacedDelay;
             if (linesCleared)
-                spawnTime += _settings.Rules.Controls.LineClearDelay;
+                spawnTime += _settings.Controls.LineClearDelay;
 
-            if (_settings.Rules.Controls.AllowHold)
+            if (_settings.Controls.AllowHold)
                 PieceHolder.UnmarkUsed();
 
             _pieceSpawnTime = placementTime + spawnTime;
@@ -244,7 +244,7 @@ namespace Blockstacker.Gameplay
         {
             if (!_isHardLocking) return;
 
-            if (_settings.Rules.Controls.HardLockType == HardLockType.LimitedInputs)
+            if (_settings.Controls.HardLockType == HardLockType.LimitedInputs)
             {
                 _hardLockAmount -= 1;
                 if (_hardLockAmount <= 0) HandlePiecePlacement(updateTime);
@@ -385,7 +385,7 @@ namespace Blockstacker.Gameplay
         {
             if (!enabled) return;
             if (_pieceIsNull) return;
-            if (!_settings.Rules.Controls.AllowHardDrop) return;
+            if (!_settings.Controls.AllowHardDrop) return;
 
             Update();
             var actionTime = ctx.time - _timer.EffectiveStartTime;
@@ -407,7 +407,7 @@ namespace Blockstacker.Gameplay
         {
             if (!enabled) return;
             if (_pieceIsNull) return;
-            if (direction == RotateDirection.OneEighty && !_settings.Rules.Controls.Allow180Spins) return;
+            if (direction == RotateDirection.OneEighty && !_settings.Controls.Allow180Spins) return;
 
             var actionType = direction switch
             {
@@ -483,11 +483,11 @@ namespace Blockstacker.Gameplay
             Update();
 
             if (!ctx.performed) return;
-            if (!_settings.Rules.Controls.AllowHold) return;
+            if (!_settings.Controls.AllowHold) return;
 
             _mediator.Send(new InputActionMessage(ActionType.Hold, KeyActionType.KeyDown, actionTime));
 
-            if (_usedHold && !_settings.Rules.Controls.UnlimitedHold)
+            if (_usedHold && !_settings.Controls.UnlimitedHold)
             {
                 _mediator.Send(new HoldUsedMessage(false, actionTime));
                 return;
@@ -496,7 +496,7 @@ namespace Blockstacker.Gameplay
             _mediator.Send(new HoldUsedMessage(true, actionTime));
 
             var newPiece = PieceHolder.SwapPiece(ActivePiece);
-            if (!_settings.Rules.Controls.UnlimitedHold)
+            if (!_settings.Controls.UnlimitedHold)
                 PieceHolder.MarkUsed();
 
             if (newPiece == null)
@@ -641,7 +641,7 @@ namespace Blockstacker.Gameplay
                 {
                     _dropTimer += _dropTime;
                     movementVector += Vector2Int.down; // piece drops one block down
-                    if (_settings.Rules.Gravity.LockDelayType != LockDelayType.OnTouchGround ||
+                    if (_settings.Gravity.LockDelayType != LockDelayType.OnTouchGround ||
                         _board.CanPlace(ActivePiece, movementVector + Vector2Int.down)) continue; // piece touches ground on this movement
                     
                     StartLockdown(_dropTimer - _dropTime); // start lockdown after this movement
@@ -665,10 +665,10 @@ namespace Blockstacker.Gameplay
                 StopLockdown(true);
 
             if (_lockTime <= functionStartTime &&
-                _settings.Rules.Controls.HardLockType != HardLockType.InfiniteMovement)
+                _settings.Controls.HardLockType != HardLockType.InfiniteMovement)
                 HandlePiecePlacement(_lockTime);
 
-            if (_settings.Rules.Controls.HardLockType == HardLockType.LimitedTime
+            if (_settings.Controls.HardLockType == HardLockType.LimitedTime
                 && _hardLockAmount <= functionStartTime)
                 HandlePiecePlacement(_hardLockAmount);
         }
@@ -681,14 +681,14 @@ namespace Blockstacker.Gameplay
 
             if (_isHardLocking) return;
             
-            switch (_settings.Rules.Controls.HardLockType)
+            switch (_settings.Controls.HardLockType)
             {
                 case HardLockType.LimitedTime:
-                    _hardLockAmount = lockStart + _settings.Rules.Controls.HardLockAmount;
+                    _hardLockAmount = lockStart + _settings.Controls.HardLockAmount;
                     break;
                 case HardLockType.LimitedMoves:
                 case HardLockType.LimitedInputs:
-                    _hardLockAmount = Math.Floor(_settings.Rules.Controls.HardLockAmount);
+                    _hardLockAmount = Math.Floor(_settings.Controls.HardLockAmount);
                     break;
                 case HardLockType.InfiniteMovement:
                     break;

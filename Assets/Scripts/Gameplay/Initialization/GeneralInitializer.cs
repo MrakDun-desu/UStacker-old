@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
-using Blockstacker.Common;
 using Blockstacker.Gameplay.Randomizers;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
@@ -12,7 +10,7 @@ using Random = UnityEngine.Random;
 
 namespace Blockstacker.Gameplay.Initialization
 {
-    public class RulesGeneralInitializer : InitializerBase
+    public class GeneralInitializer : InitializerBase
     {
         private readonly PieceDictionary _availablePieces;
         private readonly Board _board;
@@ -21,7 +19,7 @@ namespace Blockstacker.Gameplay.Initialization
         private readonly PieceContainer _pieceContainerPrefab;
         private readonly PieceSpawner _spawner;
 
-        public RulesGeneralInitializer(
+        public GeneralInitializer(
             StringBuilder problemBuilder,
             GameSettingsSO gameSettings,
             PieceDictionary availablePieces,
@@ -51,30 +49,18 @@ namespace Blockstacker.Gameplay.Initialization
 
         private void InitializeSeed()
         {
-             _gameSettings.Rules.General.ActiveSeed = _gameSettings.Rules.General.UseRandomSeed
+             _gameSettings.General.ActiveSeed = _gameSettings.General.UseRandomSeed
                 ? Random.Range(int.MinValue, int.MaxValue)
-                : _gameSettings.Rules.General.SpecificSeed;
+                : _gameSettings.General.SpecificSeed;
         }
 
         private void InitializeRandomizer()
         {
-            if (_gameSettings.Rules.General.RandomizerType == RandomizerType.Custom)
-            {
-                var randomizerScriptPath =
-                    Path.Combine(CustomizationPaths.Randomizers, _gameSettings.Rules.General.CustomRandomizerName);
-                if (!File.Exists(randomizerScriptPath))
-                {
-                    _errorBuilder.AppendLine("Custom randomizer script not found.");
-                    return;
-                }
-
-                _gameSettings.Rules.General.CustomRandomizerScript = File.ReadAllText(randomizerScriptPath);
-            }
-
             string validationErrors = null;
-            var seed = _gameSettings.Rules.General.ActiveSeed;
+            
+            var seed = _gameSettings.General.ActiveSeed;
 
-            IRandomizer randomizer = _gameSettings.Rules.General.RandomizerType switch
+            IRandomizer randomizer = _gameSettings.General.RandomizerType switch
             {
                 RandomizerType.SevenBag => new CountPerBagRandomizer(_availablePieces.Keys, seed),
                 RandomizerType.FourteenBag => new CountPerBagRandomizer(_availablePieces.Keys, seed, 2),
@@ -84,7 +70,7 @@ namespace Blockstacker.Gameplay.Initialization
                 RandomizerType.Pairs => new PairsRandomizer(_availablePieces.Keys, seed),
                 RandomizerType.Custom => new CustomRandomizer(
                     _availablePieces.Keys,
-                    _gameSettings.Rules.General.CustomRandomizerScript,
+                    _gameSettings.General.CustomRandomizerScript,
                     seed,
                     out validationErrors),
                 _ => throw new IndexOutOfRangeException()
@@ -106,7 +92,7 @@ namespace Blockstacker.Gameplay.Initialization
         private void InitializePieceContainers()
         {
             var previewContainers = new List<PieceContainer>();
-            for (var i = 0; i < _gameSettings.Rules.General.NextPieceCount; i++)
+            for (var i = 0; i < _gameSettings.General.NextPieceCount; i++)
             {
                 var pieceContainer = Object.Instantiate(_pieceContainerPrefab, _board.transform);
                 pieceContainer.transform.localPosition = new Vector3(
@@ -120,7 +106,7 @@ namespace Blockstacker.Gameplay.Initialization
 
         private void InitializePieceHolder()
         {
-            if (!_gameSettings.Rules.Controls.AllowHold) return;
+            if (!_gameSettings.Controls.AllowHold) return;
             var pieceHolder = Object.Instantiate(_pieceContainerPrefab, _board.transform);
             pieceHolder.transform.localPosition = new Vector3(
                 -PieceContainer.Width,

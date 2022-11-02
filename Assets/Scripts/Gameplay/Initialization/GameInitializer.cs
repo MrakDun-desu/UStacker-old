@@ -73,7 +73,7 @@ namespace Blockstacker.Gameplay.Initialization
         {
             List<InitializerBase> initializers = new()
             {
-                new RulesBoardDimensionsInitializer(
+                new BoardDimensionsInitializer(
                     errorBuilder, _gameSettingsAsset,
                     _board,
                     _boardBackground,
@@ -82,22 +82,18 @@ namespace Blockstacker.Gameplay.Initialization
                     _statsCanvasTransform,
                     Camera.main
                 ),
-                new RulesGeneralInitializer(
+                new GeneralInitializer(
                     errorBuilder, _gameSettingsAsset,
                     _availablePieces,
                     _pieceSpawner,
                     _board,
                     _pieceContainerPrefab,
                     _inputProcessor),
-                new RulesHandlingInitializer(errorBuilder, _gameSettingsAsset),
-                new RulesControlsInitializer(
+                new ControlsInitializer(
                     errorBuilder, _gameSettingsAsset,
                     _srsRotationSystemSo.RotationSystem,
                     _srsPlusRotationSystemSo.RotationSystem,
                     _inputProcessor),
-                new GarbageGenerationInitializer(
-                    errorBuilder, _gameSettingsAsset,
-                    _board),
                 new PresentationInitializer(
                     errorBuilder, _gameSettingsAsset,
                     _gameTitle,
@@ -119,7 +115,7 @@ namespace Blockstacker.Gameplay.Initialization
         {
             List<InitializerBase> initializers = new()
             {
-                new RulesGeneralInitializer(
+                new GeneralInitializer(
                     errorBuilder, _gameSettingsAsset,
                     _availablePieces,
                     _pieceSpawner,

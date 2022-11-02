@@ -1,9 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Text;
-using Blockstacker.Common;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.GameManagers;
+using Blockstacker.Gameplay.GarbageGeneration;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
 using UnityEngine;
@@ -31,15 +30,12 @@ namespace Blockstacker.Gameplay.Initialization
 
         public override void Execute()
         {
-            if (_gameSettings.Objective.GameManagerType == GameManagerType.Custom)
-            {
-                var gameManagerPath = Path.Combine(CustomizationPaths.GameManagers,
-                    _gameSettings.Objective.CustomGameManagerName);
-                if (!File.Exists(gameManagerPath))
-                    _errorBuilder.AppendLine("Custom game manager script not found!");
-                _gameSettings.Objective.CustomGameManagerScript = File.ReadAllText(gameManagerPath);
-            }
-
+            InitializeGameManager();
+            InitializeGarbageGenerator();
+        }
+        
+        private void InitializeGameManager()
+        {
             var managerObject = new GameObject("GameManager");
             IGameManager manager = _gameSettings.Objective.GameManagerType switch
             {
@@ -62,6 +58,36 @@ namespace Blockstacker.Gameplay.Initialization
             
             if (manager is CustomGameManager custom)
                 custom.CustomInitialize(_stateManager, _board, _gameSettings.Objective.CustomGameManagerScript);
+        }
+
+        private void InitializeGarbageGenerator()
+        {
+            if (_gameSettings.Objective.GarbageGeneration == GameSettings.Enums.GarbageGeneration.None)
+                return;
+            
+            _board.InitializeGarbagePools();
+            
+            var readonlyBoard = new GarbageBoardInterface(_board);
+            string validationErrors = null;
+
+            IGarbageGenerator garbageGenerator = _gameSettings.Objective.GarbageGeneration switch
+            {
+                GameSettings.Enums.GarbageGeneration.Custom => new CustomGarbageGenerator(
+                    readonlyBoard,
+                    _gameSettings.Objective.CustomGarbageScript,
+                    out validationErrors),
+                _ => new DefaultGarbageGenerator(
+                    readonlyBoard,
+                    _gameSettings.Objective.GarbageGeneration
+                    )
+            };
+
+            if (validationErrors is not null)
+            {
+                _errorBuilder.AppendLine(validationErrors);
+                return;
+            }
+            _board.GarbageGenerator = garbageGenerator;
         }
     }
 }

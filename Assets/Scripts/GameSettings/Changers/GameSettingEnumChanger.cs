@@ -12,6 +12,19 @@ namespace Blockstacker.GameSettings.Changers
 
         private void Start()
         {
+            RefreshValue();
+
+            _gameSettingsSO.SettingsReloaded += RefreshValue;
+            _dropdown.onValueChanged.AddListener(OnValuePicked);
+        }
+
+        private void OnValuePicked(int index)
+        {
+            SetValue(_values[index].Value);
+        }
+
+        private void RefreshValue()
+        {
             _dropdown.ClearOptions();
             for (var i = 0; i < _values.Length; i++)
             {
@@ -22,11 +35,6 @@ namespace Blockstacker.GameSettings.Changers
             }
 
             _dropdown.RefreshShownValue();
-        }
-
-        public void OnValuePicked(int index)
-        {
-            SetValue(_values[index].Value);
         }
 
         [Serializable]

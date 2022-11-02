@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blockstacker.Common;
 using Blockstacker.GlobalSettings.Music;
 using TMPro;
 using UnityEngine;
@@ -11,10 +12,12 @@ namespace Blockstacker.GlobalSettings.Changers
         [Space]
         [SerializeField] private TMP_Dropdown _typeDropdown;
         [SerializeField] private TMP_Dropdown _nameDropdown;
-        [SerializeField] private string _gameType = "";
+        [SerializeField] private StringReferenceSO _gameTypeStr;
 
         private readonly List<MusicOption> _groupOptions = new();
         private readonly List<MusicOption> _trackOptions = new();
+
+        private string _gameType => _gameTypeStr.Value;
 
         private MusicOption ChangedOption
         {
@@ -22,7 +25,7 @@ namespace Blockstacker.GlobalSettings.Changers
             set => AppSettings.Sound.GameMusicDictionary[_gameType] = value;
         }
 
-        private void Start()
+        private void Awake()
         {
             foreach (var option in MusicPlayer.ListAvailableOptions())
             {
@@ -40,13 +43,10 @@ namespace Blockstacker.GlobalSettings.Changers
                         throw new ArgumentOutOfRangeException();
                 }
             }
+        }
 
-            _typeDropdown.ClearOptions();
-            foreach (var optionName in Enum.GetNames(typeof(OptionType)))
-            {
-                _typeDropdown.options.Add(new TMP_Dropdown.OptionData(optionName));
-            }
-
+        private void Start()
+        {
             RefreshValue();
 
             _nameDropdown.onValueChanged.AddListener(OnNameSelected);
@@ -93,6 +93,10 @@ namespace Blockstacker.GlobalSettings.Changers
 
         private void RefreshValue()
         {
+            _typeDropdown.ClearOptions();
+            foreach (var optionName in Enum.GetNames(typeof(OptionType)))
+                _typeDropdown.options.Add(new TMP_Dropdown.OptionData(optionName));
+
             ChangedOption ??= new MusicOption();
 
             var currentOption = ChangedOption;

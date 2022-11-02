@@ -384,9 +384,9 @@ namespace Blockstacker.Gameplay
             SendPlacementMessage(linesCleared, cheeseLinesCleared, wasAllClear, placementTime, lastSpinResult,
                 piece.Type);
 
-            if (_settings.Rules.BoardDimensions.AllowClutchClears && linesWereCleared) return true;
+            if (_settings.BoardDimensions.AllowClutchClears && linesWereCleared) return true;
 
-            switch (_settings.Rules.BoardDimensions.TopoutCondition)
+            switch (_settings.BoardDimensions.TopoutCondition)
             {
                 case TopoutCondition.PieceSpawn:
                     break;

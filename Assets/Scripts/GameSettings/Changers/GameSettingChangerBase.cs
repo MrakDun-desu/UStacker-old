@@ -14,7 +14,6 @@ namespace Blockstacker.GameSettings.Changers
 
         protected virtual void OnValidate()
         {
-            if (_title == null) return;
             if (_gameSettingsSO == null)
                 _title.text = "Choose a game settings SO!";
 

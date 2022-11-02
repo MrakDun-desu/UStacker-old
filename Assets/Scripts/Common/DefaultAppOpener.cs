@@ -12,7 +12,7 @@ namespace Blockstacker.Common
             OpenFile(pathToFile);
         }
 
-        private static void OpenFile(string path)
+        public static void OpenFile(string path)
         {
             if (!Directory.Exists(path) && !File.Exists(path))
                 Directory.CreateDirectory(path);

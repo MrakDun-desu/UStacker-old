@@ -28,7 +28,7 @@ namespace Blockstacker.Gameplay.Pieces
             get => _activePiece;
             set
             {
-                if (!_settings.Rules.Controls.ShowGhostPiece) return;
+                if (!_settings.Controls.ShowGhostPiece) return;
 
                 _activePiece = value;
                 CurrentColor = _activePiece.GhostPieceColor;
@@ -74,7 +74,7 @@ namespace Blockstacker.Gameplay.Pieces
 
         private void Start()
         {
-            if (!_settings.Rules.Controls.ShowGhostPiece)
+            if (!_settings.Controls.ShowGhostPiece)
                 gameObject.SetActive(false);
 
             ColorGhostPieceApplier.ColorGhostPieceChanged += ChangeColoring;
@@ -111,7 +111,7 @@ namespace Blockstacker.Gameplay.Pieces
         
         public void Render()
         {
-            if (!_settings.Rules.Controls.ShowGhostPiece) return;
+            if (!_settings.Controls.ShowGhostPiece) return;
             
             transform.position = ActivePiece.transform.position;
             for (var i = 0; i < _blocks.Count; i++)

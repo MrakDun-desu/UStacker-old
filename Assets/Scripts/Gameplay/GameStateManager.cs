@@ -43,7 +43,7 @@ namespace Blockstacker.Gameplay
             if (_gameLost || _gameEnded)
                 GameRestartAfterEnd();
             GameRunning = true;
-            _mediator.Send(new GameStartedMessage(_settings.Rules.General.ActiveSeed));
+            _mediator.Send(new GameStartedMessage(_settings.General.ActiveSeed));
             _mediator.Send(new GameEndConditionChangedMessage(
                 0,
                 _settings.Objective.EndConditionCount,

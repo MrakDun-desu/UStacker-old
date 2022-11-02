@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Blockstacker.GameSettings.SettingGroups
 {
     [Serializable]
-    public record RulesSettingsBoardDimensions
+    public record BoardDimensionsSettings
     {
         [MinRestraint(2, true)]
         [MaxRestraint(500, true)]
