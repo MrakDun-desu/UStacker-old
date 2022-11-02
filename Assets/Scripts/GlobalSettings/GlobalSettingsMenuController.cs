@@ -12,6 +12,14 @@ namespace Blockstacker.GlobalSettings
         [SerializeField] private ScrollRect _settingsScrollRect;
 
         private bool _menuOpened;
+        private bool _loaded;
+
+        private void LateUpdate()
+        {
+            if (_loaded) return;
+            gameObject.SetActive(false);
+            _loaded = true;
+        }
 
         public void ToggleSettingsMenu()
         {

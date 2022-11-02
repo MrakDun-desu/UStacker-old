@@ -82,10 +82,7 @@ namespace Blockstacker.GameSettings
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                var memberInfos = type.GetMember(fieldName, MemberTypes.Field | MemberTypes.Property,
-                    BindingFlags.Default);
-                if (memberInfos.Length <= 0) return;
-                memberInfo = memberInfos[0];
+                memberInfo = type.GetField(fieldName) ?? (MemberInfo) type.GetProperty(fieldName);
 
                 oldObject = obj;
                 obj = memberInfo switch
@@ -120,10 +117,7 @@ namespace Blockstacker.GameSettings
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                var memberInfos = type.GetMember(fieldName, MemberTypes.Field | MemberTypes.Property,
-                    BindingFlags.Default);
-                if (memberInfos.Length <= 0) return default;
-                var memberInfo = memberInfos[0];
+                var memberInfo = type.GetField(fieldName) ?? (MemberInfo) type.GetProperty(fieldName);
 
                 obj = memberInfo switch
                 {
@@ -148,10 +142,7 @@ namespace Blockstacker.GameSettings
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                var memberInfos = type.GetMember(fieldName, MemberTypes.Field | MemberTypes.Property,
-                    BindingFlags.Default);
-                if (memberInfos.Length <= 0) return false;
-                var memberInfo = memberInfos[0];
+                var memberInfo = type.GetField(fieldName) ?? (MemberInfo)type.GetProperty(fieldName);
 
                 obj = memberInfo switch
                 {

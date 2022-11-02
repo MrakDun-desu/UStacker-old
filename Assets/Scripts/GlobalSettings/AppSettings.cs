@@ -64,10 +64,9 @@ namespace Blockstacker.GlobalSettings
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                var memberInfos = type.GetMember(fieldName, MemberTypes.Field | MemberTypes.Property,
-                    BindingFlags.Default);
-                if (memberInfos.Length <= 0) return false;
-                memberInfo = memberInfos[0];
+                memberInfo = type.GetField(fieldName) ?? (MemberInfo) type.GetProperty(fieldName);
+
+                if (memberInfo is null) return false;
 
                 oldObject = obj;
                 obj = memberInfo switch
@@ -105,10 +104,7 @@ namespace Blockstacker.GlobalSettings
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                var memberInfos = type.GetMember(fieldName, MemberTypes.Field | MemberTypes.Property,
-                    BindingFlags.Default);
-                if (memberInfos.Length <= 0) return default;
-                var memberInfo = memberInfos[0];
+                var memberInfo = type.GetField(fieldName) ?? (MemberInfo)type.GetProperty(fieldName);
 
                 obj = memberInfo switch
                 {
@@ -133,10 +129,7 @@ namespace Blockstacker.GlobalSettings
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                var memberInfos = type.GetMember(fieldName, MemberTypes.Field | MemberTypes.Property,
-                    BindingFlags.Default);
-                if (memberInfos.Length <= 0) return false;
-                var memberInfo = memberInfos[0];
+                var memberInfo = type.GetField(fieldName) ?? (MemberInfo)type.GetProperty(fieldName);
 
                 obj = memberInfo switch
                 {
@@ -159,19 +152,23 @@ namespace Blockstacker.GlobalSettings
             if (path.Length == 0) return false;
             object obj = Settings;
             var type = obj.GetType();
-            FieldInfo fieldInfo = null;
+            MemberInfo memberInfo = null;
             foreach (var fieldName in path)
             {
-                fieldInfo = type.GetField(fieldName);
-                if (fieldInfo is null) return false;
+                memberInfo = type.GetField(fieldName) ?? (MemberInfo)type.GetProperty(fieldName);
 
-                obj = fieldInfo.GetValue(obj);
+                obj = memberInfo switch
+                {
+                    FieldInfo fieldInfo => fieldInfo.GetValue(obj),
+                    PropertyInfo propertyInfo => propertyInfo.GetValue(obj),
+                    _ => null
+                };
                 if (obj is null) return false;
 
                 type = obj.GetType();
             }
 
-            output = fieldInfo?.GetCustomAttribute<T>(false);
+            output = memberInfo?.GetCustomAttribute<T>(false);
             return output is not null;
         }
 
