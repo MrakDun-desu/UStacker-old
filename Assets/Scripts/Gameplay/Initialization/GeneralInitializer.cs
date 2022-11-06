@@ -49,9 +49,9 @@ namespace Blockstacker.Gameplay.Initialization
 
         private void InitializeSeed()
         {
-             _gameSettings.General.ActiveSeed = _gameSettings.General.UseRandomSeed
-                ? Random.Range(int.MinValue, int.MaxValue)
-                : _gameSettings.General.SpecificSeed;
+             _gameSettings.General.ActiveSeed = _gameSettings.General.UseCustomSeed
+                ? _gameSettings.General.CustomSeed
+                : Random.Range(int.MinValue, int.MaxValue);
         }
 
         private void InitializeRandomizer()

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Blockstacker.GameSettings.Changers
 {
-    public class GameSettingUIntChanger : GameSettingChangerWithField<uint>
+    public class GameSettingUintChanger : GameSettingChangerWithField<uint>
     {
         [Space] [SerializeField] private bool _clampValue;
 

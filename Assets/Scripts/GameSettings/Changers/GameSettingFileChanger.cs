@@ -16,11 +16,14 @@ namespace Blockstacker.GameSettings.Changers
         protected abstract string TargetDir { get; }
         protected abstract string DefaultEmptyPrompt { get; }
         
-        private void Start()
-        {
+        private new void OnValidate() {
+            base.OnValidate();
             if (string.IsNullOrEmpty(_emptyPrompt))
                 _emptyPrompt = DefaultEmptyPrompt;
-                
+        }
+
+        private void Start()
+        {
             RefreshValue();
 
             _gameSettingsSO.SettingsReloaded += RefreshValue;

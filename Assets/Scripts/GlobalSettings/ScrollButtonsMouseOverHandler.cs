@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -29,12 +28,6 @@ namespace Blockstacker.GlobalSettings
                 new Vector2(_closedSize, _controlledTransform.sizeDelta.y), 
                 _openTime)
                 .setEaseInOutSine();
-            var position = _controlledTransform.localPosition;
-            LeanTween.move(
-                _controlledTransform,
-                new Vector3(_closedSize / 2f, position.y, position.z),
-                _openTime)
-                .setEaseInOutSine();
         }
 
         private IEnumerator OpenCoroutine()
@@ -46,12 +39,6 @@ namespace Blockstacker.GlobalSettings
             LeanTween.size(
                 _controlledTransform, 
                 new Vector2(_openedSize, _controlledTransform.sizeDelta.y), 
-                _openTime)
-                .setEaseInOutSine();
-            var position = _controlledTransform.localPosition;
-            LeanTween.move(
-                _controlledTransform,
-                new Vector3(_openedSize / 2f, position.y, position.z),
                 _openTime)
                 .setEaseInOutSine();
         }

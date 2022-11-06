@@ -5,7 +5,6 @@ using Blockstacker.Common;
 using Blockstacker.Common.Alerts;
 using Blockstacker.Common.Attributes;
 using Blockstacker.GameSettings.Enums;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Blockstacker.GameSettings.SettingGroups
@@ -29,7 +28,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         }
 
         [Tooltip("Filename of the custom randomizer")]
-        public string CustomRandomizerName
+        public string CustomRandomizer
         {
             get => _customRandomizerName;
             set
@@ -42,12 +41,12 @@ namespace Blockstacker.GameSettings.SettingGroups
         [Tooltip("Which spins will be significant for score. Also changes messages sent to user scripts")]
         public AllowedSpins AllowedSpins = AllowedSpins.TSpins;
         
-        [Tooltip("If set, random seed is generated at the start of each game. Overrides Specific Seed")]
-        public bool UseRandomSeed = true;
+        [Tooltip("If set, custom seed will be used instead of generating random seed at the start of the game")]
+        public bool UseCustomSeed;
         
         [Tooltip("Will be used every time when the game starts")]
         [Description("Seed")]
-        public int SpecificSeed;
+        public int CustomSeed;
         
         [Tooltip("How many piece previews will be shown")]
         [MinRestraint(0, true)]
@@ -62,7 +61,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         {
             const string filenameExtension = ".lua";
             var filePath = Path.Combine(CustomizationPaths.RotationSystems,
-                CustomRandomizerName + filenameExtension);
+                CustomRandomizer + filenameExtension);
 
             if (!File.Exists(filePath)) return false;
 
@@ -80,14 +79,14 @@ namespace Blockstacker.GameSettings.SettingGroups
             {
                 _ = AlertDisplayer.Instance.ShowAlert(
                     new Alert("Custom randomizer load failed!",
-                        $"Randomizer {CustomRandomizerName} couldn't be found.",
+                        $"Randomizer {CustomRandomizer} couldn't be found.",
                         AlertType.Error));
             }
             else
             {
                 _ = AlertDisplayer.Instance.ShowAlert(
                     new Alert("Custom randomizer loaded!",
-                        $"Randomizer {CustomRandomizerName} was loaded into game settings.",
+                        $"Randomizer {CustomRandomizer} was loaded into game settings.",
                         AlertType.Success));
             }
         }
