@@ -8,40 +8,49 @@ namespace Blockstacker.GameSettings.SettingGroups
     [Serializable]
     public record GravitySettings
     {
-        [Tooltip("Amount of units the piece will fall in one 60th of a second. Will be used by default if not overriden by game manager")]
-        [MinRestraint(0, true)]
-        [MaxRestraint(50, false)]
-        public double DefaultGravity = .02d;
-        
-        [Tooltip("Determines how long it takes for piece to lock if it is not moved. Will be used by default if not overriden by game manager")]
-        [MinRestraint(0, true)]
-        [MaxRestraint(50, false)]
-        public double DefaultLockDelay = .5d;
-        
-        [Tooltip("Determines when lock delay starts")]
-        public LockDelayType LockDelayType = LockDelayType.OnIllegalMovement;
-        
-        [Tooltip("How long to wait in seconds before spawning a piece when piece has been placed")]
-        [MinRestraint(0, true)]
-        [MaxRestraint(10, true)]
-        public double PiecePlacementDelay;
-        
-        [Tooltip("How long to wait in seconds before spawning a piece if lines have been cleared")]
-        [MinRestraint(0, true)]
-        [MaxRestraint(10, true)]
-        public double LineClearDelay;
-        
-        [Tooltip("Determines when the piece will lock after starting lock delay the first time")]
-        public HardLockType HardLockType = HardLockType.LimitedTime;
-        
-        [MinRestraint(0, true)]
-        [MaxRestraint(50, true)]
-        public double HardLockAmount = 5;
-        
-        [Tooltip("Defines how the player loses the game")]
-        public TopoutCondition TopoutCondition = TopoutCondition.AllBlocksAboveLethal;
-        
-        [Tooltip("If the player clears a line, some Topout Conditions are ignored")]
-        public bool AllowClutchClears = true;
+        // backing fields
+        private double _defaultGravity = 0.02d;
+        private double _defaultLockDelay = .5d;
+        private double _piecePlacementDelay = 0;
+        private double _lineClearDelay = 0;
+        private double _hardLockAmount = 0;
+
+        public double DefaultGravity
+        {
+            get => _defaultGravity;
+            set => _defaultGravity = Math.Max(value, 0);
+        }
+
+        public double DefaultLockDelay
+        {
+            get => _defaultLockDelay;
+            set => _defaultLockDelay = Math.Max(value, 0);
+        }
+
+        public LockDelayType LockDelayType { get; set; } = LockDelayType.OnIllegalMovement;
+
+        public double PiecePlacementDelay
+        {
+            get => _piecePlacementDelay;
+            set => _piecePlacementDelay = Math.Max(value, 0);
+        }
+
+        public double LineClearDelay
+        {
+            get => _lineClearDelay;
+            set => _lineClearDelay = Math.Max(value, 0);
+        }
+
+        public HardLockType HardLockType { get; set; } = HardLockType.LimitedTime;
+
+        public double HardLockAmount
+        {
+            get => _hardLockAmount;
+            set => _hardLockAmount = Math.Max(value, 0);
+        }
+
+        public TopoutCondition TopoutCondition { get; set; } = TopoutCondition.AllBlocksAboveLethal;
+
+        public bool AllowClutchClears { get; set; } = true;
     }
 }

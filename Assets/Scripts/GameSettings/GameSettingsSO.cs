@@ -76,21 +76,16 @@ namespace Blockstacker.GameSettings
         public void SetValue<T>(T value, string[] path)
         {
             if (path.Length == 0) return;
-            MemberInfo memberInfo = null;
+            PropertyInfo propertyInfo = null;
             object oldObject = null;
             object obj = Settings;
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                memberInfo = type.GetField(fieldName) ?? (MemberInfo) type.GetProperty(fieldName);
+                propertyInfo = type.GetProperty(fieldName);
 
                 oldObject = obj;
-                obj = memberInfo switch
-                {
-                    FieldInfo fieldInfo => fieldInfo.GetValue(obj),
-                    PropertyInfo propertyInfo => propertyInfo.GetValue(obj),
-                    _ => null
-                };
+                obj = propertyInfo.GetValue(obj);
 
                 if (obj == null) return;
 
@@ -99,15 +94,7 @@ namespace Blockstacker.GameSettings
 
             if (type != typeof(T)) return;
 
-            switch (memberInfo)
-            {
-                case FieldInfo fieldInfo:
-                    fieldInfo.SetValue(oldObject, value);
-                    break;
-                case PropertyInfo propertyInfo:
-                    propertyInfo.SetValue(oldObject, value);
-                    break;
-            }
+            propertyInfo.SetValue(oldObject, value);
         }
 
         public T GetValue<T>(string[] path)
@@ -117,21 +104,16 @@ namespace Blockstacker.GameSettings
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                var memberInfo = type.GetField(fieldName) ?? (MemberInfo) type.GetProperty(fieldName);
+                var propertyInfo = type.GetProperty(fieldName);
 
-                obj = memberInfo switch
-                {
-                    FieldInfo fieldInfo => fieldInfo.GetValue(obj),
-                    PropertyInfo propertyInfo => propertyInfo.GetValue(obj),
-                    _ => null
-                };
+                obj = propertyInfo.GetValue(obj);
 
                 if (obj == null) return default;
 
                 type = obj.GetType();
             }
 
-            if (type == typeof(T)) return (T) obj;
+            if (type == typeof(T)) return (T)obj;
             return default;
         }
 
@@ -142,14 +124,9 @@ namespace Blockstacker.GameSettings
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                var memberInfo = type.GetField(fieldName) ?? (MemberInfo)type.GetProperty(fieldName);
+                var propertyInfo = type.GetProperty(fieldName);
 
-                obj = memberInfo switch
-                {
-                    FieldInfo fieldInfo => fieldInfo.GetValue(obj),
-                    PropertyInfo propertyInfo => propertyInfo.GetValue(obj),
-                    _ => null
-                };
+                obj = propertyInfo.GetValue(obj);
 
                 if (obj == null) return false;
 

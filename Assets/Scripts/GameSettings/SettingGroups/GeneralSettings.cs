@@ -13,10 +13,10 @@ namespace Blockstacker.GameSettings.SettingGroups
     public record GeneralSettings
     {
         // backing fields
+        private uint _nextPieceCount = 5;
         private RandomizerType _randomizerType = RandomizerType.SevenBag;
         private string _customRandomizerName = string.Empty;
 
-        [Tooltip("Will determine how the pieces will spawn")]
         public RandomizerType RandomizerType
         {
             get => _randomizerType;
@@ -27,7 +27,6 @@ namespace Blockstacker.GameSettings.SettingGroups
             }
         }
 
-        [Tooltip("Filename of the custom randomizer")]
         public string CustomRandomizer
         {
             get => _customRandomizerName;
@@ -37,25 +36,22 @@ namespace Blockstacker.GameSettings.SettingGroups
                 ReloadRandomizerIfNeeded();
             }
         }
-        
-        [Tooltip("Which spins will be significant for score. Also changes messages sent to user scripts")]
-        public AllowedSpins AllowedSpins = AllowedSpins.TSpins;
-        
-        [Tooltip("If set, custom seed will be used instead of generating random seed at the start of the game")]
-        public bool UseCustomSeed;
-        
-        [Tooltip("Will be used every time when the game starts")]
-        [Description("Seed")]
-        public int CustomSeed;
-        
-        [Tooltip("How many piece previews will be shown")]
-        [MinRestraint(0, true)]
-        [MaxRestraint(7, true)]
-        public uint NextPieceCount = 5;
-        
+
+        public AllowedSpins AllowedSpins { get; set; } = AllowedSpins.TSpins;
+
+        public bool UseCustomSeed { get; set; }
+
+        public int CustomSeed { get; set; }
+
+        public uint NextPieceCount
+        {
+            get => _nextPieceCount;
+            set => _nextPieceCount = Math.Max(value, 6);
+        }
+
         // not shown in the settings UI
-        public string CustomRandomizerScript = "";
-        public int ActiveSeed;
+        public string CustomRandomizerScript { get; set; } = "";
+        public int ActiveSeed { get; set; }
 
         private bool TryReloadRandomizer()
         {
@@ -66,7 +62,7 @@ namespace Blockstacker.GameSettings.SettingGroups
             if (!File.Exists(filePath)) return false;
 
             CustomRandomizerScript = File.ReadAllText(filePath);
-            
+
             return true;
         }
 
@@ -75,7 +71,7 @@ namespace Blockstacker.GameSettings.SettingGroups
             if (_randomizerType != RandomizerType.Custom ||
                 string.IsNullOrEmpty(_customRandomizerName))
                 return;
-            
+
             if (TryReloadRandomizer())
             {
                 _ = AlertDisplayer.Instance.ShowAlert(

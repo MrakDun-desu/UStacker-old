@@ -7,20 +7,25 @@ namespace Blockstacker.GameSettings.SettingGroups
     [Serializable]
     public record PresentationSettings
     {
-        [Tooltip("Will be displayed on top of the game to show it's type")]
-        public string Title = "Custom game";
-        
-        [Tooltip("If set, will use countdown on game start, restart and resume")]
-        public bool UseCountdown = true;
-        
-        [Tooltip("Interval between countdown ticks in seconds")]
-        [MinRestraint(0.5, true)]
-        [MaxRestraint(10, true)]
-        public float CountdownInterval = 1;
-        
-        [Tooltip("How many times the countdown needs to tick before game start")]
-        [MinRestraint(1, true)]
-        [MaxRestraint(10, true)]
-        public uint CountdownCount = 3;
+        // backing fields
+        private float _countdownInterval = 1;
+        private uint _countdownCount = 3;
+
+
+        public string Title { get; set; } = "Custom game";
+
+        public bool UseCountdown { get; set; } = true;
+
+        public float CountdownInterval
+        {
+            get => _countdownInterval;
+            set => _countdownInterval = Mathf.Clamp(value, 0.1f, 10f);
+        }
+
+        public uint CountdownCount
+        {
+            get => _countdownCount;
+            set => _countdownCount = Math.Min(value, 10);
+        }
     }
 }

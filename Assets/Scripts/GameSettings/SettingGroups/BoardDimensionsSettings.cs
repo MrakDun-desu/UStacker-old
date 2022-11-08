@@ -7,27 +7,48 @@ namespace Blockstacker.GameSettings.SettingGroups
     [Serializable]
     public record BoardDimensionsSettings
     {
-        [MinRestraint(4, true)]
-        [MaxRestraint(500, true)]
-        public uint BoardWidth = 10;
-        
-        [MinRestraint(2, true)]
-        [MaxRestraint(500, true)]
-        public uint BoardHeight = 22;
-        
-        [Tooltip("Importance changes depending on the Topout Condition")]
-        public uint LethalHeight = 20;
-        
-        [MinRestraint(2, true)]
-        [MaxRestraint(600, true)]
-        public uint PieceSpawnHeight = 21;
-        
-        [Tooltip("If blocks are placed higher than this height, they are cleared from the board after placement")]
-        public uint BlockCutHeight = 40;
-        
-        [MinRestraint(2, true)]
-        [MaxRestraint(200, true)]
-        [Tooltip("Space above and below the board in units. Applies for 100% Board Zoom")]
-        public uint BoardPadding = 4;
+        // backing fields
+        private uint _boardWidth = 10;
+        private uint _boardHeight = 20;
+        private uint _lethalHeight = 20;
+        private uint _pieceSpawnHeight = 21;
+        private uint _blockCutHeight = 40;
+        private uint _boardPadding = 4;
+
+        public uint BoardWidth
+        {
+            get => _boardWidth;
+            set => _boardWidth = Math.Min(value, 200);
+        }
+
+        public uint BoardHeight
+        {
+            get => _boardHeight;
+            set => _boardHeight = Math.Min(value, 400);
+        }
+
+        public uint LethalHeight
+        {
+            get => _lethalHeight;
+            set => _lethalHeight = Math.Max(value, 400);
+        }
+
+        public uint PieceSpawnHeight
+        {
+            get => _pieceSpawnHeight;
+            set => _pieceSpawnHeight = Math.Max(value, 410);
+        }
+
+        public uint BlockCutHeight
+        {
+            get => _blockCutHeight;
+            set => _blockCutHeight = Math.Max(value, 410);
+        }
+
+        public uint BoardPadding
+        {
+            get => _boardPadding;
+            set => _boardPadding = Math.Max(value, 50);
+        }
     }
 }

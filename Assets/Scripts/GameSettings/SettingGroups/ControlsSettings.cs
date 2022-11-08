@@ -15,14 +15,13 @@ namespace Blockstacker.GameSettings.SettingGroups
         // backing fields
         private RotationSystemType _rotationSystemType = RotationSystemType.SRS;
         private string _customRotationSystem = string.Empty;
-        
-        public bool Allow180Spins = true;
-        public bool AllowHardDrop = true;
-        public bool AllowHold = true;
-        public bool UnlimitedHold;
-        public bool ShowGhostPiece = true;
 
-        [Tooltip("Changes how the pieces spawn, how they rotate and kick and which spins are treated as full spins")]
+        public bool Allow180Spins { get; set; } = true;
+        public bool AllowHardDrop { get; set; } = true;
+        public bool AllowHold { get; set; } = true;
+        public bool UnlimitedHold { get; set; }
+        public bool ShowGhostPiece { get; set; } = true;
+
         public RotationSystemType RotationSystemType
         {
             get => _rotationSystemType;
@@ -33,7 +32,6 @@ namespace Blockstacker.GameSettings.SettingGroups
             }
         }
 
-        [Tooltip("Filename of the custom rotation system")]
         public string CustomRotationSystem
         {
             get => _customRotationSystem;
@@ -43,13 +41,12 @@ namespace Blockstacker.GameSettings.SettingGroups
                 LoadCustomSystemIfNeeded();
             }
         }
-        
-        [Tooltip("If set, this handling will override the global handling")]
-        public bool OverrideHandling;
-        public HandlingSettings Handling = new();
-        
+
+        public bool OverrideHandling { get; set; }
+        public HandlingSettings Handling { get; set; } = new();
+
         // not shown in the settings UI
-        public RotationSystem ActiveRotationSystem;
+        public RotationSystem ActiveRotationSystem { get; set; }
 
         private bool TryReloadRotationSystem()
         {
@@ -58,10 +55,10 @@ namespace Blockstacker.GameSettings.SettingGroups
                 CustomRotationSystem + filenameExtension);
 
             if (!File.Exists(filePath)) return false;
-            
+
             ActiveRotationSystem =
                 JsonConvert.DeserializeObject<RotationSystem>(File.ReadAllText(filePath), StaticSettings.JsonSerializerSettings);
-            
+
             return true;
         }
 
@@ -70,7 +67,7 @@ namespace Blockstacker.GameSettings.SettingGroups
             if (_rotationSystemType != RotationSystemType.Custom ||
                 string.IsNullOrEmpty(_customRotationSystem))
                 return;
-            
+
             if (TryReloadRotationSystem())
             {
                 _ = AlertDisplayer.Instance.ShowAlert(

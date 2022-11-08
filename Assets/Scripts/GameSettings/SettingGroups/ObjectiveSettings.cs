@@ -17,23 +17,23 @@ namespace Blockstacker.GameSettings.SettingGroups
         private string _customGameManager = string.Empty;
         private GarbageGeneration _garbageGeneration;
         private string _customGarbageGeneratorName = string.Empty;
-        
-        [Tooltip("Which stat is displayed as the main one")]
-        public MainStat MainStat = MainStat.Time;
-        
-        [Tooltip("When to end the game")]
-        public GameEndCondition GameEndCondition = GameEndCondition.LinesCleared;
-        
-        [MinRestraint(0, true)]
-        public double EndConditionCount = 40;
-        
-        [Tooltip("If set, topping out will be counted as finishing the game, not as a loss")]
-        public bool ToppingOutIsOkay;
-        
-        [Tooltip("On which level to start")]
-        public string StartingLevel;
+        private double _endConditionCount = 40d;
+        private uint _garbageHeight = 10;
 
-        [Tooltip("Controls levelling, score and can be programmed to completely alter the rules of the game")]
+        public MainStat MainStat { get; set; } = MainStat.Time;
+
+        public GameEndCondition GameEndCondition { get; set; } = GameEndCondition.LinesCleared;
+
+        public double EndConditionCount
+        {
+            get => _endConditionCount;
+            set => _endConditionCount = Math.Max(value, 0);
+        }
+
+        public bool ToppingOutIsOkay { get; set; }
+
+        public string StartingLevel { get; set; }
+
         public GameManagerType GameManagerType
         {
             get => _gameManagerType;
@@ -44,7 +44,6 @@ namespace Blockstacker.GameSettings.SettingGroups
             }
         }
 
-        [Tooltip("Filename of the custom manager you want to use")]
         public string CustomGameManager
         {
             get => _customGameManager;
@@ -55,7 +54,6 @@ namespace Blockstacker.GameSettings.SettingGroups
             }
         }
 
-        [Tooltip("How tall holes to generate (if set to none, no garbage will be generated)")]
         public GarbageGeneration GarbageGeneration
         {
             get => _garbageGeneration;
@@ -65,11 +63,13 @@ namespace Blockstacker.GameSettings.SettingGroups
                 ReloadGarbageGeneratorIfNeeded();
             }
         }
-        
-        [Tooltip("How high should the garbage be on board (might not work with custom generators)")]
-        public uint GarbageHeight = 10;
 
-        [Tooltip("Filename of the custom garbage script you want to use")]
+        public uint GarbageHeight
+        {
+            get => _garbageHeight;
+            set => _garbageHeight = Math.Max(value, 400);
+        }
+
         public string CustomGarbageScriptName
         {
             get => _customGarbageGeneratorName;
@@ -79,11 +79,11 @@ namespace Blockstacker.GameSettings.SettingGroups
                 ReloadGarbageGeneratorIfNeeded();
             }
         }
-        
+
         // not shown in settings UI
-        public string CustomGarbageScript = "";
-        public string CustomGameManagerScript = "";
-        
+        public string CustomGarbageScript { get; set; } = "";
+        public string CustomGameManagerScript { get; set; } = "";
+
         private bool TryReloadGarbageGenerator()
         {
             const string filenameExtension = ".lua";
@@ -93,7 +93,7 @@ namespace Blockstacker.GameSettings.SettingGroups
             if (!File.Exists(filePath)) return false;
 
             CustomGarbageScript = File.ReadAllText(filePath);
-            
+
             return true;
         }
 
@@ -102,7 +102,7 @@ namespace Blockstacker.GameSettings.SettingGroups
             if (!_garbageGeneration.HasFlag(GarbageGeneration.CustomFlag) ||
                 string.IsNullOrEmpty(_customGarbageGeneratorName))
                 return;
-            
+
             if (TryReloadGarbageGenerator())
             {
                 _ = AlertDisplayer.Instance.ShowAlert(
@@ -118,7 +118,7 @@ namespace Blockstacker.GameSettings.SettingGroups
                         AlertType.Success));
             }
         }
-        
+
         private bool TryReloadGameManagerScript()
         {
             const string filenameExtension = ".lua";
@@ -128,7 +128,7 @@ namespace Blockstacker.GameSettings.SettingGroups
             if (!File.Exists(filePath)) return false;
 
             CustomGameManagerScript = File.ReadAllText(filePath);
-            
+
             return true;
         }
 
@@ -137,7 +137,7 @@ namespace Blockstacker.GameSettings.SettingGroups
             if (_gameManagerType != GameManagerType.Custom ||
                 string.IsNullOrEmpty(_customGameManager))
                 return;
-            
+
             if (TryReloadGameManagerScript())
             {
                 _ = AlertDisplayer.Instance.ShowAlert(
