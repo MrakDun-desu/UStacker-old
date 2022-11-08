@@ -1,61 +1,55 @@
 using System;
-using System.ComponentModel;
-using Blockstacker.Common.Attributes;
 using Blockstacker.GlobalSettings.Enums;
-using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Blockstacker.GlobalSettings.Groups
 {
     [Serializable]
     public record HandlingSettings
     {
-        [Tooltip("Time before automatic movement left or right is activated")]
-        [MinRestraint(1/60d, true)]
-        [MaxRestraint(2/6d, false)]
-        [Description("Delayed Auto Shift")]
-        public double DelayedAutoShift = .125d;
-        
-        [Tooltip("Time between automatic movements left or right")]
-        [MinRestraint(0, true)]
-        [MaxRestraint(5/60d, false)]
-        [Description("Automatic Repeat Rate")]
-        public double AutomaticRepeatRate;
-        
-        [Tooltip("How many times Soft Drop increases fall speed")]
-        [MinRestraint(2, true)]
-        [MaxRestraint(41, false)]
-        [Description("Soft Drop Factor")]
-        public double SoftDropFactor = double.PositiveInfinity;
-        
-        [Tooltip("How long to delay DAS when delaying")]
-        [MinRestraint(0, true)]
-        [MaxRestraint(2/6d, false)]
-        [Description("DAS Cut Delay")]
-        public double DasCutDelay;
-        
-        [Tooltip("After which actions to delay DAS")]
-        [Description("Delay DAS on")]
-        public DelayDasOn DelayDasOn = DelayDasOn.Nothing;
-        
-        [Tooltip("How long to disable hard drop for after dropping a piece")]
-        [MinRestraint(0, true)]
-        [MaxRestraint(5/60d, false)]
-        [Description("Double Drop Prevention Interval")]
-        public double DoubleDropPreventionInterval;
+        // backing fields 
+        private double _delayedAutoShift = .125d;
+        private double _automaticRepeatRate = .2d;
+        private double _softDropFactor = 20d;
+        private double _dasCutDelay = 0d;
+        private double _doubleDropPreventionInterval = 0;
 
-        [FormerlySerializedAs("AntiDasBehavior")]
-        [Tooltip("What to do when DAS is activated in 2 directions")]
-        [Description("Simultaneous DAS Behavior")]
-        public SimultaneousDasBehavior SimultaneousDasBehavior = SimultaneousDasBehavior.CancelFirstDirection;
-        
-        [Tooltip("What to do when piece is moving both vertically and diagonally")]
-        [Description("Diagonal Lock Behavior")]
-        public DiagonalLockBehavior DiagonalLockBehavior = DiagonalLockBehavior.DontLock;
-        
-        [Tooltip("If turned on, will cancel DAS delay with a piece movement")]
-        [Description("Cancel DAS Delay With Movement")]
-        public bool CancelDelayWithMovement = true;
-        
+        public double DelayedAutoShift
+        {
+            get => _delayedAutoShift;
+            set => _delayedAutoShift = Math.Max(value, 0);
+        }
+
+        public double AutomaticRepeatRate
+        {
+            get => _automaticRepeatRate;
+            set => _automaticRepeatRate = Math.Max(value, 0);
+        }
+
+        public double SoftDropFactor
+        {
+            get => _softDropFactor;
+            set => _softDropFactor = Math.Max(value, 1);
+        }
+
+        public double DasCutDelay
+        {
+            get => _dasCutDelay;
+            set => _dasCutDelay = Math.Max(value, 0);
+        }
+
+        public double DoubleDropPreventionInterval
+        {
+            get => _doubleDropPreventionInterval;
+            set => _doubleDropPreventionInterval = Math.Max(value, 0);
+        }
+
+        public DelayDasOn DelayDasOn { get; set; } = DelayDasOn.Nothing;
+
+        public SimultaneousDasBehavior SimultaneousDasBehavior { get; set; } = SimultaneousDasBehavior.CancelFirstDirection;
+
+        public DiagonalLockBehavior DiagonalLockBehavior { get; set; } = DiagonalLockBehavior.DontLock;
+
+        public bool CancelDelayWithMovement { get; set; } = true;
+
     }
 }

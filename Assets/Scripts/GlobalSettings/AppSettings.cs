@@ -34,9 +34,9 @@ namespace Blockstacker.GlobalSettings
                 foreach (var invalidChar in Path.GetInvalidFileNameChars())
                     path = path.Replace(invalidChar, INVALID_CHAR_REPLACEMENT);
             }
-            
+
             path ??= CustomizationPaths.GlobalSettings;
-            
+
             if (!Directory.Exists(Path.GetDirectoryName(path))) return false;
             File.WriteAllText(path, JsonConvert.SerializeObject(Settings, StaticSettings.JsonSerializerSettings));
             return true;
@@ -58,24 +58,19 @@ namespace Blockstacker.GlobalSettings
         public static bool TrySetValue<T>(T value, string[] path)
         {
             if (path.Length == 0) return false;
-            MemberInfo memberInfo = null;
+            PropertyInfo propertyInfo = null;
             object oldObject = null;
             object obj = Settings;
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                memberInfo = type.GetField(fieldName) ?? (MemberInfo) type.GetProperty(fieldName);
+                propertyInfo = type.GetProperty(fieldName);
 
-                if (memberInfo is null) return false;
+                if (propertyInfo is null) return false;
 
                 oldObject = obj;
-                obj = memberInfo switch
-                {
-                    FieldInfo fieldInfo => fieldInfo.GetValue(obj),
-                    PropertyInfo propertyInfo => propertyInfo.GetValue(obj),
-                    _ => null
-                };
-                
+                obj = propertyInfo.GetValue(obj);
+
                 if (obj == null) return false;
 
                 type = obj.GetType();
@@ -83,17 +78,9 @@ namespace Blockstacker.GlobalSettings
 
             if (type != typeof(T)) return false;
 
-            switch (memberInfo)
-            {
-                case FieldInfo fieldInfo:
-                    fieldInfo.SetValue(oldObject, value);
-                    break;
-                case PropertyInfo propertyInfo:
-                    propertyInfo.SetValue(oldObject, value);
-                    break;
-                default:
-                    return false;
-            }
+            if (propertyInfo is null) return false;
+
+            propertyInfo.SetValue(oldObject, value);
             return true;
         }
 
@@ -104,21 +91,16 @@ namespace Blockstacker.GlobalSettings
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                var memberInfo = type.GetField(fieldName) ?? (MemberInfo)type.GetProperty(fieldName);
+                var propertyInfo = type.GetProperty(fieldName);
 
-                obj = memberInfo switch
-                {
-                    FieldInfo fieldInfo => fieldInfo.GetValue(obj),
-                    PropertyInfo propertyInfo => propertyInfo.GetValue(obj),
-                    _ => null
-                };
+                obj = propertyInfo.GetValue(obj);
 
                 if (obj == null) return default;
 
                 type = obj.GetType();
             }
 
-            if (type == typeof(T)) return (T) obj;
+            if (type == typeof(T)) return (T)obj;
             return default;
         }
 
@@ -129,14 +111,9 @@ namespace Blockstacker.GlobalSettings
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                var memberInfo = type.GetField(fieldName) ?? (MemberInfo)type.GetProperty(fieldName);
+                var propertyInfo = type.GetProperty(fieldName);
 
-                obj = memberInfo switch
-                {
-                    FieldInfo fieldInfo => fieldInfo.GetValue(obj),
-                    PropertyInfo propertyInfo => propertyInfo.GetValue(obj),
-                    _ => null
-                };
+                obj = propertyInfo.GetValue(obj);
 
                 if (obj == null) return false;
 
@@ -152,23 +129,18 @@ namespace Blockstacker.GlobalSettings
             if (path.Length == 0) return false;
             object obj = Settings;
             var type = obj.GetType();
-            MemberInfo memberInfo = null;
+            PropertyInfo propertyInfo = null;
             foreach (var fieldName in path)
             {
-                memberInfo = type.GetField(fieldName) ?? (MemberInfo)type.GetProperty(fieldName);
+                propertyInfo = type.GetProperty(fieldName);
 
-                obj = memberInfo switch
-                {
-                    FieldInfo fieldInfo => fieldInfo.GetValue(obj),
-                    PropertyInfo propertyInfo => propertyInfo.GetValue(obj),
-                    _ => null
-                };
+                obj = propertyInfo.GetValue(obj);
                 if (obj is null) return false;
 
                 type = obj.GetType();
             }
 
-            output = memberInfo?.GetCustomAttribute<T>(false);
+            output = propertyInfo?.GetCustomAttribute<T>(false);
             return output is not null;
         }
 

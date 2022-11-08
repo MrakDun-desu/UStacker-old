@@ -1,6 +1,4 @@
 using System;
-using System.ComponentModel;
-using Blockstacker.Common.Attributes;
 using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Groups
@@ -8,48 +6,55 @@ namespace Blockstacker.GlobalSettings.Groups
     [Serializable]
     public record GameplaySettings
     {
-        
-        [MinRestraint(0, true)]
-        [MaxRestraint(1, true)]
-        public float BoardVisibility = .8f;
-        
-        [MinRestraint(0, true)]
-        [MaxRestraint(1, true)]
-        public float GridVisibility = .6f;
-        
-        [MinRestraint(0, true)]
-        [MaxRestraint(1, true)]
-        public float GhostPieceVisibility = .5f;
-        
-        [MinRestraint(0, true)]
-        [MaxRestraint(2, false)]
-        public float BoardZoom = 1;
-        
-        [MinRestraint(0, true)]
-        [MaxRestraint(10, true)]
-        [Tooltip("How many blocks under lethal height to start showing warning piece")]
-        public float WarningPieceTreshhold = 2;
-        
-        [Description("Control + Scroll to change Board Zoom")]
-        [Tooltip("If set, you can change board zoom while playing the game")]
-        public bool CtrlScrollToChangeBoardZoom;
-       
+        // backing fields
+        private float _boardVisibility = .8f;
+        private float _gridVisibility = .6f;
+        private float _ghostPieceVisibility = .5f;
+        private float _boardZoom = 1f;
+        private float _warningPieceTreshhold = 2f;
+
+
+        public float BoardVisibility
+        {
+            get => _boardVisibility;
+            set => _boardVisibility = Mathf.Clamp(value, 0, 1);
+        }
+        public float GridVisibility
+        {
+            get => _gridVisibility;
+            set => _gridVisibility = Mathf.Clamp(value, 0, 1);
+        }
+
+        public float GhostPieceVisibility
+        {
+            get => _ghostPieceVisibility;
+            set => _ghostPieceVisibility = Mathf.Clamp(value, 0, 1);
+        }
+
+        public float BoardZoom
+        {
+            get => _boardZoom;
+            set => _boardZoom = Mathf.Clamp(value, .01f, 2f);
+        }
+
+        public float WarningPieceTreshhold
+        {
+            get => _warningPieceTreshhold;
+            set => _warningPieceTreshhold = Mathf.Clamp(value, -4f, 10f);
+        }
+
+        public bool CtrlScrollToChangeBoardZoom { get; set; }
+
         // Not yet implemented
-        [Description("Scroll to change Volume")]
-        [Tooltip("If set, you can change volume while playing the game")]
-        public bool ScrollToChangeVolume = true;
-        
-        [Description("Drag Middle Mouse button to reposition Board")]
-        [Tooltip("If set, you can reposition board while playing the game")]
-        public bool DragMiddleButtonToRepositionBoard;
-        
-        [Tooltip("If set, ghost piece will be colored depending on your active piece")]
-        public bool ColorGhostPiece;
-        
-        [Tooltip("If set, will show a warning when you're playing but not focused on game")]
-        public bool ShowNotFocusedWarning = true;
-        
+        public bool ScrollToChangeVolume { get; set; } = true;
+
+        public bool DragMiddleButtonToRepositionBoard { get; set; }
+
+        public bool ColorGhostPiece { get; set; }
+
+        public bool ShowNotFocusedWarning { get; set; } = true;
+
         // not shown in the game menu
-        public Vector2 BoardOffset = Vector2.zero;
+        public Vector2 BoardOffset { get; set; }
     }
 }

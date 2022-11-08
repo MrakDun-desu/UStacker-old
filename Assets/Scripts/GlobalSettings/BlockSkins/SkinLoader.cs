@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockstacker.Common;
+using Blockstacker.Common.Alerts;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -28,12 +29,22 @@ namespace Blockstacker.GlobalSettings.BlockSkins
             if (!Directory.Exists(path))
             {
                 SkinChanged?.Invoke();
+                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                    "Switched to default block skin",
+                    "Block skin has been returned to default",
+                    AlertType.Info
+                ));
                 return;
             }
 
             await GetSkinAsync(path);
 
             SkinChanged?.Invoke();
+            _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                "New skin loaded",
+                "Skin has been successfully loaded and changed",
+                AlertType.Success
+            ));
         }
 
         private static async Task GetSkinAsync(string path)
@@ -94,11 +105,11 @@ namespace Blockstacker.GlobalSettings.BlockSkins
                     foreach (var spriteRecord in spriteRecords)
                     {
                         if (fileList.Contains(spriteRecord.Filename)) continue;
-                        
+
                         fileList.Add(spriteRecord.Filename);
                         taskList.Add(LoadTextureToDictionary(spriteRecord.Filename, !spriteRecord.LoadFromUrl, output, path));
                     }
-                    
+
                 }
                 else
                 {
@@ -108,7 +119,7 @@ namespace Blockstacker.GlobalSettings.BlockSkins
                     foreach (var spriteRecord in spriteRecords)
                     {
                         if (fileList.Contains(spriteRecord.Filename)) continue;
-                        
+
                         fileList.Add(spriteRecord.Filename);
                         taskList.Add(LoadTextureToDictionary(spriteRecord.Filename, !spriteRecord.LoadFromUrl, output, path));
                     }
@@ -122,7 +133,7 @@ namespace Blockstacker.GlobalSettings.BlockSkins
         private static async Task LoadTextureToDictionary(string filename, bool isFile, IDictionary<string, Texture2D> textures, string path)
         {
             var actualFilename = isFile ? Path.Combine(path, filename) : filename;
-                
+
             var texture = await FileLoading.LoadTextureFromUrl(actualFilename, isFile);
 
             if (texture is not null)

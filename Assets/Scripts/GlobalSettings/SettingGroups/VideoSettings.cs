@@ -1,6 +1,4 @@
 using System;
-using System.ComponentModel;
-using Blockstacker.Common.Attributes;
 using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Groups
@@ -8,14 +6,18 @@ namespace Blockstacker.GlobalSettings.Groups
     [Serializable]
     public record VideoSettings
     {
-        public FullScreenMode FullscreenMode = FullScreenMode.ExclusiveFullScreen;
-        public Resolution Resolution = new();
-        
-        [MinRestraint(0, true)]
-        [MaxRestraint(1, true)]
-        public float BackgroundVisibility = 1;
-        
-        [Description("Use VSync")]
-        public bool UseVsync;
+        // backing fields
+        private float _backgroundVisibility = .6f;
+
+        public FullScreenMode FullscreenMode { get; set; } = FullScreenMode.ExclusiveFullScreen;
+        public Resolution Resolution { get; set; } = new();
+
+        public float BackgroundVisibility
+        {
+            get => _backgroundVisibility;
+            set => _backgroundVisibility = Mathf.Clamp(value, 0, 1);
+        }
+
+        public bool UseVsync { get; set; }
     }
 }

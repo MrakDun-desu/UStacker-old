@@ -4,13 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockstacker.Common;
+using Blockstacker.Common.Alerts;
 
 namespace Blockstacker.GlobalSettings.Backgrounds
 {
     public static class BackgroundPackLoader
     {
         public static readonly Dictionary<string, List<BackgroundRecord>> Backgrounds = new();
-        
+
         public static event Action BackgroundPackChanged;
 
         // needs to be manually updated every time a new background is added
@@ -22,7 +23,7 @@ namespace Blockstacker.GlobalSettings.Backgrounds
             "gameSettings",
             "gameCustom"
         };
-        
+
         public static IEnumerable<string> EnumerateBackgroundPacks()
         {
             return Directory.Exists(CustomizationPaths.BackgroundPacks)
@@ -36,6 +37,11 @@ namespace Blockstacker.GlobalSettings.Backgrounds
             if (!Directory.Exists(path))
             {
                 BackgroundPackChanged?.Invoke();
+                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                    "Switched to default background pack",
+                    "Backgrounds have been returned to default",
+                    AlertType.Info
+                ));
                 return;
             }
 
@@ -46,6 +52,11 @@ namespace Blockstacker.GlobalSettings.Backgrounds
 
             await Task.WhenAll(taskList);
             BackgroundPackChanged?.Invoke();
+            _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                "New background pack loaded",
+                "Background pack has been successfully loaded and changed",
+                AlertType.Success
+            ));
         }
 
         private static async Task HandleBackgroundLoadAsync(string path)
@@ -54,8 +65,8 @@ namespace Blockstacker.GlobalSettings.Backgrounds
             if (!SupportedBackgroundNames.Contains(backgroundName)) return;
 
             var newBackground = await LoadBackgroundRecordAsync(path);
-            if (newBackground is null) return; 
-            Backgrounds[backgroundName] = new List<BackgroundRecord> {newBackground};
+            if (newBackground is null) return;
+            Backgrounds[backgroundName] = new List<BackgroundRecord> { newBackground };
         }
 
         private static async Task HandleBackgroundFolderLoadAsync(string path)

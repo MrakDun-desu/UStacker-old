@@ -36,6 +36,11 @@ namespace Blockstacker.GlobalSettings.Music
             if (!Directory.Exists(path))
             {
                 SoundPackChanged?.Invoke();
+                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                    "Switched to default sound pack",
+                    "Sound pack has been returned to default",
+                    AlertType.Info
+                ));
                 return;
             }
             var taskList = new List<Task>
@@ -47,6 +52,11 @@ namespace Blockstacker.GlobalSettings.Music
             await Task.WhenAll(taskList);
 
             SoundPackChanged?.Invoke();
+            _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                "New sound pack loaded",
+                "Sound pack has been successfully loaded and changed",
+                AlertType.Success
+            ));
         }
 
         private static async Task LoadSoundEffectsAsync(string path)
@@ -56,7 +66,7 @@ namespace Blockstacker.GlobalSettings.Music
             var scriptPath = Path.Combine(path, CustomizationFilenames.SoundEffectScript);
             if (!File.Exists(scriptPath))
                 return;
-            
+
             SoundEffectsScript = await File.ReadAllTextAsync(scriptPath);
             var lua = new Lua();
             lua.RestrictMaliciousFunctions();
@@ -77,16 +87,16 @@ namespace Blockstacker.GlobalSettings.Music
         private static async Task LoadMusicAsync(string path)
         {
             await LoadClipsFromDirectoryAsync(path, Music);
-            
+
             MusicPlayer.Configuration.GameMusic.AddRange(Music.Keys);
-            
+
             var confPath = Path.Combine(path, CustomizationFilenames.MusicConfig);
             if (!File.Exists(confPath))
                 return;
-            
+
             var musicConfStr = await File.ReadAllTextAsync(confPath);
             var musicConf = JsonConvert.DeserializeObject<MusicConfiguration>(musicConfStr, StaticSettings.JsonSerializerSettings);
-            
+
             MusicPlayer.Configuration.Rewrite(musicConf);
         }
 

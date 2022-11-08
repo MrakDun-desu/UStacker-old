@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using Blockstacker.Common.Attributes;
 using Blockstacker.GlobalSettings.Music;
 using UnityEngine;
 
@@ -10,32 +8,40 @@ namespace Blockstacker.GlobalSettings.Groups
     [Serializable]
     public record SoundSettings
     {
-        [MinRestraint(0, true)]
-        [MaxRestraint(1, true)]
-        public float MasterVolume = 0.5f;
-        
-        [MinRestraint(0, true)]
-        [MaxRestraint(1, true)]
-        public float MusicVolume = 1;
-        
-        [MinRestraint(0, true)]
-        [MaxRestraint(1, true)]
-        [Description("Sound Effects Volume")]
-        [Tooltip("Changes the volume of in-game sound effects")]
-        public float EffectsVolume = 1;
-        
-        [MinRestraint(0, true)]
-        [MaxRestraint(1, true)]
-        [Tooltip("Changes the volume of menu sound effects")]
-        public float MenuSoundsVolume = 1;
-        
-        [Tooltip("If set, will mute the game when window is of focus")]
-        public bool MuteWhenOutOfFocus;
-        
-        [Tooltip("Will enable next piece sound effects. Works only if your sound pack supports this")]
-        public bool HearNextPieces;
-        
+        private float _masterVolume = .5f;
+        private float _musicVolume = 1;
+        private float _effectsVolume = 1;
+        private float _menuSoundsVolume = 1;
+
+        public float MasterVolume
+        {
+            get => _masterVolume;
+            set => _masterVolume = Mathf.Clamp(value, 0, 1);
+        }
+
+        public float MusicVolume
+        {
+            get => _musicVolume;
+            set => _musicVolume = Mathf.Clamp(value, 0, 1);
+        }
+
+        public float EffectsVolume
+        {
+            get => _effectsVolume;
+            set => _effectsVolume = Mathf.Clamp(value, 0, 1);
+        }
+
+        public float MenuSoundsVolume
+        {
+            get => _menuSoundsVolume;
+            set => _menuSoundsVolume = Mathf.Clamp(value, 0, 1);
+        }
+
+        public bool MuteWhenOutOfFocus { get; set; }
+
+        public bool HearNextPieces { get; set; }
+
         // not viewed in global settings UI
-        public Dictionary<string, MusicOption> GameMusicDictionary = new();
+        public Dictionary<string, MusicOption> GameMusicDictionary { get; set; } = new();
     }
 }
