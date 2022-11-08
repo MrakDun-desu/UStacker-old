@@ -28,7 +28,7 @@ namespace Blockstacker.Gameplay.Initialization
         public override void Execute()
         {
             _gameSettings.Controls.ActiveRotationSystem =
-                _gameSettings.Controls.RotationSystem switch
+                _gameSettings.Controls.RotationSystemType switch
                 {
                     RotationSystemType.SRS => _srsRotationSystem,
                     RotationSystemType.SRSPlus => _srsPlusRotationSystem,

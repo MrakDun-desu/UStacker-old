@@ -10,6 +10,6 @@ namespace Blockstacker.GameSettings.Enums
         Doubles = 1 << 1,
         Triples = 1 << 2,
         Quads = 1 << 3,
-        Custom = short.MaxValue
+        CustomFlag = 1 << 4
     }
 }

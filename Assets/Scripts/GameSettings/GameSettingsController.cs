@@ -14,6 +14,7 @@ public class GameSettingsController : MonoBehaviour {
                 settingsTab.SetActive(false);
             }
         }
+        _currentOpenTab.SetActive(true);
     }
     
     public void ChangeOpenTab(GameObject newTab) {

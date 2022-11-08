@@ -4,7 +4,6 @@ namespace Blockstacker.GameSettings.Changers.Files
 {
     public class CustomRandomizerChanger : GameSettingFileChanger
     {
-        protected override string DefaultEmptyPrompt => "No randomizer available";
         protected override string TargetDir => CustomizationPaths.Randomizers;
     }
 }

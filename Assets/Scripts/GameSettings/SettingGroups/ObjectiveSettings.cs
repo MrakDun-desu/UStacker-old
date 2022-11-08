@@ -14,7 +14,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         // backing fields
 
         private GameManagerType _gameManagerType = GameManagerType.None;
-        private string _customGameManagerName = string.Empty;
+        private string _customGameManager = string.Empty;
         private GarbageGeneration _garbageGeneration;
         private string _customGarbageGeneratorName = string.Empty;
         
@@ -45,12 +45,12 @@ namespace Blockstacker.GameSettings.SettingGroups
         }
 
         [Tooltip("Filename of the custom manager you want to use")]
-        public string CustomGameManagerName
+        public string CustomGameManager
         {
-            get => _customGameManagerName;
+            get => _customGameManager;
             set
             {
-                _customGameManagerName = value;
+                _customGameManager = value;
                 ReloadGameManagerIfNeeded();
             }
         }
@@ -99,7 +99,8 @@ namespace Blockstacker.GameSettings.SettingGroups
 
         private void ReloadGarbageGeneratorIfNeeded()
         {
-            if (_garbageGeneration != GarbageGeneration.Custom)
+            if (!_garbageGeneration.HasFlag(GarbageGeneration.CustomFlag) ||
+                string.IsNullOrEmpty(_customGarbageGeneratorName))
                 return;
             
             if (TryReloadGarbageGenerator())
@@ -122,7 +123,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         {
             const string filenameExtension = ".lua";
             var filePath = Path.Combine(CustomizationPaths.RotationSystems,
-                CustomGameManagerName + filenameExtension);
+                CustomGameManager + filenameExtension);
 
             if (!File.Exists(filePath)) return false;
 
@@ -133,21 +134,22 @@ namespace Blockstacker.GameSettings.SettingGroups
 
         private void ReloadGameManagerIfNeeded()
         {
-            if (_gameManagerType != GameManagerType.Custom)
+            if (_gameManagerType != GameManagerType.Custom ||
+                string.IsNullOrEmpty(_customGameManager))
                 return;
             
             if (TryReloadGameManagerScript())
             {
                 _ = AlertDisplayer.Instance.ShowAlert(
-                    new Alert("Custom randomizer load failed!",
-                        $"Randomizer {CustomGameManagerName} couldn't be found.",
+                    new Alert("Custom game manager load failed!",
+                        $"Game manager {CustomGameManager} couldn't be found.",
                         AlertType.Error));
             }
             else
             {
                 _ = AlertDisplayer.Instance.ShowAlert(
-                    new Alert("Custom randomizer loaded!",
-                        $"Randomizer {CustomGameManagerName} was loaded into game settings.",
+                    new Alert("Custom game manager loaded!",
+                        $"Game manager {CustomGameManager} was loaded into game settings.",
                         AlertType.Success));
             }
         }

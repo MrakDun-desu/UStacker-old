@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Blockstacker.Common;
 using TMPro;
@@ -10,18 +11,10 @@ namespace Blockstacker.GameSettings.Changers
     public abstract class GameSettingFileChanger : GameSettingChangerBase<string>
     {
         [SerializeField] protected TMP_Dropdown _dropdown;
-        [SerializeField] protected string _emptyPrompt = string.Empty;
         [SerializeField] private Button _openDirectoryButton;
         
         protected abstract string TargetDir { get; }
-        protected abstract string DefaultEmptyPrompt { get; }
         
-        private new void OnValidate() {
-            base.OnValidate();
-            if (string.IsNullOrEmpty(_emptyPrompt))
-                _emptyPrompt = DefaultEmptyPrompt;
-        }
-
         private void Start()
         {
             RefreshValue();
@@ -47,7 +40,7 @@ namespace Blockstacker.GameSettings.Changers
         {
             var optionName = _dropdown.options[index].text;
 
-            if (string.IsNullOrEmpty(optionName) || optionName == _emptyPrompt)
+            if (string.IsNullOrEmpty(optionName))
                 return;
             
             SetValue(optionName);
@@ -59,7 +52,10 @@ namespace Blockstacker.GameSettings.Changers
             _dropdown.options.Add(new TMP_Dropdown.OptionData(string.Empty));
             _dropdown.SetValueWithoutNotify(0);
 
-            var options = Directory.EnumerateFiles(TargetDir).Select(Path.GetFileNameWithoutExtension).ToArray();
+            var options = Array.Empty<string>();
+            if (Directory.Exists(TargetDir))
+                options = Directory.EnumerateFiles(TargetDir).Select(Path.GetFileNameWithoutExtension).ToArray();
+            
             for (var i = 0; i < options.Length; i++)
             {
                 var optionName = options[i];
@@ -67,9 +63,6 @@ namespace Blockstacker.GameSettings.Changers
                 if (optionName == _gameSettingsSO.GetValue<string>(_controlPath))
                     _dropdown.SetValueWithoutNotify(i);
             }
-            
-            if (_dropdown.options.Count == 1) 
-                _dropdown.options.Add(new TMP_Dropdown.OptionData(_emptyPrompt));
             
             _dropdown.RefreshShownValue();
         }

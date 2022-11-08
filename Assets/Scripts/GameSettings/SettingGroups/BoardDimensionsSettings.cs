@@ -1,6 +1,5 @@
 using System;
 using Blockstacker.Common.Attributes;
-using Blockstacker.GameSettings.Enums;
 using UnityEngine;
 
 namespace Blockstacker.GameSettings.SettingGroups
@@ -8,13 +7,13 @@ namespace Blockstacker.GameSettings.SettingGroups
     [Serializable]
     public record BoardDimensionsSettings
     {
-        [MinRestraint(2, true)]
-        [MaxRestraint(500, true)]
-        public uint BoardHeight = 22;
-        
         [MinRestraint(4, true)]
         [MaxRestraint(500, true)]
         public uint BoardWidth = 10;
+        
+        [MinRestraint(2, true)]
+        [MaxRestraint(500, true)]
+        public uint BoardHeight = 22;
         
         [Tooltip("Importance changes depending on the Topout Condition")]
         public uint LethalHeight = 20;
@@ -23,11 +22,8 @@ namespace Blockstacker.GameSettings.SettingGroups
         [MaxRestraint(600, true)]
         public uint PieceSpawnHeight = 21;
         
-        [Tooltip("Defines how the player loses the game")]
-        public TopoutCondition TopoutCondition = TopoutCondition.AllBlocksAboveLethal;
-        
-        [Tooltip("If the player clears a line, some Topout Conditions are ignored")]
-        public bool AllowClutchClears = true;
+        [Tooltip("If blocks are placed higher than this height, they are cleared from the board after placement")]
+        public uint BlockCutHeight = 40;
         
         [MinRestraint(2, true)]
         [MaxRestraint(200, true)]

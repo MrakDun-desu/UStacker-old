@@ -172,7 +172,7 @@ namespace Blockstacker.Gameplay
                 _lastWasRotation = false;
 
             var dropPieceAfterMovement = false;
-            if (_settings.Controls.HardLockType == HardLockType.LimitedMoves)
+            if (_settings.Gravity.HardLockType == HardLockType.LimitedMoves)
             {
                 if (isRotation)
                     _hardLockAmount -= 1;
@@ -229,9 +229,9 @@ namespace Blockstacker.Gameplay
                 ? _board.Place(ActivePiece, placementTime, _lastSpinResult)
                 : _board.Place(ActivePiece, placementTime);
             
-            var spawnTime = _settings.Controls.PiecePlacedDelay;
+            var spawnTime = _settings.Gravity.PiecePlacementDelay;
             if (linesCleared)
-                spawnTime += _settings.Controls.LineClearDelay;
+                spawnTime += _settings.Gravity.LineClearDelay;
 
             if (_settings.Controls.AllowHold)
                 PieceHolder.UnmarkUsed();
@@ -244,7 +244,7 @@ namespace Blockstacker.Gameplay
         {
             if (!_isHardLocking) return;
 
-            if (_settings.Controls.HardLockType == HardLockType.LimitedInputs)
+            if (_settings.Gravity.HardLockType == HardLockType.LimitedInputs)
             {
                 _hardLockAmount -= 1;
                 if (_hardLockAmount <= 0) HandlePiecePlacement(updateTime);
@@ -665,10 +665,10 @@ namespace Blockstacker.Gameplay
                 StopLockdown(true);
 
             if (_lockTime <= functionStartTime &&
-                _settings.Controls.HardLockType != HardLockType.InfiniteMovement)
+                _settings.Gravity.HardLockType != HardLockType.InfiniteMovement)
                 HandlePiecePlacement(_lockTime);
 
-            if (_settings.Controls.HardLockType == HardLockType.LimitedTime
+            if (_settings.Gravity.HardLockType == HardLockType.LimitedTime
                 && _hardLockAmount <= functionStartTime)
                 HandlePiecePlacement(_hardLockAmount);
         }
@@ -681,14 +681,14 @@ namespace Blockstacker.Gameplay
 
             if (_isHardLocking) return;
             
-            switch (_settings.Controls.HardLockType)
+            switch (_settings.Gravity.HardLockType)
             {
                 case HardLockType.LimitedTime:
-                    _hardLockAmount = lockStart + _settings.Controls.HardLockAmount;
+                    _hardLockAmount = lockStart + _settings.Gravity.HardLockAmount;
                     break;
                 case HardLockType.LimitedMoves:
                 case HardLockType.LimitedInputs:
-                    _hardLockAmount = Math.Floor(_settings.Controls.HardLockAmount);
+                    _hardLockAmount = Math.Floor(_settings.Gravity.HardLockAmount);
                     break;
                 case HardLockType.InfiniteMovement:
                     break;

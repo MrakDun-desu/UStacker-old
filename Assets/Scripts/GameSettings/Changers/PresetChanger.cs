@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using Blockstacker.Common;
 using Blockstacker.Common.Alerts;
 using TMPro;
 using UnityEngine;
@@ -13,9 +13,8 @@ namespace Blockstacker.GameSettings.Changers
         [SerializeField] private string _defaultPrompt = "Pick a preset";
         [SerializeField] private string _emptyPrompt = "No preset available";
         [SerializeField] private Button _savePresetButton;
+        [SerializeField] private Button _openFolderButton;
         [SerializeField] private GameSettingsSO _targetSo;
-
-        private List<string> _availableOptions;
 
         private void Start()
         {
@@ -23,26 +22,33 @@ namespace Blockstacker.GameSettings.Changers
 
             _dropdown.onValueChanged.AddListener(OnOptionPicked);
             _savePresetButton.onClick.AddListener(OnSaveButtonClicked);
+            _openFolderButton.onClick.AddListener(OpenFolder);
+        }
+
+        private static void OpenFolder()
+        {
+            DefaultAppOpener.OpenFile(CustomizationPaths.GameSettingsPresets);
         }
 
         private void RefreshNames(string setPresetName = null)
         {
             _dropdown.ClearOptions();
 
-            _availableOptions = GameSettingsSO.EnumeratePresets().ToList();
+            var availableOptions = GameSettingsSO.EnumeratePresets();
 
             _dropdown.options.Add(new TMP_Dropdown.OptionData(_defaultPrompt));
             if (setPresetName is not null)
             {
-                for (var i = 0; i < _availableOptions.Count; i++)
+                var optionsToAdd = availableOptions.ToList();
+                for (var i = 0; i < optionsToAdd.Count; i++)
                 {
-                    _dropdown.options.Add(new TMP_Dropdown.OptionData(_availableOptions[i]));
-                    if (_availableOptions[i].Equals(setPresetName))
+                    _dropdown.options.Add(new TMP_Dropdown.OptionData(optionsToAdd[i]));
+                    if (optionsToAdd[i].Equals(setPresetName))
                         _dropdown.SetValueWithoutNotify(i);
                 }
             }
             else
-                _dropdown.AddOptions(_availableOptions.Select(opt => new TMP_Dropdown.OptionData(opt)).ToList());
+                _dropdown.AddOptions(availableOptions.Select(opt => new TMP_Dropdown.OptionData(opt)).ToList());
 
             if (_dropdown.options.Count == 1)
             {
@@ -55,7 +61,7 @@ namespace Blockstacker.GameSettings.Changers
 
         private void OnOptionPicked(int optIndex)
         {
-            var presetName = _availableOptions[optIndex];
+            var presetName = _dropdown.options[optIndex].text;
 
             if (presetName == _defaultPrompt || presetName == _emptyPrompt)
                 return;
@@ -82,7 +88,7 @@ namespace Blockstacker.GameSettings.Changers
             presetName = _targetSo.Save(presetName);
             _ = AlertDisplayer.Instance.ShowAlert(
                 new Alert("Game settings saved!",
-                    $"Game settings have been saved to a preset named {presetName}.",
+                    $"Game settings have been saved to a file {presetName}.",
                     AlertType.Success));
 
             RefreshNames(presetName);

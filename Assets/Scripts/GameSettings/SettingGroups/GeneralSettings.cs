@@ -72,7 +72,8 @@ namespace Blockstacker.GameSettings.SettingGroups
 
         private void ReloadRandomizerIfNeeded()
         {
-            if (_randomizerType != RandomizerType.Custom)
+            if (_randomizerType != RandomizerType.Custom ||
+                string.IsNullOrEmpty(_customRandomizerName))
                 return;
             
             if (TryReloadRandomizer())

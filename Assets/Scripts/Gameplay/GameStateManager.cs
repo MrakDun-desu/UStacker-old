@@ -17,6 +17,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private GameTimer _timer;
         [SerializeField] private StatCounterManager _statCounterManager;
         [SerializeField] private GameRecorder _gameRecorder;
+        [SerializeField] private GameResultDisplayer _resultDisplayer;
 
         [Space] 
         [SerializeField] private UnityEvent GameStarted;
@@ -113,6 +114,7 @@ namespace Blockstacker.Gameplay
             Replay.ActionList.AddRange(_gameRecorder.ActionList);
             Replay.Stats = _statCounterManager.Stats;
             Replay.GameLength = endTime;
+            _resultDisplayer.DisplayedReplay = Replay;
             GameEnded.Invoke();
             _mediator.Send(new GameEndedMessage(endTime));
         }

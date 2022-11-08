@@ -29,8 +29,10 @@ namespace Blockstacker.GameSettings.Changers
                 RefreshValue();
                 return;
             }
-            SetValue(_clampValue ? Math.Clamp(doubleValue, _minValue, _maxValue) : doubleValue);
-            _valueField.SetTextWithoutNotify(doubleValue.ToString(CultureInfo.InvariantCulture));
+
+            var actualValue = _clampValue ? Math.Clamp(doubleValue, _minValue, _maxValue) : doubleValue;
+            SetValue(actualValue);
+            _valueField.SetTextWithoutNotify(actualValue.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

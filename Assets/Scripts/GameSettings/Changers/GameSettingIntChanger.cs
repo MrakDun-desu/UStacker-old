@@ -22,8 +22,11 @@ namespace Blockstacker.GameSettings.Changers
                 RefreshValue();
                 return;
             }
-            SetValue(_clampValue ? Mathf.Clamp(intValue, _minValue, _maxValue) : intValue);
-            _valueField.SetTextWithoutNotify(intValue.ToString());
+
+            var actualValue = _clampValue ? Mathf.Clamp(intValue, _minValue, _maxValue) : intValue;
+            
+            SetValue(actualValue);
+            _valueField.SetTextWithoutNotify(actualValue.ToString());
         }
     }
 }

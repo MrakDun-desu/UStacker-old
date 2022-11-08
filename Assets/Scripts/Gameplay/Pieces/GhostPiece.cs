@@ -78,7 +78,6 @@ namespace Blockstacker.Gameplay.Pieces
                 gameObject.SetActive(false);
 
             ColorGhostPieceApplier.ColorGhostPieceChanged += ChangeColoring;
-            ChangeColoring(AppSettings.Gameplay.ColorGhostPiece);
         }
 
         private BlockBase CreateBlock()

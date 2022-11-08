@@ -233,9 +233,11 @@ namespace Blockstacker.Gameplay
         private void ClearLine(int lineNumber)
         {
             if (Blocks.Count <= lineNumber) return;
+
+            var slots = Slots;
             for (var i = 0; i < Blocks[lineNumber].Length; i++)
             {
-                if (!Slots[lineNumber][i]) continue;
+                if (!slots[lineNumber][i]) continue;
 
                 Blocks[lineNumber][i].Clear();
             }
@@ -244,7 +246,7 @@ namespace Blockstacker.Gameplay
             if (GarbageHeight > lineNumber)
                 GarbageHeight--;
 
-            var slots = Slots;
+            slots = Slots;
             for (var y = lineNumber; y < Blocks.Count; y++)
             for (var x = 0; x < Blocks[y].Length; x++)
             {
@@ -258,6 +260,18 @@ namespace Blockstacker.Gameplay
         {
             linesCleared = 0;
             var cheeseHeightStart = GarbageHeight;
+            var slots = Slots;
+            for (var y = Blocks.Count; y > _settings.BoardDimensions.BlockCutHeight; y--)
+            {
+                for (var x = 0; x < Blocks[y].Length; x++)
+                {
+                    if (!slots[y][x]) continue;
+                    
+                    Blocks[y][x].Clear();
+                }
+                Blocks.RemoveAt(y);
+            }
+            
             for (var i = 0; i < Blocks.Count; i++)
             {
                 var isFull = Slots[i].All(blockExists => blockExists);
@@ -384,9 +398,9 @@ namespace Blockstacker.Gameplay
             SendPlacementMessage(linesCleared, cheeseLinesCleared, wasAllClear, placementTime, lastSpinResult,
                 piece.Type);
 
-            if (_settings.BoardDimensions.AllowClutchClears && linesWereCleared) return true;
+            if (_settings.Gravity.AllowClutchClears && linesWereCleared) return true;
 
-            switch (_settings.BoardDimensions.TopoutCondition)
+            switch (_settings.Gravity.TopoutCondition)
             {
                 case TopoutCondition.PieceSpawn:
                     break;

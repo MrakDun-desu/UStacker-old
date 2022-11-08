@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using Blockstacker.Common;
 using Blockstacker.Common.Alerts;
-using Blockstacker.Common.Attributes;
 using Blockstacker.GameSettings.Enums;
 using Blockstacker.GlobalSettings.Groups;
 using Newtonsoft.Json;
@@ -14,8 +13,8 @@ namespace Blockstacker.GameSettings.SettingGroups
     public record ControlsSettings
     {
         // backing fields
-        private RotationSystemType _rotationSystem = RotationSystemType.SRS;
-        private string _customRotationSystemName = string.Empty;
+        private RotationSystemType _rotationSystemType = RotationSystemType.SRS;
+        private string _customRotationSystem = string.Empty;
         
         public bool Allow180Spins = true;
         public bool AllowHardDrop = true;
@@ -24,43 +23,26 @@ namespace Blockstacker.GameSettings.SettingGroups
         public bool ShowGhostPiece = true;
 
         [Tooltip("Changes how the pieces spawn, how they rotate and kick and which spins are treated as full spins")]
-        public RotationSystemType RotationSystem
+        public RotationSystemType RotationSystemType
         {
-            get => _rotationSystem;
+            get => _rotationSystemType;
             set
             {
-                _rotationSystem = value;
+                _rotationSystemType = value;
                 LoadCustomSystemIfNeeded();
             }
         }
 
         [Tooltip("Filename of the custom rotation system")]
-        public string CustomRotationSystemName
+        public string CustomRotationSystem
         {
-            get => _customRotationSystemName;
+            get => _customRotationSystem;
             set
             {
-                _customRotationSystemName = value;
+                _customRotationSystem = value;
                 LoadCustomSystemIfNeeded();
             }
         }
-        
-        [Tooltip("How long to wait in seconds before spawning a piece when piece has been placed")]
-        [MinRestraint(0, true)]
-        [MaxRestraint(10, true)]
-        public double PiecePlacedDelay;
-        
-        [Tooltip("How long to wait in seconds before spawning a piece if lines have been cleared")]
-        [MinRestraint(0, true)]
-        [MaxRestraint(10, true)]
-        public double LineClearDelay;
-        
-        [Tooltip("Determines when the piece will lock after starting lock delay the first time")]
-        public HardLockType HardLockType = HardLockType.LimitedTime;
-        
-        [MinRestraint(0, true)]
-        [MaxRestraint(50, true)]
-        public double HardLockAmount = 5;
         
         [Tooltip("If set, this handling will override the global handling")]
         public bool OverrideHandling;
@@ -73,7 +55,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         {
             const string filenameExtension = ".json";
             var filePath = Path.Combine(CustomizationPaths.RotationSystems,
-                CustomRotationSystemName + filenameExtension);
+                CustomRotationSystem + filenameExtension);
 
             if (!File.Exists(filePath)) return false;
             
@@ -85,21 +67,22 @@ namespace Blockstacker.GameSettings.SettingGroups
 
         private void LoadCustomSystemIfNeeded()
         {
-            if (_rotationSystem != RotationSystemType.Custom)
+            if (_rotationSystemType != RotationSystemType.Custom ||
+                string.IsNullOrEmpty(_customRotationSystem))
                 return;
             
             if (TryReloadRotationSystem())
             {
                 _ = AlertDisplayer.Instance.ShowAlert(
                     new Alert("Custom rotation system load failed!",
-                        $"Rotation system {CustomRotationSystemName} couldn't be found.",
+                        $"Rotation system {CustomRotationSystem} couldn't be found.",
                         AlertType.Error));
             }
             else
             {
                 _ = AlertDisplayer.Instance.ShowAlert(
                     new Alert("Custom rotation system loaded!",
-                        $"Rotation system {CustomRotationSystemName} was loaded into game settings.",
+                        $"Rotation system {CustomRotationSystem} was loaded into game settings.",
                         AlertType.Success));
             }
         }

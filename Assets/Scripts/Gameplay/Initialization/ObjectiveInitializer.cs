@@ -70,17 +70,13 @@ namespace Blockstacker.Gameplay.Initialization
             var readonlyBoard = new GarbageBoardInterface(_board);
             string validationErrors = null;
 
-            IGarbageGenerator garbageGenerator = _gameSettings.Objective.GarbageGeneration switch
-            {
-                GameSettings.Enums.GarbageGeneration.Custom => new CustomGarbageGenerator(
-                    readonlyBoard,
-                    _gameSettings.Objective.CustomGarbageScript,
-                    out validationErrors),
-                _ => new DefaultGarbageGenerator(
-                    readonlyBoard,
-                    _gameSettings.Objective.GarbageGeneration
-                    )
-            };
+            IGarbageGenerator garbageGenerator;
+            if (_gameSettings.Objective.GarbageGeneration.HasFlag(GameSettings.Enums.GarbageGeneration.CustomFlag))
+                garbageGenerator = new CustomGarbageGenerator(readonlyBoard,
+                    _gameSettings.Objective.CustomGarbageScript, out validationErrors);
+            else
+                garbageGenerator = new DefaultGarbageGenerator(
+                    readonlyBoard, _gameSettings.Objective.GarbageGeneration);
 
             if (validationErrors is not null)
             {
