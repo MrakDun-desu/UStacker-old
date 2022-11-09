@@ -71,7 +71,7 @@ namespace Blockstacker.GlobalSettings
                 oldObject = obj;
                 obj = propertyInfo.GetValue(obj);
 
-                if (obj == null) return false;
+                if (obj is null) return false;
 
                 type = obj.GetType();
             }
@@ -93,9 +93,9 @@ namespace Blockstacker.GlobalSettings
             {
                 var propertyInfo = type.GetProperty(fieldName);
 
-                obj = propertyInfo.GetValue(obj);
+                obj = propertyInfo?.GetValue(obj);
 
-                if (obj == null) return default;
+                if (obj is null) return default;
 
                 type = obj.GetType();
             }
@@ -113,9 +113,9 @@ namespace Blockstacker.GlobalSettings
             {
                 var propertyInfo = type.GetProperty(fieldName);
 
-                obj = propertyInfo.GetValue(obj);
+                obj = propertyInfo?.GetValue(obj);
 
-                if (obj == null) return false;
+                if (obj is null) return false;
 
                 type = obj.GetType();
             }
@@ -134,7 +134,7 @@ namespace Blockstacker.GlobalSettings
             {
                 propertyInfo = type.GetProperty(fieldName);
 
-                obj = propertyInfo.GetValue(obj);
+                obj = propertyInfo?.GetValue(obj);
                 if (obj is null) return false;
 
                 type = obj.GetType();

@@ -85,16 +85,16 @@ namespace Blockstacker.GameSettings
                 propertyInfo = type.GetProperty(fieldName);
 
                 oldObject = obj;
-                obj = propertyInfo.GetValue(obj);
+                obj = propertyInfo?.GetValue(obj);
 
-                if (obj == null) return;
+                if (obj is null) return;
 
                 type = obj.GetType();
             }
 
             if (type != typeof(T)) return;
 
-            propertyInfo.SetValue(oldObject, value);
+            propertyInfo?.SetValue(oldObject, value);
         }
 
         public T GetValue<T>(string[] path)
@@ -106,9 +106,9 @@ namespace Blockstacker.GameSettings
             {
                 var propertyInfo = type.GetProperty(fieldName);
 
-                obj = propertyInfo.GetValue(obj);
+                obj = propertyInfo?.GetValue(obj);
 
-                if (obj == null) return default;
+                if (obj is null) return default;
 
                 type = obj.GetType();
             }
@@ -126,9 +126,9 @@ namespace Blockstacker.GameSettings
             {
                 var propertyInfo = type.GetProperty(fieldName);
 
-                obj = propertyInfo.GetValue(obj);
+                obj = propertyInfo?.GetValue(obj);
 
-                if (obj == null) return false;
+                if (obj is null) return false;
 
                 type = obj.GetType();
             }

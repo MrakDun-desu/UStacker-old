@@ -13,7 +13,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         private double _defaultLockDelay = .5d;
         private double _piecePlacementDelay = 0;
         private double _lineClearDelay = 0;
-        private double _hardLockAmount = 0;
+        private double _hardLockAmount = 5d;
 
         public double DefaultGravity
         {
