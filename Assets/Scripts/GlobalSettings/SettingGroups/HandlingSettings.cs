@@ -1,5 +1,6 @@
 using System;
 using Blockstacker.GlobalSettings.Enums;
+using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Groups
 {
@@ -7,12 +8,26 @@ namespace Blockstacker.GlobalSettings.Groups
     public record HandlingSettings
     {
         // backing fields 
+        [SerializeField]
         private double _delayedAutoShift = .125d;
+        [SerializeField]
         private double _automaticRepeatRate = .2d;
+        [SerializeField]
         private double _softDropFactor = 20d;
+        [SerializeField]
         private double _dasCutDelay = 0d;
+        [SerializeField]
         private double _doubleDropPreventionInterval = 0;
-
+        
+        [field: SerializeField]
+        public DelayDasOn DelayDasOn { get; set; } = DelayDasOn.Nothing;
+        [field: SerializeField]
+        public SimultaneousDasBehavior SimultaneousDasBehavior { get; set; } = SimultaneousDasBehavior.CancelFirstDirection;
+        [field: SerializeField]
+        public DiagonalLockBehavior DiagonalLockBehavior { get; set; } = DiagonalLockBehavior.DontLock;
+        [field: SerializeField]
+        public bool CancelDelayWithMovement { get; set; } = true;
+        
         public double DelayedAutoShift
         {
             get => _delayedAutoShift;
@@ -42,14 +57,5 @@ namespace Blockstacker.GlobalSettings.Groups
             get => _doubleDropPreventionInterval;
             set => _doubleDropPreventionInterval = Math.Max(value, 0);
         }
-
-        public DelayDasOn DelayDasOn { get; set; } = DelayDasOn.Nothing;
-
-        public SimultaneousDasBehavior SimultaneousDasBehavior { get; set; } = SimultaneousDasBehavior.CancelFirstDirection;
-
-        public DiagonalLockBehavior DiagonalLockBehavior { get; set; } = DiagonalLockBehavior.DontLock;
-
-        public bool CancelDelayWithMovement { get; set; } = true;
-
     }
 }

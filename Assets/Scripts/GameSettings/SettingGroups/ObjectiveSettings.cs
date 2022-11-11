@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using Blockstacker.Common;
 using Blockstacker.Common.Alerts;
-using Blockstacker.Common.Attributes;
 using Blockstacker.GameSettings.Enums;
 using UnityEngine;
 
@@ -12,27 +11,37 @@ namespace Blockstacker.GameSettings.SettingGroups
     public record ObjectiveSettings
     {
         // backing fields
-
+        [SerializeField]
         private GameManagerType _gameManagerType = GameManagerType.None;
+        [SerializeField]
         private string _customGameManager = string.Empty;
+        [SerializeField]
         private GarbageGeneration _garbageGeneration;
+        [SerializeField]
         private string _customGarbageGeneratorName = string.Empty;
+        [SerializeField]
         private double _endConditionCount = 40d;
+        [SerializeField]
         private uint _garbageHeight = 10;
 
+        [field: SerializeField]
         public MainStat MainStat { get; set; } = MainStat.Time;
-
+        [field: SerializeField]
         public GameEndCondition GameEndCondition { get; set; } = GameEndCondition.LinesCleared;
+        [field: SerializeField]
+        public string CustomGarbageScript { get; set; } = "";
+        [field: SerializeField]
+        public string CustomGameManagerScript { get; set; } = "";
+        [field: SerializeField]
+        public bool ToppingOutIsOkay { get; set; }
+        [field: SerializeField]
+        public string StartingLevel { get; set; }
 
         public double EndConditionCount
         {
             get => _endConditionCount;
             set => _endConditionCount = Math.Max(value, 0);
         }
-
-        public bool ToppingOutIsOkay { get; set; }
-
-        public string StartingLevel { get; set; }
 
         public GameManagerType GameManagerType
         {
@@ -79,10 +88,6 @@ namespace Blockstacker.GameSettings.SettingGroups
                 ReloadGarbageGeneratorIfNeeded();
             }
         }
-
-        // not shown in settings UI
-        public string CustomGarbageScript { get; set; } = "";
-        public string CustomGameManagerScript { get; set; } = "";
 
         private bool TryReloadGarbageGenerator()
         {

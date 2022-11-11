@@ -42,9 +42,7 @@ namespace Blockstacker.Gameplay.Pieces
             get => _currentColor;
             private set
             {
-                var newColor = value;
-                if (!_colorGhostPiece) 
-                    newColor = _defaultColor;
+                var newColor = _colorGhostPiece ? value : _defaultColor;
                 if (_currentColor == newColor)
                     return;
                 _currentColor = newColor;
@@ -77,6 +75,7 @@ namespace Blockstacker.Gameplay.Pieces
             if (!_settings.Controls.ShowGhostPiece)
                 gameObject.SetActive(false);
 
+            _colorGhostPiece = AppSettings.Gameplay.ColorGhostPiece;
             ColorGhostPieceApplier.ColorGhostPieceChanged += ChangeColoring;
         }
 

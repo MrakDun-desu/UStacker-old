@@ -1,5 +1,4 @@
 using System;
-using Blockstacker.Common.Attributes;
 using UnityEngine;
 
 namespace Blockstacker.GameSettings.SettingGroups
@@ -8,11 +7,17 @@ namespace Blockstacker.GameSettings.SettingGroups
     public record BoardDimensionsSettings
     {
         // backing fields
+        [SerializeField]
         private uint _boardWidth = 10;
+        [SerializeField]
         private uint _boardHeight = 20;
+        [SerializeField]
         private uint _lethalHeight = 20;
+        [SerializeField]
         private uint _pieceSpawnHeight = 21;
+        [SerializeField]
         private uint _blockCutHeight = 40;
+        [SerializeField]
         private uint _boardPadding = 4;
 
         public uint BoardWidth

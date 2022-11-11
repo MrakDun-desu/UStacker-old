@@ -13,14 +13,25 @@ namespace Blockstacker.GameSettings.SettingGroups
     public record ControlsSettings
     {
         // backing fields
+        [SerializeField]
         private RotationSystemType _rotationSystemType = RotationSystemType.SRS;
+        [SerializeField]
         private string _customRotationSystem = string.Empty;
 
+        [field: SerializeField]
         public bool Allow180Spins { get; set; } = true;
+        [field: SerializeField]
         public bool AllowHardDrop { get; set; } = true;
+        [field: SerializeField]
         public bool AllowHold { get; set; } = true;
+        [field: SerializeField]
         public bool UnlimitedHold { get; set; }
+        [field: SerializeField]
         public bool ShowGhostPiece { get; set; } = true;
+        [field: SerializeField]
+        public bool OverrideHandling { get; set; }
+        [field: SerializeField]
+        public HandlingSettings Handling { get; set; } = new();
 
         public RotationSystemType RotationSystemType
         {
@@ -41,9 +52,6 @@ namespace Blockstacker.GameSettings.SettingGroups
                 LoadCustomSystemIfNeeded();
             }
         }
-
-        public bool OverrideHandling { get; set; }
-        public HandlingSettings Handling { get; set; } = new();
 
         // not shown in the settings UI
         public RotationSystem ActiveRotationSystem { get; set; }
