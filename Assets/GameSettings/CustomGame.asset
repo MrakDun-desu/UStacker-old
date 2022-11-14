@@ -14,95 +14,66 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GameType: {fileID: 11400000, guid: d5b147ab88e76c1479291959c777b01d, type: 2}
   Settings:
-    Rules:
-      General:
-        RandomizerType: 0
-        CustomRandomizerName: 
-        AllowedSpins: 2
-        UseRandomSeed: 1
-        SpecificSeed: 0
-        NextPieceCount: 5
-        CustomRandomizerScript: 
-        ActiveSeed: -634461149
-      Controls:
-        Allow180Spins: 1
-        AllowHardDrop: 1
-        AllowHold: 1
-        UnlimitedHold: 0
-        ShowGhostPiece: 1
-        RotationSystem: 1
-        CustomRotationSystemName: 
-        PiecePlacedDelay: 0
-        LineClearDelay: 0
-        HardLockType: 0
-        HardLockAmount: 5
-        OverrideHandling: 0
-        Handling:
-          DelayedAutoShift: 0.08500000089406967
-          AutomaticRepeatRate: 0
-          SoftDropFactor: Infinity
-          DasCutDelay: 0.03
-          DelayDasOn: 1
-          DoubleDropPreventionInterval: 0.03
-          SimultaneousDasBehavior: 1
-          DiagonalLockBehavior: 0
-          CancelDelayWithMovement: 1
-        ActiveRotationSystem:
-          DefaultTable:
-            StartState: 0
-            FullSpinKicks: []
-            ZeroToThree:
-            - {x: 0, y: 0}
-            ZeroToOne:
-            - {x: 0, y: 0}
-            OneToZero:
-            - {x: 0, y: 0}
-            OneToTwo:
-            - {x: 0, y: 0}
-            TwoToOne:
-            - {x: 0, y: 0}
-            TwoToThree:
-            - {x: 0, y: 0}
-            ThreeToTwo:
-            - {x: 0, y: 0}
-            ThreeToZero:
-            - {x: 0, y: 0}
-            ZeroToTwo:
-            - {x: 0, y: 0}
-            TwoToZero:
-            - {x: 0, y: 0}
-            OneToThree:
-            - {x: 0, y: 0}
-            ThreeToOne:
-            - {x: 0, y: 0}
-      Gravity:
-        DefaultGravity: 0.02
-        DefaultLockDelay: 0.5
-        LockDelayType: 1
-      BoardDimensions:
-        BoardHeight: 20
-        BoardWidth: 10
-        LethalHeight: 20
-        PieceSpawnHeight: 21
-        TopoutCondition: 0
-        AllowClutchClears: 1
-        BoardPadding: 5
-    Objective:
-      MainStat: 1
-      GameEndCondition: 1
-      EndConditionCount: 40
-      ToppingOutIsOkay: 0
-      StartingLevel: 0
-      GameManagerType: 0
-      CustomGameManagerName: 
-      GarbageGeneration: 0
-      GarbageHeight: 10
-      UseCustomGarbageScript: 0
-      CustomGarbageScriptName: 
-      CustomGarbageScript: 
-      CustomGameManagerScript: 
-    Presentation:
-      Title: Custom game
-      UseCountdown: 1
-      CountdownInterval: 0.5
-      CountdownCount: 3
+    <General>k__BackingField:
+      _nextPieceCount: 5
+      _randomizerType: 0
+      _customRandomizerName: 
+      <AllowedSpins>k__BackingField: 2
+      <UseCustomSeed>k__BackingField: 0
+      <CustomSeed>k__BackingField: 0
+      <CustomRandomizerScript>k__BackingField: 
+      <ActiveSeed>k__BackingField: 1050476319
+    <Controls>k__BackingField:
+      _rotationSystemType: 1
+      _customRotationSystem: 
+      <Allow180Spins>k__BackingField: 1
+      <AllowHardDrop>k__BackingField: 1
+      <AllowHold>k__BackingField: 1
+      <UnlimitedHold>k__BackingField: 0
+      <ShowGhostPiece>k__BackingField: 1
+      <OverrideHandling>k__BackingField: 0
+      <Handling>k__BackingField:
+        _delayedAutoShift: 0.085
+        _automaticRepeatRate: 0
+        _softDropFactor: Infinity
+        _dasCutDelay: 0.03
+        _doubleDropPreventionInterval: 0.03
+        <DelayDasOn>k__BackingField: 1
+        <SimultaneousDasBehavior>k__BackingField: 1
+        <DiagonalLockBehavior>k__BackingField: 0
+        <CancelDelayWithMovement>k__BackingField: 1
+    <BoardDimensions>k__BackingField:
+      _boardWidth: 10
+      _boardHeight: 20
+      _lethalHeight: 20
+      _pieceSpawnHeight: 21
+      _blockCutHeight: 40
+      _boardPadding: 4
+    <Gravity>k__BackingField:
+      _defaultGravity: 0.02
+      _defaultLockDelay: 0.5
+      _piecePlacementDelay: 0
+      _lineClearDelay: 0
+      _hardLockAmount: 5
+      <LockDelayType>k__BackingField: 1
+      <HardLockType>k__BackingField: 0
+      <TopoutCondition>k__BackingField: 2
+      <AllowClutchClears>k__BackingField: 1
+    <Objective>k__BackingField:
+      _gameManagerType: 0
+      _customGameManager: 
+      _garbageGeneration: 0
+      _customGarbageGeneratorName: 
+      _endConditionCount: 40
+      _garbageHeight: 10
+      <MainStat>k__BackingField: 1
+      <GameEndCondition>k__BackingField: 1
+      <CustomGarbageScript>k__BackingField: 
+      <CustomGameManagerScript>k__BackingField: 
+      <ToppingOutIsOkay>k__BackingField: 0
+      <StartingLevel>k__BackingField: 
+    <Presentation>k__BackingField:
+      _countdownInterval: 1
+      _countdownCount: 3
+      <Title>k__BackingField: Custom game
+      <UseCountdown>k__BackingField: 1

@@ -261,7 +261,7 @@ namespace Blockstacker.Gameplay
             linesCleared = 0;
             var cheeseHeightStart = GarbageHeight;
             var slots = Slots;
-            for (var y = Blocks.Count; y > _settings.BoardDimensions.BlockCutHeight; y--)
+            for (var y = Blocks.Count - 1; y >= _settings.BoardDimensions.BlockCutHeight; y--)
             {
                 for (var x = 0; x < Blocks[y].Length; x++)
                 {

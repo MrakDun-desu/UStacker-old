@@ -366,7 +366,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7734393948807267264, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_text
-      value: Color Ghost Piece
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8938684458795999658, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: _autoformatName
@@ -540,7 +540,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7597766658182900293, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: m_text
-      value: Automatic Repeat Rate
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8048587565150676515, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: _maxValue
@@ -1096,7 +1096,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3346748288000425753, guid: 94b6e27a66804cf4d8a72fd9e31b5c97, type: 3}
       propertyPath: m_text
-      value: Fullscreen Mode
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 3441245230571639827, guid: 94b6e27a66804cf4d8a72fd9e31b5c97, type: 3}
       propertyPath: m_fontSize
@@ -1420,7 +1420,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4824090472439437016, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: m_text
-      value: Ghost Piece Visibility
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 6219719621687869474, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1566,7 +1566,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7734393948807267264, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_text
-      value: Drag Middle Button To Reposition Board
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8938684458795999658, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: _autoformatName
@@ -1767,7 +1767,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7597766658182900293, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: m_text
-      value: Soft Drop Factor
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8048587565150676515, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: _maxValue
@@ -1918,7 +1918,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4824090472439437016, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: m_text
-      value: Board Zoom
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 4913567396917910206, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: _maxValue
@@ -2605,7 +2605,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7734393948807267264, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_text
-      value: Show Not Focused Warning
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8938684458795999658, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: _autoformatName
@@ -3460,7 +3460,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4824090472439437016, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: m_text
-      value: Background Visibility
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 4913567396917910206, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: _maxValue
@@ -3685,7 +3685,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8135162441654472765, guid: 0ac5efb20204592418237d3c892abf88, type: 3}
       propertyPath: m_text
-      value: Block skin
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8135162441654472765, guid: 0ac5efb20204592418237d3c892abf88, type: 3}
       propertyPath: m_fontSize
@@ -4215,7 +4215,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4824090472439437016, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: m_text
-      value: Sound Effects Volume
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8102400625087870905, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: m_Navigation.m_Mode
@@ -4371,7 +4371,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8135162441654472765, guid: 0ac5efb20204592418237d3c892abf88, type: 3}
       propertyPath: m_text
-      value: Background pack
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8135162441654472765, guid: 0ac5efb20204592418237d3c892abf88, type: 3}
       propertyPath: m_fontSize
@@ -5633,7 +5633,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4824090472439437016, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: m_text
-      value: Warning Piece Treshhold
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 4913567396917910206, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: _maxValue
@@ -6041,7 +6041,7 @@ PrefabInstance:
       objectReference: {fileID: 1478042448}
     - target: {fileID: 7597766658182900293, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: m_text
-      value: Double Drop Prevention Interval
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8048587565150676515, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: _maxValue
@@ -6922,7 +6922,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4824090472439437016, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: m_text
-      value: Grid Visibility
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 6219719621687869474, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: m_AnchorMax.x
@@ -8311,7 +8311,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6616534284926214280, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Size
-      value: 0.17219731
+      value: 0.17219733
       objectReference: {fileID: 0}
     - target: {fileID: 6616534284926214280, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Value
@@ -8709,7 +8709,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7734393948807267264, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_text
-      value: Mute When Out Of Focus
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8145978221063410779, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_Navigation.m_Mode
@@ -9597,7 +9597,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7734393948807267264, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_text
-      value: Hear Next Pieces
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8938684458795999658, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: _autoformatName
@@ -9782,7 +9782,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7425367294938623524, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
       propertyPath: m_fontSize
-      value: 24.3
+      value: 23.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10466,7 +10466,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4824090472439437016, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: m_text
-      value: Music Volume
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 9100049352183068561, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: m_AnchorMax.y
@@ -10634,7 +10634,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7425367294938623524, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
       propertyPath: m_fontSize
-      value: 24.3
+      value: 23.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11181,7 +11181,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8135162441654472765, guid: 0ac5efb20204592418237d3c892abf88, type: 3}
       propertyPath: m_text
-      value: Resolution
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8135162441654472765, guid: 0ac5efb20204592418237d3c892abf88, type: 3}
       propertyPath: m_fontSize
@@ -11525,7 +11525,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7597766658182900293, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: m_text
-      value: Das Cut Delay
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8048587565150676515, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: _maxValue
@@ -11567,7 +11567,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3346748288000425753, guid: 94b6e27a66804cf4d8a72fd9e31b5c97, type: 3}
       propertyPath: m_text
-      value: Diagonal Lock Behavior
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 3441245230571639827, guid: 94b6e27a66804cf4d8a72fd9e31b5c97, type: 3}
       propertyPath: m_fontSize
@@ -12124,7 +12124,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4824090472439437016, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: m_text
-      value: Master Volume
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 9100049352183068561, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: m_AnchorMax.y
@@ -12711,7 +12711,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7734393948807267264, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_text
-      value: Use VSync
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8938684458795999658, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: _autoformatName
@@ -13225,7 +13225,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7425367294938623524, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
       propertyPath: m_fontSize
-      value: 24.3
+      value: 23.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13612,7 +13612,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3346748288000425753, guid: 94b6e27a66804cf4d8a72fd9e31b5c97, type: 3}
       propertyPath: m_text
-      value: Delay Das On
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 3441245230571639827, guid: 94b6e27a66804cf4d8a72fd9e31b5c97, type: 3}
       propertyPath: m_fontSize
@@ -14404,10 +14404,10 @@ PrefabInstance:
       addedObject: {fileID: 1108391546}
     - targetCorrespondingSourceObject: {fileID: 4277255442040839437, guid: 0ed263f4373fd7f469bdb84de977e4ba, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 656091139}
+      addedObject: {fileID: 1297407547}
     - targetCorrespondingSourceObject: {fileID: 4277255442040839437, guid: 0ed263f4373fd7f469bdb84de977e4ba, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1297407547}
+      addedObject: {fileID: 656091139}
     - targetCorrespondingSourceObject: {fileID: 4277255442040839437, guid: 0ed263f4373fd7f469bdb84de977e4ba, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1179551437}
@@ -14915,7 +14915,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7734393948807267264, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_text
-      value: Use Discord Rich Presence
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8938684458795999658, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: _controlPath.Array.data[0]
@@ -15369,7 +15369,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8135162441654472765, guid: 0ac5efb20204592418237d3c892abf88, type: 3}
       propertyPath: m_text
-      value: Sound pack
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8135162441654472765, guid: 0ac5efb20204592418237d3c892abf88, type: 3}
       propertyPath: m_fontSize
@@ -16337,7 +16337,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7734393948807267264, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_text
-      value: Ctrl Scroll To Change Board Zoom
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8145978221063410779, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_Navigation.m_Mode
@@ -16744,7 +16744,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4824090472439437016, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: m_text
-      value: Board Visibility
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 9100049352183068561, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       propertyPath: m_AnchorMax.y
@@ -16876,7 +16876,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7597766658182900293, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: m_text
-      value: Delayed Auto Shift
+      value: Setting not found!
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16921,7 +16921,7 @@ PrefabInstance:
       objectReference: {fileID: 1478042448}
     - target: {fileID: 3346748288000425753, guid: 94b6e27a66804cf4d8a72fd9e31b5c97, type: 3}
       propertyPath: m_text
-      value: Simultaneous Das Behavior
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 3441245230571639827, guid: 94b6e27a66804cf4d8a72fd9e31b5c97, type: 3}
       propertyPath: m_fontSize
@@ -17621,7 +17621,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7734393948807267264, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_text
-      value: Cancel DAS Delay With Movement
+      value: Setting not found!
       objectReference: {fileID: 0}
     - target: {fileID: 8938684458795999658, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: _autoformatName

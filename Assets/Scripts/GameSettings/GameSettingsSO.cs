@@ -139,12 +139,18 @@ namespace Blockstacker.GameSettings
         [Serializable]
         public record SettingsContainer
         {
-            public GeneralSettings General = new();
-            public ControlsSettings Controls = new();
-            public BoardDimensionsSettings BoardDimensions = new();
-            public GravitySettings Gravity => new();
-            public ObjectiveSettings Objective = new();
-            public PresentationSettings Presentation = new();
+            [field:SerializeField]
+            public GeneralSettings General {get;set;} = new();
+            [field:SerializeField]
+            public ControlsSettings Controls {get;set;}= new();
+            [field:SerializeField]
+            public BoardDimensionsSettings BoardDimensions {get;set;}= new();
+            [field:SerializeField]
+            public GravitySettings Gravity {get;set;} =new();
+            [field:SerializeField]
+            public ObjectiveSettings Objective {get;set;}= new();
+            [field:SerializeField]
+            public PresentationSettings Presentation {get;set;}= new();
         }
     }
 }

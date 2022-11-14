@@ -35,25 +35,25 @@ namespace Blockstacker.GameSettings.SettingGroups
         public uint LethalHeight
         {
             get => _lethalHeight;
-            set => _lethalHeight = Math.Max(value, 400);
+            set => _lethalHeight = Math.Min(value, 400);
         }
 
         public uint PieceSpawnHeight
         {
             get => _pieceSpawnHeight;
-            set => _pieceSpawnHeight = Math.Max(value, 410);
+            set => _pieceSpawnHeight = Math.Min(value, 410);
         }
 
         public uint BlockCutHeight
         {
             get => _blockCutHeight;
-            set => _blockCutHeight = Math.Max(value, 410);
+            set => _blockCutHeight = Math.Min(value, 410);
         }
 
         public uint BoardPadding
         {
             get => _boardPadding;
-            set => _boardPadding = Math.Max(value, 50);
+            set => _boardPadding = Math.Min(value, 50);
         }
     }
 }

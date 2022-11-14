@@ -4,6 +4,7 @@ using System.Reflection;
 using Blockstacker.Common;
 using Blockstacker.GlobalSettings.Groups;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace Blockstacker.GlobalSettings
 {
@@ -147,14 +148,22 @@ namespace Blockstacker.GlobalSettings
         [Serializable]
         internal record SettingsContainer
         {
-            public HandlingSettings Handling = new();
-            public SoundSettings Sound = new();
-            public GameplaySettings Gameplay = new();
-            public VideoSettings Video = new();
-            public CustomizationSettings Customization = new();
-            public StatCountingSettings StatCounting = new();
-            public OtherSettings Others = new();
-            public string Rebinds;
+            [field:SerializeField]
+            public HandlingSettings Handling {get;set;} = new();
+            [field:SerializeField]
+            public SoundSettings Sound {get;set;} = new();
+            [field:SerializeField]
+            public GameplaySettings Gameplay {get;set;} = new();
+            [field:SerializeField]
+            public VideoSettings Video {get;set;} = new();
+            [field:SerializeField]
+            public CustomizationSettings Customization {get;set;} = new();
+            [field:SerializeField]
+            public StatCountingSettings StatCounting {get;set;} = new();
+            [field:SerializeField]
+            public OtherSettings Others {get;set;}= new();
+            [field:SerializeField]
+            public string Rebinds {get;set;} = string.Empty;
         }
     }
 }

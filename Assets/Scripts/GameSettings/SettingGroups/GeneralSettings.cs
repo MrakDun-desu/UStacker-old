@@ -52,7 +52,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         public uint NextPieceCount
         {
             get => _nextPieceCount;
-            set => _nextPieceCount = Math.Max(value, 6);
+            set => _nextPieceCount = Math.Min(value, 6);
         }
 
         private bool TryReloadRandomizer()
