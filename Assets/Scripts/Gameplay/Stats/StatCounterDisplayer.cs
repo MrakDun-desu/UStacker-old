@@ -209,6 +209,7 @@ namespace Blockstacker.Gameplay.Stats
                 var sizeDelta = (mousePos - containerPos) / _textContainer.lossyScale;
                 sizeDelta.x = Mathf.Round(sizeDelta.x);
                 sizeDelta.y = Mathf.Round(sizeDelta.y);
+                if (sizeDelta.x < 1 || sizeDelta.y < 1) return; 
                 _textContainer.sizeDelta = sizeDelta;
                 _statCounter.Size = sizeDelta;
             }
