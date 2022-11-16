@@ -101,7 +101,7 @@ namespace Blockstacker.GlobalSettings
                 type = obj.GetType();
             }
 
-            if (type == typeof(T)) return (T)obj;
+            if (type == typeof(T)) return (T) obj;
             return default;
         }
 
@@ -148,22 +148,14 @@ namespace Blockstacker.GlobalSettings
         [Serializable]
         internal record SettingsContainer
         {
-            [field:SerializeField]
-            public HandlingSettings Handling {get;set;} = new();
-            [field:SerializeField]
-            public SoundSettings Sound {get;set;} = new();
-            [field:SerializeField]
-            public GameplaySettings Gameplay {get;set;} = new();
-            [field:SerializeField]
-            public VideoSettings Video {get;set;} = new();
-            [field:SerializeField]
-            public CustomizationSettings Customization {get;set;} = new();
-            [field:SerializeField]
-            public StatCountingSettings StatCounting {get;set;} = new();
-            [field:SerializeField]
-            public OtherSettings Others {get;set;}= new();
-            [field:SerializeField]
-            public string Rebinds {get;set;} = string.Empty;
+            [field: SerializeField] public HandlingSettings Handling { get; set; } = new();
+            [field: SerializeField] public SoundSettings Sound { get; set; } = new();
+            [field: SerializeField] public GameplaySettings Gameplay { get; set; } = new();
+            [field: SerializeField] public VideoSettings Video { get; set; } = new();
+            [field: SerializeField] public CustomizationSettings Customization { get; set; } = new();
+            [field: SerializeField] public StatCountingSettings StatCounting { get; set; } = new();
+            [field: SerializeField] public OtherSettings Others { get; set; } = new();
+            [field: SerializeField] public string Rebinds { get; set; } = string.Empty;
         }
     }
 }

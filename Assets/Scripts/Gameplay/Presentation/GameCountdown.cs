@@ -10,6 +10,7 @@ namespace Blockstacker.Gameplay.Presentation
     {
         public float CountdownInterval = .1f;
         public uint CountdownCount = 3;
+        [SerializeField] private string _noCountdownMessage = "Ready";
         [SerializeField] private string _lastMessage = "Start!";
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private UnityEvent CountdownFinished;
@@ -74,7 +75,7 @@ namespace Blockstacker.Gameplay.Presentation
             _active = true;
             _nextInterval = Time.realtimeSinceStartup + CountdownInterval;
             _currentCount = CountdownCount + 1;
-            _countdownText.text = CountdownCount.ToString();
+            _countdownText.text = _currentCount == 2 ? _noCountdownMessage : CountdownCount.ToString();
             _mediator.Send(new CountdownTickedMessage(_currentCount));
         }
     }

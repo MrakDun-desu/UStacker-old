@@ -9,8 +9,9 @@ namespace Blockstacker.GlobalSettings.Appliers
 {
     public class SoundPackApplier : SettingApplierBase, IAsyncApplier
     {
-        [SerializeField] public UnityEvent _loadingStarted;
-        [SerializeField] public UnityEvent _loadingFinished;
+        [SerializeField] private bool _showAlert = true;
+        public UnityEvent _loadingStarted;
+        public UnityEvent _loadingFinished;
 
         public UnityEvent LoadingStarted => _loadingStarted;
         public UnityEvent LoadingFinished => _loadingFinished;
@@ -24,8 +25,8 @@ namespace Blockstacker.GlobalSettings.Appliers
 
         private async Task ReloadAndInvoke()
         {
-            await SoundPackLoader.Reload(Path.Combine(CustomizationPaths.SoundPacks,
-                AppSettings.Customization.SoundPackFolder));
+            var soundPackFolder = Path.Combine(CustomizationPaths.SoundPacks, AppSettings.Customization.SoundPackFolder);
+            await SoundPackLoader.Reload(soundPackFolder, _showAlert);
             LoadingFinished.Invoke();
         }
     }

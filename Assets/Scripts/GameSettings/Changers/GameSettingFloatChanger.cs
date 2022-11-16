@@ -5,8 +5,7 @@ namespace Blockstacker.GameSettings.Changers
 {
     public class GameSettingFloatChanger : GameSettingChangerWithField<float>
     {
-        [Space] [SerializeField] private bool _clampValue;
-
+        [Space] 
         [SerializeField] private float _maxValue;
         [SerializeField] private float _minValue;
 
@@ -29,8 +28,9 @@ namespace Blockstacker.GameSettings.Changers
                 return;
             }
 
-            var actualValue = _clampValue ? Mathf.Clamp(floatValue, _minValue, _maxValue) : floatValue;
-            SetValue(actualValue);
+            SetValue(floatValue);
+
+            var actualValue = _gameSettingsSO.GetValue<float>(_controlPath);
             _valueField.SetTextWithoutNotify(actualValue.ToString(CultureInfo.InvariantCulture));
         }
     }

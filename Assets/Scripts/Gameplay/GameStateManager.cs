@@ -26,7 +26,8 @@ namespace Blockstacker.Gameplay
         [SerializeField] private UnityEvent GameRestarted;
         [SerializeField] private UnityEvent GameLost;
         [SerializeField] private UnityEvent GameEnded;
-        public GameReplay Replay;
+        
+        private readonly GameReplay Replay = new();
         private bool _gameEnded;
         private bool _gameLost;
         private bool _gameStarted;

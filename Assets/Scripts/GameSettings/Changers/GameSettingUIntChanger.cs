@@ -4,8 +4,7 @@ namespace Blockstacker.GameSettings.Changers
 {
     public class GameSettingUintChanger : GameSettingChangerWithField<uint>
     {
-        [Space] [SerializeField] private bool _clampValue;
-
+        [Space] 
         [SerializeField] private uint _maxValue;
         [SerializeField] private uint _minValue;
 
@@ -22,14 +21,10 @@ namespace Blockstacker.GameSettings.Changers
                 RefreshValue();
                 return;
             }
-            if (_clampValue)
-            {
-                if (uintValue < _minValue) uintValue = _minValue;
-                if (uintValue > _maxValue) uintValue = _maxValue;
-            }
 
             SetValue(uintValue);
-            _valueField.SetTextWithoutNotify(uintValue.ToString());
+            var actualValue = _gameSettingsSO.GetValue<uint>(_controlPath);
+            _valueField.SetTextWithoutNotify(actualValue.ToString());
         }
     }
 }

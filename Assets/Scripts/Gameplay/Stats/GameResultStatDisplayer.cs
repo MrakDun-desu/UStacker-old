@@ -20,8 +20,9 @@ namespace Blockstacker.Gameplay.Stats
         public void DisplayStat(string statName, double value, bool formatAsTime = false)
         {
             _nameText.text = statName;
-            value = Math.Round(value, 2);
-            _valueText.text = formatAsTime ? value.FormatAsTime() : value.ToString(CultureInfo.InvariantCulture);
+            _valueText.text = formatAsTime 
+                ? value.FormatAsTime() 
+                : Math.Round(value, 2).ToString(CultureInfo.InvariantCulture);
         }
         
         public void DisplayStat(string statName, string value)

@@ -4,8 +4,7 @@ namespace Blockstacker.GameSettings.Changers
 {
     public class GameSettingIntChanger : GameSettingChangerWithField<int>
     {
-        [Space] [SerializeField] private bool _clampValue;
-
+        [Space] 
         [SerializeField] private int _maxValue;
         [SerializeField] private int _minValue;
 
@@ -23,9 +22,8 @@ namespace Blockstacker.GameSettings.Changers
                 return;
             }
 
-            var actualValue = _clampValue ? Mathf.Clamp(intValue, _minValue, _maxValue) : intValue;
-            
-            SetValue(actualValue);
+            SetValue(intValue);
+            var actualValue = _gameSettingsSO.GetValue<int>(_controlPath);
             _valueField.SetTextWithoutNotify(actualValue.ToString());
         }
     }

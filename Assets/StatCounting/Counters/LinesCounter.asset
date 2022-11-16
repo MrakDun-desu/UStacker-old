@@ -20,6 +20,6 @@ MonoBehaviour:
       OnPiecePlaced(message)\n\tLinesCleared = LinesCleared + message.LinesCleared\n\treturn
       \"Lines cleared: \" .. LinesCleared\nend\nSetText(Reset())\nreturn {\n\t[\"GameStarted\"]
       = Reset,\n\t[\"GameRestarted\"] = Reset,\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-    Position: {x: -8, y: 9}
+    Position: {x: -9, y: 11}
     Size: {x: 8, y: 2}
     UpdateInterval: 0

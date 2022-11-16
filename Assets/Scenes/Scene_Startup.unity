@@ -650,6 +650,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 550c16d38db400d44858b05a49314ba1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _showAlert: 0
   _loadingStarted:
     m_PersistentCalls:
       m_Calls: []
@@ -668,6 +669,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9488fe584466764f851e7d78864e78e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _showAlert: 0
   _loadingStarted:
     m_PersistentCalls:
       m_Calls: []
@@ -686,6 +688,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff5f5149a0c72ff43893739cefe16595, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _showAlert: 0
   _loadingStarted:
     m_PersistentCalls:
       m_Calls: []

@@ -23,7 +23,7 @@ namespace Blockstacker.GlobalSettings.BlockSkins
                 : Array.Empty<string>();
         }
 
-        public static async Task ReloadAsync(string path)
+        public static async Task ReloadAsync(string path, bool showAlert)
         {
             SkinRecords.Clear();
             if (!Directory.Exists(path))
@@ -40,6 +40,8 @@ namespace Blockstacker.GlobalSettings.BlockSkins
             await GetSkinAsync(path);
 
             SkinChanged?.Invoke();
+            if (!showAlert) return;
+            
             _ = AlertDisplayer.Instance.ShowAlert(new Alert(
                 "New skin loaded",
                 "Skin has been successfully loaded and changed",

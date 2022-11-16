@@ -19,7 +19,6 @@ namespace Blockstacker.GlobalSettings.Backgrounds
         {
             "default",
             "mainMenu",
-            "globalSettings",
             "gameSettings",
             "gameCustom"
         };
@@ -31,7 +30,7 @@ namespace Blockstacker.GlobalSettings.Backgrounds
                 : Array.Empty<string>();
         }
 
-        public static async Task Reload(string path)
+        public static async Task Reload(string path, bool showAlert)
         {
             Backgrounds.Clear();
             if (!Directory.Exists(path))
@@ -51,6 +50,7 @@ namespace Blockstacker.GlobalSettings.Backgrounds
             taskList.AddRange(Directory.EnumerateDirectories(path).Select(HandleBackgroundFolderLoadAsync));
 
             await Task.WhenAll(taskList);
+            if (!showAlert) return;
             BackgroundPackChanged?.Invoke();
             _ = AlertDisplayer.Instance.ShowAlert(new Alert(
                 "New background pack loaded",

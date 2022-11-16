@@ -6,8 +6,7 @@ namespace Blockstacker.GameSettings.Changers
 {
     public class GameSettingDoubleChanger : GameSettingChangerWithField<double>
     {
-        [Space] [SerializeField] private bool _clampValue;
-
+        [Space] 
         [SerializeField] private float _maxValue;
         [SerializeField] private float _minValue;
 
@@ -30,8 +29,8 @@ namespace Blockstacker.GameSettings.Changers
                 return;
             }
 
-            var actualValue = _clampValue ? Math.Clamp(doubleValue, _minValue, _maxValue) : doubleValue;
-            SetValue(actualValue);
+            SetValue(doubleValue);
+            var actualValue = _gameSettingsSO.GetValue<double>(_controlPath);
             _valueField.SetTextWithoutNotify(actualValue.ToString(CultureInfo.InvariantCulture));
         }
     }

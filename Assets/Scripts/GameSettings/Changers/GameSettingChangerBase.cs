@@ -23,7 +23,7 @@ namespace Blockstacker.GameSettings.Changers
                 _title.text = _controlPath[^1].FormatCamelCase();
         }
 
-        public void SetValue(T value)
+        protected void SetValue(T value)
         {
             _gameSettingsSO.SetValue(value, _controlPath);
         }

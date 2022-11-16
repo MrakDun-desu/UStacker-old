@@ -28,7 +28,7 @@ namespace Blockstacker.GlobalSettings.Music
                 : Array.Empty<string>();
         }
 
-        public static async Task Reload(string path)
+        public static async Task Reload(string path, bool showAlert)
         {
             Music.Clear();
             SoundEffects.Clear();
@@ -52,6 +52,8 @@ namespace Blockstacker.GlobalSettings.Music
             await Task.WhenAll(taskList);
 
             SoundPackChanged?.Invoke();
+            if (!showAlert) return;
+            
             _ = AlertDisplayer.Instance.ShowAlert(new Alert(
                 "New sound pack loaded",
                 "Sound pack has been successfully loaded and changed",
