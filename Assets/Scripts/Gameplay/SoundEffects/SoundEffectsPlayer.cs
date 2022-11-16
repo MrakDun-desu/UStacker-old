@@ -48,6 +48,8 @@ namespace Blockstacker.Gameplay.SoundEffects
 
             _luaState = new Lua();
             _luaState.RestrictMaliciousFunctions();
+            _luaState.RegisterFunction(nameof(Play), this, GetType().GetMethod(nameof(Play)));
+            _luaState.RegisterFunction(nameof(PlayAsAnnouncer), this, GetType().GetMethod(nameof(PlayAsAnnouncer)));
             LuaTable events = null;
             try
             {
@@ -217,6 +219,28 @@ namespace Blockstacker.Gameplay.SoundEffects
             else if (message.Y != 0 && message.WasHardDrop)
                 TryPlayClip("harddrop");
         }
+
+        private void PlayAsAnnouncer(string clipName)
+        {
+            var clipExists = SoundPackLoader.SoundEffects.TryGetValue(clipName, out var clip);
+            if (!clipExists)
+                _defaultEffects.TryGetValue(clipName, out clip);
+            
+            if (!clipExists)
+            {
+                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                    "Clip not found!",
+                    $"Sound effect with a name {clipName} was not found.",
+                    AlertType.Warning
+                ));
+                return;
+            }
+
+            _audioSource.clip = clip;
+            _audioSource.Play();
+        }
+
+        private void Play(string clipName) => TryPlayClip(clipName);
 
         private void TryPlayClip(string clipName)
         {

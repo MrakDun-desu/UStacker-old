@@ -10,6 +10,7 @@ namespace Blockstacker.GlobalSettings
         [SerializeField] private float _openedX = 1000f;
         [SerializeField] private float _closedX = 300f;
         [SerializeField] private ScrollRect _settingsScrollRect;
+        [SerializeField] private GameObject _closeOverlay;
 
         private bool _menuOpened;
         private bool _loaded;
@@ -32,13 +33,17 @@ namespace Blockstacker.GlobalSettings
         private void OpenSettingsMenu()
         {
             gameObject.SetActive(true);
-            LeanTween.moveX(_menuTransform, _openedX, 0.5f).setEaseInOutSine();
+            LeanTween.moveX(_menuTransform, _openedX, 0.5f).setEaseInOutSine().setOnComplete(() => _closeOverlay.SetActive(true));
             _menuOpened = true;
         }
 
         private void CloseSettingsMenu()
         {
-            LeanTween.moveX(_menuTransform, _closedX, 0.5f).setEaseInOutSine().setOnComplete(() => gameObject.SetActive(false));
+            LeanTween.moveX(_menuTransform, _closedX, 0.5f).setEaseInOutSine().setOnComplete(() =>
+            {
+                gameObject.SetActive(false);
+                _closeOverlay.SetActive(false);
+            });
             _menuOpened = false;
         }
 
