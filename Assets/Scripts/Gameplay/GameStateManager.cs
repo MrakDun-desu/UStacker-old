@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Blockstacker.Gameplay.Communication;
+using Blockstacker.Gameplay.Initialization;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
 using Blockstacker.Gameplay.Stats;
@@ -10,9 +11,8 @@ using UnityEngine.InputSystem;
 
 namespace Blockstacker.Gameplay
 {
-    public class GameStateManager : MonoBehaviour
+    public class GameStateManager : MonoBehaviour, IGameSettingsDependency
     {
-        [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private GameTimer _timer;
         [SerializeField] private StatCounterManager _statCounterManager;
@@ -26,6 +26,9 @@ namespace Blockstacker.Gameplay
         [SerializeField] private UnityEvent GameRestarted;
         [SerializeField] private UnityEvent GameLost;
         [SerializeField] private UnityEvent GameEnded;
+        
+        public GameSettingsSO GameSettings { set => _settings = value; }
+        private GameSettingsSO _settings;
         
         private readonly GameReplay Replay = new();
         private bool _gameEnded;
@@ -97,6 +100,8 @@ namespace Blockstacker.Gameplay
 
         public void LoseGame(double loseTime)
         {
+            if (_gameEnded) return;
+            
             _gameEnded = true;
             if (_settings.Objective.ToppingOutIsOkay)
                 EndGame(loseTime);

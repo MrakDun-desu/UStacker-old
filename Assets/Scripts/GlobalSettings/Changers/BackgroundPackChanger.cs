@@ -1,14 +1,17 @@
+using System.IO;
+using Blockstacker.Common;
 using Blockstacker.GlobalSettings.Backgrounds;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Blockstacker.GlobalSettings.Changers
 {
     public class BackgroundPackChanger : AppSettingChangerBase<string>
     {
         [Space] [SerializeField] private TMP_Dropdown _dropdown;
-
-        [SerializeField] private string _default = "Default";
+        [SerializeField] private Button _folderButton;
+        [SerializeField] private Button _docsButton;
 
         private void Start()
         {
@@ -16,17 +19,15 @@ namespace Blockstacker.GlobalSettings.Changers
             
             AppSettings.SettingsReloaded += RefreshValue;
             _dropdown.onValueChanged.AddListener(OnOptionPicked);
+            _folderButton.onClick.AddListener(OpenBackgroundFolder);
+            _docsButton.onClick.AddListener(OpenDocumentation);
         }
 
-        public void RefreshNames()
+        private void OnOptionPicked(int value)
         {
-            _dropdown.ClearOptions();
-            _dropdown.options.Add(new TMP_Dropdown.OptionData(_default));
-            _dropdown.SetValueWithoutNotify(0);
-            foreach (var path in BackgroundPackLoader.EnumerateBackgroundPacks())
-                _dropdown.options.Add(new TMP_Dropdown.OptionData(path));
+            var newBackgroundFolder = _dropdown.options[value].text;
 
-            RefreshValue();
+            SetValue(newBackgroundFolder);
         }
 
         private void RefreshValue()
@@ -40,15 +41,34 @@ namespace Blockstacker.GlobalSettings.Changers
             }
             _dropdown.RefreshShownValue();
         }
-
-        private void OnOptionPicked(int value)
+        
+        private void OpenBackgroundFolder()
         {
-            var newBackgroundFolder = _dropdown.options[value].text;
+            if (!Directory.Exists(CustomizationPaths.BackgroundPacks))
+                Directory.CreateDirectory(CustomizationPaths.BackgroundPacks);
 
-            if (newBackgroundFolder.Equals(_default))
-                newBackgroundFolder = "";
+            var defaultPath = Path.Combine(CustomizationPaths.BackgroundPacks, BackgroundPackLoader.DEFAULT_PATH);
+            if (!Directory.Exists(defaultPath))
+                Directory.CreateDirectory(defaultPath);
             
-            SetValue(newBackgroundFolder);
+            DefaultAppOpener.OpenFile(CustomizationPaths.BackgroundPacks);
+        }
+
+        private void OpenDocumentation()
+        {
+            const string backgroundDocsUrl = StaticSettings.WikiUrl + "blob/main/Background-customization.md";
+            Application.OpenURL(backgroundDocsUrl);
+        }
+
+        public void RefreshNames()
+        {
+            _dropdown.ClearOptions();
+            _dropdown.options.Add(new TMP_Dropdown.OptionData(BackgroundPackLoader.DEFAULT_PATH));
+            _dropdown.SetValueWithoutNotify(0);
+            foreach (var path in BackgroundPackLoader.EnumerateBackgroundPacks())
+                _dropdown.options.Add(new TMP_Dropdown.OptionData(path));
+
+            RefreshValue();
         }
     }
 }

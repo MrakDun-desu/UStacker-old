@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Enums;
+using Blockstacker.Gameplay.Initialization;
 using Blockstacker.GameSettings;
 using Blockstacker.GlobalSettings;
 using Blockstacker.GlobalSettings.StatCounting;
@@ -10,18 +11,20 @@ using UnityEngine;
 
 namespace Blockstacker.Gameplay.Stats
 {
-    public class StatCounterManager : MonoBehaviour
+    public class StatCounterManager : MonoBehaviour, IGameSettingsDependency
     {
         [SerializeField] private Board _board;
         [SerializeField] private Canvas _statCountersCanvas;
         [SerializeField] private StatCounterDisplayer _displayerPrefab;
-        [SerializeField] private GameSettingsSO _gameSettings;
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private GameTimer _timer;
-        [SerializeField] private StatContainer _stats = new();
         [SerializeField] private GameStateManager _gameStateManager;
+        [SerializeField] private StatContainer _stats = new();
 
         public ReadonlyStatContainer Stats;
+        public GameSettingsSO GameSettings { set => _settings = value; }
+        private GameSettingsSO _settings;
+        
 
         private void Start()
         {
@@ -32,7 +35,6 @@ namespace Blockstacker.Gameplay.Stats
             _mediator.Register<ScoreChangedMessage>(OnScoreChanged, true);
             _mediator.Register<LevelChangedMessage>(OnLevelChanged, true);
             CreateStatCounters();
-            StatCounterDisplayer.ResetCurrentlyUnderMouse();
         }
 
         private void OnDestroy()
@@ -53,7 +55,7 @@ namespace Blockstacker.Gameplay.Stats
             AppSettings.StatCounting.GameStatCounterDictionary ??= new Dictionary<string, Guid>();
             
             var statUtility = new StatUtility(_timer);
-            var gameName = _gameSettings.GameType.Value;
+            var gameName = _settings.GameType.Value;
             StatCounterGroup counterGroup = null;
             if (AppSettings.StatCounting.GameStatCounterDictionary.TryGetValue(gameName, out var groupId))
             {

@@ -15,6 +15,7 @@ namespace Blockstacker.GlobalSettings.BlockSkins
         public static List<SkinRecord> SkinRecords { get; private set; } = new();
 
         public static event Action SkinChanged;
+        public const string DEFAULT_PATH = "Default";
 
         public static IEnumerable<string> EnumerateSkins()
         {
@@ -25,6 +26,14 @@ namespace Blockstacker.GlobalSettings.BlockSkins
 
         public static async Task ReloadAsync(string path, bool showAlert)
         {
+            if (Path.GetFileName(path).Equals(DEFAULT_PATH))
+            {
+                if (!Directory.Exists(path))
+                    return;
+                if (!Directory.EnumerateFiles(path).Any())
+                    return;
+            }
+
             SkinRecords.Clear();
             if (!Directory.Exists(path))
             {

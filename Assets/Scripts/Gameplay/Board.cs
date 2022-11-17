@@ -6,6 +6,7 @@ using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Blocks;
 using Blockstacker.Gameplay.GarbageGeneration;
 using Blockstacker.Gameplay.Communication;
+using Blockstacker.Gameplay.Initialization;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Spins;
 using Blockstacker.GameSettings;
@@ -19,9 +20,8 @@ using UnityEngine.Serialization;
 
 namespace Blockstacker.Gameplay
 {
-    public class Board : MonoBehaviour
+    public class Board : MonoBehaviour, IGameSettingsDependency
     {
-        [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private Transform _helperTransform;
         [FormerlySerializedAs("_manager")] [SerializeField] private GameStateManager _stateManager;
         [SerializeField] private MediatorSO _mediator;
@@ -37,6 +37,9 @@ namespace Blockstacker.Gameplay
         [Range(0.00001f, 1)] [SerializeField] private float _minimumBoardScale = 0.1f;
 
         private readonly List<ClearableBlock[]> Blocks = new();
+        
+        public GameSettingsSO GameSettings { set => _settings = value; }
+        private GameSettingsSO _settings;
 
         public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots =>
             Blocks

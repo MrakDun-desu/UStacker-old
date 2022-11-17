@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Gameplay.Blocks;
+using Blockstacker.Gameplay.Initialization;
 using Blockstacker.GameSettings;
 using Blockstacker.GlobalSettings;
 using Blockstacker.GlobalSettings.Appliers;
@@ -10,12 +11,14 @@ using UnityEngine.Pool;
 
 namespace Blockstacker.Gameplay.Pieces
 {
-    public class GhostPiece : MonoBehaviour, IBlockCollection
+    public class GhostPiece : MonoBehaviour, IBlockCollection, IGameSettingsDependency
     {
         [SerializeField] private BlockBase _blockPrefab;
         [SerializeField] private Board _board;
-        [SerializeField] private GameSettingsSO _settings;
 
+        public GameSettingsSO GameSettings { set => _settings = value; }
+        private GameSettingsSO _settings;
+        
         private static readonly Color _defaultColor = Color.white;
         private readonly List<BlockBase> _blocks = new();
         private Piece _activePiece;

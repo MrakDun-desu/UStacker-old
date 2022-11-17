@@ -2,6 +2,7 @@
 using System.Linq;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Enums;
+using Blockstacker.Gameplay.Initialization;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
@@ -13,11 +14,9 @@ using UnityEngine.InputSystem;
 
 namespace Blockstacker.Gameplay
 {
-    public class InputProcessor : MonoBehaviour
+    public class InputProcessor : MonoBehaviour, IGameSettingsDependency
     {
-        [Header("Dependencies")] [SerializeField]
-        private GameSettingsSO _settings;
-
+        [Header("Dependencies")]
         [SerializeField] private Board _board;
         [SerializeField] private PieceSpawner _spawner;
         [SerializeField] private GhostPiece _ghostPiece;
@@ -26,6 +25,9 @@ namespace Blockstacker.Gameplay
 
         [Header("Dependencies filled by initializer")]
         public PieceContainer PieceHolder;
+        
+        public GameSettingsSO GameSettings { set => _settings = value; }
+        private GameSettingsSO _settings;
 
         private Piece _activePiece;
         private double _arrTimer = double.PositiveInfinity;
@@ -86,6 +88,16 @@ namespace Blockstacker.Gameplay
                 _ghostPiece.ActivePiece = value;
                 _ghostPiece.Render();
             }
+        }
+
+        public void DisablePieceControls()
+        {
+            _pieceIsNull = true;
+        }
+
+        public void EnablePieceControls()
+        {
+            _pieceIsNull = _activePiece is null;
         }
 
         private void Awake()
@@ -155,6 +167,7 @@ namespace Blockstacker.Gameplay
             bool wasHardDrop = false,
             bool isRotation = false)
         {
+            if (_pieceIsNull) return;
             if (sendMessage)
             {
                 var wasSoftDrop = !wasHardDrop && _holdingSoftDrop;

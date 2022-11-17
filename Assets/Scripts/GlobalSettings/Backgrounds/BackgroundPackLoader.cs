@@ -13,6 +13,7 @@ namespace Blockstacker.GlobalSettings.Backgrounds
         public static readonly Dictionary<string, List<BackgroundRecord>> Backgrounds = new();
 
         public static event Action BackgroundPackChanged;
+        public const string DEFAULT_PATH = "Default";
 
         // needs to be manually updated every time a new background is added
         private static readonly string[] SupportedBackgroundNames =
@@ -32,6 +33,14 @@ namespace Blockstacker.GlobalSettings.Backgrounds
 
         public static async Task Reload(string path, bool showAlert)
         {
+            if (Path.GetFileName(path).Equals(DEFAULT_PATH))
+            {
+                if (!Directory.Exists(path))
+                    return;
+                if (!Directory.EnumerateFiles(path).Any())
+                    return;
+            }
+
             Backgrounds.Clear();
             if (!Directory.Exists(path))
             {

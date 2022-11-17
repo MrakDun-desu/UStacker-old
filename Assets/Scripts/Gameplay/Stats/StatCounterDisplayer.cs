@@ -40,11 +40,6 @@ namespace Blockstacker.Gameplay.Stats
         private bool _isDraggingSize;
         private static StatCounterDisplayer _currentlyUnderMouse;
 
-        public static void ResetCurrentlyUnderMouse()
-        {
-            _currentlyUnderMouse = null;
-        }
-
         private void RefreshStatCounter()
         {
             _textContainer.localPosition =
@@ -172,6 +167,12 @@ namespace Blockstacker.Gameplay.Stats
             _currentlyUnderMouse = null;
             _moveHandle.gameObject.SetActive(false);
             _sizeHandle.gameObject.SetActive(false);
+        }
+
+        private void OnDestroy()
+        {
+            if (_currentlyUnderMouse == this)
+                _currentlyUnderMouse = null;
         }
 
         private void HandlePositionDrag(Vector2 mousePos)

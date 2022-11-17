@@ -21,10 +21,6 @@ namespace Blockstacker.Gameplay.SoundEffects
         private void Awake()
         {
             _audioSource = GetComponent<AudioSource>();
-        }
-
-        private void Start()
-        {
             if (!TryRegisterCustomFunctions())
                 RegisterDefaultFunctions();
         }
@@ -102,7 +98,7 @@ namespace Blockstacker.Gameplay.SoundEffects
                     }
                 }
 
-                _mediator.Register((Action<Message>) Action, entry.Value);
+                _mediator.Register((Action<Message>)Action, entry.Value);
             }
 
             return true;
@@ -118,11 +114,11 @@ namespace Blockstacker.Gameplay.SoundEffects
         {
             switch (message.RemainingTicks)
             {
-                case < 4:
-                    TryPlayClip($"countdown{message.RemainingTicks + 1}");
+                case 0:
+                    TryPlayClip($"countdown1");
                     break;
-                case >= 4:
-                    TryPlayClip("countdown5");
+                case > 0:
+                    TryPlayClip("countdown2");
                     break;
             }
         }
@@ -225,7 +221,7 @@ namespace Blockstacker.Gameplay.SoundEffects
             var clipExists = SoundPackLoader.SoundEffects.TryGetValue(clipName, out var clip);
             if (!clipExists)
                 _defaultEffects.TryGetValue(clipName, out clip);
-            
+
             if (!clipExists)
             {
                 _ = AlertDisplayer.Instance.ShowAlert(new Alert(

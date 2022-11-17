@@ -20,6 +20,7 @@ namespace Blockstacker.GlobalSettings.Music
 
         public static string SoundEffectsScript;
         public static event Action SoundPackChanged;
+        public const string DEFAULT_PATH = "Default";
 
         public static IEnumerable<string> EnumerateSoundPacks()
         {
@@ -30,6 +31,28 @@ namespace Blockstacker.GlobalSettings.Music
 
         public static async Task Reload(string path, bool showAlert)
         {
+            if (Path.GetFileName(path).Equals(DEFAULT_PATH))
+            {
+                if (!Directory.Exists(path))
+                    return;
+
+                var sfxPath = Path.Combine(path, CustomizationFilenames.SoundEffects);
+                var musicPath = Path.Combine(path, CustomizationFilenames.Music);
+
+                var musicExists = Directory.Exists(musicPath);
+                var sfxExists = Directory.Exists(sfxPath);
+                switch (musicExists)
+                {
+                    case false when !sfxExists:
+                    case false when !Directory.EnumerateFiles(sfxPath).Any():
+                    case true when !sfxExists && !Directory.EnumerateFiles(musicPath).Any():
+                        return;
+                }
+
+                if (!Directory.EnumerateFiles(sfxPath).Any() && !Directory.EnumerateFiles(musicPath).Any())
+                    return;
+            }
+
             Music.Clear();
             SoundEffects.Clear();
             SoundEffectsScript = "";

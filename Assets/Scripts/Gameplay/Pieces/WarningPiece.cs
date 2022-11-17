@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Gameplay.Blocks;
+using Blockstacker.Gameplay.Initialization;
 using Blockstacker.GameSettings;
 using UnityEngine;
 using UnityEngine.Pool;
 
 namespace Blockstacker.Gameplay.Pieces
 {
-    public class WarningPiece : MonoBehaviour, IBlockCollection
+    public class WarningPiece : MonoBehaviour, IBlockCollection, IGameSettingsDependency
     {
         [SerializeField] private BlockBase _blockPrefab;
         [SerializeField] private Board _board;
-        [SerializeField] private GameSettingsSO _settings;
+
+        public GameSettingsSO GameSettings { set => _settings = value; }
+        private GameSettingsSO _settings;
 
         private readonly List<BlockBase> _blocks = new();
         private string _currentPieceType = "";

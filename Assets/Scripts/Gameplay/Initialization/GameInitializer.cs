@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Blockstacker.Gameplay.Blocks;
@@ -36,6 +37,7 @@ namespace Blockstacker.Gameplay.Initialization
         [SerializeField] private GameObject _loadingOverlay;
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private GameStateManager _stateManager;
+        [SerializeField] private GameObject[] _gameSettingsDependencies = Array.Empty<GameObject>();
 
         [Header("Events")] public UnityEvent GameInitialized;
         public UnityEvent<string> GameFailedToInitialize;
@@ -44,6 +46,12 @@ namespace Blockstacker.Gameplay.Initialization
         {
             _loadingOverlay.SetActive(true);
             StringBuilder errorBuilder = new();
+            foreach (var dependantObject in _gameSettingsDependencies)
+            {
+                var dependencies = dependantObject.GetComponents<IGameSettingsDependency>();
+                foreach (var dependency in dependencies)
+                    dependency.GameSettings = _gameSettingsAsset;
+            }
             if (TryInitialize(errorBuilder))
             {
                 GameInitialized.Invoke();

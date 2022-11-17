@@ -81,15 +81,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e22a6a7319fdc0743955941190a49075, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _settings: {fileID: 11400000, guid: 82a8dfd8c479a9746b991978530983d6, type: 2}
   _helperTransform: {fileID: 6618509541302748816}
   _stateManager: {fileID: 0}
   _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   _backgroundRenderer: {fileID: 6618509542994380394}
   _camera: {fileID: 0}
   _warningPiece: {fileID: 6038704166358694674}
-  _garbageBlockPrefab: {fileID: 0}
-  _garbageLayerPrefab: {fileID: 0}
+  _garbageBlockPrefab: {fileID: 1817985151758386682, guid: 6e8bdcd444f7bfe41a710cf4bff75fb6, type: 3}
+  _garbageLayerPrefab: {fileID: 6542221489855597950, guid: 5be1dc40c1e84c8429b2aeda7bdb00b7, type: 3}
   _boardZoomFactor: 0.1
   _minimumBoardScale: 0.1
 --- !u!1001 &2647458976110773330

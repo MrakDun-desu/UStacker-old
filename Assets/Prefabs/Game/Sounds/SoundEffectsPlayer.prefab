@@ -230,7 +230,7 @@ MonoBehaviour:
     - Key: combo_19_power
       Value: {fileID: 8300000, guid: 6035dda031e8ab542a84d3a67b35047b, type: 3}
     - Key: allclear
-      Value: {fileID: 8300000, guid: 87005b2e215519e4a970119d74095312, type: 3}
+      Value: {fileID: 8300000, guid: 01aec9ce339367549b74589045de736d, type: 3}
     - Key: floor
       Value: {fileID: 8300000, guid: 66b46c16076cb3a44a23f56566d1729f, type: 3}
     - Key: clearspin
@@ -246,18 +246,26 @@ MonoBehaviour:
     - Key: death
       Value: {fileID: 8300000, guid: f13e26ea38e29854db1c5beac217e6dd, type: 3}
     - Key: countdown1
-      Value: {fileID: 8300000, guid: 0c31bba6338ce384ba4d4e00385aaa9e, type: 3}
+      Value: {fileID: 8300000, guid: 927fa5fd650b1b54aa29c63445071333, type: 3}
     - Key: countdown2
-      Value: {fileID: 8300000, guid: 0c31bba6338ce384ba4d4e00385aaa9e, type: 3}
-    - Key: countdown3
-      Value: {fileID: 8300000, guid: 0c31bba6338ce384ba4d4e00385aaa9e, type: 3}
-    - Key: countdown4
-      Value: {fileID: 8300000, guid: 0c31bba6338ce384ba4d4e00385aaa9e, type: 3}
-    - Key: countdown5
-      Value: {fileID: 8300000, guid: 0c31bba6338ce384ba4d4e00385aaa9e, type: 3}
+      Value: {fileID: 8300000, guid: 6cc77b7a61c581a4a9b5b7ccd78f5ad9, type: 3}
     - Key: harddrop
       Value: {fileID: 8300000, guid: 6035dda031e8ab542a84d3a67b35047b, type: 3}
     - Key: combobreak
       Value: {fileID: 8300000, guid: 7d8d1306cdfe13a47b0c9b4c75046c70, type: 3}
+    - Key: i
+      Value: {fileID: 8300000, guid: e8b9b15c530615049bafd6dd108a40b6, type: 3}
+    - Key: j
+      Value: {fileID: 8300000, guid: ea58729f52590da45babae114805e7d8, type: 3}
+    - Key: l
+      Value: {fileID: 8300000, guid: 5d6f70b0e98f9074cb76d03cedc0c854, type: 3}
+    - Key: o
+      Value: {fileID: 8300000, guid: afdaf01cf343f524bb7726c4ff872a69, type: 3}
+    - Key: s
+      Value: {fileID: 8300000, guid: 3e1b3cc0c9be9ae4cb54a63da4861f00, type: 3}
+    - Key: t
+      Value: {fileID: 8300000, guid: 2de438e479ea31f40aacec0eb82994ff, type: 3}
+    - Key: z
+      Value: {fileID: 8300000, guid: e11a2bc0374e4274ea3ac863b8ce6db8, type: 3}
     _duplicateEntries: []
   _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}

@@ -12,9 +12,8 @@ using UnityEngine.Serialization;
 
 namespace Blockstacker.Gameplay
 {
-    public class PieceSpawner : MonoBehaviour
+    public class PieceSpawner : MonoBehaviour, IGameSettingsDependency
     {
-        [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private Board _board;
         [SerializeField] private InputProcessor _inputProcessor;
         [FormerlySerializedAs("_manager")] [SerializeField] private GameStateManager _stateManager;
@@ -23,6 +22,8 @@ namespace Blockstacker.Gameplay
 
         public IRandomizer Randomizer;
         
+        public GameSettingsSO GameSettings { set => _settings = value; }
+        private GameSettingsSO _settings;
         private List<PieceContainer> _previewContainers;
         private PiecePreviews _previews;
         private readonly Dictionary<string, ObjectPool<Piece>> _piecePools = new();
