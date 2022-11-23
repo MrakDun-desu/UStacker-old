@@ -116,7 +116,7 @@ namespace Blockstacker.Gameplay.Stats
                 catch (LuaException ex)
                 {
                     _ = AlertDisplayer.Instance.ShowAlert(new Alert(
-                        "Error executing user code!",
+                        "Error executing stat counter script!",
                         $"Error executing stat counter script with name {_statCounter.Name}.\nLua error: {ex.Message}",
                         AlertType.Error
                     ));

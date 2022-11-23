@@ -89,6 +89,9 @@ namespace Blockstacker.Gameplay
 
         public void Restart()
         {
+            if (!GameRunning)
+                GameResumed.Invoke();
+            
             GameRestarted.Invoke();
             _mediator.Send(new GameRestartedMessage());
             _mediator.Send(new GameEndConditionChangedMessage(

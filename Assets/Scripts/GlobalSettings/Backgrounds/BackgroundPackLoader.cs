@@ -33,15 +33,16 @@ namespace Blockstacker.GlobalSettings.Backgrounds
 
         public static async Task Reload(string path, bool showAlert)
         {
+            Backgrounds.Clear();
             if (Path.GetFileName(path).Equals(DEFAULT_PATH))
             {
                 if (!Directory.Exists(path))
+                {
+                    BackgroundPackChanged?.Invoke();
                     return;
-                if (!Directory.EnumerateFiles(path).Any())
-                    return;
+                }
             }
 
-            Backgrounds.Clear();
             if (!Directory.Exists(path))
             {
                 BackgroundPackChanged?.Invoke();

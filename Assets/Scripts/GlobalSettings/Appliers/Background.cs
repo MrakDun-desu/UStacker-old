@@ -22,8 +22,8 @@ namespace Blockstacker.GlobalSettings.Appliers
         private Camera _camera;
         private RectTransform _myTransform;
         private float _lastFrameRatio;
+        private float _textureWidth;
 
-        private const float REFERENCE_WIDTH = 1920f;
         private const float REFERENCE_HEIGHT = 1080f;
 
         private void Awake()
@@ -87,6 +87,7 @@ namespace Blockstacker.GlobalSettings.Appliers
 
             if (newTexture is null) return;
 
+            _textureWidth = newTexture.width;
             _widthToHeightRatio = (float) newTexture.width / newTexture.height;
             _heightToWidthRatio = (float) newTexture.height / newTexture.width;
 
@@ -95,7 +96,8 @@ namespace Blockstacker.GlobalSettings.Appliers
 
         private void Update()
         {
-            var realWidthToHeightRatio = (float) _camera.pixelWidth / _camera.pixelHeight;
+            var pixelHeight = _camera.pixelHeight;
+            var realWidthToHeightRatio = (float) _camera.pixelWidth / pixelHeight;
 
             if (Math.Abs(realWidthToHeightRatio - _lastFrameRatio) < float.Epsilon)
                 return;
@@ -108,10 +110,10 @@ namespace Blockstacker.GlobalSettings.Appliers
         {
             if (realRatio > _widthToHeightRatio)
             {
-                var newWidth = REFERENCE_WIDTH * realRatio * _heightToWidthRatio;
+                var realWidth = _camera.pixelWidth * REFERENCE_HEIGHT / _camera.pixelHeight;
                 _myTransform.sizeDelta = new Vector2(
-                    newWidth,
-                    newWidth * _heightToWidthRatio);
+                    realWidth,
+                    realWidth * _heightToWidthRatio);
             }
             else
             {

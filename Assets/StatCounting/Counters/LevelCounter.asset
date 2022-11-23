@@ -20,10 +20,11 @@ MonoBehaviour:
       = message.ConditionName\n\tif Name == nil or Name == \"None\" or Name == \"\"
       then\n\t\treturn \"\"\n\tend\n\tCurrent = StatUtility:FormatNumber(message.CurrentCount,
       0)\n\tTotal = StatUtility:FormatNumber(message.TotalCount, 0)\n\treturn FormatOutput()\nend\nfunction
-      OnLevelChange(message)\n\tLevel = message.Level\n\treturn FormatOutput()\nend\nfunction
+      OnLevelChange(message)\n\tLevel = message.Level\n\tif Level == nil or Level
+      == \"None\" or Level == \"\" then\n\t\treturn \"\"\n\tend\n\treturn FormatOutput()\nend\nfunction
       FormatOutput()\n\treturn \"Level \" .. Level .. \"\\n\" .. Current .. \"/\"
       .. Total .. \" \" .. Name .. \" to next\"\nend\nSetText(\"\")\nreturn {\n\t[\"LevelUpConditionChanged\"]
-      = OnConditionChange,\n\t[\"LevelChanged\"] = OnLevelChange\n}"
+      = OnConditionChange,\n--\t[\"LevelChanged\"] = OnLevelChange\n}"
     Position: {x: 0, y: -3}
     Size: {x: 10, y: 3}
     UpdateInterval: 0.01

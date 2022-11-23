@@ -26,15 +26,16 @@ namespace Blockstacker.GlobalSettings.BlockSkins
 
         public static async Task ReloadAsync(string path, bool showAlert)
         {
+            SkinRecords.Clear();
             if (Path.GetFileName(path).Equals(DEFAULT_PATH))
             {
                 if (!Directory.Exists(path))
+                {
+                    SkinChanged?.Invoke();
                     return;
-                if (!Directory.EnumerateFiles(path).Any())
-                    return;
+                }
             }
 
-            SkinRecords.Clear();
             if (!Directory.Exists(path))
             {
                 SkinChanged?.Invoke();
