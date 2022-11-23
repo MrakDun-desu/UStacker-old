@@ -17,6 +17,7 @@ namespace Blockstacker.Gameplay.Communication
         public readonly bool WasSpinMiniRaw;
         public readonly bool BrokenCombo;
         public readonly bool BrokenBackToBack;
+        public bool WasBtbClear => WasSpin || WasSpinMini || LinesCleared > 3;
 
         public PiecePlacedMessage(uint linesCleared, uint garbageLinesCleared, uint currentCombo,
             uint currentBackToBack, string pieceType, bool wasAllClear, bool wasSpin, bool wasSpinMini, bool wasSpinRaw,

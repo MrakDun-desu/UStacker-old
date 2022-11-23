@@ -16,9 +16,7 @@ namespace Blockstacker.Common
 
         public void ChangeColor(string colorHex)
         {
-            var systemColor = ColorTranslator.FromHtml(colorHex);
-
-            _text.color = new Color(systemColor.R / 255f, systemColor.G / 255f, systemColor.B / 255f);
+            _text.color = CreateColor.FromString(colorHex);
         }
     }
 }

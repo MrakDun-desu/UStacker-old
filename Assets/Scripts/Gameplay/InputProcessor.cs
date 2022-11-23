@@ -65,6 +65,8 @@ namespace Blockstacker.Gameplay
         private double _currentGravity;
         private double _normalGravity;
 
+        private bool _controlsActive = true;
+
         private bool _lastWasRotation;
         private SpinResult _lastSpinResult;
 
@@ -92,12 +94,12 @@ namespace Blockstacker.Gameplay
 
         public void DisablePieceControls()
         {
-            _pieceIsNull = true;
+            _controlsActive = false;
         }
 
         public void EnablePieceControls()
         {
-            _pieceIsNull = _activePiece is null;
+            _controlsActive = true;
         }
 
         private void Awake()
@@ -131,7 +133,6 @@ namespace Blockstacker.Gameplay
 
         public void DeleteActivePiece()
         {
-            enabled = false;
             if (!_pieceIsNull)
                 _activePiece.ReleaseFromPool();
             ActivePiece = null;
@@ -156,7 +157,6 @@ namespace Blockstacker.Gameplay
             _dasDelay = 0;
             _lockTime = double.PositiveInfinity;
             _arrTimer = double.PositiveInfinity;
-            enabled = true;
         }
 
         private void MovePiece(
@@ -228,8 +228,8 @@ namespace Blockstacker.Gameplay
 
         private void HandlePiecePlacement(double placementTime, bool wasHarddrop = false)
         {
+            if (_pieceIsNull || !_controlsActive) return;
             if (_dropDisabledUntil > placementTime) return;
-            if (_pieceIsNull) return;
 
             _dropDisabledUntil = placementTime + _handling.DoubleDropPreventionInterval;
             var movementVector = Vector2Int.down;
@@ -285,7 +285,7 @@ namespace Blockstacker.Gameplay
 
         public void OnMovePieceLeft(InputAction.CallbackContext ctx)
         {
-            if (!enabled) return;
+            if (_pieceIsNull || !_controlsActive) return;
             if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeVertical && _holdingSoftDrop)
                 return;
 
@@ -313,7 +313,6 @@ namespace Blockstacker.Gameplay
                 _dasRightStart = actionTime;
             }
 
-            if (_pieceIsNull) return;
             if (!_board.CanPlace(ActivePiece, Vector2Int.left)) return;
             MovePiece(Vector2Int.left, true, actionTime);
             UpdatePiecePlacementVars(actionTime);
@@ -321,7 +320,7 @@ namespace Blockstacker.Gameplay
 
         public void OnMovePieceRight(InputAction.CallbackContext ctx)
         {
-            if (!enabled) return;
+            if (_pieceIsNull || !_controlsActive) return;
             if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeVertical && _holdingSoftDrop)
                 return;
 
@@ -350,7 +349,6 @@ namespace Blockstacker.Gameplay
                 _dasLeftStart = actionTime;
             }
 
-            if (_pieceIsNull) return;
             if (!_board.CanPlace(ActivePiece, Vector2Int.right)) return;
             MovePiece(Vector2Int.right, true, actionTime);
             UpdatePiecePlacementVars(actionTime);
@@ -358,7 +356,7 @@ namespace Blockstacker.Gameplay
 
         public void OnSoftDrop(InputAction.CallbackContext ctx)
         {
-            if (!enabled) return;
+            if (_pieceIsNull || !_controlsActive) return;
             var actionTime = ctx.time - _timer.EffectiveStartTime;
             Update();
 
@@ -396,8 +394,7 @@ namespace Blockstacker.Gameplay
 
         public void OnHardDrop(InputAction.CallbackContext ctx)
         {
-            if (!enabled) return;
-            if (_pieceIsNull) return;
+            if (_pieceIsNull || !_controlsActive) return;
             if (!_settings.Controls.AllowHardDrop) return;
 
             Update();
@@ -418,8 +415,7 @@ namespace Blockstacker.Gameplay
 
         private void HandlePieceRotation(InputAction.CallbackContext ctx, int rotationAngle, RotateDirection direction)
         {
-            if (!enabled) return;
-            if (_pieceIsNull) return;
+            if (_pieceIsNull || !_controlsActive) return;
             if (direction == RotateDirection.OneEighty && !_settings.Controls.Allow180Spins) return;
 
             var actionType = direction switch
@@ -486,8 +482,7 @@ namespace Blockstacker.Gameplay
 
         public void OnSwapHoldPiece(InputAction.CallbackContext ctx)
         {
-            if (!enabled) return;
-            if (_pieceIsNull) return;
+            if (_pieceIsNull || !_controlsActive) return;
 
             var actionTime = ctx.time - _timer.EffectiveStartTime;
             if (ctx.canceled)
@@ -529,7 +524,7 @@ namespace Blockstacker.Gameplay
         private void Update()
         {
             HandlePieceSpawning();
-            if (_pieceIsNull) return;
+            if (_pieceIsNull || !_controlsActive) return;
             HandleDas();
             HandleGravity();
         }
@@ -560,7 +555,7 @@ namespace Blockstacker.Gameplay
                 _dasRightTimer = 0;
             }
 
-            if (_pieceIsNull) return;
+            if (_pieceIsNull || !_controlsActive) return;
 
             var dasRightCondition = _handling.SimultaneousDasBehavior switch
             {
@@ -636,7 +631,7 @@ namespace Blockstacker.Gameplay
         private void HandleGravity()
         {
             var functionStartTime = _timer.CurrentTime;
-            if (_pieceIsNull) return;
+            if (_pieceIsNull || !_controlsActive) return;
 
             if (_board.CanPlace(ActivePiece, Vector2Int.down) && _isLocking) // there is an empty space below piece
             {
@@ -719,7 +714,7 @@ namespace Blockstacker.Gameplay
 
         private void HandlePieceSpawning()
         {
-            if (!_pieceIsNull) return;
+            if (!_pieceIsNull || !_controlsActive) return;
             var functionStartTime = _timer.CurrentTime;
             if (_pieceSpawnTime > functionStartTime) return;
 

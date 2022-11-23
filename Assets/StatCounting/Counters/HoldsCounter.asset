@@ -16,9 +16,9 @@ MonoBehaviour:
     Name: Holds
     Type: 0
     Filename: 
-    Script: "function Reset()\n\tHolds = 0\n\treturn \"<align=\\\"left\\\">Holds:
-      0\"\nend\nfunction OnHold(message)\n\tif message.WasSuccessful then\n\t\tHolds
-      = Holds + 1\n\tend\n\treturn \"<align=\\\"left\\\">Holds: \" .. Holds\nend\nSetText(Reset())\nreturn
+    Script: "function Reset()\n\tHolds = 0\n\treturn \"Holds: 0\"\nend\nfunction
+      OnHold(message)\n\tif message.WasSuccessful then\n\t\tHolds = Holds + 1\n\tend\n\treturn
+      \"Holds: \" .. Holds\nend\nSetText(Reset())\nSetAlignment(\"left\")\nreturn
       {\n\t[\"HoldUsed\"] = OnHold,\n\t[\"GameStarted\"] = Reset,\n\t[\"GameRestarted\"]
       = Reset\n}"
     Position: {x: 11, y: 2}

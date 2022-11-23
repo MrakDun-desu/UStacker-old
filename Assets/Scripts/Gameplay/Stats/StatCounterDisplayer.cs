@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Blockstacker.Common;
 using Blockstacker.Common.Alerts;
 using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
@@ -51,7 +52,13 @@ namespace Blockstacker.Gameplay.Stats
             _luaState[UTILITY_NAME] = _statUtility;
             _luaState[STAT_CONTAINER_NAME] = _statContainer;
             _luaState[BOARD_INTERFACE_NAME] = _boardInterface;
-            _luaState.RegisterFunction(nameof(SetText), this, GetType().GetMethod(nameof(SetText)));
+            RegisterMethod(nameof(SetText));
+            RegisterMethod(nameof(SetColor));
+            RegisterMethod(nameof(SetVisibility));
+            RegisterMethod(nameof(AnimateColor));
+            RegisterMethod(nameof(AnimateVisibility));
+            RegisterMethod(nameof(SetAlignment));
+            RegisterMethod(nameof(SetTextSize));
             LuaTable events = null;
             try
             {
@@ -103,6 +110,11 @@ namespace Blockstacker.Gameplay.Stats
             _updateFunction = updateFunc;
 
             StartCoroutine(UpdateCor());
+        }
+
+        private void RegisterMethod(string methodName)
+        {
+            _luaState.RegisterFunction(methodName, this, GetType().GetMethod(methodName));
         }
 
         private IEnumerator UpdateCor()
@@ -223,6 +235,53 @@ namespace Blockstacker.Gameplay.Stats
         public void SetText(string text)
         {
             _displayText.text = text;
+        }
+
+        public void SetVisibility(object value)
+        {
+            _displayText.canvasRenderer.SetAlpha(Convert.ToSingle(value));
+        }
+
+        public void AnimateVisibility(object alphaObj, object durationObj)
+        {
+            var alpha = Convert.ToSingle(alphaObj);
+            var duration = Convert.ToSingle(durationObj);
+            _displayText.CrossFadeAlpha(alpha, duration, true);
+        }
+
+        public void SetColor(string color)
+        {
+            _displayText.canvasRenderer.SetColor(CreateColor.FromString(color));
+        }
+
+        public void AnimateColor(string color, object durationObj)
+        {
+            var duration = Convert.ToSingle(durationObj);
+            _displayText.CrossFadeColor(CreateColor.FromString(color), duration, true, true);
+        }
+
+        public void SetAlignment(string alignment)
+        {
+            _displayText.alignment = alignment.ToLowerInvariant() switch
+            {
+                "left" => TextAlignmentOptions.Left,
+                "right" => TextAlignmentOptions.Right,
+                "center" => TextAlignmentOptions.Center,
+                "justified" => TextAlignmentOptions.Justified,
+                "flush" => TextAlignmentOptions.Flush,
+                "top" => TextAlignmentOptions.Top,
+                "bottom" => TextAlignmentOptions.Bottom,
+                "middle" => TextAlignmentOptions.Midline,
+                "baseline" => TextAlignmentOptions.Baseline,
+                "capline" => TextAlignmentOptions.Capline,
+                _ => _displayText.alignment       
+            };
+        }
+
+        public void SetTextSize(object sizeObj)
+        {
+            _displayText.enableAutoSizing = false;
+            _displayText.fontSize = Convert.ToSingle(sizeObj);
         }
 
         public void Initialize(MediatorSO mediator, StatBoardInterface board,

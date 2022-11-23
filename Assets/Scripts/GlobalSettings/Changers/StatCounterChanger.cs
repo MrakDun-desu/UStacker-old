@@ -26,7 +26,7 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private StatCounterSO[] _premadeCounters = Array.Empty<StatCounterSO>();
 
         private StatCounterRecord _value;
-        private RectTransform _selfTransform;
+        private RectTransform _selfTransform => (RectTransform) transform;
 
         public StatCounterRecord Value
         {
@@ -40,11 +40,6 @@ namespace Blockstacker.GlobalSettings.Changers
 
         public event Action<StatCounterChanger> Removed;
         public event Action<float> SizeChanged;
-
-        private void Awake()
-        {
-            _selfTransform = (RectTransform) transform;
-        }
 
         private void Start()
         {

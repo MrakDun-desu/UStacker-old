@@ -16,12 +16,11 @@ MonoBehaviour:
     Name: Remaining end condition
     Type: 0
     Filename: 
-    Script: "function FormatOutput(input)\n\treturn \"<align=\\\"center\\\"><alpha=#88>\"
-      .. input\nend\nfunction OnChange(message)\n\tif message.ConditionName == nil
-      or message.ConditionName == \"None\" or message.ConditionName == \"\" then\n\t\treturn
-      \"\"\n\tend\n\tlocal remaining = message.TotalCount - message.CurrentCount\n\tif
-      remaining > 0 then remaining = 0 end\n\treturn FormatOutput(StatUtility:FormatNumber(remaining,
-      0))\nend\nSetText(\"\")\nreturn {\n\t[\"GameEndConditionChanged\"] = OnChange\n}"
+    Script: "function OnChange(message)\n\tif message.ConditionName == nil or message.ConditionName
+      == \"None\" or message.ConditionName == \"\" then\n\t\treturn \"\"\n\tend\n\tlocal
+      remaining = message.TotalCount - message.CurrentCount\n\tif remaining > 0 then
+      remaining = 0 end\n\treturn StatUtility:FormatNumber(remaining, 0)\nend\nSetText(\"\")\nSetAlignment(\"left\")\nSetAlpha(0.4)\nreturn
+      {\n\t[\"GameEndConditionChanged\"] = OnChange\n}"
     Position: {x: 3, y: 16}
     Size: {x: 4, y: 4}
     UpdateInterval: 0
