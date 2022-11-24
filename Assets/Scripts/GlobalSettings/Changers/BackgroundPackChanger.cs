@@ -63,11 +63,12 @@ namespace Blockstacker.GlobalSettings.Changers
         public void RefreshNames()
         {
             _dropdown.ClearOptions();
-            _dropdown.options.Add(new TMP_Dropdown.OptionData(BackgroundPackLoader.DEFAULT_PATH));
             _dropdown.SetValueWithoutNotify(0);
             foreach (var path in BackgroundPackLoader.EnumerateBackgroundPacks())
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(path));
 
+            if (!_dropdown.options.Exists(item => item.text == BackgroundPackLoader.DEFAULT_PATH))
+                _dropdown.options.Insert(0, new TMP_Dropdown.OptionData(BackgroundPackLoader.DEFAULT_PATH));
             RefreshValue();
         }
     }

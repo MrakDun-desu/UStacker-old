@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Blockstacker.Common.Extensions
@@ -64,11 +65,12 @@ namespace Blockstacker.Common.Extensions
 
             var posDifference = newAnchoredPos - currentAnchoredPos;
 
-            var newPos = contentPanel.localPosition + (Vector3) posDifference;
-            if (easeCurve is null)
-                LeanTween.move(contentPanel, newPos, time).setEaseInOutSine();
-            else
-                LeanTween.move(contentPanel, newPos, time).setEase(easeCurve);
+            var newPos = contentPanel.anchoredPosition + posDifference;
+
+            void SetPos(Vector2 value) => contentPanel.anchoredPosition = value;
+            Vector2 GetPos() => contentPanel.anchoredPosition;
+
+            DOTween.To(GetPos, SetPos, newPos, time);
         }
     }
 }

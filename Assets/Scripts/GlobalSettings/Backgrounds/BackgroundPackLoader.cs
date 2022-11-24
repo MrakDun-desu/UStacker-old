@@ -33,12 +33,19 @@ namespace Blockstacker.GlobalSettings.Backgrounds
 
         public static async Task Reload(string path, bool showAlert)
         {
+            var defaultAlert = new Alert(
+                "Switched to default background pack",
+                "Backgrounds have been returned to default",
+                AlertType.Info
+            );
             Backgrounds.Clear();
             if (Path.GetFileName(path).Equals(DEFAULT_PATH))
             {
                 if (!Directory.Exists(path))
                 {
                     BackgroundPackChanged?.Invoke();
+                    if (showAlert)
+                        _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
                     return;
                 }
             }
@@ -46,11 +53,8 @@ namespace Blockstacker.GlobalSettings.Backgrounds
             if (!Directory.Exists(path))
             {
                 BackgroundPackChanged?.Invoke();
-                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
-                    "Switched to default background pack",
-                    "Backgrounds have been returned to default",
-                    AlertType.Info
-                ));
+                if (showAlert)
+                    _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
                 return;
             }
 
@@ -61,12 +65,16 @@ namespace Blockstacker.GlobalSettings.Backgrounds
 
             await Task.WhenAll(taskList);
             if (!showAlert) return;
+
             BackgroundPackChanged?.Invoke();
-            _ = AlertDisplayer.Instance.ShowAlert(new Alert(
-                "New background pack loaded",
-                "Background pack has been successfully loaded and changed",
-                AlertType.Success
-            ));
+            var shownAlert = Path.GetFileNameWithoutExtension(path) == DEFAULT_PATH
+                ? defaultAlert
+                : new Alert(
+                    $"Background pack {Path.GetFileNameWithoutExtension(path)} loaded",
+                    "Background pack has been successfully loaded and changed",
+                    AlertType.Success
+                );
+            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
         }
 
         private static async Task HandleBackgroundLoadAsync(string path)
@@ -76,7 +84,7 @@ namespace Blockstacker.GlobalSettings.Backgrounds
 
             var newBackground = await LoadBackgroundRecordAsync(path);
             if (newBackground is null) return;
-            Backgrounds[backgroundName] = new List<BackgroundRecord> { newBackground };
+            Backgrounds[backgroundName] = new List<BackgroundRecord> {newBackground};
         }
 
         private static async Task HandleBackgroundFolderLoadAsync(string path)

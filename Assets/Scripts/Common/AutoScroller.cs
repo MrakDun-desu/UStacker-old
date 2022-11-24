@@ -36,27 +36,27 @@ namespace Blockstacker.Common
         {
             var contentPos = _scrollRect.content.localPosition;
             contentPos.x += amount;
-            LeanTween.move(_scrollRect.content, contentPos, .2f).setEaseInOutSine();
+            _scrollRect.content.anchoredPosition = contentPos;
         }
         
         public void ScrollRight(float amount)
         {
             var contentPos = _scrollRect.content.localPosition;
             contentPos.x -= amount;
-            LeanTween.move(_scrollRect.content, contentPos, .2f).setEaseInOutSine();
+            _scrollRect.content.anchoredPosition = contentPos;
         }
         
         public void ScrollUp(float amount)
         {
             var contentPos = _scrollRect.content.anchoredPosition;
-            contentPos = new Vector2(contentPos.x, contentPos.y + amount);
+            contentPos.y += amount; 
             _scrollRect.content.anchoredPosition = contentPos;
         }
         
         public void ScrollDown(float amount)
         {
             var contentPos = _scrollRect.content.anchoredPosition;
-            contentPos = new Vector2(contentPos.x, contentPos.y - amount);
+            contentPos.y -= amount;
             _scrollRect.content.anchoredPosition = contentPos;
         }
     }

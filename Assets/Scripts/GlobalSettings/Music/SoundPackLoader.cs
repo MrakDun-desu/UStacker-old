@@ -31,6 +31,11 @@ namespace Blockstacker.GlobalSettings.Music
 
         public static async Task Reload(string path, bool showAlert)
         {
+            var defaultAlert = new Alert(
+                "Switched to default sound pack",
+                "Sound pack has been returned to default",
+                AlertType.Info
+            );
             Music.Clear();
             SoundEffects.Clear();
             SoundEffectsScript = "";
@@ -39,6 +44,8 @@ namespace Blockstacker.GlobalSettings.Music
                 if (!Directory.Exists(path))
                 {
                     SoundPackChanged?.Invoke();
+                    if (showAlert)
+                        _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
                     return;
                 }
             }
@@ -46,11 +53,8 @@ namespace Blockstacker.GlobalSettings.Music
             if (!Directory.Exists(path))
             {
                 SoundPackChanged?.Invoke();
-                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
-                    "Switched to default sound pack",
-                    "Sound pack has been returned to default",
-                    AlertType.Info
-                ));
+                if (showAlert)
+                    _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
                 return;
             }
             var taskList = new List<Task>
@@ -64,11 +68,14 @@ namespace Blockstacker.GlobalSettings.Music
             SoundPackChanged?.Invoke();
             if (!showAlert) return;
             
-            _ = AlertDisplayer.Instance.ShowAlert(new Alert(
-                "New sound pack loaded",
-                "Sound pack has been successfully loaded and changed",
-                AlertType.Success
-            ));
+            var shownAlert = Path.GetFileNameWithoutExtension(path) == DEFAULT_PATH
+                ? defaultAlert
+                : new Alert(
+                    $"Sound pack {Path.GetFileNameWithoutExtension(path)} loaded",
+                    "Sound pack has been successfully loaded and changed",
+                    AlertType.Success
+                );
+            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
         }
 
         private static async Task LoadSoundEffectsAsync(string path)

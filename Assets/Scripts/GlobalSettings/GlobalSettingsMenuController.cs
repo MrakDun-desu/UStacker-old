@@ -1,4 +1,5 @@
 ﻿using Blockstacker.Common.Extensions;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ namespace Blockstacker.GlobalSettings
         [SerializeField] private RectTransform _menuTransform;
         [SerializeField] private float _openedX = 1000f;
         [SerializeField] private float _closedX = 300f;
+        [SerializeField] private float _tweenDuration = 0.5f;
         [SerializeField] private ScrollRect _settingsScrollRect;
         [SerializeField] private GameObject _closeOverlay;
 
@@ -33,18 +35,25 @@ namespace Blockstacker.GlobalSettings
         private void OpenSettingsMenu()
         {
             gameObject.SetActive(true);
-            LeanTween.moveX(_menuTransform, _openedX, 0.5f).setEaseInOutSine().setOnComplete(() => _closeOverlay.SetActive(true));
+            DOTween.To(GetPosX, SetPosX, _openedX, _tweenDuration).OnComplete(() => _closeOverlay.SetActive(false));
             _menuOpened = true;
         }
 
         private void CloseSettingsMenu()
         {
-            LeanTween.moveX(_menuTransform, _closedX, 0.5f).setEaseInOutSine().setOnComplete(() =>
-            {
-                gameObject.SetActive(false);
-                _closeOverlay.SetActive(false);
-            });
+            DOTween.To(GetPosX, SetPosX, _closedX, _tweenDuration).OnComplete(() => _closeOverlay.SetActive(true));
             _menuOpened = false;
+        }
+
+        private float GetPosX()
+        {
+            return _menuTransform.anchoredPosition.x;
+        }
+
+        private void SetPosX(float value)
+        {
+            var position = _menuTransform.anchoredPosition;
+            _menuTransform.anchoredPosition = new Vector2(value, position.y);
         }
 
         public void ScrollTo(RectTransform target)

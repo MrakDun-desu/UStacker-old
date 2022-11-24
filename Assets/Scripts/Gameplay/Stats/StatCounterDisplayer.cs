@@ -5,6 +5,9 @@ using Blockstacker.Common.Alerts;
 using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.GlobalSettings.StatCounting;
+using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using NLua;
 using NLua.Exceptions;
 using TMPro;
@@ -133,7 +136,7 @@ namespace Blockstacker.Gameplay.Stats
                         AlertType.Error
                     ));
                     gameObject.SetActive(false);
-                    
+
                     yield break;
                 }
 
@@ -175,7 +178,7 @@ namespace Blockstacker.Gameplay.Stats
                 HandleSizeDrag(mousePos);
                 return;
             }
-            
+
             _currentlyUnderMouse = null;
             _moveHandle.gameObject.SetActive(false);
             _sizeHandle.gameObject.SetActive(false);
@@ -222,7 +225,7 @@ namespace Blockstacker.Gameplay.Stats
                 var sizeDelta = (mousePos - containerPos) / _textContainer.lossyScale;
                 sizeDelta.x = Mathf.Round(sizeDelta.x);
                 sizeDelta.y = Mathf.Round(sizeDelta.y);
-                if (sizeDelta.x < 1 || sizeDelta.y < 1) return; 
+                if (sizeDelta.x < 1 || sizeDelta.y < 1) return;
                 _textContainer.sizeDelta = sizeDelta;
                 _statCounter.Size = sizeDelta;
             }
@@ -237,27 +240,39 @@ namespace Blockstacker.Gameplay.Stats
             _displayText.text = text;
         }
 
+        private TweenerCore<Color, Color, ColorOptions> _visibilityTween;
+        private TweenerCore<Color, Color, ColorOptions> _colorTween;
+
         public void SetVisibility(object value)
         {
-            _displayText.canvasRenderer.SetAlpha(Convert.ToSingle(value));
+            _visibilityTween?.Kill();
+            _displayText.alpha = Convert.ToSingle(value);
         }
 
         public void AnimateVisibility(object alphaObj, object durationObj)
         {
             var alpha = Convert.ToSingle(alphaObj);
             var duration = Convert.ToSingle(durationObj);
-            _displayText.CrossFadeAlpha(alpha, duration, true);
+
+            _visibilityTween = DOTween.ToAlpha(() => _displayText.color,
+                value => _displayText.color = value,
+                alpha,
+                duration);
         }
 
         public void SetColor(string color)
         {
-            _displayText.canvasRenderer.SetColor(CreateColor.FromString(color));
+            _colorTween?.Kill();
+            _displayText.color = CreateColor.FromString(color);
         }
 
         public void AnimateColor(string color, object durationObj)
         {
             var duration = Convert.ToSingle(durationObj);
-            _displayText.CrossFadeColor(CreateColor.FromString(color), duration, true, true);
+            _colorTween = DOTween.To(() => _displayText.color,
+                value => _displayText.color = value,
+                CreateColor.FromString(color),
+                duration);
         }
 
         public void SetAlignment(string alignment)
@@ -274,7 +289,7 @@ namespace Blockstacker.Gameplay.Stats
                 "middle" => TextAlignmentOptions.Midline,
                 "baseline" => TextAlignmentOptions.Baseline,
                 "capline" => TextAlignmentOptions.Capline,
-                _ => _displayText.alignment       
+                _ => _displayText.alignment
             };
         }
 

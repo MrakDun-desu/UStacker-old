@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using Blockstacker.Common.Extensions;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,55 +41,34 @@ namespace Blockstacker.Common.Alerts
 
             _title.text = alert.Title;
             _text.text = alert.Text;
-            _closeButton.onClick.AddListener(() => StartCoroutine(RemoveAlertCor()));
-            _ = FadeInCor();
+            _closeButton.onClick.AddListener(RemoveAlert);
+            SetAlpha(0);
+            DOTween.To(GetAlpha, SetAlpha, 1, _appearTime).SetEase(Ease.Linear);
             StartCoroutine(WaitForRemoveAlertCor());
         }
 
         private IEnumerator WaitForRemoveAlertCor()
         {
             yield return new WaitForSeconds(_visibleInterval);
-            StartCoroutine(RemoveAlertCor());
+            RemoveAlert();
         }
 
-        private IEnumerator RemoveAlertCor()
+        private void RemoveAlert()
         {
-            LeanTween.moveY(_controlledTransform, _controlledTransform.localPosition.y + _movement, _appearTime)
-                .setEaseInOutSine().setOnComplete(() => Destroy(gameObject));
-            
-            var startTime = Time.unscaledTime;
-            while (Time.unscaledTime < startTime + _appearTime)
-            {
-                var currentAlpha = (startTime + _appearTime - Time.unscaledTime) / _appearTime;
-                foreach (var image in _controlledImages)
-                    image.color = image.color.WithAlpha(currentAlpha);
-
-                foreach (var text in _controlledTexts)
-                    text.alpha = currentAlpha;
-                
-                yield return new WaitForSeconds(1f / 60f);
-            }
+            _controlledTransform.DOMoveY(_movement, _appearTime).SetRelative(true)
+                .OnComplete(() => Destroy(gameObject));
+            DOTween.To(GetAlpha, SetAlpha, 0, _appearTime).SetEase(Ease.Linear);
         }
 
-        private async Task FadeInCor()
+        private void SetAlpha(float value)
         {
-            var stopwatch = Stopwatch.StartNew();
-            while (stopwatch.Elapsed.TotalSeconds < _appearTime)
-            {
-                var currentAlpha = (float)stopwatch.Elapsed.TotalSeconds / _appearTime;
-                foreach (var image in _controlledImages)
-                    image.color = image.color.WithAlpha(currentAlpha);
-
-                foreach (var text in _controlledTexts)
-                    text.alpha = currentAlpha;
-
-                await Task.Delay(16);
-            }
             foreach (var image in _controlledImages)
-                image.color = image.color.WithAlpha(1);
-
+                image.color = image.color.WithAlpha(value);
             foreach (var text in _controlledTexts)
-                text.alpha = 1;
+                text.alpha = value;
         }
+
+        private float GetAlpha() => _controlledImages[0].color.a;
+        
     }
 }

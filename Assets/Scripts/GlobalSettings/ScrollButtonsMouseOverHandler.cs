@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -23,11 +24,11 @@ namespace Blockstacker.GlobalSettings
         public void OnPointerExit(PointerEventData eventData)
         {
             _pointerOver = false;
-            LeanTween.size(
-                _controlledTransform, 
-                new Vector2(_closedSize, _controlledTransform.sizeDelta.y), 
-                _openTime)
-                .setEaseInOutSine();
+            DOTween.To(
+                () => _controlledTransform.sizeDelta, 
+                value => _controlledTransform.sizeDelta = value,
+                new Vector2(_closedSize, _controlledTransform.sizeDelta.y),
+                _openTime);
         }
 
         private IEnumerator OpenCoroutine()
@@ -36,11 +37,11 @@ namespace Blockstacker.GlobalSettings
             if (!_pointerOver)
                 yield break;
             
-            LeanTween.size(
-                _controlledTransform, 
-                new Vector2(_openedSize, _controlledTransform.sizeDelta.y), 
-                _openTime)
-                .setEaseInOutSine();
+            DOTween.To(
+                () => _controlledTransform.sizeDelta, 
+                value => _controlledTransform.sizeDelta = value,
+                new Vector2(_openedSize, _controlledTransform.sizeDelta.y),
+                _openTime);
         }
     }
 }
