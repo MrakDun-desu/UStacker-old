@@ -8,7 +8,7 @@ namespace Blockstacker.GameSettings.SettingGroups
     {
         // backing fields
         [SerializeField]
-        private float _countdownInterval = 1;
+        private float _countdownInterval = .5f;
         [SerializeField]
         private uint _countdownCount = 3;
 

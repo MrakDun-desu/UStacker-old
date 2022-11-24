@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 36f7ab6fbbd4e8b40a0d398785ed582d, type: 3}
-  m_Name: CustomGame
+  m_Name: game_Ultra
   m_EditorClassIdentifier: 
-  GameType: {fileID: 11400000, guid: d5b147ab88e76c1479291959c777b01d, type: 2}
+  GameType: {fileID: 11400000, guid: b7f7ff470392d2d4ba48edcd7444df3d, type: 2}
   Settings:
     <General>k__BackingField:
       _nextPieceCount: 5
@@ -22,7 +22,7 @@ MonoBehaviour:
       <UseCustomSeed>k__BackingField: 0
       <CustomSeed>k__BackingField: 0
       <CustomRandomizerScript>k__BackingField: 
-      <ActiveSeed>k__BackingField: 1050476319
+      <ActiveSeed>k__BackingField: 0
     <Controls>k__BackingField:
       _rotationSystemType: 1
       _customRotationSystem: 
@@ -33,12 +33,12 @@ MonoBehaviour:
       <ShowGhostPiece>k__BackingField: 1
       <OverrideHandling>k__BackingField: 0
       <Handling>k__BackingField:
-        _delayedAutoShift: 0.085
-        _automaticRepeatRate: 0
-        _softDropFactor: Infinity
-        _dasCutDelay: 0.03
-        _doubleDropPreventionInterval: 0.03
-        <DelayDasOn>k__BackingField: 1
+        _delayedAutoShift: 0.125
+        _automaticRepeatRate: 0.2
+        _softDropFactor: 20
+        _dasCutDelay: 0
+        _doubleDropPreventionInterval: 0
+        <DelayDasOn>k__BackingField: 0
         <SimultaneousDasBehavior>k__BackingField: 1
         <DiagonalLockBehavior>k__BackingField: 0
         <CancelDelayWithMovement>k__BackingField: 1
@@ -57,23 +57,23 @@ MonoBehaviour:
       _hardLockAmount: 5
       <LockDelayType>k__BackingField: 1
       <HardLockType>k__BackingField: 0
-      <TopoutCondition>k__BackingField: 2
+      <TopoutCondition>k__BackingField: 0
       <AllowClutchClears>k__BackingField: 1
     <Objective>k__BackingField:
-      _gameManagerType: 0
+      _gameManagerType: 1
       _customGameManager: 
       _garbageGeneration: 0
       _customGarbageGeneratorName: 
-      _endConditionCount: 40
+      _endConditionCount: 120
       _garbageHeight: 10
-      <MainStat>k__BackingField: 1
-      <GameEndCondition>k__BackingField: 1
+      <MainStat>k__BackingField: 0
+      <GameEndCondition>k__BackingField: 5
       <CustomGarbageScript>k__BackingField: 
       <CustomGameManagerScript>k__BackingField: 
       <ToppingOutIsOkay>k__BackingField: 0
       <StartingLevel>k__BackingField: 
     <Presentation>k__BackingField:
-      _countdownInterval: 1
+      _countdownInterval: 0.5
       _countdownCount: 3
-      <Title>k__BackingField: Custom game
+      <Title>k__BackingField: Ultra
       <UseCountdown>k__BackingField: 1

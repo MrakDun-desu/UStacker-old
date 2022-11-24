@@ -43,6 +43,10 @@ namespace Blockstacker.Gameplay.Stats
         private bool _isDraggingPosition;
         private bool _isDraggingSize;
         private static StatCounterDisplayer _currentlyUnderMouse;
+        
+        private TweenerCore<Color, Color, ColorOptions> _visibilityTween;
+        private TweenerCore<Color, Color, ColorOptions> _colorTween;
+
 
         private void RefreshStatCounter()
         {
@@ -240,9 +244,6 @@ namespace Blockstacker.Gameplay.Stats
             _displayText.text = text;
         }
 
-        private TweenerCore<Color, Color, ColorOptions> _visibilityTween;
-        private TweenerCore<Color, Color, ColorOptions> _colorTween;
-
         public void SetVisibility(object value)
         {
             _visibilityTween?.Kill();
@@ -257,7 +258,7 @@ namespace Blockstacker.Gameplay.Stats
             _visibilityTween = DOTween.ToAlpha(() => _displayText.color,
                 value => _displayText.color = value,
                 alpha,
-                duration);
+                duration).SetAutoKill(false);
         }
 
         public void SetColor(string color)
@@ -269,6 +270,7 @@ namespace Blockstacker.Gameplay.Stats
         public void AnimateColor(string color, object durationObj)
         {
             var duration = Convert.ToSingle(durationObj);
+
             _colorTween = DOTween.To(() => _displayText.color,
                 value => _displayText.color = value,
                 CreateColor.FromString(color),

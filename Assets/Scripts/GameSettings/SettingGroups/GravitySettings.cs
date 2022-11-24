@@ -24,7 +24,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         [field: SerializeField]
         public HardLockType HardLockType { get; set; } = HardLockType.LimitedTime;
         [field: SerializeField]
-        public TopoutCondition TopoutCondition { get; set; } = TopoutCondition.AllBlocksAboveLethal;
+        public TopoutCondition TopoutCondition { get; set; } = TopoutCondition.PieceSpawn;
         [field: SerializeField]
         public bool AllowClutchClears { get; set; } = true;
         

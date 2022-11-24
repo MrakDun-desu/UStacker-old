@@ -205,6 +205,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1617022711}
+    - target: {fileID: 2104051357663440278, guid: aee2cdc296440a64e844b8824081b52f, type: 3}
+      propertyPath: _gameSettingsAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8b839de80c045754bbd099e79b75cf64, type: 2}
     - target: {fileID: 8141839149516784097, guid: aee2cdc296440a64e844b8824081b52f, type: 3}
       propertyPath: m_Camera
       value: 
