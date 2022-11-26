@@ -61,7 +61,15 @@ namespace Blockstacker.GlobalSettings.Changers
         private void OnValueRewritten(string value)
         {
             if (string.IsNullOrEmpty(value)) value = "0";
-            var newValue = float.Parse(value);
+            
+            value = value.Replace('.', ',');
+            var isValid = float.TryParse(value, out var newValue);
+
+            if (!isValid)
+            {
+                _valueField.SetTextWithoutNotify(FormatValue(AppSettings.GetValue<float>(_controlPath)));
+                return;
+            }
             
             newValue /= _multiplier;
 

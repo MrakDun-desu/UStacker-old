@@ -60,6 +60,8 @@ MonoBehaviour:
   _title: {fileID: 6310777133412188188}
   _autoformatName: 0
   _dropdown: {fileID: 5468033011456797308}
+  _folderButton: {fileID: 0}
+  _docsButton: {fileID: 0}
 --- !u!114 &2842199616465437187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -598,7 +600,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5e406bc1b26a2864391d2b98f197ce07, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -623,6 +625,7 @@ MonoBehaviour:
   _menuTransform: {fileID: 2842199617028823201}
   _openedX: 1150
   _closedX: 150
+  _tweenDuration: 0.5
   _settingsScrollRect: {fileID: 6552790354317606355}
   _closeOverlay: {fileID: 4186867971425990576}
 --- !u!1 &2842199617083370051
@@ -741,6 +744,8 @@ MonoBehaviour:
   _title: {fileID: 6310777132377469051}
   _autoformatName: 0
   _dropdown: {fileID: 6887326709158427105}
+  _folderButton: {fileID: 0}
+  _docsButton: {fileID: 0}
 --- !u!114 &2842199617115112631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1192,6 +1197,8 @@ MonoBehaviour:
   _title: {fileID: 6310777132591856734}
   _autoformatName: 0
   _dropdown: {fileID: 451842914857943531}
+  _folderButton: {fileID: 0}
+  _docsButton: {fileID: 0}
 --- !u!114 &2842199617729295016
 MonoBehaviour:
   m_ObjectHideFlags: 0

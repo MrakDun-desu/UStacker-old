@@ -168,31 +168,56 @@ namespace Blockstacker.GlobalSettings.Changers
 
         private void OnPosXChanged(string newValue)
         {
-            var converted = float.Parse(newValue);
+            newValue = newValue.Replace('.', ',');
+            if (!float.TryParse(newValue, out var converted))
+            {
+                _posXField.SetTextWithoutNotify(_value.Position.x.ToString(CultureInfo.InvariantCulture));
+                return;
+            }
             _value.Position.x = converted;
         }
 
         private void OnPosYChanged(string newValue)
         {
-            var converted = float.Parse(newValue);
+            newValue = newValue.Replace('.', ',');
+            if (!float.TryParse(newValue, out var converted))
+            {
+                _posYField.SetTextWithoutNotify(_value.Position.y.ToString(CultureInfo.InvariantCulture));
+                return;
+            }
             _value.Position.y = converted;
         }
         
         private void OnSizeXChanged(string newValue)
         {
-            var converted = float.Parse(newValue);
+            newValue = newValue.Replace('.', ',');
+            if (!float.TryParse(newValue, out var converted))
+            {
+                _sizeXField.SetTextWithoutNotify(_value.Size.x.ToString(CultureInfo.InvariantCulture));
+                return;
+            }
             _value.Size.x = converted;
         }
 
         private void OnSizeYChanged(string newValue)
         {
-            var converted = float.Parse(newValue);
+            newValue = newValue.Replace('.', ',');
+            if (!float.TryParse(newValue, out var converted))
+            {
+                _sizeYField.SetTextWithoutNotify(_value.Size.y.ToString(CultureInfo.InvariantCulture));
+                return;
+            }
             _value.Size.y = converted;
         }
 
         private void OnUpdateIntervalChanged(string newValue)
         {
-            var converted = float.Parse(newValue);
+            newValue = newValue.Replace('.', ',');
+            if (!float.TryParse(newValue, out var converted))
+            {
+                _updateIntervalField.SetTextWithoutNotify(_value.UpdateInterval.ToString(CultureInfo.InvariantCulture));
+                return;
+            }
             _value.UpdateInterval = Mathf.Max(converted, 0f);
             _updateIntervalField.SetTextWithoutNotify(_value.UpdateInterval.ToString(CultureInfo.InvariantCulture));
         }

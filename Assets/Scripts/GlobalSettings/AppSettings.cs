@@ -18,6 +18,7 @@ namespace Blockstacker.GlobalSettings
         public static CustomizationSettings Customization => Settings.Customization;
         public static StatCountingSettings StatCounting => Settings.StatCounting;
         public static OtherSettings Other => Settings.Others;
+        public static OverridesDictionary GameOverrides => Settings.GameOverrrides;
 
         public static event Action SettingsReloaded;
         private const char INVALID_CHAR_REPLACEMENT = '_';
@@ -156,6 +157,7 @@ namespace Blockstacker.GlobalSettings
             [field: SerializeField] public StatCountingSettings StatCounting { get; set; } = new();
             [field: SerializeField] public OtherSettings Others { get; set; } = new();
             [field: SerializeField] public string Rebinds { get; set; } = string.Empty;
+            [field: SerializeField] public OverridesDictionary GameOverrrides { get; set; } = new();
         }
     }
 }

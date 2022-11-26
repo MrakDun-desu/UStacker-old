@@ -59,6 +59,8 @@ namespace Blockstacker.GlobalSettings.Changers
         private void OnValueRewritten(string value)
         {
             if (string.IsNullOrEmpty(value)) value = "0";
+            
+            value = value.Replace('.', ',');
             var isValid = double.TryParse(value, out var newValue);
 
             if (!isValid)

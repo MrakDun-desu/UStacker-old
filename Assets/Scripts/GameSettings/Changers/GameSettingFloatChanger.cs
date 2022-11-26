@@ -22,6 +22,7 @@ namespace Blockstacker.GameSettings.Changers
 
         protected override void OnValueOverwritten(string value)
         {
+            value = value.Replace('.', ',');
             if (!float.TryParse(value, out var floatValue))
             {
                 RefreshValue();

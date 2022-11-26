@@ -19,5 +19,5 @@ MonoBehaviour:
     Script: "function OnUpdated()\n\treturn \"Time: \" .. StatUtility:GetFormattedTime()\nend\nSetText(\"Time:
       \" .. StatUtility:FormatTime(0))\nreturn {\n\t[\"CounterUpdated\"] = OnUpdated\n}"
     Position: {x: -9, y: 0}
-    Size: {x: 7, y: 2}
+    Size: {x: 8, y: 2}
     UpdateInterval: 0.01

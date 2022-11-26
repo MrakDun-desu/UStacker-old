@@ -12,9 +12,39 @@ EditorBuildSettings:
     path: Assets/Scenes/Scene_Menu_Main.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/Scene_Menu_GameSettings_Custom.unity
-    guid: 3c94ae79079e3cc469b8282cf6e761fb
+    path: Assets/Scenes/Scene_Game_CheeseRace20L.unity
+    guid: cf7c5c7c3d76243469f35902352f3622
+  - enabled: 1
+    path: Assets/Scenes/Scene_Game_ClassicMarathon.unity
+    guid: 835d31641881ad346a34b2f6085e20b5
   - enabled: 1
     path: Assets/Scenes/Scene_Game_Custom.unity
     guid: 1a5e1173c5a6b7440bf351baa5851bfe
+  - enabled: 1
+    path: Assets/Scenes/Scene_Game_Marathon.unity
+    guid: 3cddaddaaf94f904ebda7a8f4e557247
+  - enabled: 1
+    path: Assets/Scenes/Scene_Game_Sprint40L.unity
+    guid: 20d48d86682642e44ba764e8b8d1af4e
+  - enabled: 1
+    path: Assets/Scenes/Scene_Game_Ultra.unity
+    guid: 3df2b14b81380b046964cda813264942
+  - enabled: 1
+    path: Assets/Scenes/Scene_Menu_GameSettings_CheeseRace20L.unity
+    guid: eebfe541c9f08424ba463e94097d6115
+  - enabled: 1
+    path: Assets/Scenes/Scene_Menu_GameSettings_ClassicMarathon.unity
+    guid: 52e76fad401fc7546ae4b0befd861205
+  - enabled: 1
+    path: Assets/Scenes/Scene_Menu_GameSettings_Custom.unity
+    guid: 3c94ae79079e3cc469b8282cf6e761fb
+  - enabled: 1
+    path: Assets/Scenes/Scene_Menu_GameSettings_Marathon.unity
+    guid: 0f26690d32c86984c8daefd05ecd216e
+  - enabled: 1
+    path: Assets/Scenes/Scene_Menu_GameSettings_Sprint40L.unity
+    guid: b863207d74c0c9240867ff0d3872b3e7
+  - enabled: 1
+    path: Assets/Scenes/Scene_Menu_GameSettings_Ultra.unity
+    guid: 373da3696b6b6f84099a4bc4606912fc
   m_configObjects: {}

@@ -32,14 +32,14 @@ namespace Blockstacker.GlobalSettings
                 OpenSettingsMenu();
         }
         
-        private void OpenSettingsMenu()
+        public void OpenSettingsMenu()
         {
             gameObject.SetActive(true);
             DOTween.To(GetPosX, SetPosX, _openedX, _tweenDuration).OnComplete(() => _closeOverlay.SetActive(false));
             _menuOpened = true;
         }
 
-        private void CloseSettingsMenu()
+        public void CloseSettingsMenu()
         {
             DOTween.To(GetPosX, SetPosX, _closedX, _tweenDuration).OnComplete(() => _closeOverlay.SetActive(true));
             _menuOpened = false;

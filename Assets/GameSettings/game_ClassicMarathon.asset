@@ -33,8 +33,8 @@ MonoBehaviour:
       <ShowGhostPiece>k__BackingField: 1
       <OverrideHandling>k__BackingField: 1
       <Handling>k__BackingField:
-        _delayedAutoShift: 0.15
-        _automaticRepeatRate: 0.5
+        _delayedAutoShift: 0.25
+        _automaticRepeatRate: 0.1
         _softDropFactor: 10
         _dasCutDelay: 0
         _doubleDropPreventionInterval: 0

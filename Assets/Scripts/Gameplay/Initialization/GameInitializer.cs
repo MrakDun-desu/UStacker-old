@@ -6,6 +6,7 @@ using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Presentation;
 using Blockstacker.GameSettings;
+using Blockstacker.GlobalSettings.Music;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -37,6 +38,7 @@ namespace Blockstacker.Gameplay.Initialization
         [SerializeField] private GameObject _loadingOverlay;
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private GameStateManager _stateManager;
+        [SerializeField] private MusicPlayerFinder _playerFinder;
         [SerializeField] private GameObject[] _gameSettingsDependencies = Array.Empty<GameObject>();
 
         [Header("Events")] public UnityEvent GameInitialized;
@@ -79,8 +81,10 @@ namespace Blockstacker.Gameplay.Initialization
 
         private bool TryInitialize(StringBuilder errorBuilder)
         {
+            _playerFinder.gameTypeStr = _gameSettingsAsset.GameType;
             List<InitializerBase> initializers = new()
             {
+                new OverridesInitializer(errorBuilder, _gameSettingsAsset),
                 new BoardDimensionsInitializer(
                     errorBuilder, _gameSettingsAsset,
                     _board,

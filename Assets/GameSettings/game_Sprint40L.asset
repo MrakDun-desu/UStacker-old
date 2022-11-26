@@ -16,7 +16,7 @@ MonoBehaviour:
   Settings:
     <General>k__BackingField:
       _nextPieceCount: 5
-      _randomizerType: 0
+      _randomizerType: 1
       _customRandomizerName: 
       <AllowedSpins>k__BackingField: 2
       <UseCustomSeed>k__BackingField: 0

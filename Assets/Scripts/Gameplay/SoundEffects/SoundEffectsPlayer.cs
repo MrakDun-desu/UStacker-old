@@ -112,15 +112,24 @@ namespace Blockstacker.Gameplay.SoundEffects
 
         private void HandleCountdownTicked(CountdownTickedMessage message)
         {
-            switch (message.RemainingTicks)
+            string countdownKey = null;
+            var found = false;
+            for (var i = message.RemainingTicks; i > 0; i--)
             {
-                case 0:
-                    TryPlayClip($"countdown1");
-                    break;
-                case > 0:
-                    TryPlayClip("countdown2");
-                    break;
+                countdownKey = $"countdown{i}";
+                if (SoundPackLoader.SoundEffects.ContainsKey(countdownKey))
+                {
+                    found = true;
+                     break;
+                }
+                if (_defaultEffects.ContainsKey(countdownKey))
+                {
+                    found = true;
+                     break;
+                }
             }
+
+            TryPlayClip(found ? countdownKey : $"countdown{message.RemainingTicks}");
         }
 
         private void HandlePieceSpawned(PieceSpawnedMessage message)

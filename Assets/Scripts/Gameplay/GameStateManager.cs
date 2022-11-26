@@ -22,6 +22,7 @@ namespace Blockstacker.Gameplay
         [Space] 
         [SerializeField] private UnityEvent GameStarted;
         [SerializeField] private UnityEvent GamePaused;
+        [SerializeField] private UnityEvent GameUnpaused;
         [SerializeField] private UnityEvent GameResumed;
         [SerializeField] private UnityEvent GameRestarted;
         [SerializeField] private UnityEvent GameLost;
@@ -38,11 +39,20 @@ namespace Blockstacker.Gameplay
         private double _lastSentTimeCondition;
 
         public bool GameRunning { get; private set; }
+        private bool _gamePaused;
 
         #region Game event management
 
         public void StartGame()
         {
+            if (_gamePaused)
+            {
+                GameResumed.Invoke();
+                _mediator.Send(new GameResumedMessage());
+                _gamePaused = false;
+                return;
+            }
+            
             if (!_gameStarted)
                 FirstTimeGameStart();
             if (_gameLost || _gameEnded)
@@ -77,20 +87,23 @@ namespace Blockstacker.Gameplay
             {
                 GamePaused.Invoke();
                 _mediator.Send(new GamePausedMessage());
+                _gamePaused = true;
             }
             else
             {
-                GameResumed.Invoke();
-                _mediator.Send(new GameResumedMessage());
+                GameUnpaused.Invoke();
             }
 
             GameRunning = !GameRunning;
         }
-
+        
         public void Restart()
         {
-            if (!GameRunning)
+            if (!_gamePaused)
+            {
+                _gamePaused = false;
                 GameResumed.Invoke();
+            }
             
             GameRestarted.Invoke();
             _mediator.Send(new GameRestartedMessage());
@@ -152,7 +165,7 @@ namespace Blockstacker.Gameplay
 
         private void Update()
         {
-            if (_settings.Objective.GameEndCondition != GameEndCondition.Time) return;
+            if (_settings.Objective.GameEndCondition != GameEndCondition.Time || _gameEnded) return;
 
             var functionStartTime = _timer.CurrentTime;
 

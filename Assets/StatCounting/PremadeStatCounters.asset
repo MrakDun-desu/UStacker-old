@@ -12,36 +12,70 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30c7e74a4b804022aef7c59547c34b5d, type: 3}
   m_Name: PremadeStatCounters
   m_EditorClassIdentifier: 
-  PremadeGroups: []
+  PremadeGroups:
+  - _name: Sprint 40L
+    _gameType: {fileID: 11400000, guid: d1ef566a279ff264c88ee9c93b7c99f7, type: 2}
+    StatCounterSos:
+    - {fileID: 11400000, guid: da01094586ea3ff42b5d0427967e84f5, type: 2}
+    - {fileID: 11400000, guid: a93c75259ac95fa4c8e35e2570556598, type: 2}
+    - {fileID: 11400000, guid: 5a65acaebf7418442a6506c2d5647d0d, type: 2}
+    - {fileID: 11400000, guid: 99a1507bdfe942c41a6dd7fe380ea1cb, type: 2}
+    - {fileID: 11400000, guid: 4a9886897f755cf4c9143a4f700abdf8, type: 2}
+    - {fileID: 11400000, guid: be038ea0a0ad71c4a9a49b55536e061d, type: 2}
+    - {fileID: 11400000, guid: a059b8164b4204e44b92ef546184abe2, type: 2}
+    - {fileID: 11400000, guid: b8aa3efaa10821544ab1a3937865e458, type: 2}
+    - {fileID: 11400000, guid: 62d14d5b7668c504ba2065b11d6e10b6, type: 2}
+    - {fileID: 11400000, guid: 2077419e4bb765a4d9bc5e3f7bbc20fa, type: 2}
+  - _name: Cheese Race 20L
+    _gameType: {fileID: 11400000, guid: 2eac9bfd32fcf27439d78c2ced67144e, type: 2}
+    StatCounterSos:
+    - {fileID: 11400000, guid: da01094586ea3ff42b5d0427967e84f5, type: 2}
+    - {fileID: 11400000, guid: a93c75259ac95fa4c8e35e2570556598, type: 2}
+    - {fileID: 11400000, guid: 5a65acaebf7418442a6506c2d5647d0d, type: 2}
+    - {fileID: 11400000, guid: 99a1507bdfe942c41a6dd7fe380ea1cb, type: 2}
+    - {fileID: 11400000, guid: b8aa3efaa10821544ab1a3937865e458, type: 2}
+    - {fileID: 11400000, guid: 62d14d5b7668c504ba2065b11d6e10b6, type: 2}
+    - {fileID: 11400000, guid: 2077419e4bb765a4d9bc5e3f7bbc20fa, type: 2}
+  - _name: Classic Marathon
+    _gameType: {fileID: 11400000, guid: 9e871d44a98d84541bd957a59c36de9e, type: 2}
+    StatCounterSos:
+    - {fileID: 11400000, guid: da01094586ea3ff42b5d0427967e84f5, type: 2}
+    - {fileID: 11400000, guid: a93c75259ac95fa4c8e35e2570556598, type: 2}
+    - {fileID: 11400000, guid: 5a65acaebf7418442a6506c2d5647d0d, type: 2}
+    - {fileID: 11400000, guid: 99a1507bdfe942c41a6dd7fe380ea1cb, type: 2}
+    - {fileID: 11400000, guid: a9fc146114079ad4698de12de2b720a5, type: 2}
+    - {fileID: 11400000, guid: a059b8164b4204e44b92ef546184abe2, type: 2}
+    - {fileID: 11400000, guid: 7df7f198474b5174297ea76a062840b6, type: 2}
+    - {fileID: 11400000, guid: 2077419e4bb765a4d9bc5e3f7bbc20fa, type: 2}
+  - _name: Marathon
+    _gameType: {fileID: 11400000, guid: d3eb4377728da054cb82ad5ca5528be8, type: 2}
+    StatCounterSos:
+    - {fileID: 11400000, guid: da01094586ea3ff42b5d0427967e84f5, type: 2}
+    - {fileID: 11400000, guid: a93c75259ac95fa4c8e35e2570556598, type: 2}
+    - {fileID: 11400000, guid: 5a65acaebf7418442a6506c2d5647d0d, type: 2}
+    - {fileID: 11400000, guid: 99a1507bdfe942c41a6dd7fe380ea1cb, type: 2}
+    - {fileID: 11400000, guid: a9fc146114079ad4698de12de2b720a5, type: 2}
+    - {fileID: 11400000, guid: a059b8164b4204e44b92ef546184abe2, type: 2}
+    - {fileID: 11400000, guid: 7df7f198474b5174297ea76a062840b6, type: 2}
+    - {fileID: 11400000, guid: 2077419e4bb765a4d9bc5e3f7bbc20fa, type: 2}
+  - _name: Ultra
+    _gameType: {fileID: 11400000, guid: b7f7ff470392d2d4ba48edcd7444df3d, type: 2}
+    StatCounterSos:
+    - {fileID: 11400000, guid: da01094586ea3ff42b5d0427967e84f5, type: 2}
+    - {fileID: 11400000, guid: a93c75259ac95fa4c8e35e2570556598, type: 2}
+    - {fileID: 11400000, guid: 5a65acaebf7418442a6506c2d5647d0d, type: 2}
+    - {fileID: 11400000, guid: 99a1507bdfe942c41a6dd7fe380ea1cb, type: 2}
+    - {fileID: 11400000, guid: a059b8164b4204e44b92ef546184abe2, type: 2}
+    - {fileID: 11400000, guid: 7df7f198474b5174297ea76a062840b6, type: 2}
+    - {fileID: 11400000, guid: 2077419e4bb765a4d9bc5e3f7bbc20fa, type: 2}
+    - {fileID: 11400000, guid: 62d14d5b7668c504ba2065b11d6e10b6, type: 2}
   DefaultGroup:
-    Name: Default
-    StatCounters:
-    - Name: Stopwatch
-      Type: 0
-      Filename: 
-      Script: "function OnUpdated()\n\treturn \"Time: \" .. StatUtility:GetFormattedTime()\nend\nSetText(\"Time:
-        \" .. StatUtility:FormatTime(0))\nreturn {\n\t[\"CounterUpdated\"] = OnUpdated\n}"
-      Position: {x: -6, y: 0}
-      Size: {x: 6, y: 2}
-      UpdateInterval: 0.01
-    - Name: Pieces
-      Type: 0
-      Filename: 
-      Script: "function Reset()\n\tPiecesPlaced = 0\nend\nfunction OnPiecePlaced()\n\tPiecesPlaced
-        = PiecesPlaced + 1\nend\nfunction OnUpdated()\n\tlocal pps = Stats.PiecesPerSecond\n\treturn
-        \"Pieces: \" .. PiecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\nend\nReset()\nSetText(\"Pieces:
-        0\\nPPS: 0\")\nreturn {\n\t[\"CounterUpdated\"] = OnUpdated,\n\t[\"PiecePlaced\"]
-        = OnPiecePlaced,\n\t[\"GameStarted\"] = Reset,\n\t[\"GameRestarted\"] = Reset\n}"
-      Position: {x: -6, y: 5}
-      Size: {x: 6, y: 4}
-      UpdateInterval: 0.1
-    - Name: Lines cleared
-      Type: 0
-      Filename: 
-      Script: "function Reset()\n\tLinesCleared = 0\n\treturn \"Lines cleared: 0\"\nend\nfunction
-        OnPiecePlaced(message)\n\tLinesCleared = LinesCleared + message.LinesCleared\n\treturn
-        \"Lines cleared: \" .. LinesCleared\nend\nSetText(Reset())\nreturn {\n\t[\"GameStarted\"]
-        = Reset,\n\t[\"GameRestarted\"] = Reset,\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -8, y: 9}
-      Size: {x: 8, y: 2}
-      UpdateInterval: 0
+    _name: Default
+    _gameType: {fileID: 0}
+    StatCounterSos:
+    - {fileID: 11400000, guid: 2077419e4bb765a4d9bc5e3f7bbc20fa, type: 2}
+    - {fileID: 11400000, guid: b8aa3efaa10821544ab1a3937865e458, type: 2}
+    - {fileID: 11400000, guid: da01094586ea3ff42b5d0427967e84f5, type: 2}
+    - {fileID: 11400000, guid: a93c75259ac95fa4c8e35e2570556598, type: 2}
+    - {fileID: 11400000, guid: 5a65acaebf7418442a6506c2d5647d0d, type: 2}
+    - {fileID: 11400000, guid: 99a1507bdfe942c41a6dd7fe380ea1cb, type: 2}

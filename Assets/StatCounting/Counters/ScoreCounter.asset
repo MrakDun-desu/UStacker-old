@@ -20,6 +20,6 @@ MonoBehaviour:
       \"Score: \" .. Stats.Score .. \"\\n\" .. StatUtility:FormatNumber(spp, 0) ..
       \" per piece\"\nend\nSetText(\"Score: 0\\n0 per piece\")\nreturn {\n\t[\"ScoreChanged\"]
       = OnUpdated,\n\t[\"PiecePlaced\"] = OnUpdated\n}"
-    Position: {x: -10, y: 3}
-    Size: {x: 8, y: 3}
+    Position: {x: -10, y: 2}
+    Size: {x: 9, y: 3}
     UpdateInterval: 0

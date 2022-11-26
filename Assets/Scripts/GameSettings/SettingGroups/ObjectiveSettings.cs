@@ -34,8 +34,8 @@ namespace Blockstacker.GameSettings.SettingGroups
         public string CustomGameManagerScript { get; set; } = "";
         [field: SerializeField]
         public bool ToppingOutIsOkay { get; set; }
-        [field: SerializeField]
-        public string StartingLevel { get; set; }
+
+        [field: SerializeField] public string StartingLevel { get; set; } = string.Empty;
 
         public double EndConditionCount
         {

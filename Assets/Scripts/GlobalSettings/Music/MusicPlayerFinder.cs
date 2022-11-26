@@ -5,42 +5,32 @@ namespace Blockstacker.GlobalSettings.Music
 {
     public class MusicPlayerFinder : MonoBehaviour
     {
-        private MusicPlayer _musicPlayer;
+        public StringReferenceSO gameTypeStr;
+        private string _gameType => gameTypeStr.Value;
 
-        private void FindMusicPlayer()
+        public void PlayGameTrackByType()
         {
-            if (_musicPlayer == null)
-                _musicPlayer = FindObjectOfType<MusicPlayer>();
-        }
-
-        public void PlayGameTrackByType(StringReferenceSO gameType)
-        {
-            FindMusicPlayer();
-            _musicPlayer.PlayTrackByGameTypeImmediate(gameType.Value);
+            MusicPlayer.Instance.PlayTrackByGameTypeImmediate(_gameType);
         }
 
         public void PlayVictoryTrack()
         {
-            FindMusicPlayer();
-            _musicPlayer.PlayVictoryTrack();
+            MusicPlayer.Instance.PlayVictoryTrack();
         }
 
         public void PlayLossTrack()
         {
-            FindMusicPlayer();
-            _musicPlayer.PlayLossTrack();
+            MusicPlayer.Instance.PlayLossTrack();
         }
 
         public void StopPlaying()
         {
-            FindMusicPlayer();
-            _musicPlayer.StopPlaying();
+            MusicPlayer.Instance.StopPlaying();
         }
 
         public void Quieten()
         {
-            FindMusicPlayer();
-            _musicPlayer.StartCoroutine(_musicPlayer.MuteSourceOverTime());
+            MusicPlayer.Instance.StartCoroutine(MusicPlayer.Instance.MuteSourceOverTime());
         }
     }
 }

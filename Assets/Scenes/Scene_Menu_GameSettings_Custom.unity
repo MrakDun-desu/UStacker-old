@@ -5419,7 +5419,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: LoadGameCustom
+      value: LoadGame_Custom
       objectReference: {fileID: 0}
     - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -6320,7 +6320,7 @@ MonoBehaviour:
   _title: {fileID: 1285358634}
   _autoformatName: 0
   _dropdown: {fileID: 181245189}
-  _gameTypeStr: {fileID: 11400000, guid: d5b147ab88e76c1479291959c777b01d, type: 2}
+  gameTypeStr: {fileID: 0}
 --- !u!1001 &1285622851
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7459,7 +7459,7 @@ MonoBehaviour:
   _autoformatName: 0
   _typeDropdown: {fileID: 744102686}
   _nameDropdown: {fileID: 1822459848}
-  _gameTypeStr: {fileID: 11400000, guid: d5b147ab88e76c1479291959c777b01d, type: 2}
+  gameTypeStr: {fileID: 0}
 --- !u!1001 &1430387928
 PrefabInstance:
   m_ObjectHideFlags: 0
