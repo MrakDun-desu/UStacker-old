@@ -22,7 +22,7 @@ MonoBehaviour:
       <UseCustomSeed>k__BackingField: 0
       <CustomSeed>k__BackingField: 0
       <CustomRandomizerScript>k__BackingField: 
-      <ActiveSeed>k__BackingField: 0
+      <ActiveSeed>k__BackingField: -936399301
     <Controls>k__BackingField:
       _rotationSystemType: 0
       _customRotationSystem: 
@@ -35,7 +35,7 @@ MonoBehaviour:
       <Handling>k__BackingField:
         _delayedAutoShift: 0.25
         _automaticRepeatRate: 0.1
-        _softDropFactor: 10
+        _softDropFactor: 3
         _dasCutDelay: 0
         _doubleDropPreventionInterval: 0
         <DelayDasOn>k__BackingField: 0
@@ -71,9 +71,9 @@ MonoBehaviour:
       <CustomGarbageScript>k__BackingField: 
       <CustomGameManagerScript>k__BackingField: 
       <ToppingOutIsOkay>k__BackingField: 1
-      <StartingLevel>k__BackingField: 
+      <StartingLevel>k__BackingField: 9
     <Presentation>k__BackingField:
-      _countdownInterval: 0.5
+      _countdownInterval: 0.8
       _countdownCount: 3
       <Title>k__BackingField: Classic Marathon
       <UseCountdown>k__BackingField: 1

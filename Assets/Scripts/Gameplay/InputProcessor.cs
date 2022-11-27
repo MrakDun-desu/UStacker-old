@@ -285,7 +285,7 @@ namespace Blockstacker.Gameplay
 
         public void OnMovePieceLeft(InputAction.CallbackContext ctx)
         {
-            if (_pieceIsNull || !_controlsActive) return;
+            if (!_controlsActive) return;
             if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeVertical && _holdingSoftDrop)
                 return;
 
@@ -313,6 +313,7 @@ namespace Blockstacker.Gameplay
                 _dasRightStart = actionTime;
             }
 
+            if (_pieceIsNull) return;
             if (!_board.CanPlace(ActivePiece, Vector2Int.left)) return;
             MovePiece(Vector2Int.left, true, actionTime);
             UpdatePiecePlacementVars(actionTime);
@@ -320,7 +321,7 @@ namespace Blockstacker.Gameplay
 
         public void OnMovePieceRight(InputAction.CallbackContext ctx)
         {
-            if (_pieceIsNull || !_controlsActive) return;
+            if (!_controlsActive) return;
             if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeVertical && _holdingSoftDrop)
                 return;
 
@@ -349,6 +350,7 @@ namespace Blockstacker.Gameplay
                 _dasLeftStart = actionTime;
             }
 
+            if (_pieceIsNull) return;
             if (!_board.CanPlace(ActivePiece, Vector2Int.right)) return;
             MovePiece(Vector2Int.right, true, actionTime);
             UpdatePiecePlacementVars(actionTime);
@@ -356,7 +358,7 @@ namespace Blockstacker.Gameplay
 
         public void OnSoftDrop(InputAction.CallbackContext ctx)
         {
-            if (_pieceIsNull || !_controlsActive) return;
+            if (!_controlsActive) return;
             var actionTime = ctx.time - _timer.EffectiveStartTime;
             Update();
 

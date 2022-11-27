@@ -31,9 +31,12 @@ namespace Blockstacker.GlobalSettings.Changers
                 AppSettings.GameOverrides[_changedOverride.Value] = _value;
             }
 
-            _countdownIntervalField.text = _value.CountdownInterval.ToString(CultureInfo.InvariantCulture);
-            _countdownCountField.text = _value.CountdownCount.ToString(CultureInfo.InvariantCulture);
-            _startingLevelField.text = _value.StartingLevel?.ToString(CultureInfo.InvariantCulture);
+            if (_value.CountdownInterval is {} interval)
+                _countdownIntervalField.text = interval.ToString(CultureInfo.InvariantCulture);
+            if (_value.CountdownCount is {} count)
+                _countdownCountField.text = count.ToString(CultureInfo.InvariantCulture);
+            
+            _startingLevelField.text = _value.StartingLevel;
         }
 
         private void OnCountdownIntervalChange(string newValue)
@@ -42,7 +45,8 @@ namespace Blockstacker.GlobalSettings.Changers
             if (float.TryParse(newValue, out var newInterval))
                 _value.CountdownInterval = newInterval;
             
-            _countdownIntervalField.text = _value.CountdownInterval.ToString(CultureInfo.InvariantCulture);
+            if (_value.CountdownInterval is {} interval)
+                _countdownIntervalField.text = interval.ToString(CultureInfo.InvariantCulture);
         }
         
         private void OnCountdownCountChange(string newValue)
@@ -50,7 +54,8 @@ namespace Blockstacker.GlobalSettings.Changers
             if (uint.TryParse(newValue, out var newCount))
                 _value.CountdownCount = newCount;
             
-            _countdownCountField.text = _value.CountdownCount.ToString(CultureInfo.InvariantCulture);
+            if (_value.CountdownCount is {} count)
+                _countdownCountField.text = count.ToString(CultureInfo.InvariantCulture);
         }
         
         private void OnStartingLevelChange(string newValue)

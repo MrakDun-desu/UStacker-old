@@ -12,7 +12,6 @@ namespace Blockstacker.GlobalSettings
         [SerializeField] private float _closedX = 300f;
         [SerializeField] private float _tweenDuration = 0.5f;
         [SerializeField] private ScrollRect _settingsScrollRect;
-        [SerializeField] private GameObject _closeOverlay;
 
         private bool _menuOpened;
         private bool _loaded;
@@ -35,13 +34,13 @@ namespace Blockstacker.GlobalSettings
         public void OpenSettingsMenu()
         {
             gameObject.SetActive(true);
-            DOTween.To(GetPosX, SetPosX, _openedX, _tweenDuration).OnComplete(() => _closeOverlay.SetActive(false));
+            DOTween.To(GetPosX, SetPosX, _openedX, _tweenDuration);
             _menuOpened = true;
         }
 
         public void CloseSettingsMenu()
         {
-            DOTween.To(GetPosX, SetPosX, _closedX, _tweenDuration).OnComplete(() => _closeOverlay.SetActive(true));
+            DOTween.To(GetPosX, SetPosX, _closedX, _tweenDuration).OnComplete(() => gameObject.SetActive(false));
             _menuOpened = false;
         }
 

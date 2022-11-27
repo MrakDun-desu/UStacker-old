@@ -22,6 +22,6 @@ MonoBehaviour:
       \" .. StatUtility:FormatNumber(pps)\nend\nSetText(Reset())\nreturn {\n\t[\"CounterUpdated\"]
       = OnUpdated,\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStarted\"] = Reset,\n\t[\"GameRestarted\"]
       = Reset\n}"
-    Position: {x: -9, y: 5}
+    Position: {x: -9, y: 6}
     Size: {x: 8, y: 3}
     UpdateInterval: 0.1

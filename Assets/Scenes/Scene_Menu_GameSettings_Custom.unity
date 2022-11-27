@@ -6320,7 +6320,7 @@ MonoBehaviour:
   _title: {fileID: 1285358634}
   _autoformatName: 0
   _dropdown: {fileID: 181245189}
-  gameTypeStr: {fileID: 0}
+  gameTypeStr: {fileID: 11400000, guid: d5b147ab88e76c1479291959c777b01d, type: 2}
 --- !u!1001 &1285622851
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7459,7 +7459,7 @@ MonoBehaviour:
   _autoformatName: 0
   _typeDropdown: {fileID: 744102686}
   _nameDropdown: {fileID: 1822459848}
-  gameTypeStr: {fileID: 0}
+  gameTypeStr: {fileID: 11400000, guid: d5b147ab88e76c1479291959c777b01d, type: 2}
 --- !u!1001 &1430387928
 PrefabInstance:
   m_ObjectHideFlags: 0

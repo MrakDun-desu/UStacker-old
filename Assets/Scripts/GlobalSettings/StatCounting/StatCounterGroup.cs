@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Blockstacker.Common;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -8,11 +7,11 @@ using UnityEngine;
 namespace Blockstacker.GlobalSettings.StatCounting
 {
     [Serializable]
-    public class StatCounterGroup
+    public class StatCounterGroup : ISerializationCallbackReceiver
     {
         [JsonIgnore] [SerializeField] private string _name;
         [JsonIgnore] [SerializeField] private StringReferenceSO _gameType;
-        [JsonIgnore] [SerializeField] private List<StatCounterSO> StatCounterSos = new();
+        [JsonIgnore] [SerializeField] private List<StatCounterSO> _statCounterSos = new();
         [JsonIgnore] [SerializeField] private List<StatCounterRecord> _statCounters = new();
 
         public string Name
@@ -25,19 +24,7 @@ namespace Blockstacker.GlobalSettings.StatCounting
             }
         }
 
-        public List<StatCounterRecord> StatCounters
-        {
-            get
-            {
-                foreach (var counterSo in StatCounterSos.Where(
-                             counterSo => !_statCounters.Exists(counter => counter.Equals(counterSo.Value))))
-                {
-                    _statCounters.Add(counterSo.Value);
-                }
-
-                return _statCounters;
-            }
-        }
+        public List<StatCounterRecord> StatCounters => _statCounters;
 
 
         public StatCounterGroup Copy()
@@ -54,6 +41,30 @@ namespace Blockstacker.GlobalSettings.StatCounting
             }
 
             return output;
+        }
+
+        public void OnBeforeSerialize()
+        {
+            foreach (var counterSo in _statCounterSos)
+            {
+                if (counterSo is null) continue;
+                bool Predicate(StatCounterRecord counter) => counter.Name == counterSo.Value.Name;
+                if (!_statCounters.Exists(Predicate))
+                    _statCounters.Add(counterSo.Value.Copy());
+                else
+                    _statCounters.Find(Predicate).Script = counterSo.Value.Script;
+            }
+            for (var i = 0; i < _statCounters.Count; i++)
+            {
+                var counter = _statCounters[i];
+                if (_statCounterSos.Exists(so => so.Value.Name == counter.Name)) continue;
+                _statCounters.RemoveAt(i);
+                i--;
+            }
+        }
+
+        public void OnAfterDeserialize()
+        {
         }
     }
 }

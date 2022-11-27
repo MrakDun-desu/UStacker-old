@@ -73,7 +73,7 @@ MonoBehaviour:
       <ToppingOutIsOkay>k__BackingField: 0
       <StartingLevel>k__BackingField: 
     <Presentation>k__BackingField:
-      _countdownInterval: 0.5
+      _countdownInterval: 0.8
       _countdownCount: 3
       <Title>k__BackingField: Sprint 40L
       <UseCountdown>k__BackingField: 1
