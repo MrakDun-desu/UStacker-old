@@ -4,6 +4,7 @@ using System.Linq;
 using Blockstacker.Gameplay.Blocks;
 using Blockstacker.Gameplay.Initialization;
 using Blockstacker.GameSettings;
+using Blockstacker.GameSettings.Enums;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -13,6 +14,7 @@ namespace Blockstacker.Gameplay.Pieces
     {
         [SerializeField] private BlockBase _blockPrefab;
         [SerializeField] private Board _board;
+        [SerializeField] private SpriteRenderer _warningLine;
 
         public GameSettingsSO GameSettings { set => _settings = value; }
         private GameSettingsSO _settings;
@@ -29,14 +31,19 @@ namespace Blockstacker.Gameplay.Pieces
 
         public void MakeVisible()
         {
-            if (_isEnabled)
-                gameObject.SetActive(true);
+            if (!_isEnabled) return;
+            gameObject.SetActive(true);
+            
+            if (_settings.Gravity.TopoutCondition == TopoutCondition.PieceSpawn) return;
+            _warningLine.gameObject.SetActive(true);
         }
 
-        public void MakeInvisible() 
+        public void MakeInvisible()
         {
-            if (_isEnabled)
-                gameObject.SetActive(false);
+            if (!_isEnabled) return;
+            
+            gameObject.SetActive(false);
+            _warningLine.gameObject.SetActive(false);
         }
 
         private void Awake()
@@ -57,7 +64,12 @@ namespace Blockstacker.Gameplay.Pieces
             if (_settings.General.NextPieceCount <= 0) 
                 _isEnabled = false;
             
-            gameObject.SetActive(false);
+            MakeInvisible();
+
+            var warningLineTransform = _warningLine.transform;
+            warningLineTransform.localScale = new Vector2(_settings.BoardDimensions.BoardWidth, warningLineTransform.localScale.y);
+            warningLineTransform.localPosition = new Vector3(_settings.BoardDimensions.BoardWidth / 2f,
+                _settings.BoardDimensions.BoardHeight);
         }
         
         private BlockBase CreateBlock()

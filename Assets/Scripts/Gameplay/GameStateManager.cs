@@ -58,6 +58,8 @@ namespace Blockstacker.Gameplay
             if (_gameLost || _gameEnded)
                 GameRestartAfterEnd();
             GameRunning = true;
+            
+            _lastSentTimeCondition = 0;
             _mediator.Send(new GameStartedMessage(_settings.General.ActiveSeed));
             _mediator.Send(new GameEndConditionChangedMessage(
                 0,
@@ -180,8 +182,8 @@ namespace Blockstacker.Gameplay
                     _settings.Objective.GameEndCondition.ToString()));
             }
 
-            if (functionStartTime > _settings.Objective.EndConditionCount)
-                EndGame(_settings.Objective.EndConditionCount);
+            if (!(functionStartTime > _settings.Objective.EndConditionCount)) return;
+            EndGame(_settings.Objective.EndConditionCount);
         }
 
         private void OnDestroy()
@@ -195,8 +197,6 @@ namespace Blockstacker.Gameplay
             var endConditionCount = _settings.Objective.EndConditionCount;
             switch (endCondition)
             {
-                case GameEndCondition.Time:
-                    break;
                 case GameEndCondition.LinesCleared:
                     var linesCleared = _statCounterManager.Stats.LinesCleared;
                     _mediator.Send(new GameEndConditionChangedMessage(
@@ -227,6 +227,7 @@ namespace Blockstacker.Gameplay
                     if (piecesPlaced >= _settings.Objective.EndConditionCount)
                         EndGame(message.Time);
                     break;
+                case GameEndCondition.Time:
                 case GameEndCondition.Score:
                 case GameEndCondition.None:
                     break;
