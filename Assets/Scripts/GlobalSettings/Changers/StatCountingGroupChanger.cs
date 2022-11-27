@@ -10,9 +10,15 @@ namespace Blockstacker.GlobalSettings.Changers
     public class StatCountingGroupChanger : AppSettingChangerBase<Dictionary<string, Guid>>
     {
         [Space] [SerializeField] private TMP_Dropdown _dropdown;
-        public StringReferenceSO gameTypeStr;
+        [SerializeField] private StringReferenceSO _gameTypeStr;
 
-        private string _gameType => gameTypeStr.Value;
+        public StringReferenceSO GameTypeStr
+        {
+            get => _gameTypeStr;
+            set => _gameTypeStr = value;
+        }
+
+        private string _gameType => GameTypeStr.Value;
         private List<KeyValuePair<Guid, string>> _availableGroups;
 
         private Guid ChangedGroupId
@@ -46,7 +52,7 @@ namespace Blockstacker.GlobalSettings.Changers
                     break;
                 }
             }
-            
+
             _dropdown.ClearOptions();
             for (var i = 0; i < _availableGroups.Count; i++)
             {

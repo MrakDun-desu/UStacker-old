@@ -138,6 +138,7 @@ namespace Blockstacker.Gameplay
             Replay.ActionList.AddRange(_gameRecorder.ActionList);
             Replay.Stats = _statCounterManager.Stats;
             Replay.GameLength = endTime;
+            Replay.TimeStamp = DateTime.UtcNow;
             _resultDisplayer.DisplayedReplay = Replay;
             GameEnded.Invoke();
             _mediator.Send(new GameEndedMessage(endTime));

@@ -8,27 +8,27 @@ namespace Blockstacker.GlobalSettings.Changers
 {
     public class GameSettingsOverrideChanger : MonoBehaviour
     {
-        [SerializeField] private StringReferenceSO _changedOverride;
         [SerializeField] private TMP_InputField _countdownIntervalField;
         [SerializeField] private TMP_InputField _countdownCountField;
         [SerializeField] private TMP_InputField _startingLevelField;
         [SerializeField] private MusicOptionChanger _musicOptionChanger;
         [SerializeField] private StatCountingGroupChanger _statCountingGroupChanger;
+        public StringReferenceSO ChangedOverrideName { get; set; }
 
         private GameSettingsOverrides _value;
 
-        private void Awake()
+        private void Start()
         {
             _countdownIntervalField.onEndEdit.AddListener(OnCountdownIntervalChange);
             _countdownCountField.onEndEdit.AddListener(OnCountdownCountChange);
             _startingLevelField.onEndEdit.AddListener(OnStartingLevelChange);
-            _musicOptionChanger.gameTypeStr = _changedOverride;
-            _statCountingGroupChanger.gameTypeStr = _changedOverride;
+            _musicOptionChanger.GameTypeStr = ChangedOverrideName;
+            _statCountingGroupChanger.GameTypeStr = ChangedOverrideName;
             
-            if (!AppSettings.GameOverrides.TryGetValue(_changedOverride.Value, out _value))
+            if (!AppSettings.GameOverrides.TryGetValue(ChangedOverrideName.Value, out _value))
             {
                 _value = new GameSettingsOverrides();
-                AppSettings.GameOverrides[_changedOverride.Value] = _value;
+                AppSettings.GameOverrides[ChangedOverrideName.Value] = _value;
             }
 
             if (_value.CountdownInterval is {} interval)

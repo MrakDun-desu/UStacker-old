@@ -168,6 +168,7 @@ namespace Blockstacker.Gameplay
             bool isRotation = false)
         {
             if (_pieceIsNull) return;
+            if (!ActivePiece.BlockPositions.Any()) return;
             if (sendMessage)
             {
                 var wasSoftDrop = !wasHardDrop && _holdingSoftDrop;
@@ -528,11 +529,13 @@ namespace Blockstacker.Gameplay
         private void Update()
         {
             var functionStartTime = _timer.CurrentTime;
+            if (!_pieceIsNull && _controlsActive)
+            {
+                HandleDas(functionStartTime);
+                HandleGravity(functionStartTime);
+                HandlePieceLockdownAnimation(functionStartTime);
+            }
             HandlePieceSpawning();
-            if (_pieceIsNull || !_controlsActive) return;
-            HandleDas(functionStartTime);
-            HandleGravity(functionStartTime);
-            HandlePieceLockdownAnimation(functionStartTime);
         }
 
         private void HandleDas(double functionStartTime)
@@ -634,8 +637,6 @@ namespace Blockstacker.Gameplay
 
         private void HandleGravity(double functionStartTime)
         {
-            if (_pieceIsNull || !_controlsActive) return;
-
             if (_board.CanPlace(ActivePiece, Vector2Int.down) && _isLocking) // there is an empty space below piece
             {
                 StopLockdown(false); // stop lockdown even if piece doesn't want to move down
@@ -686,7 +687,6 @@ namespace Blockstacker.Gameplay
 
         private void HandlePieceLockdownAnimation(double functionStartTime)
         {
-            if (_pieceIsNull) return;
             if (!_isLocking) return;
 
             var lockProgress = (_lockTime - functionStartTime) / _lockDelay;

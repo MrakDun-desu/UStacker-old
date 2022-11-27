@@ -15,8 +15,6 @@ namespace Blockstacker.Gameplay.Initialization
 {
     public class GameInitializer : MonoBehaviour
     {
-        [SerializeField] private GameSettingsSO _gameSettingsAsset;
-
         [Space] [SerializeField] private PieceDictionary _availablePieces = new();
 
         [Header("Board")] [SerializeField] private PieceSpawner _pieceSpawner;
@@ -44,6 +42,8 @@ namespace Blockstacker.Gameplay.Initialization
         [Header("Events")] public UnityEvent GameInitialized;
         public UnityEvent<string> GameFailedToInitialize;
 
+        public static GameSettingsSO GameSettingsAsset { get; set; } = null;
+
         private void Start()
         {
             _loadingOverlay.SetActive(true);
@@ -52,7 +52,7 @@ namespace Blockstacker.Gameplay.Initialization
             {
                 var dependencies = dependantObject.GetComponents<IGameSettingsDependency>();
                 foreach (var dependency in dependencies)
-                    dependency.GameSettings = _gameSettingsAsset;
+                    dependency.GameSettings = GameSettingsAsset;
             }
             if (TryInitialize(errorBuilder))
             {
@@ -81,12 +81,12 @@ namespace Blockstacker.Gameplay.Initialization
 
         private bool TryInitialize(StringBuilder errorBuilder)
         {
-            _playerFinder.gameTypeStr = _gameSettingsAsset.GameType;
+            _playerFinder.gameTypeStr = GameSettingsAsset.GameType;
             List<InitializerBase> initializers = new()
             {
-                new OverridesInitializer(errorBuilder, _gameSettingsAsset),
+                new OverridesInitializer(errorBuilder, GameSettingsAsset),
                 new BoardDimensionsInitializer(
-                    errorBuilder, _gameSettingsAsset,
+                    errorBuilder, GameSettingsAsset,
                     _board,
                     _boardBackground,
                     _gridBlock,
@@ -95,24 +95,24 @@ namespace Blockstacker.Gameplay.Initialization
                     Camera.main
                 ),
                 new GeneralInitializer(
-                    errorBuilder, _gameSettingsAsset,
+                    errorBuilder, GameSettingsAsset,
                     _availablePieces,
                     _pieceSpawner,
                     _board,
                     _pieceContainerPrefab,
                     _inputProcessor),
                 new ControlsInitializer(
-                    errorBuilder, _gameSettingsAsset,
+                    errorBuilder, GameSettingsAsset,
                     _srsRotationSystemSo.RotationSystem,
                     _srsPlusRotationSystemSo.RotationSystem,
                     _inputProcessor),
                 new PresentationInitializer(
-                    errorBuilder, _gameSettingsAsset,
+                    errorBuilder, GameSettingsAsset,
                     _gameTitle,
                     _countdown
                 ),
                 new ObjectiveInitializer(
-                    errorBuilder, _gameSettingsAsset,
+                    errorBuilder, GameSettingsAsset,
                     _mediator,
                     _stateManager,
                     _board)
@@ -128,7 +128,7 @@ namespace Blockstacker.Gameplay.Initialization
             List<InitializerBase> initializers = new()
             {
                 new GeneralInitializer(
-                    errorBuilder, _gameSettingsAsset,
+                    errorBuilder, GameSettingsAsset,
                     _availablePieces,
                     _pieceSpawner,
                     _board,

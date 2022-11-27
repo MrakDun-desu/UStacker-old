@@ -9,15 +9,20 @@ namespace Blockstacker.GlobalSettings.Changers
 {
     public class MusicOptionChanger : AppSettingChangerBase<Dictionary<string, MusicOption>>
     {
-        [Space]
-        [SerializeField] private TMP_Dropdown _typeDropdown;
+        [Space] [SerializeField] private TMP_Dropdown _typeDropdown;
         [SerializeField] private TMP_Dropdown _nameDropdown;
-        public StringReferenceSO gameTypeStr;
+        [SerializeField] private StringReferenceSO _gameTypeStr;
+
+        public StringReferenceSO GameTypeStr
+        {
+            get => _gameTypeStr;
+            set => _gameTypeStr = value;
+        }
 
         private readonly List<MusicOption> _groupOptions = new();
         private readonly List<MusicOption> _trackOptions = new();
 
-        private string _gameType => gameTypeStr.Value;
+        private string _gameType => GameTypeStr.Value;
 
         private MusicOption ChangedOption
         {
@@ -68,6 +73,7 @@ namespace Blockstacker.GlobalSettings.Changers
                         if (option.Name.Equals(currentOption.Name))
                             _nameDropdown.SetValueWithoutNotify(i);
                     }
+
                     _nameDropdown.RefreshShownValue();
                     break;
                 case OptionType.Track:
@@ -80,6 +86,7 @@ namespace Blockstacker.GlobalSettings.Changers
                         if (option.Name.Equals(currentOption.Name))
                             _nameDropdown.SetValueWithoutNotify(i);
                     }
+
                     _nameDropdown.RefreshShownValue();
                     break;
                 case OptionType.Random:
@@ -88,7 +95,6 @@ namespace Blockstacker.GlobalSettings.Changers
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
         }
 
         private void RefreshValue()
@@ -103,7 +109,7 @@ namespace Blockstacker.GlobalSettings.Changers
             for (var i = 0; i < _typeDropdown.options.Count; i++)
             {
                 if (!string.Equals(currentOption.OptionType.ToString(), _typeDropdown.options[i].text)) continue;
-                
+
                 _typeDropdown.SetValueWithoutNotify(i);
                 _typeDropdown.RefreshShownValue();
                 break;
@@ -131,12 +137,11 @@ namespace Blockstacker.GlobalSettings.Changers
         {
             var newName = _nameDropdown.options[index].text;
             var optionType = ChangedOption.OptionType;
-            
+
             ChangedOption = new MusicOption(optionType, newName);
-            
+
             InvokeSettingChanged();
             AppSettings.TrySave();
         }
-
     }
 }

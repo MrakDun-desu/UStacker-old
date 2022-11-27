@@ -5407,27 +5407,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1395564692}
+      objectReference: {fileID: 1535399008}
     - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: LoadGame_Custom
+      value: OpenGame
       objectReference: {fileID: 0}
     - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Blockstacker.Common.Navigator, Blockstacker.Common
+      value: Blockstacker.Gameplay.Gameplay.GameOpener, Blockstacker.Gameplay
       objectReference: {fileID: 0}
     - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 11400000, guid: 82a8dfd8c479a9746b991978530983d6, type: 2}
+    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
+      value: Blockstacker.GameSettings.GameSettingsSO, Blockstacker.GameSettings
       objectReference: {fileID: 0}
     - target: {fileID: 7167318321076373142, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
       propertyPath: m_Name
@@ -5452,7 +5456,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7167318321076373142, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1535399008}
   m_SourcePrefab: {fileID: 100100000, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
 --- !u!1 &1161057087 stripped
 GameObject:
@@ -6320,7 +6327,7 @@ MonoBehaviour:
   _title: {fileID: 1285358634}
   _autoformatName: 0
   _dropdown: {fileID: 181245189}
-  gameTypeStr: {fileID: 11400000, guid: d5b147ab88e76c1479291959c777b01d, type: 2}
+  _gameTypeStr: {fileID: 11400000, guid: d5b147ab88e76c1479291959c777b01d, type: 2}
 --- !u!1001 &1285622851
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7459,7 +7466,7 @@ MonoBehaviour:
   _autoformatName: 0
   _typeDropdown: {fileID: 744102686}
   _nameDropdown: {fileID: 1822459848}
-  gameTypeStr: {fileID: 11400000, guid: d5b147ab88e76c1479291959c777b01d, type: 2}
+  _gameTypeStr: {fileID: 11400000, guid: d5b147ab88e76c1479291959c777b01d, type: 2}
 --- !u!1001 &1430387928
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8147,6 +8154,18 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4067438773607615757, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
   m_PrefabInstance: {fileID: 1161057086}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1535399008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1161057087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4fae6f026834b719617651b98f3277d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1544845080
 PrefabInstance:
   m_ObjectHideFlags: 0
