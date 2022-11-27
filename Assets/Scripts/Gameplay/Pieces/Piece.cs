@@ -25,6 +25,20 @@ namespace Blockstacker.Gameplay.Pieces
         private bool _activeInPool = true;
         private string _currentType;
         private readonly List<Transform> _activeTransforms = new();
+        
+        private float _visibility;
+        public float Visibility
+        {
+            get => _visibility;
+            set
+            {
+                _visibility = value;
+                foreach (var block in Blocks)
+                {
+                    block.Visibility = _visibility;
+                }
+            }
+        }
         public event Action Rotated;
         
         public ObjectPool<Piece> SourcePool { get; set; }

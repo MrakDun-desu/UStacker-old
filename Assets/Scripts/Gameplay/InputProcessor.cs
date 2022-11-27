@@ -230,6 +230,8 @@ namespace Blockstacker.Gameplay
         {
             if (_pieceIsNull || !_controlsActive) return;
             if (_dropDisabledUntil > placementTime) return;
+            
+            StopLockdown(true);
 
             _dropDisabledUntil = placementTime + _handling.DoubleDropPreventionInterval;
             var movementVector = Vector2Int.down;
@@ -525,16 +527,16 @@ namespace Blockstacker.Gameplay
 
         private void Update()
         {
+            var functionStartTime = _timer.CurrentTime;
             HandlePieceSpawning();
             if (_pieceIsNull || !_controlsActive) return;
-            HandleDas();
-            HandleGravity();
+            HandleDas(functionStartTime);
+            HandleGravity(functionStartTime);
+            HandlePieceLockdownAnimation(functionStartTime);
         }
 
-        private void HandleDas()
+        private void HandleDas(double functionStartTime)
         {
-            var functionStartTime = _timer.CurrentTime;
-
             if (_dasDelay > functionStartTime) return;
 
             if (_holdingLeftStart < functionStartTime)
@@ -630,9 +632,8 @@ namespace Blockstacker.Gameplay
             }
         }
 
-        private void HandleGravity()
+        private void HandleGravity(double functionStartTime)
         {
-            var functionStartTime = _timer.CurrentTime;
             if (_pieceIsNull || !_controlsActive) return;
 
             if (_board.CanPlace(ActivePiece, Vector2Int.down) && _isLocking) // there is an empty space below piece
@@ -683,6 +684,16 @@ namespace Blockstacker.Gameplay
                 HandlePiecePlacement(_hardLockAmount);
         }
 
+        private void HandlePieceLockdownAnimation(double functionStartTime)
+        {
+            if (_pieceIsNull) return;
+            if (!_isLocking) return;
+
+            var lockProgress = (_lockTime - functionStartTime) / _lockDelay;
+
+            ActivePiece.Visibility = Mathf.Lerp(.5f, 0f, (float)lockProgress);
+        }
+
         private void StartLockdown(double lockStart)
         {
             if (_isLocking) return;
@@ -709,6 +720,9 @@ namespace Blockstacker.Gameplay
 
         private void StopLockdown(bool stopHardlock)
         {
+            if (!_pieceIsNull)
+                ActivePiece.Visibility = 1;
+            
             _lockTime = double.PositiveInfinity;
             if (stopHardlock)
                 _hardLockAmount = double.PositiveInfinity;

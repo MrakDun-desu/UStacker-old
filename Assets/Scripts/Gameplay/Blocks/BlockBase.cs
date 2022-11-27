@@ -15,8 +15,21 @@ namespace Blockstacker.Gameplay.Blocks
         private IBlockCollection _blockCollection;
         private BlockSkin[] _defaultSkins;
         private readonly List<BlockSkin> _currentSkins = new();
+        private float _visibility = 1;
 
         public uint BlockNumber { get; set; }
+        public float Visibility
+        {
+            get => _visibility;
+            set
+            {
+                _visibility = value;
+                foreach (var skin in _currentSkins)
+                {
+                    skin.Visibility = _visibility;
+                }
+            }
+        }
         public string CollectionType
         {
             get => _collectionType;
