@@ -230,7 +230,6 @@ namespace Blockstacker.Gameplay
         private void HandlePiecePlacement(double placementTime, bool wasHarddrop = false)
         {
             if (_pieceIsNull || !_controlsActive) return;
-            if (_dropDisabledUntil > placementTime) return;
             
             StopLockdown(true);
 
@@ -402,8 +401,9 @@ namespace Blockstacker.Gameplay
             if (_pieceIsNull || !_controlsActive) return;
             if (!_settings.Controls.AllowHardDrop) return;
 
-            Update();
             var actionTime = ctx.time - _timer.EffectiveStartTime;
+            if (_dropDisabledUntil > actionTime) return;
+            Update();
             if (ctx.canceled)
                 _mediator.Send(new InputActionMessage(ActionType.Harddrop, KeyActionType.KeyUp, actionTime));
 
@@ -733,6 +733,8 @@ namespace Blockstacker.Gameplay
             if (!_pieceIsNull || !_controlsActive) return;
             var functionStartTime = _timer.CurrentTime;
             if (_pieceSpawnTime > functionStartTime) return;
+            
+            _timer.PauseTiming();
 
             _lockTime = double.PositiveInfinity;
             _hardLockAmount = double.PositiveInfinity;

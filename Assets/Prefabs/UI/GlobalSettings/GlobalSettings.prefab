@@ -627,7 +627,6 @@ MonoBehaviour:
   _closedX: 150
   _tweenDuration: 0.5
   _settingsScrollRect: {fileID: 6552790354317606355}
-  _closeOverlay: {fileID: 4186867971425990576}
 --- !u!1 &2842199617083370051
 GameObject:
   m_ObjectHideFlags: 0
@@ -1236,7 +1235,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4486262639418220707
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1342,7 +1341,7 @@ MonoBehaviour:
       - m_Target: {fileID: 2842199617028823202}
         m_TargetAssemblyTypeName: Blockstacker.GlobalSettings.GlobalSettingsMenuController,
           Blockstacker.GlobalSettings
-        m_MethodName: ToggleSettingsMenu
+        m_MethodName: CloseSettingsMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1351,6 +1350,30 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+        m_MethodName: Select
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!1001 &951882100890579696
 PrefabInstance:
@@ -2590,11 +2613,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2505392558122691691, guid: 70145917e55f5dd419f7f4f601102421, type: 3}
       propertyPath: m_text
-      value: C [Keyboard]
+      value: Up Arrow [Keyboard]
       objectReference: {fileID: 0}
     - target: {fileID: 2505392558122691691, guid: 70145917e55f5dd419f7f4f601102421, type: 3}
       propertyPath: m_fontSize
-      value: 19.25
+      value: 18.95
       objectReference: {fileID: 0}
     - target: {fileID: 3831756606412640530, guid: 70145917e55f5dd419f7f4f601102421, type: 3}
       propertyPath: m_text
@@ -9108,7 +9131,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2987071467723112421, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3953.19
+      value: -0.00024414062
       objectReference: {fileID: 0}
     - target: {fileID: 4067438773607615757, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Pivot.x
@@ -9220,11 +9243,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6616534284926214280, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Size
-      value: 0.16452442
+      value: 0.1645244
       objectReference: {fileID: 0}
     - target: {fileID: 6616534284926214280, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Value
-      value: 0.1890893
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7167318321076373142, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Name
@@ -11267,11 +11290,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2505392558122691691, guid: 70145917e55f5dd419f7f4f601102421, type: 3}
       propertyPath: m_text
-      value: Up Arrow [Keyboard]
+      value: C [Keyboard]
       objectReference: {fileID: 0}
     - target: {fileID: 2505392558122691691, guid: 70145917e55f5dd419f7f4f601102421, type: 3}
       propertyPath: m_fontSize
-      value: 18.95
+      value: 19.25
       objectReference: {fileID: 0}
     - target: {fileID: 3831756606412640530, guid: 70145917e55f5dd419f7f4f601102421, type: 3}
       propertyPath: m_text
