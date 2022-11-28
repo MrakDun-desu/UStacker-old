@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Initialization;
 using Blockstacker.GameSettings;
@@ -28,13 +27,12 @@ namespace Blockstacker.Gameplay
         [SerializeField] private UnityEvent GameLost;
         [SerializeField] private UnityEvent GameEnded;
         
-        public GameSettingsSO GameSettings { set => _settings = value; }
-        private GameSettingsSO _settings;
+        public GameSettingsSO.SettingsContainer GameSettings { set => _settings = value; }
+        private GameSettingsSO.SettingsContainer _settings;
+        public string GameType { get; set; }
         
         private readonly GameReplay Replay = new();
         private bool _gameEnded;
-        private bool _gameLost;
-        private bool _gameStarted;
 
         private double _lastSentTimeCondition;
 
@@ -53,10 +51,7 @@ namespace Blockstacker.Gameplay
                 return;
             }
             
-            if (!_gameStarted)
-                FirstTimeGameStart();
-            if (_gameLost || _gameEnded)
-                GameRestartAfterEnd();
+            _gameEnded = false;
             GameRunning = true;
             
             _lastSentTimeCondition = 0;
@@ -69,21 +64,9 @@ namespace Blockstacker.Gameplay
             GameStarted.Invoke();
         }
 
-        private void FirstTimeGameStart()
-        {
-            _gameStarted = true;
-            Replay.GameSettings = _settings.Settings with { };
-        }
-
-        private void GameRestartAfterEnd()
-        {
-            _gameLost = false;
-            _gameEnded = false;
-        }
-
         public void TogglePause()
         {
-            if (_gameEnded || !_gameStarted) return;
+            if (_gameEnded) return;
 
             if (GameRunning)
             {
@@ -125,7 +108,6 @@ namespace Blockstacker.Gameplay
                 EndGame(loseTime);
             else
             {
-                _gameLost = true;
                 _mediator.Send(new GameLostMessage());
                 GameLost.Invoke();
             }
@@ -134,11 +116,13 @@ namespace Blockstacker.Gameplay
         public void EndGame(double endTime)
         {
             _gameEnded = true;
-            Replay.ActionList = new List<InputActionMessage>();
+            Replay.GameSettings = _settings with { };
+            Replay.ActionList.Clear();
             Replay.ActionList.AddRange(_gameRecorder.ActionList);
             Replay.Stats = _statCounterManager.Stats;
             Replay.GameLength = endTime;
             Replay.TimeStamp = DateTime.UtcNow;
+            Replay.Save(GameType);
             _resultDisplayer.DisplayedReplay = Replay;
             GameEnded.Invoke();
             _mediator.Send(new GameEndedMessage(endTime));

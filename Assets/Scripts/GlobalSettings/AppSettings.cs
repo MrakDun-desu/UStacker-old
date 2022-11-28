@@ -37,21 +37,21 @@ namespace Blockstacker.GlobalSettings
                     path = path.Replace(invalidChar, INVALID_CHAR_REPLACEMENT);
             }
 
-            path ??= CustomizationPaths.GlobalSettings;
+            path ??= PersistentPaths.GlobalSettings;
 
             if (!Directory.Exists(Path.GetDirectoryName(path))) return false;
-            File.WriteAllText(path, JsonConvert.SerializeObject(Settings, StaticSettings.JsonSerializerSettings));
+            File.WriteAllText(path, JsonConvert.SerializeObject(Settings, StaticSettings.DefaultSerializerSettings));
             return true;
         }
 
         public static bool TryLoad(string path = null)
         {
-            path ??= CustomizationPaths.GlobalSettings;
+            path ??= PersistentPaths.GlobalSettings;
             if (!File.Exists(path))
                 return false;
 
             Settings = JsonConvert.DeserializeObject<SettingsContainer>(File.ReadAllText(path),
-                StaticSettings.JsonSerializerSettings);
+                StaticSettings.DefaultSerializerSettings);
             Settings ??= new SettingsContainer();
             SettingsReloaded?.Invoke();
             return true;

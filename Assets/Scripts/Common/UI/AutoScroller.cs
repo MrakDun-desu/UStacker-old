@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Blockstacker.Common
+namespace Blockstacker.Common.UI
 {
     [RequireComponent(typeof(ScrollRect))]
     public class AutoScroller : MonoBehaviour
@@ -19,6 +19,11 @@ namespace Blockstacker.Common
         }
 
         public void ScrollToElement(RectTransform target)
+        {
+            _scrollRect.ScrollTo(target, _minimalMovement, false);
+        }
+
+        public void ScrollToElementSmooth(RectTransform target)
         {
             _scrollRect.ScrollTo(target, _minimalMovement, false);
         }

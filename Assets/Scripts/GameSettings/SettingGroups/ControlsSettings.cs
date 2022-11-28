@@ -59,13 +59,13 @@ namespace Blockstacker.GameSettings.SettingGroups
         private bool TryReloadRotationSystem()
         {
             const string filenameExtension = ".json";
-            var filePath = Path.Combine(CustomizationPaths.RotationSystems,
+            var filePath = Path.Combine(PersistentPaths.RotationSystems,
                 CustomRotationSystem + filenameExtension);
 
             if (!File.Exists(filePath)) return false;
 
             ActiveRotationSystem =
-                JsonConvert.DeserializeObject<RotationSystem>(File.ReadAllText(filePath), StaticSettings.JsonSerializerSettings);
+                JsonConvert.DeserializeObject<RotationSystem>(File.ReadAllText(filePath), StaticSettings.DefaultSerializerSettings);
 
             return true;
         }

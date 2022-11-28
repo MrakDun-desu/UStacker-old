@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Blockstacker.Common
+namespace Blockstacker.Common.UI
 {
     public class CommunityLinkOpener : MonoBehaviour
     {

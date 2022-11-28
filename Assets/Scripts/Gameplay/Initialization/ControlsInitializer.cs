@@ -14,7 +14,7 @@ namespace Blockstacker.Gameplay.Initialization
 
         public ControlsInitializer(
             StringBuilder errorBuilder,
-            GameSettingsSO gameSettings,
+            GameSettingsSO.SettingsContainer gameSettings,
             RotationSystem srsRotationSystem,
             RotationSystem srsPlusRotationSystem,
             InputProcessor inputProcessor)

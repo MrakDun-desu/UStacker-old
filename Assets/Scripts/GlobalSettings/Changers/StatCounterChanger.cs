@@ -159,7 +159,7 @@ namespace Blockstacker.GlobalSettings.Changers
             Value.Filename = newValue;
             if (_value.Type != StatCounterType.Custom) return;
 
-            var scriptFilePath = Path.Combine(CustomizationPaths.StatCounters, Value.Filename);
+            var scriptFilePath = Path.Combine(PersistentPaths.StatCounters, Value.Filename);
             if (!File.Exists(scriptFilePath))
                 return;
 

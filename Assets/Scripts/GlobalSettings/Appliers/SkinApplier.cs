@@ -25,7 +25,7 @@ namespace Blockstacker.GlobalSettings.Appliers
 
         private async Task ReloadAndInvoke()
         {
-            var skinFolder = Path.Combine(CustomizationPaths.Skins, AppSettings.Customization.SkinFolder);
+            var skinFolder = Path.Combine(PersistentPaths.Skins, AppSettings.Customization.SkinFolder);
             await SkinLoader.ReloadAsync(skinFolder, _showAlert);
             LoadingFinished.Invoke();
         }

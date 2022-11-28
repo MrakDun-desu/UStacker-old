@@ -27,10 +27,10 @@ namespace Blockstacker.GameSettings
 
         public static IEnumerable<string> EnumeratePresets()
         {
-            if (!Directory.Exists(CustomizationPaths.GameSettingsPresets))
-                Directory.CreateDirectory(CustomizationPaths.GameSettingsPresets);
+            if (!Directory.Exists(PersistentPaths.GameSettingsPresets))
+                Directory.CreateDirectory(PersistentPaths.GameSettingsPresets);
 
-            foreach (var filename in Directory.EnumerateFiles(CustomizationPaths.GameSettingsPresets))
+            foreach (var filename in Directory.EnumerateFiles(PersistentPaths.GameSettingsPresets))
             {
                 yield return Path.GetFileNameWithoutExtension(filename);
             }
@@ -41,10 +41,10 @@ namespace Blockstacker.GameSettings
             foreach (var invalidChar in Path.GetInvalidFileNameChars())
                 presetName = presetName.Replace(invalidChar, INVALID_CHAR_REPLACEMENT);
 
-            if (!Directory.Exists(CustomizationPaths.GameSettingsPresets))
-                Directory.CreateDirectory(CustomizationPaths.GameSettingsPresets);
+            if (!Directory.Exists(PersistentPaths.GameSettingsPresets))
+                Directory.CreateDirectory(PersistentPaths.GameSettingsPresets);
 
-            var savePath = Path.Combine(CustomizationPaths.GameSettingsPresets, presetName);
+            var savePath = Path.Combine(PersistentPaths.GameSettingsPresets, presetName);
             var actualSavePath = savePath;
 
             for (var i = 0; File.Exists(actualSavePath); i++)
@@ -56,18 +56,18 @@ namespace Blockstacker.GameSettings
             actualSavePath += FILENAME_EXTENSION;
 
             File.WriteAllText(actualSavePath,
-                JsonConvert.SerializeObject(Settings, StaticSettings.JsonSerializerSettings));
+                JsonConvert.SerializeObject(Settings, StaticSettings.DefaultSerializerSettings));
             return actualSavePath;
         }
 
         public bool TryLoad(string presetName)
         {
-            var path = Path.Combine(CustomizationPaths.GameSettingsPresets, presetName);
+            var path = Path.Combine(PersistentPaths.GameSettingsPresets, presetName);
             path += FILENAME_EXTENSION;
             if (!File.Exists(path)) return false;
 
             Settings = JsonConvert.DeserializeObject<SettingsContainer>(File.ReadAllText(path),
-                StaticSettings.JsonSerializerSettings);
+                StaticSettings.DefaultSerializerSettings);
 
             SettingsReloaded?.Invoke();
             return true;

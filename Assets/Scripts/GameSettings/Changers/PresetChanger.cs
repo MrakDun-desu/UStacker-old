@@ -27,7 +27,7 @@ namespace Blockstacker.GameSettings.Changers
 
         private static void OpenFolder()
         {
-            DefaultAppOpener.OpenFile(CustomizationPaths.GameSettingsPresets);
+            DefaultAppOpener.OpenFile(PersistentPaths.GameSettingsPresets);
         }
 
         private void RefreshNames(string setPresetName = null)

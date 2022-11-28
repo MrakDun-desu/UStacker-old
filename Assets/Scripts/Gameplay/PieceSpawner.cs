@@ -22,8 +22,8 @@ namespace Blockstacker.Gameplay
 
         public IRandomizer Randomizer;
         
-        public GameSettingsSO GameSettings { set => _settings = value; }
-        private GameSettingsSO _settings;
+        public GameSettingsSO.SettingsContainer GameSettings { set => _settings = value; }
+        private GameSettingsSO.SettingsContainer _settings;
         private List<PieceContainer> _previewContainers;
         private PiecePreviews _previews;
         private readonly Dictionary<string, ObjectPool<Piece>> _piecePools = new();

@@ -26,8 +26,8 @@ namespace Blockstacker.GlobalSettings.Backgrounds
 
         public static IEnumerable<string> EnumerateBackgroundPacks()
         {
-            return Directory.Exists(CustomizationPaths.BackgroundPacks)
-                ? Directory.EnumerateDirectories(CustomizationPaths.BackgroundPacks).Select(Path.GetFileName)
+            return Directory.Exists(PersistentPaths.BackgroundPacks)
+                ? Directory.EnumerateDirectories(PersistentPaths.BackgroundPacks).Select(Path.GetFileName)
                 : Array.Empty<string>();
         }
 

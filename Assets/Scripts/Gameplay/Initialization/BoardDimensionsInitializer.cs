@@ -17,7 +17,7 @@ namespace Blockstacker.Gameplay.Initialization
 
         public BoardDimensionsInitializer(
             StringBuilder errorBuilder,
-            GameSettingsSO gameSettings,
+            GameSettingsSO.SettingsContainer gameSettings,
             Board board,
             GameObject boardBackground,
             BlockBase gridBlock,

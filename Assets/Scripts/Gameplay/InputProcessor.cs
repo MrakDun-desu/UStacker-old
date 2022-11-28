@@ -26,8 +26,8 @@ namespace Blockstacker.Gameplay
         [Header("Dependencies filled by initializer")]
         public PieceContainer PieceHolder;
         
-        public GameSettingsSO GameSettings { set => _settings = value; }
-        private GameSettingsSO _settings;
+        public GameSettingsSO.SettingsContainer GameSettings { set => _settings = value; }
+        private GameSettingsSO.SettingsContainer _settings;
 
         private Piece _activePiece;
         private double _arrTimer = double.PositiveInfinity;
@@ -734,8 +734,6 @@ namespace Blockstacker.Gameplay
             var functionStartTime = _timer.CurrentTime;
             if (_pieceSpawnTime > functionStartTime) return;
             
-            _timer.PauseTiming();
-
             _lockTime = double.PositiveInfinity;
             _hardLockAmount = double.PositiveInfinity;
             _lowestPosition = int.MaxValue;

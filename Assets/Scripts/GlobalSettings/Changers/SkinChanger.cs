@@ -44,14 +44,14 @@ namespace Blockstacker.GlobalSettings.Changers
 
         private void OpenSkinFolder()
         {
-            if (!Directory.Exists(CustomizationPaths.Skins))
-                Directory.CreateDirectory(CustomizationPaths.Skins);
+            if (!Directory.Exists(PersistentPaths.Skins))
+                Directory.CreateDirectory(PersistentPaths.Skins);
 
-            var defaultPath = Path.Combine(CustomizationPaths.Skins, SkinLoader.DEFAULT_PATH);
+            var defaultPath = Path.Combine(PersistentPaths.Skins, SkinLoader.DEFAULT_PATH);
             if (!Directory.Exists(defaultPath))
                 Directory.CreateDirectory(defaultPath);
             
-            DefaultAppOpener.OpenFile(CustomizationPaths.Skins);
+            DefaultAppOpener.OpenFile(PersistentPaths.Skins);
         }
 
         private void OpenDocumentation()

@@ -32,7 +32,7 @@ namespace Blockstacker.GlobalSettings.Music
 
         private void CopyToClipboard()
         {
-            var output = JsonConvert.SerializeObject(_musicConfiguration, StaticSettings.JsonSerializerSettings);
+            var output = JsonConvert.SerializeObject(_musicConfiguration, StaticSettings.DefaultSerializerSettings);
             GUIUtility.systemCopyBuffer = output;
         }
         

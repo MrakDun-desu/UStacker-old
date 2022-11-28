@@ -38,8 +38,8 @@ namespace Blockstacker.Gameplay
 
         private readonly List<ClearableBlock[]> Blocks = new();
         
-        public GameSettingsSO GameSettings { set => _settings = value; }
-        private GameSettingsSO _settings;
+        public GameSettingsSO.SettingsContainer GameSettings { set => _settings = value; }
+        private GameSettingsSO.SettingsContainer _settings;
 
         public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots =>
             Blocks

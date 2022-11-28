@@ -13,7 +13,7 @@ namespace Blockstacker.Gameplay.Initialization
 
         public PresentationInitializer(
             StringBuilder problemBuilder,
-            GameSettingsSO gameSettings,
+            GameSettingsSO.SettingsContainer gameSettings,
             TMP_Text title,
             GameCountdown countdown)
             : base(problemBuilder, gameSettings)

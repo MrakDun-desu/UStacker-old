@@ -25,7 +25,7 @@ namespace Blockstacker.GlobalSettings.Appliers
 
         private async Task ReloadAndInvoke()
         {
-            var soundPackFolder = Path.Combine(CustomizationPaths.SoundPacks, AppSettings.Customization.SoundPackFolder);
+            var soundPackFolder = Path.Combine(PersistentPaths.SoundPacks, AppSettings.Customization.SoundPackFolder);
             await SoundPackLoader.Reload(soundPackFolder, _showAlert);
             LoadingFinished.Invoke();
         }

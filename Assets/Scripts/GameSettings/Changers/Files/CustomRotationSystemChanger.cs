@@ -4,6 +4,6 @@ namespace Blockstacker.GameSettings.Changers.Files
 {
     public class CustomRotationSystemChanger : GameSettingFileChanger
     {
-        protected override string TargetDir => CustomizationPaths.RotationSystems;
+        protected override string TargetDir => PersistentPaths.RotationSystems;
     }
 }

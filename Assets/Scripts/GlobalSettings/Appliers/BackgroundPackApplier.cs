@@ -25,7 +25,7 @@ namespace Blockstacker.GlobalSettings.Appliers
         
         private async Task ReloadAndInvoke()
         {
-            var backgroundFolder = Path.Combine(CustomizationPaths.BackgroundPacks,
+            var backgroundFolder = Path.Combine(PersistentPaths.BackgroundPacks,
                 AppSettings.Customization.BackgroundFolder);
             await BackgroundPackLoader.Reload(backgroundFolder, _showAlert);
             LoadingFinished.Invoke();

@@ -44,10 +44,10 @@ namespace Blockstacker.GlobalSettings.Changers
         
         private void OpenSoundFolder()
         {
-            if (!Directory.Exists(CustomizationPaths.SoundPacks))
-                Directory.CreateDirectory(CustomizationPaths.SoundPacks);
+            if (!Directory.Exists(PersistentPaths.SoundPacks))
+                Directory.CreateDirectory(PersistentPaths.SoundPacks);
 
-            var defaultPath = Path.Combine(CustomizationPaths.SoundPacks, SoundPackLoader.DEFAULT_PATH);
+            var defaultPath = Path.Combine(PersistentPaths.SoundPacks, SoundPackLoader.DEFAULT_PATH);
             if (!Directory.Exists(defaultPath))
             {
                 Directory.CreateDirectory(defaultPath);
@@ -55,7 +55,7 @@ namespace Blockstacker.GlobalSettings.Changers
                 Directory.CreateDirectory(Path.Combine(defaultPath, CustomizationFilenames.SoundEffects));
             }
             
-            DefaultAppOpener.OpenFile(CustomizationPaths.SoundPacks);
+            DefaultAppOpener.OpenFile(PersistentPaths.SoundPacks);
         }
 
         private void OpenDocumentation()

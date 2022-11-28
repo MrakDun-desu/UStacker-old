@@ -17,7 +17,7 @@ namespace Blockstacker.Gameplay.Initialization
         private readonly Board _board;
 
         public ObjectiveInitializer(
-            StringBuilder errorBuilder, GameSettingsSO gameSettings,
+            StringBuilder errorBuilder, GameSettingsSO.SettingsContainer gameSettings,
             MediatorSO mediator,
             GameStateManager stateManager,
             Board board) :

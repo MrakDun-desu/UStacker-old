@@ -5,7 +5,7 @@ using System.Globalization;
 using TMPro;
 using UnityEngine;
 
-namespace Blockstacker.Common
+namespace Blockstacker.Common.UI
 {
     [RequireComponent(typeof(TMP_Text))]
     public class FpsCounter : MonoBehaviour

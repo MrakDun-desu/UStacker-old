@@ -4,6 +4,6 @@ namespace Blockstacker.Gameplay.Initialization
 {
     public interface IGameSettingsDependency
     {
-        GameSettingsSO GameSettings { set; }
+        GameSettingsSO.SettingsContainer GameSettings { set; }
     }
 }

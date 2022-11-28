@@ -16,8 +16,8 @@ namespace Blockstacker.Gameplay.Pieces
         [SerializeField] private Board _board;
         [SerializeField] private SpriteRenderer _warningLine;
 
-        public GameSettingsSO GameSettings { set => _settings = value; }
-        private GameSettingsSO _settings;
+        public GameSettingsSO.SettingsContainer GameSettings { set => _settings = value; }
+        private GameSettingsSO.SettingsContainer _settings;
 
         private readonly List<BlockBase> _blocks = new();
         private string _currentPieceType = "";

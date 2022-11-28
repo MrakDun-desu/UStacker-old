@@ -96,31 +96,8 @@ namespace Blockstacker.Gameplay.Stats
             }
         }
 
-        public void SaveReplay()
+        public void ShowReplay()
         {
-            try
-            {
-                var replayFilename = $"{_displayedReplay.GameSettings.Presentation.Title}_{DateTime.UtcNow}.bsrep";
-                var replaysDir = Path.Combine(Application.persistentDataPath, "replays");
-                if (!Directory.Exists(replaysDir))
-                    Directory.CreateDirectory(replaysDir);
-                
-                var filePath = Path.Combine(replaysDir, replayFilename);
-                
-                File.WriteAllText(filePath, JsonConvert.SerializeObject(_displayedReplay, StaticSettings.JsonSerializerSettings));
-                
-                AlertDisplayer.Instance.ShowAlert(new Alert(
-                    "Replay saved!",
-                    $"Your replay has been saved to a file {filePath}", 
-                    AlertType.Success));
-            }
-            catch (Exception)
-            {
-                AlertDisplayer.Instance.ShowAlert(new Alert(
-                    "Saving replay failed!",
-                    "Replay couldn't be saved due to missing permissions", 
-                    AlertType.Error));
-            }
             
         }
     }

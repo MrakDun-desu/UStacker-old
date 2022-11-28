@@ -92,7 +92,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         private bool TryReloadGarbageGenerator()
         {
             const string filenameExtension = ".lua";
-            var filePath = Path.Combine(CustomizationPaths.RotationSystems,
+            var filePath = Path.Combine(PersistentPaths.RotationSystems,
                 CustomGarbageScriptName + filenameExtension);
 
             if (!File.Exists(filePath)) return false;
@@ -127,7 +127,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         private bool TryReloadGameManagerScript()
         {
             const string filenameExtension = ".lua";
-            var filePath = Path.Combine(CustomizationPaths.RotationSystems,
+            var filePath = Path.Combine(PersistentPaths.RotationSystems,
                 CustomGameManager + filenameExtension);
 
             if (!File.Exists(filePath)) return false;

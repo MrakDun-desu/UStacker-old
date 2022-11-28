@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using Color = UnityEngine.Color;
 
-namespace Blockstacker.Common
+namespace Blockstacker.Common.UI
 {
     public class TMP_ColorChanger : MonoBehaviour
     {

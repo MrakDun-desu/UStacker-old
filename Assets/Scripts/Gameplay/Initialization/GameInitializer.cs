@@ -5,6 +5,7 @@ using Blockstacker.Gameplay.Blocks;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Presentation;
+using Blockstacker.Gameplay.Stats;
 using Blockstacker.GameSettings;
 using Blockstacker.GlobalSettings.Music;
 using TMPro;
@@ -37,22 +38,26 @@ namespace Blockstacker.Gameplay.Initialization
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private GameStateManager _stateManager;
         [SerializeField] private MusicPlayerFinder _playerFinder;
+        [SerializeField] private StatCounterManager _statCounterManager;
         [SerializeField] private GameObject[] _gameSettingsDependencies = Array.Empty<GameObject>();
 
         [Header("Events")] public UnityEvent GameInitialized;
         public UnityEvent<string> GameFailedToInitialize;
 
-        public static GameSettingsSO GameSettingsAsset { get; set; } = null;
+        public static GameSettingsSO.SettingsContainer GameSettings { get; set; }
+        public static string GameType { get; set; }
+        public static bool InitAsReplay { get; set; }
 
         private void Start()
         {
+            // TODO add initialization as replay here
             _loadingOverlay.SetActive(true);
             StringBuilder errorBuilder = new();
             foreach (var dependantObject in _gameSettingsDependencies)
             {
                 var dependencies = dependantObject.GetComponents<IGameSettingsDependency>();
                 foreach (var dependency in dependencies)
-                    dependency.GameSettings = GameSettingsAsset;
+                    dependency.GameSettings = GameSettings;
             }
             if (TryInitialize(errorBuilder))
             {
@@ -81,12 +86,14 @@ namespace Blockstacker.Gameplay.Initialization
 
         private bool TryInitialize(StringBuilder errorBuilder)
         {
-            _playerFinder.gameTypeStr = GameSettingsAsset.GameType;
+            _playerFinder.GameType = GameType;
+            _statCounterManager.GameType = GameType;
+            _stateManager.GameType = GameType;
             List<InitializerBase> initializers = new()
             {
-                new OverridesInitializer(errorBuilder, GameSettingsAsset),
+                new OverridesInitializer(errorBuilder, GameSettings, GameType),
                 new BoardDimensionsInitializer(
-                    errorBuilder, GameSettingsAsset,
+                    errorBuilder, GameSettings,
                     _board,
                     _boardBackground,
                     _gridBlock,
@@ -95,24 +102,24 @@ namespace Blockstacker.Gameplay.Initialization
                     Camera.main
                 ),
                 new GeneralInitializer(
-                    errorBuilder, GameSettingsAsset,
+                    errorBuilder, GameSettings,
                     _availablePieces,
                     _pieceSpawner,
                     _board,
                     _pieceContainerPrefab,
                     _inputProcessor),
                 new ControlsInitializer(
-                    errorBuilder, GameSettingsAsset,
+                    errorBuilder, GameSettings,
                     _srsRotationSystemSo.RotationSystem,
                     _srsPlusRotationSystemSo.RotationSystem,
                     _inputProcessor),
                 new PresentationInitializer(
-                    errorBuilder, GameSettingsAsset,
+                    errorBuilder, GameSettings,
                     _gameTitle,
                     _countdown
                 ),
                 new ObjectiveInitializer(
-                    errorBuilder, GameSettingsAsset,
+                    errorBuilder, GameSettings,
                     _mediator,
                     _stateManager,
                     _board)
@@ -128,7 +135,7 @@ namespace Blockstacker.Gameplay.Initialization
             List<InitializerBase> initializers = new()
             {
                 new GeneralInitializer(
-                    errorBuilder, GameSettingsAsset,
+                    errorBuilder, GameSettings,
                     _availablePieces,
                     _pieceSpawner,
                     _board,

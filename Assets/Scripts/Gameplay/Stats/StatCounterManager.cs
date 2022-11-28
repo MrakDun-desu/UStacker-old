@@ -23,13 +23,14 @@ namespace Blockstacker.Gameplay.Stats
 
         public ReadonlyStatContainer Stats;
 
-        public GameSettingsSO GameSettings
+        public GameSettingsSO.SettingsContainer GameSettings
         {
             set => _settings = value;
         }
 
-        private GameSettingsSO _settings;
+        private GameSettingsSO.SettingsContainer _settings;
 
+        public string GameType { get; set; }
 
         private void Start()
         {
@@ -61,7 +62,7 @@ namespace Blockstacker.Gameplay.Stats
 
             AppSettings.StatCounting.GameStatCounterDictionary ??= new Dictionary<string, Guid>();
 
-            var gameName = _settings.GameType.Value;
+            var gameName = GameType;
             StatCounterGroup counterGroup = null;
             if (AppSettings.StatCounting.GameStatCounterDictionary.TryGetValue(gameName, out var groupId))
             {

@@ -4,6 +4,6 @@ namespace Blockstacker.GameSettings.Changers.Files
 {
     public class CustomGarbageGeneratorChanger : GameSettingFileChanger
     {
-        protected override string TargetDir => CustomizationPaths.GarbageGenerators;
+        protected override string TargetDir => PersistentPaths.GarbageGenerators;
     }
 }

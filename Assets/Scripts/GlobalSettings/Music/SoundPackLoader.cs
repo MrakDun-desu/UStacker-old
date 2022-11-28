@@ -24,8 +24,8 @@ namespace Blockstacker.GlobalSettings.Music
 
         public static IEnumerable<string> EnumerateSoundPacks()
         {
-            return Directory.Exists(CustomizationPaths.SoundPacks)
-                ? Directory.EnumerateDirectories(CustomizationPaths.SoundPacks).Select(Path.GetFileName)
+            return Directory.Exists(PersistentPaths.SoundPacks)
+                ? Directory.EnumerateDirectories(PersistentPaths.SoundPacks).Select(Path.GetFileName)
                 : Array.Empty<string>();
         }
 
@@ -114,7 +114,7 @@ namespace Blockstacker.GlobalSettings.Music
                 return;
 
             var musicConfStr = await File.ReadAllTextAsync(confPath);
-            var musicConf = JsonConvert.DeserializeObject<MusicConfiguration>(musicConfStr, StaticSettings.JsonSerializerSettings);
+            var musicConf = JsonConvert.DeserializeObject<MusicConfiguration>(musicConfStr, StaticSettings.DefaultSerializerSettings);
 
             MusicPlayer.Configuration.Rewrite(musicConf);
         }

@@ -17,7 +17,7 @@ namespace Blockstacker.GameSettings
         [ContextMenu("Copy JSON to clipboard")]
         public void CopyToClipboard()
         {
-            GUIUtility.systemCopyBuffer = JsonConvert.SerializeObject(RotationSystem, StaticSettings.JsonSerializerSettings);
+            GUIUtility.systemCopyBuffer = JsonConvert.SerializeObject(RotationSystem, StaticSettings.DefaultSerializerSettings);
         }
         
         public readonly RotationSystem RotationSystem = new();

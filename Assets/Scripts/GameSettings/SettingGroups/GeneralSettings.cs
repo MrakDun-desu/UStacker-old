@@ -58,7 +58,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         private bool TryReloadRandomizer()
         {
             const string filenameExtension = ".lua";
-            var filePath = Path.Combine(CustomizationPaths.RotationSystems,
+            var filePath = Path.Combine(PersistentPaths.RotationSystems,
                 CustomRandomizer + filenameExtension);
 
             if (!File.Exists(filePath)) return false;

@@ -44,14 +44,14 @@ namespace Blockstacker.GlobalSettings.Changers
         
         private void OpenBackgroundFolder()
         {
-            if (!Directory.Exists(CustomizationPaths.BackgroundPacks))
-                Directory.CreateDirectory(CustomizationPaths.BackgroundPacks);
+            if (!Directory.Exists(PersistentPaths.BackgroundPacks))
+                Directory.CreateDirectory(PersistentPaths.BackgroundPacks);
 
-            var defaultPath = Path.Combine(CustomizationPaths.BackgroundPacks, BackgroundPackLoader.DEFAULT_PATH);
+            var defaultPath = Path.Combine(PersistentPaths.BackgroundPacks, BackgroundPackLoader.DEFAULT_PATH);
             if (!Directory.Exists(defaultPath))
                 Directory.CreateDirectory(defaultPath);
             
-            DefaultAppOpener.OpenFile(CustomizationPaths.BackgroundPacks);
+            DefaultAppOpener.OpenFile(PersistentPaths.BackgroundPacks);
         }
 
         private void OpenDocumentation()

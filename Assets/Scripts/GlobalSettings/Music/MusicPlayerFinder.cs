@@ -5,12 +5,11 @@ namespace Blockstacker.GlobalSettings.Music
 {
     public class MusicPlayerFinder : MonoBehaviour
     {
-        public StringReferenceSO gameTypeStr;
-        private string _gameType => gameTypeStr.Value;
+        public string GameType { get; set; }
 
         public void PlayGameTrackByType()
         {
-            MusicPlayer.Instance.PlayTrackByGameTypeImmediate(_gameType);
+            MusicPlayer.Instance.PlayTrackByGameTypeImmediate(GameType);
         }
 
         public void PlayVictoryTrack()

@@ -11,8 +11,6 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private TMP_InputField _countdownIntervalField;
         [SerializeField] private TMP_InputField _countdownCountField;
         [SerializeField] private TMP_InputField _startingLevelField;
-        [SerializeField] private MusicOptionChanger _musicOptionChanger;
-        [SerializeField] private StatCountingGroupChanger _statCountingGroupChanger;
         public StringReferenceSO ChangedOverrideName { get; set; }
 
         private GameSettingsOverrides _value;
@@ -22,8 +20,6 @@ namespace Blockstacker.GlobalSettings.Changers
             _countdownIntervalField.onEndEdit.AddListener(OnCountdownIntervalChange);
             _countdownCountField.onEndEdit.AddListener(OnCountdownCountChange);
             _startingLevelField.onEndEdit.AddListener(OnStartingLevelChange);
-            _musicOptionChanger.GameTypeStr = ChangedOverrideName;
-            _statCountingGroupChanger.GameTypeStr = ChangedOverrideName;
             
             if (!AppSettings.GameOverrides.TryGetValue(ChangedOverrideName.Value, out _value))
             {

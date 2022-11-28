@@ -16,8 +16,8 @@ namespace Blockstacker.Gameplay.Pieces
         [SerializeField] private BlockBase _blockPrefab;
         [SerializeField] private Board _board;
 
-        public GameSettingsSO GameSettings { set => _settings = value; }
-        private GameSettingsSO _settings;
+        public GameSettingsSO.SettingsContainer GameSettings { set => _settings = value; }
+        private GameSettingsSO.SettingsContainer _settings;
         
         private static readonly Color _defaultColor = Color.white;
         private readonly List<BlockBase> _blocks = new();

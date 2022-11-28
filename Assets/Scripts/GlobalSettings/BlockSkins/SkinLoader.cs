@@ -19,8 +19,8 @@ namespace Blockstacker.GlobalSettings.BlockSkins
 
         public static IEnumerable<string> EnumerateSkins()
         {
-            return Directory.Exists(CustomizationPaths.Skins)
-                ? Directory.EnumerateDirectories(CustomizationPaths.Skins).Select(Path.GetFileName)
+            return Directory.Exists(PersistentPaths.Skins)
+                ? Directory.EnumerateDirectories(PersistentPaths.Skins).Select(Path.GetFileName)
                 : Array.Empty<string>();
         }
 
@@ -68,12 +68,12 @@ namespace Blockstacker.GlobalSettings.BlockSkins
 
         private static async Task GetSkinAsync(string path)
         {
-            var configFilePath = Path.Combine(path, CustomizationPaths.SkinConfiguration);
+            var configFilePath = Path.Combine(path, PersistentPaths.SkinConfiguration);
             if (!File.Exists(configFilePath)) return;
 
             var skinJson = await File.ReadAllTextAsync(configFilePath);
             SkinRecords =
-                JsonConvert.DeserializeObject<List<SkinRecord>>(skinJson, StaticSettings.JsonSerializerSettings);
+                JsonConvert.DeserializeObject<List<SkinRecord>>(skinJson, StaticSettings.DefaultSerializerSettings);
             SkinRecords ??= new List<SkinRecord>();
 
             var existingTextures = await LoadAllTexturesAsync(SkinRecords, path);

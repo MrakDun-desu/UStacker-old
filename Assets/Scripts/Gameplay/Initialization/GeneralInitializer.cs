@@ -21,7 +21,7 @@ namespace Blockstacker.Gameplay.Initialization
 
         public GeneralInitializer(
             StringBuilder problemBuilder,
-            GameSettingsSO gameSettings,
+            GameSettingsSO.SettingsContainer gameSettings,
             PieceDictionary availablePieces,
             PieceSpawner spawner,
             Board board,

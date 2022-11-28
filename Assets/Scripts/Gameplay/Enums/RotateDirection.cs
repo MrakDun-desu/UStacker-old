@@ -1,4 +1,4 @@
-﻿namespace Blockstacker.Gameplay
+﻿namespace Blockstacker.Gameplay.Enums
 {
     public enum RotateDirection : byte
     {
