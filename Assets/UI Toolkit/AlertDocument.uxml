@@ -1,6 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI%20Toolkit/StyleSheets/alerts.uss?fileID=7433441132597879392&amp;guid=9fc3e232a9fc1db4ea6faf59ca329044&amp;type=3#alerts" />
-    <ui:VisualElement style="height: 100%; justify-content: flex-end; align-items: flex-end;">
-        <ui:VisualElement name="alertField" />
-    </ui:VisualElement>
-</ui:UXML>
