@@ -6,7 +6,7 @@ namespace Blockstacker.GlobalSettings.Appliers
     {
         public static event Action<float> VisibilityChanged;
 
-        protected override void OnSettingChanged()
+        public override void OnSettingChanged()
         {
             VisibilityChanged?.Invoke(AppSettings.Gameplay.GridVisibility);
         }

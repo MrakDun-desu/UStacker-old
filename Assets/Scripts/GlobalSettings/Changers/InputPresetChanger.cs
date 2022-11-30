@@ -42,15 +42,15 @@ namespace Blockstacker.GlobalSettings.Changers
         private static IEnumerable<string> GetAvailablePresets()
         {
             var filenames = new List<string>();
-            if (Directory.Exists(CustomizationPaths.InputPresets))
-                filenames.AddRange(Directory.EnumerateFiles(CustomizationPaths.InputPresets));
+            if (Directory.Exists(PersistentPaths.InputPresets))
+                filenames.AddRange(Directory.EnumerateFiles(PersistentPaths.InputPresets));
             
             foreach (var filename in filenames) yield return Path.GetFileNameWithoutExtension(filename);
         }
 
         private static string WrapOptionName(string optionName)
         {
-            return Path.Combine(CustomizationPaths.InputPresets, $"{optionName}.json");
+            return Path.Combine(PersistentPaths.InputPresets, $"{optionName}.json");
         }
 
         private static bool IsNameValid(string presetName)
@@ -84,10 +84,10 @@ namespace Blockstacker.GlobalSettings.Changers
         public void SavePreset()
         {
             if (!IsNameValid(_newPresetNameField.text)) return;
-            if (!Directory.Exists(CustomizationPaths.InputPresets))
-                Directory.CreateDirectory(CustomizationPaths.InputPresets);
+            if (!Directory.Exists(PersistentPaths.InputPresets))
+                Directory.CreateDirectory(PersistentPaths.InputPresets);
 
-            var newFile = Path.Combine(CustomizationPaths.InputPresets, $"{_newPresetNameField.text}.json");
+            var newFile = Path.Combine(PersistentPaths.InputPresets, $"{_newPresetNameField.text}.json");
             File.WriteAllText(newFile, AppSettings.Rebinds);
             OnValidate();
             _newPresetBlocker.SetActive(false);

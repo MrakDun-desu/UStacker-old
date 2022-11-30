@@ -13,7 +13,7 @@ namespace Blockstacker.Gameplay.Initialization
 
         public PresentationInitializer(
             StringBuilder problemBuilder,
-            GameSettingsSO gameSettings,
+            GameSettingsSO.SettingsContainer gameSettings,
             TMP_Text title,
             GameCountdown countdown)
             : base(problemBuilder, gameSettings)
@@ -33,7 +33,7 @@ namespace Blockstacker.Gameplay.Initialization
             else
             {
                 _countdown.CountdownInterval = .5f;
-                _countdown.CountdownCount = 0;
+                _countdown.CountdownCount = 1;
             }
         }
     }

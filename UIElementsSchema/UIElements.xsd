@@ -11,6 +11,7 @@
   <xs:include schemaLocation="GlobalNamespace.xsd" />
   <xs:import schemaLocation="UnityEditor.U2D.Layout.xsd" namespace="UnityEditor.U2D.Layout" />
   <xs:import schemaLocation="UnityEditor.U2D.Animation.xsd" namespace="UnityEditor.U2D.Animation" />
+  <xs:import schemaLocation="Blockstacker.GlobalSettings.VisualElements.xsd" namespace="Blockstacker.GlobalSettings.VisualElements" />
   <xs:import schemaLocation="Blockstacker.GlobalSettings.StatCounting.UI.xsd" namespace="Blockstacker.GlobalSettings.StatCounting.UI" />
   <xs:import schemaLocation="UnityEditor.ShortcutManagement.xsd" namespace="UnityEditor.ShortcutManagement" />
   <xs:import schemaLocation="UnityEditor.UIElements.Debugger.xsd" namespace="UnityEditor.UIElements.Debugger" />

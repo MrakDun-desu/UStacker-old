@@ -16,10 +16,11 @@ MonoBehaviour:
     Name: Remaining end condition
     Type: 0
     Filename: 
-    Script: "function AddAlpha(input)\n\treturn \"<alpha=#AA>\" .. input\nend\nfunction
-      OnChange(message)\n\tlocal remaining = message.TotalCount - message.CurrentCount\n\tif
-      remaining > 0 then remaining = 0 end\n\treturn AddAlpha(StatUtility:FormatNumber(remaining,
-      0))\nend\nSetText(\"0\")\nreturn {\n\t[\"GameEndConditionChanged\"] = OnChange\n}"
-    Position: {x: 4, y: 15}
-    Size: {x: 6, y: 5}
-    UpdateInterval: 0.01
+    Script: "function OnChange(message)\n\tif message.ConditionName == nil or message.ConditionName
+      == \"None\" or message.ConditionName == \"\" then\n\t\treturn \"\"\n\tend\n\tlocal
+      remaining = message.TotalCount - message.CurrentCount\n\tif remaining < 0 then
+      remaining = 0 end\n\treturn StatUtility:FormatNumber(remaining, 0)\nend\nSetText(\"\")\nSetAlignment(\"center\")\nSetVisibility(0.4)\nreturn
+      {\n\t[\"GameEndConditionChanged\"] = OnChange\n}"
+    Position: {x: 3, y: 16}
+    Size: {x: 4, y: 4}
+    UpdateInterval: 0

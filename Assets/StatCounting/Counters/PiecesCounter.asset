@@ -16,11 +16,12 @@ MonoBehaviour:
     Name: Pieces
     Type: 0
     Filename: 
-    Script: "function Reset()\n\tPiecesPlaced = 0\nend\nfunction OnPiecePlaced()\n\tPiecesPlaced
-      = PiecesPlaced + 1\nend\nfunction OnUpdated()\n\tlocal pps = Stats.PiecesPerSecond\n\treturn
-      \"Pieces: \" .. PiecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\nend\nReset()\nSetText(\"Pieces:
-      0\\nPPS: 0\")\nreturn {\n\t[\"CounterUpdated\"] = OnUpdated,\n\t[\"PiecePlaced\"]
-      = OnPiecePlaced,\n\t[\"GameStarted\"] = Reset,\n\t[\"GameRestarted\"] = Reset\n}"
-    Position: {x: -6, y: 5}
-    Size: {x: 6, y: 4}
+    Script: "function Reset()\n\tPiecesPlaced = 0\n\treturn \"Pieces: 0\\nPPS: 0\"\nend\nfunction
+      OnPiecePlaced()\n\tPiecesPlaced = PiecesPlaced + 1\nend\nfunction OnUpdated()\n\tlocal
+      pps = Stats.PiecesPerSecond\n\treturn \"Pieces: \" .. PiecesPlaced .. \"\\nPPS:
+      \" .. StatUtility:FormatNumber(pps)\nend\nSetText(Reset())\nreturn {\n\t[\"CounterUpdated\"]
+      = OnUpdated,\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStarted\"] = Reset,\n\t[\"GameRestarted\"]
+      = Reset\n}"
+    Position: {x: -9, y: 6}
+    Size: {x: 8, y: 3}
     UpdateInterval: 0.1

@@ -4,6 +4,7 @@ using System.Reflection;
 using Blockstacker.Common;
 using Blockstacker.GlobalSettings.Groups;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace Blockstacker.GlobalSettings
 {
@@ -17,8 +18,10 @@ namespace Blockstacker.GlobalSettings
         public static CustomizationSettings Customization => Settings.Customization;
         public static StatCountingSettings StatCounting => Settings.StatCounting;
         public static OtherSettings Other => Settings.Others;
+        public static OverridesDictionary GameOverrides => Settings.GameOverrrides;
 
         public static event Action SettingsReloaded;
+        private const char INVALID_CHAR_REPLACEMENT = '_';
 
         public static string Rebinds
         {
@@ -26,23 +29,29 @@ namespace Blockstacker.GlobalSettings
             set => Settings.Rebinds = value;
         }
 
-
         public static bool TrySave(string path = null)
         {
-            path ??= CustomizationPaths.GlobalSettings;
-            
+            if (path is not null)
+            {
+                foreach (var invalidChar in Path.GetInvalidFileNameChars())
+                    path = path.Replace(invalidChar, INVALID_CHAR_REPLACEMENT);
+            }
+
+            path ??= PersistentPaths.GlobalSettings;
+
             if (!Directory.Exists(Path.GetDirectoryName(path))) return false;
-            File.WriteAllText(path, JsonConvert.SerializeObject(Settings, StaticSettings.JsonSerializerSettings));
+            File.WriteAllText(path, JsonConvert.SerializeObject(Settings, StaticSettings.DefaultSerializerSettings));
             return true;
         }
 
         public static bool TryLoad(string path = null)
         {
-            path ??= CustomizationPaths.GlobalSettings;
+            path ??= PersistentPaths.GlobalSettings;
             if (!File.Exists(path))
                 return false;
 
-            Settings = JsonConvert.DeserializeObject<SettingsContainer>(File.ReadAllText(path), StaticSettings.JsonSerializerSettings);
+            Settings = JsonConvert.DeserializeObject<SettingsContainer>(File.ReadAllText(path),
+                StaticSettings.DefaultSerializerSettings);
             Settings ??= new SettingsContainer();
             SettingsReloaded?.Invoke();
             return true;
@@ -51,25 +60,29 @@ namespace Blockstacker.GlobalSettings
         public static bool TrySetValue<T>(T value, string[] path)
         {
             if (path.Length == 0) return false;
-            FieldInfo fieldInfo = null;
+            PropertyInfo propertyInfo = null;
             object oldObject = null;
             object obj = Settings;
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                fieldInfo = type.GetField(fieldName);
-                if (fieldInfo == null) return false;
+                propertyInfo = type.GetProperty(fieldName);
+
+                if (propertyInfo is null) return false;
 
                 oldObject = obj;
-                obj = fieldInfo.GetValue(obj);
-                if (obj == null) return false;
+                obj = propertyInfo.GetValue(obj);
+
+                if (obj is null) return false;
 
                 type = obj.GetType();
             }
 
             if (type != typeof(T)) return false;
 
-            fieldInfo?.SetValue(oldObject, value);
+            if (propertyInfo is null) return false;
+
+            propertyInfo.SetValue(oldObject, value);
             return true;
         }
 
@@ -80,11 +93,11 @@ namespace Blockstacker.GlobalSettings
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                var fieldInfo = type.GetField(fieldName);
-                if (fieldInfo == null) return default;
+                var propertyInfo = type.GetProperty(fieldName);
 
-                obj = fieldInfo.GetValue(obj);
-                if (obj == null) return default;
+                obj = propertyInfo?.GetValue(obj);
+
+                if (obj is null) return default;
 
                 type = obj.GetType();
             }
@@ -100,10 +113,10 @@ namespace Blockstacker.GlobalSettings
             var type = obj.GetType();
             foreach (var fieldName in path)
             {
-                var fieldInfo = type.GetField(fieldName);
-                if (fieldInfo is null) return false;
+                var propertyInfo = type.GetProperty(fieldName);
 
-                obj = fieldInfo.GetValue(obj);
+                obj = propertyInfo?.GetValue(obj);
+
                 if (obj is null) return false;
 
                 type = obj.GetType();
@@ -112,17 +125,39 @@ namespace Blockstacker.GlobalSettings
             return type == typeof(T);
         }
 
+        public static bool TryGetSettingAttribute<T>(string[] path, out T output) where T : Attribute
+        {
+            output = default;
+            if (path.Length == 0) return false;
+            object obj = Settings;
+            var type = obj.GetType();
+            PropertyInfo propertyInfo = null;
+            foreach (var fieldName in path)
+            {
+                propertyInfo = type.GetProperty(fieldName);
+
+                obj = propertyInfo?.GetValue(obj);
+                if (obj is null) return false;
+
+                type = obj.GetType();
+            }
+
+            output = propertyInfo?.GetCustomAttribute<T>(false);
+            return output is not null;
+        }
+
         [Serializable]
         internal record SettingsContainer
         {
-            public HandlingSettings Handling = new();
-            public SoundSettings Sound = new();
-            public GameplaySettings Gameplay = new();
-            public VideoSettings Video = new();
-            public CustomizationSettings Customization = new();
-            public StatCountingSettings StatCounting = new();
-            public OtherSettings Others = new();
-            public string Rebinds;
+            [field: SerializeField] public HandlingSettings Handling { get; set; } = new();
+            [field: SerializeField] public SoundSettings Sound { get; set; } = new();
+            [field: SerializeField] public GameplaySettings Gameplay { get; set; } = new();
+            [field: SerializeField] public VideoSettings Video { get; set; } = new();
+            [field: SerializeField] public CustomizationSettings Customization { get; set; } = new();
+            [field: SerializeField] public StatCountingSettings StatCounting { get; set; } = new();
+            [field: SerializeField] public OtherSettings Others { get; set; } = new();
+            [field: SerializeField] public string Rebinds { get; set; } = string.Empty;
+            [field: SerializeField] public OverridesDictionary GameOverrrides { get; set; } = new();
         }
     }
 }

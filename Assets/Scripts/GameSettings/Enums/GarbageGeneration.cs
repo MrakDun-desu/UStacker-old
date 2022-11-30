@@ -9,6 +9,7 @@ namespace Blockstacker.GameSettings.Enums
         Singles = 1,
         Doubles = 1 << 1,
         Triples = 1 << 2,
-        Quads = 1 << 3
+        Quads = 1 << 3,
+        CustomFlag = 1 << 4
     }
 }

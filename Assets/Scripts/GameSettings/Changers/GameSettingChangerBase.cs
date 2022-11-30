@@ -14,7 +14,6 @@ namespace Blockstacker.GameSettings.Changers
 
         protected virtual void OnValidate()
         {
-            if (_title == null) return;
             if (_gameSettingsSO == null)
                 _title.text = "Choose a game settings SO!";
 
@@ -24,7 +23,7 @@ namespace Blockstacker.GameSettings.Changers
                 _title.text = _controlPath[^1].FormatCamelCase();
         }
 
-        public void SetValue(T value)
+        protected void SetValue(T value)
         {
             _gameSettingsSO.SetValue(value, _controlPath);
         }

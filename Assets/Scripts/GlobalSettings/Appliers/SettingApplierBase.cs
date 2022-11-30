@@ -1,5 +1,6 @@
 using Blockstacker.GlobalSettings.Changers;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Blockstacker.GlobalSettings.Appliers
 {
@@ -22,6 +23,6 @@ namespace Blockstacker.GlobalSettings.Appliers
             _settingChanger.SettingChanged -= OnSettingChanged;
         }
 
-        protected abstract void OnSettingChanged();
+        public abstract void OnSettingChanged();
     }
 }

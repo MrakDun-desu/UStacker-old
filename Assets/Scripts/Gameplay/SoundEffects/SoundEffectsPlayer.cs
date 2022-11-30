@@ -21,10 +21,6 @@ namespace Blockstacker.Gameplay.SoundEffects
         private void Awake()
         {
             _audioSource = GetComponent<AudioSource>();
-        }
-
-        private void Start()
-        {
             if (!TryRegisterCustomFunctions())
                 RegisterDefaultFunctions();
         }
@@ -48,6 +44,8 @@ namespace Blockstacker.Gameplay.SoundEffects
 
             _luaState = new Lua();
             _luaState.RestrictMaliciousFunctions();
+            _luaState.RegisterFunction(nameof(Play), this, GetType().GetMethod(nameof(Play)));
+            _luaState.RegisterFunction(nameof(PlayAsAnnouncer), this, GetType().GetMethod(nameof(PlayAsAnnouncer)));
             LuaTable events = null;
             try
             {
@@ -100,7 +98,7 @@ namespace Blockstacker.Gameplay.SoundEffects
                     }
                 }
 
-                _mediator.Register((Action<Message>) Action, entry.Value);
+                _mediator.Register((Action<Message>)Action, entry.Value);
             }
 
             return true;
@@ -114,15 +112,24 @@ namespace Blockstacker.Gameplay.SoundEffects
 
         private void HandleCountdownTicked(CountdownTickedMessage message)
         {
-            switch (message.RemainingTicks)
+            string countdownKey = null;
+            var found = false;
+            for (var i = message.RemainingTicks; i > 0; i--)
             {
-                case < 4:
-                    TryPlayClip($"countdown{message.RemainingTicks + 1}");
-                    break;
-                case >= 4:
-                    TryPlayClip("countdown5");
-                    break;
+                countdownKey = $"countdown{i}";
+                if (SoundPackLoader.SoundEffects.ContainsKey(countdownKey))
+                {
+                    found = true;
+                     break;
+                }
+                if (_defaultEffects.ContainsKey(countdownKey))
+                {
+                    found = true;
+                     break;
+                }
             }
+
+            TryPlayClip(found ? countdownKey : $"countdown{message.RemainingTicks}");
         }
 
         private void HandlePieceSpawned(PieceSpawnedMessage message)
@@ -217,6 +224,28 @@ namespace Blockstacker.Gameplay.SoundEffects
             else if (message.Y != 0 && message.WasHardDrop)
                 TryPlayClip("harddrop");
         }
+
+        private void PlayAsAnnouncer(string clipName)
+        {
+            var clipExists = SoundPackLoader.SoundEffects.TryGetValue(clipName, out var clip);
+            if (!clipExists)
+                _defaultEffects.TryGetValue(clipName, out clip);
+
+            if (!clipExists)
+            {
+                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                    "Clip not found!",
+                    $"Sound effect with a name {clipName} was not found.",
+                    AlertType.Warning
+                ));
+                return;
+            }
+
+            _audioSource.clip = clip;
+            _audioSource.Play();
+        }
+
+        private void Play(string clipName) => TryPlayClip(clipName);
 
         private void TryPlayClip(string clipName)
         {

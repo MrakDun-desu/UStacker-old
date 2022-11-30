@@ -9,6 +9,13 @@ namespace Blockstacker.GameSettings.Changers
 
         private void Start()
         {
+            RefreshValue();
+            _gameSettingsSO.SettingsReloaded += RefreshValue;
+            _toggle.onValueChanged.AddListener(SetValue);
+        }
+
+        private void RefreshValue()
+        {
             _toggle.isOn = _gameSettingsSO.GetValue<bool>(_controlPath);
         }
     }

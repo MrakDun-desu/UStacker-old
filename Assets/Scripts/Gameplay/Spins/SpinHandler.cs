@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blockstacker.Gameplay.Enums;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;

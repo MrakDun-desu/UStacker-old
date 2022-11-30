@@ -12,9 +12,8 @@ using UnityEngine.Serialization;
 
 namespace Blockstacker.Gameplay
 {
-    public class PieceSpawner : MonoBehaviour
+    public class PieceSpawner : MonoBehaviour, IGameSettingsDependency
     {
-        [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private Board _board;
         [SerializeField] private InputProcessor _inputProcessor;
         [FormerlySerializedAs("_manager")] [SerializeField] private GameStateManager _stateManager;
@@ -23,12 +22,19 @@ namespace Blockstacker.Gameplay
 
         public IRandomizer Randomizer;
         
+        public GameSettingsSO.SettingsContainer GameSettings { set => _settings = value; }
+        private GameSettingsSO.SettingsContainer _settings;
         private List<PieceContainer> _previewContainers;
         private PiecePreviews _previews;
         private readonly Dictionary<string, ObjectPool<Piece>> _piecePools = new();
         private int _defaultPoolCapacity;
 
         private bool _containersEmpty = true;
+
+        public void ResetRandomizer(GameStartedMessage message)
+        {
+            Randomizer.Reset(message.Seed);
+        }
 
         public void SetPreviewContainers(List<PieceContainer> previewContainers)
         {
@@ -52,7 +58,7 @@ namespace Blockstacker.Gameplay
 
         public bool SpawnPiece(double spawnTime)
         {
-            if (!_stateManager.GameRunning || _containersEmpty) return false;
+            if (!_stateManager.GameRunningActively || _containersEmpty) return false;
             
             var nextPieceType = Randomizer.GetNextPiece();
             var swappedPiece = _piecePools[nextPieceType].Get();
@@ -67,8 +73,8 @@ namespace Blockstacker.Gameplay
         {
             var boardTransform = _board.transform;
             var piecePos = new Vector3(
-                (int) (_settings.Rules.BoardDimensions.BoardWidth / 2u),
-                (int) _settings.Rules.BoardDimensions.PieceSpawnHeight,
+                (int) (_settings.BoardDimensions.BoardWidth / 2u),
+                (int) _settings.BoardDimensions.PieceSpawnHeight,
                 boardTransform.position.z
             );
 
@@ -79,7 +85,7 @@ namespace Blockstacker.Gameplay
 
             _inputProcessor.ActivePiece = piece;
 
-            var rotationSystem = _settings.Rules.Controls.ActiveRotationSystem;
+            var rotationSystem = _settings.Controls.ActiveRotationSystem;
             var rotation = rotationSystem.GetKickTable(piece.Type).StartState;
             piece.Rotate((int) rotation);
 
@@ -103,7 +109,7 @@ namespace Blockstacker.Gameplay
 
         public void SetAvailablePieces(PieceDictionary pieces)
         {
-            var blockCount = _settings.Rules.BoardDimensions.BoardHeight * _settings.Rules.BoardDimensions.BoardWidth;
+            var blockCount = _settings.BoardDimensions.BoardHeight * _settings.BoardDimensions.BoardWidth;
             _defaultPoolCapacity = (int) (blockCount / 25u);
             var maxSize = (int) (blockCount / 3u);
 

@@ -6,9 +6,9 @@ namespace Blockstacker.Gameplay.Initialization
     public abstract class InitializerBase
     {
         protected readonly StringBuilder _errorBuilder;
-        protected readonly GameSettingsSO _gameSettings;
+        protected readonly GameSettingsSO.SettingsContainer _gameSettings;
 
-        protected InitializerBase(StringBuilder errorBuilder, GameSettingsSO gameSettings)
+        protected InitializerBase(StringBuilder errorBuilder, GameSettingsSO.SettingsContainer gameSettings)
         {
             _errorBuilder = errorBuilder;
             _gameSettings = gameSettings;

@@ -3,21 +3,13 @@
 namespace Blockstacker.GlobalSettings.Music
 {
     [Serializable]
-    public record MusicOption
+    public record MusicOption(OptionType OptionType, string Name)
     {
-        public OptionType OptionType;
-        public string Name;
+        public OptionType OptionType { get; set; } = OptionType;
+        public string Name { get; } = Name;
 
-        public MusicOption(OptionType optionType, string name)
+        public MusicOption() : this(OptionType.Random, "")
         {
-            OptionType = optionType;
-            Name = name;
-        }
-
-        public MusicOption()
-        {
-            OptionType = OptionType.Random;
-            Name = "";
         }
     }
 

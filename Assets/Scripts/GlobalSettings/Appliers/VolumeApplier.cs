@@ -8,7 +8,7 @@ namespace Blockstacker.GlobalSettings.Appliers
         [SerializeField] private AudioMixer _mixer;
         [SerializeField] private string _propertyName;
 
-        protected override void OnSettingChanged()
+        public override void OnSettingChanged()
         {
             var path = new[]
             {

@@ -1,10 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Blockstacker.Gameplay.Blocks;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Presentation;
+using Blockstacker.Gameplay.Stats;
 using Blockstacker.GameSettings;
+using Blockstacker.GlobalSettings.Music;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,8 +16,6 @@ namespace Blockstacker.Gameplay.Initialization
 {
     public class GameInitializer : MonoBehaviour
     {
-        [SerializeField] private GameSettingsSO _gameSettingsAsset;
-
         [Space] [SerializeField] private PieceDictionary _availablePieces = new();
 
         [Header("Board")] [SerializeField] private PieceSpawner _pieceSpawner;
@@ -36,17 +37,48 @@ namespace Blockstacker.Gameplay.Initialization
         [SerializeField] private GameObject _loadingOverlay;
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private GameStateManager _stateManager;
+        [SerializeField] private MusicPlayerFinder _playerFinder;
+        [SerializeField] private StatCounterManager _statCounterManager;
+        [SerializeField] private GameObject[] _gameSettingsDependencies = Array.Empty<GameObject>();
 
         [Header("Events")] public UnityEvent GameInitialized;
+        public UnityEvent ReplayStarted;
+        public UnityEvent ReplayInitialized;
         public UnityEvent<string> GameFailedToInitialize;
+
+        private static GameReplay _replay;
+        public static GameSettingsSO.SettingsContainer GameSettings { get; set; }
+
+        public static GameReplay Replay
+        {
+            get => _replay;
+            set
+            {
+                _replay = value;
+                if (_replay is not null)
+                    GameSettings = _replay?.GameSettings;
+            }
+        }
+        
+        public static string GameType { get; set; }
+        public static bool InitAsReplay { get; set; }
 
         private void Start()
         {
             _loadingOverlay.SetActive(true);
             StringBuilder errorBuilder = new();
+            foreach (var dependantObject in _gameSettingsDependencies)
+            {
+                var dependencies = dependantObject.GetComponents<IGameSettingsDependency>();
+                foreach (var dependency in dependencies)
+                    dependency.GameSettings = GameSettings;
+            }
             if (TryInitialize(errorBuilder))
             {
-                GameInitialized.Invoke();
+                if (InitAsReplay)
+                    ReplayInitialized.Invoke();
+                else
+                    GameInitialized.Invoke();
                 _loadingOverlay.SetActive(false);
                 return;
             }
@@ -61,7 +93,10 @@ namespace Blockstacker.Gameplay.Initialization
             StringBuilder errorBuilder = new();
             if (TryReinitialize(errorBuilder))
             {
-                GameInitialized.Invoke();
+                if (InitAsReplay)
+                    ReplayStarted.Invoke();
+                else
+                    GameInitialized.Invoke();
                 _loadingOverlay.SetActive(false);
                 return;
             }
@@ -71,10 +106,16 @@ namespace Blockstacker.Gameplay.Initialization
 
         private bool TryInitialize(StringBuilder errorBuilder)
         {
+            var actionList = Replay?.ActionList;
+            
+            _playerFinder.GameType = GameType;
+            _statCounterManager.GameType = GameType;
+            _stateManager.GameType = GameType;
             List<InitializerBase> initializers = new()
             {
-                new RulesBoardDimensionsInitializer(
-                    errorBuilder, _gameSettingsAsset,
+                new OverridesInitializer(errorBuilder, GameSettings, GameType, InitAsReplay),
+                new BoardDimensionsInitializer(
+                    errorBuilder, GameSettings,
                     _board,
                     _boardBackground,
                     _gridBlock,
@@ -82,29 +123,30 @@ namespace Blockstacker.Gameplay.Initialization
                     _statsCanvasTransform,
                     Camera.main
                 ),
-                new RulesGeneralInitializer(
-                    errorBuilder, _gameSettingsAsset,
+                new GeneralInitializer(
+                    errorBuilder, GameSettings,
                     _availablePieces,
                     _pieceSpawner,
                     _board,
                     _pieceContainerPrefab,
-                    _inputProcessor),
-                new RulesHandlingInitializer(errorBuilder, _gameSettingsAsset),
-                new RulesControlsInitializer(
-                    errorBuilder, _gameSettingsAsset,
+                    _inputProcessor,
+                    _stateManager,
+                    actionList,
+                    false,
+                    InitAsReplay),
+                new ControlsInitializer(
+                    errorBuilder, GameSettings,
                     _srsRotationSystemSo.RotationSystem,
                     _srsPlusRotationSystemSo.RotationSystem,
-                    _inputProcessor),
-                new GarbageGenerationInitializer(
-                    errorBuilder, _gameSettingsAsset,
-                    _board),
+                    _inputProcessor,
+                    InitAsReplay),
                 new PresentationInitializer(
-                    errorBuilder, _gameSettingsAsset,
+                    errorBuilder, GameSettings,
                     _gameTitle,
                     _countdown
                 ),
                 new ObjectiveInitializer(
-                    errorBuilder, _gameSettingsAsset,
+                    errorBuilder, GameSettings,
                     _mediator,
                     _stateManager,
                     _board)
@@ -117,16 +159,23 @@ namespace Blockstacker.Gameplay.Initialization
 
         private bool TryReinitialize(StringBuilder errorBuilder)
         {
+            _playerFinder.GameType = GameType;
+
+            var actionList = Replay?.ActionList;
+            
             List<InitializerBase> initializers = new()
             {
-                new RulesGeneralInitializer(
-                    errorBuilder, _gameSettingsAsset,
+                new GeneralInitializer(
+                    errorBuilder, GameSettings,
                     _availablePieces,
                     _pieceSpawner,
                     _board,
                     _pieceContainerPrefab,
                     _inputProcessor,
-                    true),
+                    _stateManager,
+                    actionList,
+                    true,
+                    InitAsReplay),
             };
 
             foreach (var initializer in initializers) initializer.Execute();

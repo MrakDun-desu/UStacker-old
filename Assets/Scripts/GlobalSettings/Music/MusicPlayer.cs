@@ -21,6 +21,7 @@ namespace Blockstacker.GlobalSettings.Music
         [SerializeField] private AudioClipCollection _defaultMusic = new();
 
         public static MusicConfiguration Configuration { get; private set; }
+        public static MusicPlayer Instance => _instance;
 
         private AudioSource _audioSource;
         private const string MENU_STRING = "Scene_Menu";
@@ -31,7 +32,7 @@ namespace Blockstacker.GlobalSettings.Music
 
         private void CopyToClipboard()
         {
-            var output = JsonConvert.SerializeObject(_musicConfiguration, StaticSettings.JsonSerializerSettings);
+            var output = JsonConvert.SerializeObject(_musicConfiguration, StaticSettings.DefaultSerializerSettings);
             GUIUtility.systemCopyBuffer = output;
         }
         

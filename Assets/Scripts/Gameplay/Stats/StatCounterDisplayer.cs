@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections;
+using Blockstacker.Common;
 using Blockstacker.Common.Alerts;
 using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.GlobalSettings.StatCounting;
+using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using NLua;
 using NLua.Exceptions;
 using TMPro;
@@ -39,6 +43,10 @@ namespace Blockstacker.Gameplay.Stats
         private bool _isDraggingPosition;
         private bool _isDraggingSize;
         private static StatCounterDisplayer _currentlyUnderMouse;
+        
+        private TweenerCore<Color, Color, ColorOptions> _visibilityTween;
+        private TweenerCore<Color, Color, ColorOptions> _colorTween;
+
 
         private void RefreshStatCounter()
         {
@@ -51,7 +59,13 @@ namespace Blockstacker.Gameplay.Stats
             _luaState[UTILITY_NAME] = _statUtility;
             _luaState[STAT_CONTAINER_NAME] = _statContainer;
             _luaState[BOARD_INTERFACE_NAME] = _boardInterface;
-            _luaState.RegisterFunction(nameof(SetText), this, GetType().GetMethod(nameof(SetText)));
+            RegisterMethod(nameof(SetText));
+            RegisterMethod(nameof(SetColor));
+            RegisterMethod(nameof(SetVisibility));
+            RegisterMethod(nameof(AnimateColor));
+            RegisterMethod(nameof(AnimateVisibility));
+            RegisterMethod(nameof(SetAlignment));
+            RegisterMethod(nameof(SetTextSize));
             LuaTable events = null;
             try
             {
@@ -105,6 +119,11 @@ namespace Blockstacker.Gameplay.Stats
             StartCoroutine(UpdateCor());
         }
 
+        private void RegisterMethod(string methodName)
+        {
+            _luaState.RegisterFunction(methodName, this, GetType().GetMethod(methodName));
+        }
+
         private IEnumerator UpdateCor()
         {
             while (true)
@@ -116,12 +135,12 @@ namespace Blockstacker.Gameplay.Stats
                 catch (LuaException ex)
                 {
                     _ = AlertDisplayer.Instance.ShowAlert(new Alert(
-                        "Error executing user code!",
+                        "Error executing stat counter script!",
                         $"Error executing stat counter script with name {_statCounter.Name}.\nLua error: {ex.Message}",
                         AlertType.Error
                     ));
                     gameObject.SetActive(false);
-                    
+
                     yield break;
                 }
 
@@ -163,10 +182,16 @@ namespace Blockstacker.Gameplay.Stats
                 HandleSizeDrag(mousePos);
                 return;
             }
-            
+
             _currentlyUnderMouse = null;
             _moveHandle.gameObject.SetActive(false);
             _sizeHandle.gameObject.SetActive(false);
+        }
+
+        private void OnDestroy()
+        {
+            if (_currentlyUnderMouse == this)
+                _currentlyUnderMouse = null;
         }
 
         private void HandlePositionDrag(Vector2 mousePos)
@@ -204,6 +229,7 @@ namespace Blockstacker.Gameplay.Stats
                 var sizeDelta = (mousePos - containerPos) / _textContainer.lossyScale;
                 sizeDelta.x = Mathf.Round(sizeDelta.x);
                 sizeDelta.y = Mathf.Round(sizeDelta.y);
+                if (sizeDelta.x < 1 || sizeDelta.y < 1) return;
                 _textContainer.sizeDelta = sizeDelta;
                 _statCounter.Size = sizeDelta;
             }
@@ -216,6 +242,63 @@ namespace Blockstacker.Gameplay.Stats
         public void SetText(string text)
         {
             _displayText.text = text;
+        }
+
+        public void SetVisibility(object value)
+        {
+            _visibilityTween?.Kill();
+            _displayText.alpha = Convert.ToSingle(value);
+        }
+
+        public void AnimateVisibility(object alphaObj, object durationObj)
+        {
+            var alpha = Convert.ToSingle(alphaObj);
+            var duration = Convert.ToSingle(durationObj);
+
+            _visibilityTween = DOTween.ToAlpha(() => _displayText.color,
+                value => _displayText.color = value,
+                alpha,
+                duration).SetAutoKill(false);
+        }
+
+        public void SetColor(string color)
+        {
+            _colorTween?.Kill();
+            _displayText.color = CreateColor.FromString(color);
+        }
+
+        public void AnimateColor(string color, object durationObj)
+        {
+            var duration = Convert.ToSingle(durationObj);
+
+            _colorTween = DOTween.To(() => _displayText.color,
+                value => _displayText.color = value,
+                CreateColor.FromString(color),
+                duration);
+        }
+
+        public void SetAlignment(string alignment)
+        {
+            _displayText.alignment = alignment.ToLowerInvariant() switch
+            {
+                "left" => TextAlignmentOptions.Left,
+                "right" => TextAlignmentOptions.Right,
+                "center" => TextAlignmentOptions.Center,
+                "justified" => TextAlignmentOptions.Justified,
+                "flush" => TextAlignmentOptions.Flush,
+                "top" => TextAlignmentOptions.Top,
+                "bottom" => TextAlignmentOptions.Bottom,
+                "middle" => TextAlignmentOptions.Midline,
+                "baseline" => TextAlignmentOptions.Baseline,
+                "capline" => TextAlignmentOptions.Capline,
+                _ => _displayText.alignment
+            };
+        }
+
+        public void SetTextSize(object sizeObj)
+        {
+            _displayText.enableAutoSizing = false;
+            _displayText.fontSize = Convert.ToSingle(sizeObj);
         }
 
         public void Initialize(MediatorSO mediator, StatBoardInterface board,

@@ -19,6 +19,17 @@ namespace Blockstacker.Gameplay.Blocks
 
         private float _switchFrameTime;
         private List<SpriteRecord> _currentSprites = new();
+        private float _visibility;
+
+        public float Visibility
+        {
+            get => _visibility;
+            set
+            {
+                _visibility = Mathf.Clamp01(value);
+                _renderer.color = _renderer.color.WithAlpha(_visibility);
+            }
+        }
 
         public IBlockCollection BlockCollection { get; set; }
 
@@ -49,7 +60,7 @@ namespace Blockstacker.Gameplay.Blocks
 
             var newSpriteIndex = Mathf.FloorToInt(Time.realtimeSinceStartup / _switchFrameTime);
             newSpriteIndex %= _currentSprites.Count;
-            newSpriteIndex = newSpriteIndex < 0 ? 0 : newSpriteIndex;
+            newSpriteIndex = Mathf.Max(newSpriteIndex, 0);
             _renderer.sprite = _currentSprites[newSpriteIndex].Sprite;
         }
 

@@ -6,7 +6,7 @@ namespace Blockstacker.GlobalSettings.Appliers
     {
         public static event Action<bool> ScrollToChangeVolumeChanged;
 
-        protected override void OnSettingChanged()
+        public override void OnSettingChanged()
         {
             ScrollToChangeVolumeChanged?.Invoke(AppSettings.Gameplay.ScrollToChangeVolume);
         }

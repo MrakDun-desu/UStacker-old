@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Gameplay.Blocks;
+using Blockstacker.Gameplay.Initialization;
 using Blockstacker.GameSettings;
 using Blockstacker.GlobalSettings;
 using Blockstacker.GlobalSettings.Appliers;
@@ -10,12 +11,14 @@ using UnityEngine.Pool;
 
 namespace Blockstacker.Gameplay.Pieces
 {
-    public class GhostPiece : MonoBehaviour, IBlockCollection
+    public class GhostPiece : MonoBehaviour, IBlockCollection, IGameSettingsDependency
     {
         [SerializeField] private BlockBase _blockPrefab;
         [SerializeField] private Board _board;
-        [SerializeField] private GameSettingsSO _settings;
 
+        public GameSettingsSO.SettingsContainer GameSettings { set => _settings = value; }
+        private GameSettingsSO.SettingsContainer _settings;
+        
         private static readonly Color _defaultColor = Color.white;
         private readonly List<BlockBase> _blocks = new();
         private Piece _activePiece;
@@ -28,7 +31,7 @@ namespace Blockstacker.Gameplay.Pieces
             get => _activePiece;
             set
             {
-                if (!_settings.Rules.Controls.ShowGhostPiece) return;
+                if (!_settings.Controls.ShowGhostPiece) return;
 
                 _activePiece = value;
                 CurrentColor = _activePiece.GhostPieceColor;
@@ -42,9 +45,7 @@ namespace Blockstacker.Gameplay.Pieces
             get => _currentColor;
             private set
             {
-                var newColor = value;
-                if (!_colorGhostPiece) 
-                    newColor = _defaultColor;
+                var newColor = _colorGhostPiece ? value : _defaultColor;
                 if (_currentColor == newColor)
                     return;
                 _currentColor = newColor;
@@ -74,11 +75,11 @@ namespace Blockstacker.Gameplay.Pieces
 
         private void Start()
         {
-            if (!_settings.Rules.Controls.ShowGhostPiece)
+            if (!_settings.Controls.ShowGhostPiece)
                 gameObject.SetActive(false);
 
+            _colorGhostPiece = AppSettings.Gameplay.ColorGhostPiece;
             ColorGhostPieceApplier.ColorGhostPieceChanged += ChangeColoring;
-            ChangeColoring(AppSettings.Gameplay.ColorGhostPiece);
         }
 
         private BlockBase CreateBlock()
@@ -111,7 +112,7 @@ namespace Blockstacker.Gameplay.Pieces
         
         public void Render()
         {
-            if (!_settings.Rules.Controls.ShowGhostPiece) return;
+            if (!_settings.Controls.ShowGhostPiece) return;
             
             transform.position = ActivePiece.transform.position;
             for (var i = 0; i < _blocks.Count; i++)

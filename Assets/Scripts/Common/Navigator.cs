@@ -6,29 +6,14 @@ namespace Blockstacker.Common
 {
     public class Navigator : MonoBehaviour
     {
-        private const string MAIN_MENU_SCENE ="Scene_Menu_Main";
-        private const string GLOBAL_SETTINGS_SCENE = "Scene_Menu_GlobalSettings";
-        private const string GAME_SETTINGS_SCENE = "Scene_Menu_GameSettings";
-        private const string GAME_CUSTOM_SCENE = "Scene_Game_Custom";
-        
         public void LoadMenu()
         {
-            SceneManager.LoadScene(MAIN_MENU_SCENE);
+            SceneManager.LoadScene("Scene_Menu_Main");
         }
 
-        public void LoadSettings()
+        public void LoadCustomGameSettings()
         {
-            SceneManager.LoadScene(GLOBAL_SETTINGS_SCENE);
-        }
-
-        public void LoadGameSettings()
-        {
-            SceneManager.LoadScene(GAME_SETTINGS_SCENE);
-        }
-
-        public void LoadGame()
-        {
-            SceneManager.LoadScene(GAME_CUSTOM_SCENE);
+            SceneManager.LoadScene("Scene_Menu_GameSettings_Custom");
         }
 
         public void EndGame()

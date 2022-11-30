@@ -144,122 +144,128 @@ MonoBehaviour:
   _defaultEffects:
     _entries:
     - Key: spin
-      Value: {fileID: 8300000, guid: be5336bbcd018e54e9f7386b83d71418, type: 3}
+      Value: {fileID: 8300000, guid: c48e63b3ade26d3479cdd5417bf5388b, type: 3}
     - Key: rotate
-      Value: {fileID: 8300000, guid: 50afada4502180441b9eb3ad5650dc4a, type: 3}
+      Value: {fileID: 8300000, guid: 63a69d7403927a741b5406bd20425def, type: 3}
     - Key: move
-      Value: {fileID: 8300000, guid: d6bdf1b5bc54d2644b1412d869d79c5d, type: 3}
+      Value: {fileID: 8300000, guid: 6dcdd1e9e1ab1bd449d4552a29721960, type: 3}
     - Key: softdrop
-      Value: {fileID: 8300000, guid: 1747d51e894f6b14d89f2372c2fee1de, type: 3}
+      Value: {fileID: 8300000, guid: 38fc0b6d31f70b74c922d338fd89a562, type: 3}
     - Key: hold
-      Value: {fileID: 8300000, guid: 2ce3193c2894c2b4dab1c21d93b79d52, type: 3}
+      Value: {fileID: 8300000, guid: 3fcee963e49ada142a8b46f6bde62d48, type: 3}
     - Key: combo_1
-      Value: {fileID: 8300000, guid: c4e856207aba0a247bfadfb8fd9008c2, type: 3}
+      Value: {fileID: 8300000, guid: 772d3baa5ce061048830fb030c86cd97, type: 3}
     - Key: combo_1_power
-      Value: {fileID: 8300000, guid: 002f13b1dec9f504a9503ddf2e24bf58, type: 3}
+      Value: {fileID: 8300000, guid: 19f34122fe0fddc4782d62393e2f844c, type: 3}
     - Key: combo_2
-      Value: {fileID: 8300000, guid: de061c6e06b9e4a4faaf18dccbdfc35f, type: 3}
+      Value: {fileID: 8300000, guid: 99836c55dcb803749a7da4ef408c9655, type: 3}
     - Key: combo_2_power
-      Value: {fileID: 8300000, guid: 5044c6487a188b1459f25333694d589b, type: 3}
+      Value: {fileID: 8300000, guid: e1c62a62b448dae469ae138eca83918d, type: 3}
     - Key: combo_3
-      Value: {fileID: 8300000, guid: ccaf616dd05039d4885191cc86698cac, type: 3}
+      Value: {fileID: 8300000, guid: 8307bc2bfb97a084f8d1f6735abed412, type: 3}
     - Key: combo_3_power
-      Value: {fileID: 8300000, guid: 50557afec6440b642949a435fa7b3c35, type: 3}
+      Value: {fileID: 8300000, guid: 99ef0b2422206694384028021f27fc25, type: 3}
     - Key: combo_4
-      Value: {fileID: 8300000, guid: 8c707ad5855ff8c46bf40dccbdd0dbf4, type: 3}
+      Value: {fileID: 8300000, guid: 3aefc21a0c7aa4d47a206786476eeeec, type: 3}
     - Key: combo_4_power
-      Value: {fileID: 8300000, guid: 8c707ad5855ff8c46bf40dccbdd0dbf4, type: 3}
+      Value: {fileID: 8300000, guid: 1457f88d163e5b34a95bde2b6082bf63, type: 3}
     - Key: combo_5
-      Value: {fileID: 8300000, guid: fd8ec1df076ef8740b2b838982210f4c, type: 3}
+      Value: {fileID: 8300000, guid: 7a75161963dffac459d52c19c910e48c, type: 3}
     - Key: combo_5_power
-      Value: {fileID: 8300000, guid: b905ba2c1fc02ff4e893b8ca8f453210, type: 3}
+      Value: {fileID: 8300000, guid: a4337005891616144821b3723836f511, type: 3}
     - Key: combo_6
-      Value: {fileID: 8300000, guid: 83b7432001a34464e99d455246621e74, type: 3}
+      Value: {fileID: 8300000, guid: 7fa2d31838f2c3041a27aa07d26ad88f, type: 3}
     - Key: combo_6_power
-      Value: {fileID: 8300000, guid: 79a181f2662991e4bb8703968552ed87, type: 3}
+      Value: {fileID: 8300000, guid: 87c82fe166b55dd4c8c2c007798d523f, type: 3}
     - Key: combo_7
-      Value: {fileID: 8300000, guid: 674387141261d9648b50abf1cce6090f, type: 3}
+      Value: {fileID: 8300000, guid: a3c0c475b134e6e4f9af34b08829faa1, type: 3}
     - Key: combo_7_power
-      Value: {fileID: 8300000, guid: 674387141261d9648b50abf1cce6090f, type: 3}
+      Value: {fileID: 8300000, guid: e50c6663282ec1649985c2be1756b309, type: 3}
     - Key: combo_8
-      Value: {fileID: 8300000, guid: 9cfacfcb7a7864042a04d59e33d7503e, type: 3}
+      Value: {fileID: 8300000, guid: a8714d47361aabf48969d3bae2ad48e0, type: 3}
     - Key: combo_8_power
-      Value: {fileID: 8300000, guid: 73a0431c1f707fe419694f64cad08e9e, type: 3}
+      Value: {fileID: 8300000, guid: 8b0a4111de832174db7fc385836be473, type: 3}
     - Key: combo_9
-      Value: {fileID: 8300000, guid: a9600a0fbf962d04ebfc6168887587db, type: 3}
+      Value: {fileID: 8300000, guid: 36aebb345353f1c4b9086b02fb58b9b0, type: 3}
     - Key: combo_9_power
-      Value: {fileID: 8300000, guid: dee694e5d75ca7040b2c9903bc2574cf, type: 3}
+      Value: {fileID: 8300000, guid: 0f744dad252abe04c8debdc5f7b76f76, type: 3}
     - Key: combo_10
-      Value: {fileID: 8300000, guid: 601187775fa9d1c41bd7c00eb23de055, type: 3}
+      Value: {fileID: 8300000, guid: eb777f5ac07dd474fac178a140ee033c, type: 3}
     - Key: combo_10_power
-      Value: {fileID: 8300000, guid: 272c8d2089e199242b7d1e5c744e7bc0, type: 3}
+      Value: {fileID: 8300000, guid: 7e3d82792bf9e5b469dc8a1744de0f7f, type: 3}
     - Key: combo_11
-      Value: {fileID: 8300000, guid: 980499dc2bbcba04a8d6737031c8e989, type: 3}
+      Value: {fileID: 8300000, guid: 52eb0fbcd5289c2459003b70bffe771a, type: 3}
     - Key: combo_11_power
-      Value: {fileID: 8300000, guid: 32d06178861c55542b0127ea5a2e0950, type: 3}
+      Value: {fileID: 8300000, guid: 26b0d1fb6e67360418ec81ef59143829, type: 3}
     - Key: combo_12
-      Value: {fileID: 8300000, guid: 7454a86a40e8da247b0a20d95c59e97e, type: 3}
+      Value: {fileID: 8300000, guid: f966c4212581f014eaee8c79e04bbb48, type: 3}
     - Key: combo_12_power
-      Value: {fileID: 8300000, guid: 5a1069442616be1428e915568f00b1f7, type: 3}
+      Value: {fileID: 8300000, guid: cc64db32ded1a2046a621be50e07e6e4, type: 3}
     - Key: combo_13
-      Value: {fileID: 8300000, guid: b1aa9eac140c3364eb2e4dc5050d3696, type: 3}
+      Value: {fileID: 8300000, guid: 29e0a8f934d7f3b4eb73246cb1c7b375, type: 3}
     - Key: combo_13_power
-      Value: {fileID: 8300000, guid: 3293003e4c96cc345b57587359257fc0, type: 3}
+      Value: {fileID: 8300000, guid: 2b183ec86503979448ecf6c95288c411, type: 3}
     - Key: combo_14
-      Value: {fileID: 8300000, guid: b2405af90a19e0b488a75215b1ce35ee, type: 3}
+      Value: {fileID: 8300000, guid: 8024329db04bfb64d8269ee7b191a099, type: 3}
     - Key: combo_14_power
-      Value: {fileID: 8300000, guid: ee05395d9a0e73143a0b38b433b2578f, type: 3}
+      Value: {fileID: 8300000, guid: 63052bc4e10c4204f9ee358cc53403b2, type: 3}
     - Key: combo_15
-      Value: {fileID: 8300000, guid: 863135cfbd6f7cc44bc977f1c409e0b8, type: 3}
+      Value: {fileID: 8300000, guid: 6319aa11688e5fa4aa9d645445ccace6, type: 3}
     - Key: combo_15_power
-      Value: {fileID: 0}
+      Value: {fileID: 8300000, guid: 8919c25a21f6cf4469b5aa2af676f6ab, type: 3}
     - Key: combo_16
-      Value: {fileID: 8300000, guid: b26d905fd63a09748963da4f17ef2a48, type: 3}
+      Value: {fileID: 8300000, guid: fd736d482e86d9144986bd749c388a58, type: 3}
     - Key: combo_16_power
-      Value: {fileID: 8300000, guid: 19e6bd37cb40349478698ad8a0d45a87, type: 3}
+      Value: {fileID: 8300000, guid: 3a4c98d344345574492829828d82d461, type: 3}
+    - Key: combo_17
+      Value: {fileID: 8300000, guid: 6035dda031e8ab542a84d3a67b35047b, type: 3}
+    - Key: combo_17_power
+      Value: {fileID: 8300000, guid: 6035dda031e8ab542a84d3a67b35047b, type: 3}
+    - Key: combo_18
+      Value: {fileID: 8300000, guid: 6035dda031e8ab542a84d3a67b35047b, type: 3}
+    - Key: combo_18_power
+      Value: {fileID: 8300000, guid: 6035dda031e8ab542a84d3a67b35047b, type: 3}
+    - Key: combo_19
+      Value: {fileID: 8300000, guid: 6035dda031e8ab542a84d3a67b35047b, type: 3}
+    - Key: combo_19_power
+      Value: {fileID: 8300000, guid: 6035dda031e8ab542a84d3a67b35047b, type: 3}
     - Key: allclear
-      Value: {fileID: 8300000, guid: a337e47eabcced8428a986fd58ccfab0, type: 3}
-    - Key: combobreak
-      Value: {fileID: 8300000, guid: 1f95088baef75dc4fba6141fb3c338f5, type: 3}
+      Value: {fileID: 8300000, guid: 01aec9ce339367549b74589045de736d, type: 3}
     - Key: floor
       Value: {fileID: 8300000, guid: 66b46c16076cb3a44a23f56566d1729f, type: 3}
     - Key: clearspin
-      Value: {fileID: 8300000, guid: 4190693385c31534ab20181c8b3f2dad, type: 3}
+      Value: {fileID: 8300000, guid: 1963207a2cac5344abbbb74c449e5c83, type: 3}
     - Key: btb_break
-      Value: {fileID: 8300000, guid: 905b270441c8d8b408edf4297f9409e8, type: 3}
+      Value: {fileID: 8300000, guid: 7e0f18b54deee26489f26733fbb6e7c9, type: 3}
     - Key: clearline
-      Value: {fileID: 8300000, guid: f1e5b71a6606abb47903757a7a98f833, type: 3}
+      Value: {fileID: 8300000, guid: ea10f9418ecaa93478869c6deeed01c4, type: 3}
     - Key: clearquad
-      Value: {fileID: 8300000, guid: 083f6c413055b1a4199e0d8241de83cd, type: 3}
+      Value: {fileID: 8300000, guid: 29643b678f6aaf345883cac7eaed75c8, type: 3}
     - Key: finish
-      Value: {fileID: 8300000, guid: 30a5a96b4509d3e4584faa732a7c0f80, type: 3}
+      Value: {fileID: 8300000, guid: 8ca43884c9538e74caa6da5840362d88, type: 3}
     - Key: death
-      Value: {fileID: 8300000, guid: d617b68266df224468252065fbf90470, type: 3}
-    - Key: i
-      Value: {fileID: 8300000, guid: cc93a7cb1b9529b4dbfb3b31f46be9bb, type: 3}
-    - Key: j
-      Value: {fileID: 8300000, guid: 3c1b1d8ff58625048b087a43abd3a120, type: 3}
-    - Key: l
-      Value: {fileID: 8300000, guid: 75658ef73129da14e8d5b3a00b1322dd, type: 3}
-    - Key: o
-      Value: {fileID: 8300000, guid: f1f5c7ec342f55f46a61429b358de294, type: 3}
-    - Key: s
-      Value: {fileID: 8300000, guid: f71a5bc18da89944f83146cc97b454b6, type: 3}
-    - Key: t
-      Value: {fileID: 8300000, guid: fae1fb997c1d734448cca937c84df58b, type: 3}
-    - Key: z
-      Value: {fileID: 8300000, guid: 5d2e7613a8de9694eb50af8bc865056d, type: 3}
+      Value: {fileID: 8300000, guid: f13e26ea38e29854db1c5beac217e6dd, type: 3}
     - Key: countdown1
-      Value: {fileID: 8300000, guid: 8b8faea2af0da694c8535f80c0569fae, type: 3}
+      Value: {fileID: 8300000, guid: 927fa5fd650b1b54aa29c63445071333, type: 3}
     - Key: countdown2
-      Value: {fileID: 8300000, guid: 42122240b29dedb409823a90257f9acd, type: 3}
-    - Key: countdown3
-      Value: {fileID: 8300000, guid: 031a3f4943ea8ca4795e4e11910cbe75, type: 3}
-    - Key: countdown4
-      Value: {fileID: 8300000, guid: a0a8726680eb24f448b8a9cab814561d, type: 3}
-    - Key: countdown5
-      Value: {fileID: 8300000, guid: 2a96f5c03d7a32d499a0ef9ea6a5e883, type: 3}
+      Value: {fileID: 8300000, guid: 6cc77b7a61c581a4a9b5b7ccd78f5ad9, type: 3}
     - Key: harddrop
-      Value: {fileID: 8300000, guid: b9b3921ba91bbd74b82c2d50bf84621f, type: 3}
+      Value: {fileID: 8300000, guid: 6035dda031e8ab542a84d3a67b35047b, type: 3}
+    - Key: combobreak
+      Value: {fileID: 8300000, guid: 7d8d1306cdfe13a47b0c9b4c75046c70, type: 3}
+    - Key: i
+      Value: {fileID: 8300000, guid: e8b9b15c530615049bafd6dd108a40b6, type: 3}
+    - Key: j
+      Value: {fileID: 8300000, guid: ea58729f52590da45babae114805e7d8, type: 3}
+    - Key: l
+      Value: {fileID: 8300000, guid: 5d6f70b0e98f9074cb76d03cedc0c854, type: 3}
+    - Key: o
+      Value: {fileID: 8300000, guid: afdaf01cf343f524bb7726c4ff872a69, type: 3}
+    - Key: s
+      Value: {fileID: 8300000, guid: 3e1b3cc0c9be9ae4cb54a63da4861f00, type: 3}
+    - Key: t
+      Value: {fileID: 8300000, guid: 2de438e479ea31f40aacec0eb82994ff, type: 3}
+    - Key: z
+      Value: {fileID: 8300000, guid: e11a2bc0374e4274ea3ac863b8ce6db8, type: 3}
     _duplicateEntries: []
   _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}

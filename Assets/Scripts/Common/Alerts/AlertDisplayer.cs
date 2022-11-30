@@ -1,48 +1,28 @@
-﻿using System.Collections;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Blockstacker.Common.Alerts
 {
-    [RequireComponent(typeof(UIDocument))]
     public class AlertDisplayer : MonoSingleton<AlertDisplayer>
     {
-        [SerializeField] private float _alertVisibleInterval = 10;
+        [SerializeField] private AlertController _alertPrefab;
+        [SerializeField] private RectTransform _alertsParent;
+        
         public static AlertDisplayer Instance => _instance;
 
-        private VisualElement _alertField;
-        private const string ALERTS_PARENT_ID = "alertField";
-        private const string ALERTS_ADDED_CLASS = "added";
-        private const string ALERTS_REMOVED_CLASS = "removed";
-
-        protected override void Awake()
+        public Task ShowAlert(Alert alert)
         {
-            base.Awake();
-            _alertField = GetComponent<UIDocument>().rootVisualElement.Q(ALERTS_PARENT_ID);
+            var newAlert = Instantiate(_alertPrefab, _alertsParent);
+            newAlert.Initialize(alert);
+            return Task.CompletedTask;
         }
 
-        public async Task ShowAlert(Alert alert)
+        [ContextMenu("Show example alert")]
+        public void ShowExample()
         {
-            var newAlert = new AlertUiControl(alert);
-            newAlert.AddToClassList(ALERTS_ADDED_CLASS);
-            _alertField.hierarchy.Add(newAlert);
-            await Task.Delay(500);
-            newAlert.RemoveFromClassList(ALERTS_ADDED_CLASS);
-            newAlert.RegisterCallback<TransitionEndEvent>(StartAlertCoroutine);
+            var newAlert = Instantiate(_alertPrefab, _alertsParent);
+            newAlert.Initialize(new Alert("Example", "This is an example alert", AlertType.Info));
         }
-
-        private IEnumerator RemoveAlertCor(VisualElement alert)
-        {
-            alert.UnregisterCallback<TransitionEndEvent>(StartAlertCoroutine);
-            yield return new WaitForSeconds(_alertVisibleInterval);
-            alert.AddToClassList(ALERTS_REMOVED_CLASS);
-            alert.RegisterCallback<TransitionEndEvent>(_ => _alertField.hierarchy.Remove(alert));
-        }
-
-        private void StartAlertCoroutine(TransitionEndEvent evt)
-        {
-            StartCoroutine(RemoveAlertCor(evt.currentTarget as VisualElement));
-        }
+        
     }
 }

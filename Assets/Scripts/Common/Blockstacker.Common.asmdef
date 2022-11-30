@@ -2,7 +2,8 @@
     "name": "Blockstacker.Common",
     "rootNamespace": "Blockstacker.Common",
     "references": [
-        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:31fcf5f3a8bd60c459c1c5ab7e1d9d1d"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

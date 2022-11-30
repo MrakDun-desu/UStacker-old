@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blockstacker.Common;
+using Blockstacker.Common.Alerts;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -14,35 +15,65 @@ namespace Blockstacker.GlobalSettings.BlockSkins
         public static List<SkinRecord> SkinRecords { get; private set; } = new();
 
         public static event Action SkinChanged;
+        public const string DEFAULT_PATH = "Default";
 
         public static IEnumerable<string> EnumerateSkins()
         {
-            return Directory.Exists(CustomizationPaths.Skins)
-                ? Directory.EnumerateDirectories(CustomizationPaths.Skins).Select(Path.GetFileName)
+            return Directory.Exists(PersistentPaths.Skins)
+                ? Directory.EnumerateDirectories(PersistentPaths.Skins).Select(Path.GetFileName)
                 : Array.Empty<string>();
         }
 
-        public static async Task ReloadAsync(string path)
+        public static async Task ReloadAsync(string path, bool showAlert)
         {
+            var defaultAlert = new Alert(
+                "Switched to default block skin",
+                "Block skin has been returned to default",
+                AlertType.Info
+            );
             SkinRecords.Clear();
+            if (Path.GetFileName(path).Equals(DEFAULT_PATH))
+            {
+                if (!Directory.Exists(path))
+                {
+                    SkinChanged?.Invoke();
+                    if (showAlert)
+                        _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                    return;
+                }
+            }
+
             if (!Directory.Exists(path))
             {
                 SkinChanged?.Invoke();
+                if (showAlert)
+                    _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
                 return;
             }
 
             await GetSkinAsync(path);
 
             SkinChanged?.Invoke();
+            if (!showAlert) return;
+
+            var shownAlert = Path.GetFileNameWithoutExtension(path) == DEFAULT_PATH
+                ? defaultAlert
+                : new Alert(
+                    $"Block skin {Path.GetFileNameWithoutExtension(path)} loaded",
+                    "Skin has been successfully loaded and changed",
+                    AlertType.Success
+                );
+            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
         }
 
         private static async Task GetSkinAsync(string path)
         {
-            var configFilePath = Path.Combine(path, CustomizationPaths.SkinConfiguration);
+            var configFilePath = Path.Combine(path, PersistentPaths.SkinConfiguration);
             if (!File.Exists(configFilePath)) return;
 
             var skinJson = await File.ReadAllTextAsync(configFilePath);
-            SkinRecords = JsonConvert.DeserializeObject<List<SkinRecord>>(skinJson, StaticSettings.JsonSerializerSettings);
+            SkinRecords =
+                JsonConvert.DeserializeObject<List<SkinRecord>>(skinJson, StaticSettings.DefaultSerializerSettings);
             SkinRecords ??= new List<SkinRecord>();
 
             var existingTextures = await LoadAllTexturesAsync(SkinRecords, path);
@@ -61,9 +92,11 @@ namespace Blockstacker.GlobalSettings.BlockSkins
                         if (!spriteRecord.TryLoadSpriteFromDict(existingTextures))
                             connectedSprite.Sprites.Remove(spriteRecord);
                     }
+
                     if (connectedSprite.Sprites.Count == 0)
                         skinRecord.ConnectedSprites.Remove(connectedSprite);
                 }
+
                 if (skinRecord.ConnectedSprites.Count == 0)
                     SkinRecords.Remove(skinRecord);
             }
@@ -74,12 +107,14 @@ namespace Blockstacker.GlobalSettings.BlockSkins
                     if (!spriteRecord.TryLoadSpriteFromDict(existingTextures))
                         skinRecord.Sprites.Remove(spriteRecord);
                 }
+
                 if (skinRecord.Sprites.Count == 0)
                     SkinRecords.Remove(skinRecord);
             }
         }
 
-        private static async Task<Dictionary<string, Texture2D>> LoadAllTexturesAsync(ICollection<SkinRecord> skinRecords, string path)
+        private static async Task<Dictionary<string, Texture2D>> LoadAllTexturesAsync(
+            ICollection<SkinRecord> skinRecords, string path)
         {
             var taskList = new List<Task>();
             var output = new Dictionary<string, Texture2D>();
@@ -94,11 +129,11 @@ namespace Blockstacker.GlobalSettings.BlockSkins
                     foreach (var spriteRecord in spriteRecords)
                     {
                         if (fileList.Contains(spriteRecord.Filename)) continue;
-                        
+
                         fileList.Add(spriteRecord.Filename);
-                        taskList.Add(LoadTextureToDictionary(spriteRecord.Filename, !spriteRecord.LoadFromUrl, output, path));
+                        taskList.Add(LoadTextureToDictionary(spriteRecord.Filename, !spriteRecord.LoadFromUrl, output,
+                            path));
                     }
-                    
                 }
                 else
                 {
@@ -108,9 +143,10 @@ namespace Blockstacker.GlobalSettings.BlockSkins
                     foreach (var spriteRecord in spriteRecords)
                     {
                         if (fileList.Contains(spriteRecord.Filename)) continue;
-                        
+
                         fileList.Add(spriteRecord.Filename);
-                        taskList.Add(LoadTextureToDictionary(spriteRecord.Filename, !spriteRecord.LoadFromUrl, output, path));
+                        taskList.Add(LoadTextureToDictionary(spriteRecord.Filename, !spriteRecord.LoadFromUrl, output,
+                            path));
                     }
                 }
             }
@@ -119,15 +155,15 @@ namespace Blockstacker.GlobalSettings.BlockSkins
             return output;
         }
 
-        private static async Task LoadTextureToDictionary(string filename, bool isFile, IDictionary<string, Texture2D> textures, string path)
+        private static async Task LoadTextureToDictionary(string filename, bool isFile,
+            IDictionary<string, Texture2D> textures, string path)
         {
             var actualFilename = isFile ? Path.Combine(path, filename) : filename;
-                
+
             var texture = await FileLoading.LoadTextureFromUrl(actualFilename, isFile);
 
             if (texture is not null)
                 textures[filename] = texture;
         }
-
     }
 }

@@ -8,14 +8,22 @@ namespace Blockstacker.Common
 
         protected virtual void Awake()
         {
-            transform.parent = null;
             if (_instance == null)
             {
                 _instance = (T)this;
                 DontDestroyOnLoad(gameObject);
             }
 
-            if (_instance != this) Destroy(gameObject);
+            if (_instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            
+            if (transform is RectTransform rectTransform)
+                rectTransform.SetParent(null, false);
+            else 
+                transform.SetParent(null, true);
         }
     }
 }

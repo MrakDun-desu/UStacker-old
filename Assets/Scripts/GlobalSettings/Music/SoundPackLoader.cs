@@ -20,22 +20,41 @@ namespace Blockstacker.GlobalSettings.Music
 
         public static string SoundEffectsScript;
         public static event Action SoundPackChanged;
+        public const string DEFAULT_PATH = "Default";
 
         public static IEnumerable<string> EnumerateSoundPacks()
         {
-            return Directory.Exists(CustomizationPaths.SoundPacks)
-                ? Directory.EnumerateDirectories(CustomizationPaths.SoundPacks).Select(Path.GetFileName)
+            return Directory.Exists(PersistentPaths.SoundPacks)
+                ? Directory.EnumerateDirectories(PersistentPaths.SoundPacks).Select(Path.GetFileName)
                 : Array.Empty<string>();
         }
 
-        public static async Task Reload(string path)
+        public static async Task Reload(string path, bool showAlert)
         {
+            var defaultAlert = new Alert(
+                "Switched to default sound pack",
+                "Sound pack has been returned to default",
+                AlertType.Info
+            );
             Music.Clear();
             SoundEffects.Clear();
             SoundEffectsScript = "";
+            if (Path.GetFileName(path).Equals(DEFAULT_PATH))
+            {
+                if (!Directory.Exists(path))
+                {
+                    SoundPackChanged?.Invoke();
+                    if (showAlert)
+                        _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                    return;
+                }
+            }
+
             if (!Directory.Exists(path))
             {
                 SoundPackChanged?.Invoke();
+                if (showAlert)
+                    _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
                 return;
             }
             var taskList = new List<Task>
@@ -47,6 +66,16 @@ namespace Blockstacker.GlobalSettings.Music
             await Task.WhenAll(taskList);
 
             SoundPackChanged?.Invoke();
+            if (!showAlert) return;
+            
+            var shownAlert = Path.GetFileNameWithoutExtension(path) == DEFAULT_PATH
+                ? defaultAlert
+                : new Alert(
+                    $"Sound pack {Path.GetFileNameWithoutExtension(path)} loaded",
+                    "Sound pack has been successfully loaded and changed",
+                    AlertType.Success
+                );
+            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
         }
 
         private static async Task LoadSoundEffectsAsync(string path)
@@ -56,7 +85,7 @@ namespace Blockstacker.GlobalSettings.Music
             var scriptPath = Path.Combine(path, CustomizationFilenames.SoundEffectScript);
             if (!File.Exists(scriptPath))
                 return;
-            
+
             SoundEffectsScript = await File.ReadAllTextAsync(scriptPath);
             var lua = new Lua();
             lua.RestrictMaliciousFunctions();
@@ -77,16 +106,16 @@ namespace Blockstacker.GlobalSettings.Music
         private static async Task LoadMusicAsync(string path)
         {
             await LoadClipsFromDirectoryAsync(path, Music);
-            
+
             MusicPlayer.Configuration.GameMusic.AddRange(Music.Keys);
-            
+
             var confPath = Path.Combine(path, CustomizationFilenames.MusicConfig);
             if (!File.Exists(confPath))
                 return;
-            
+
             var musicConfStr = await File.ReadAllTextAsync(confPath);
-            var musicConf = JsonConvert.DeserializeObject<MusicConfiguration>(musicConfStr, StaticSettings.JsonSerializerSettings);
-            
+            var musicConf = JsonConvert.DeserializeObject<MusicConfiguration>(musicConfStr, StaticSettings.DefaultSerializerSettings);
+
             MusicPlayer.Configuration.Rewrite(musicConf);
         }
 

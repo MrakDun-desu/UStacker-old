@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using Blockstacker.Gameplay.Communication;
+using Blockstacker.Gameplay.Initialization;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
 using Blockstacker.Gameplay.Stats;
@@ -10,80 +10,108 @@ using UnityEngine.InputSystem;
 
 namespace Blockstacker.Gameplay
 {
-    public class GameStateManager : MonoBehaviour
+    public class GameStateManager : MonoBehaviour, IGameSettingsDependency
     {
-        [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private GameTimer _timer;
         [SerializeField] private StatCounterManager _statCounterManager;
         [SerializeField] private GameRecorder _gameRecorder;
+        [SerializeField] private GameResultDisplayer _resultDisplayer;
 
         [Space] 
         [SerializeField] private UnityEvent GameStarted;
         [SerializeField] private UnityEvent GamePaused;
+        [SerializeField] private UnityEvent GameUnpaused;
         [SerializeField] private UnityEvent GameResumed;
         [SerializeField] private UnityEvent GameRestarted;
         [SerializeField] private UnityEvent GameLost;
         [SerializeField] private UnityEvent GameEnded;
-        public GameReplay Replay;
-        private bool _gameEnded;
-        private bool _gameLost;
-        private bool _gameStarted;
+        [SerializeField] private UnityEvent ReplayStarted;
+        [SerializeField] private UnityEvent ReplayFinished;
+        [SerializeField] private UnityEvent ReplayPaused;
+        [SerializeField] private UnityEvent ReplayUnpaused;
+
+        public GameSettingsSO.SettingsContainer GameSettings { set => _settings = value; }
+        private GameSettingsSO.SettingsContainer _settings;
+        public string GameType { get; set; }
+        public bool IsReplaying { get; set; }
+        
+        private readonly GameReplay Replay = new();
 
         private double _lastSentTimeCondition;
 
-        public bool GameRunning { get; private set; }
+        public bool GameRunningActively => !_gamePaused && !_gameEnded;
+        private bool _gameEnded;
+        private bool _gamePaused;
+        private bool _gameCurrentlyInProgress;
+        private bool _gamePauseable = true;
 
         #region Game event management
 
         public void StartGame()
         {
-            if (!_gameStarted)
-                FirstTimeGameStart();
-            if (_gameLost || _gameEnded)
-                GameRestartAfterEnd();
-            GameRunning = true;
-            _mediator.Send(new GameStartedMessage(_settings.Rules.General.ActiveSeed));
+            if (_gamePaused)
+            {
+                GameResumed.Invoke();
+                _mediator.Send(new GameResumedMessage());
+                _gamePaused = false;
+            }
+
+            if (_gameCurrentlyInProgress) return;
+
+            _gameCurrentlyInProgress = true;
+            
+            _gameEnded = false;
+            
+            _lastSentTimeCondition = 0;
+            _mediator.Send(new GameStartedMessage(_settings.General.ActiveSeed));
             _mediator.Send(new GameEndConditionChangedMessage(
                 0,
                 _settings.Objective.EndConditionCount,
                 0,
                 _settings.Objective.GameEndCondition.ToString()));
             GameStarted.Invoke();
-        }
-
-        private void FirstTimeGameStart()
-        {
-            _gameStarted = true;
-            Replay.GameSettings = _settings.Settings with { };
-        }
-
-        private void GameRestartAfterEnd()
-        {
-            _gameLost = false;
-            _gameEnded = false;
+            if (IsReplaying)
+                ReplayStarted.Invoke();
         }
 
         public void TogglePause()
         {
-            if (_gameEnded || !_gameStarted) return;
+            if (_gameEnded) return;
 
-            if (GameRunning)
+            if (_gamePauseable)
             {
                 GamePaused.Invoke();
+                if (IsReplaying)
+                    ReplayPaused.Invoke();
                 _mediator.Send(new GamePausedMessage());
+                _gamePaused = true;
+                _gamePauseable = false;
             }
             else
             {
-                GameResumed.Invoke();
-                _mediator.Send(new GameResumedMessage());
+                _gamePauseable = true;
+                if (IsReplaying)
+                {
+                    ReplayUnpaused.Invoke();
+                    _gamePaused = false;
+                }
+                else
+                    GameUnpaused.Invoke();
             }
-
-            GameRunning = !GameRunning;
         }
-
+        
         public void Restart()
         {
+            if (!_gamePaused)
+            {
+                _gamePauseable = true;
+                _gamePaused = false;
+                GameResumed.Invoke();
+            }
+
+            _gameCurrentlyInProgress = false;
+            _gamePauseable = true;
             GameRestarted.Invoke();
             _mediator.Send(new GameRestartedMessage());
             _mediator.Send(new GameEndConditionChangedMessage(
@@ -95,12 +123,14 @@ namespace Blockstacker.Gameplay
 
         public void LoseGame(double loseTime)
         {
+            if (_gameEnded) return;
+            
             _gameEnded = true;
             if (_settings.Objective.ToppingOutIsOkay)
                 EndGame(loseTime);
             else
             {
-                _gameLost = true;
+                _gameCurrentlyInProgress = false;
                 _mediator.Send(new GameLostMessage());
                 GameLost.Invoke();
             }
@@ -109,10 +139,22 @@ namespace Blockstacker.Gameplay
         public void EndGame(double endTime)
         {
             _gameEnded = true;
-            Replay.ActionList = new List<InputActionMessage>();
-            Replay.ActionList.AddRange(_gameRecorder.ActionList);
-            Replay.Stats = _statCounterManager.Stats;
-            Replay.GameLength = endTime;
+            _gameCurrentlyInProgress = false;
+            if (!IsReplaying)
+            {
+                Replay.GameType = GameType;
+                Replay.GameSettings = _settings with { };
+                Replay.ActionList.Clear();
+                Replay.ActionList.AddRange(_gameRecorder.ActionList);
+                Replay.Stats = _statCounterManager.Stats;
+                Replay.GameLength = endTime;
+                Replay.TimeStamp = DateTime.UtcNow;
+                Replay.Save(GameType);
+                _resultDisplayer.DisplayedReplay = Replay;
+            }
+            else 
+                ReplayFinished.Invoke();
+            
             GameEnded.Invoke();
             _mediator.Send(new GameEndedMessage(endTime));
         }
@@ -125,8 +167,9 @@ namespace Blockstacker.Gameplay
 
         public void Restart(InputAction.CallbackContext ctx)
         {
-            if (ctx.performed)
-                Restart();
+            if (!ctx.performed) return;
+            _gameEnded = false;
+            Restart();
         }
 
         #endregion
@@ -141,7 +184,7 @@ namespace Blockstacker.Gameplay
 
         private void Update()
         {
-            if (_settings.Objective.GameEndCondition != GameEndCondition.Time) return;
+            if (_settings.Objective.GameEndCondition != GameEndCondition.Time || _gameEnded) return;
 
             var functionStartTime = _timer.CurrentTime;
 
@@ -156,8 +199,8 @@ namespace Blockstacker.Gameplay
                     _settings.Objective.GameEndCondition.ToString()));
             }
 
-            if (functionStartTime > _settings.Objective.EndConditionCount)
-                EndGame(_settings.Objective.EndConditionCount);
+            if (!(functionStartTime > _settings.Objective.EndConditionCount)) return;
+            EndGame(_settings.Objective.EndConditionCount);
         }
 
         private void OnDestroy()
@@ -171,8 +214,6 @@ namespace Blockstacker.Gameplay
             var endConditionCount = _settings.Objective.EndConditionCount;
             switch (endCondition)
             {
-                case GameEndCondition.Time:
-                    break;
                 case GameEndCondition.LinesCleared:
                     var linesCleared = _statCounterManager.Stats.LinesCleared;
                     _mediator.Send(new GameEndConditionChangedMessage(
@@ -203,6 +244,7 @@ namespace Blockstacker.Gameplay
                     if (piecesPlaced >= _settings.Objective.EndConditionCount)
                         EndGame(message.Time);
                     break;
+                case GameEndCondition.Time:
                 case GameEndCondition.Score:
                 case GameEndCondition.None:
                     break;

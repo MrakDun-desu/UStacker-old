@@ -6,12 +6,18 @@ namespace Blockstacker.GlobalSettings.Groups
     [Serializable]
     public record VideoSettings
     {
-        public FullScreenMode FullscreenMode = FullScreenMode.FullScreenWindow;
-        public Resolution Resolution = new();
-        public float BackgroundVisibility = 1;
-        public bool UseVsync;
-        
-        // Implement later
-        // public float ParticleCount = 1;
+        // backing fields
+        private float _backgroundVisibility = .6f;
+
+        public FullScreenMode FullscreenMode { get; set; } = FullScreenMode.ExclusiveFullScreen;
+        public Resolution Resolution { get; set; } = new();
+
+        public float BackgroundVisibility
+        {
+            get => _backgroundVisibility;
+            set => _backgroundVisibility = Mathf.Clamp(value, 0, 1);
+        }
+
+        public bool UseVsync { get; set; }
     }
 }

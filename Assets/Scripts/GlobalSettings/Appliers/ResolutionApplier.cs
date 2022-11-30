@@ -5,7 +5,7 @@ namespace Blockstacker.GlobalSettings.Appliers
 {
     public class ResolutionApplier : SettingApplierBase
     {
-        protected override void OnSettingChanged()
+        public override void OnSettingChanged()
         {
             var newResolution = AppSettings.Video.Resolution;
             if (newResolution.IsEqualTo(Screen.currentResolution)) return;
@@ -14,8 +14,10 @@ namespace Blockstacker.GlobalSettings.Appliers
                 newResolution.width,
                 newResolution.height,
                 Screen.fullScreenMode,
-                newResolution.refreshRate
+                newResolution.refreshRateRatio
             );
+
+            QualitySettings.vSyncCount = AppSettings.Video.UseVsync ? 1 : 0;
         }
     }
 }

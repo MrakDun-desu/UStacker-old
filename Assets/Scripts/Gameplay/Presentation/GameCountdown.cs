@@ -10,6 +10,7 @@ namespace Blockstacker.Gameplay.Presentation
     {
         public float CountdownInterval = .1f;
         public uint CountdownCount = 3;
+        [SerializeField] private string _noCountdownMessage = "Ready";
         [SerializeField] private string _lastMessage = "Start!";
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private UnityEvent CountdownFinished;
@@ -22,10 +23,7 @@ namespace Blockstacker.Gameplay.Presentation
         private void Awake()
         {
             _countdownText = GetComponent<TMP_Text>();
-            _mediator.Register<GameLostMessage>(_ => StopCountdown());
-            _mediator.Register<GamePausedMessage>(_ => StopCountdown());
-            _mediator.Register<GameResumedMessage>(_ => RestartCountdown());
-            _mediator.Register<GameRestartedMessage>(_ => RestartCountdown());
+            CountdownFinished.AddListener(() => gameObject.SetActive(false));
         }
 
         private void Update()
@@ -56,25 +54,18 @@ namespace Blockstacker.Gameplay.Presentation
             }
         }
 
-        private void StopCountdown()
+        public void StopCountdown()
         {
             _active = false;
-        }
-
-        private void RestartCountdown()
-        {
-            if (_currentCount == 0) return;
-            StopCountdown();
-            StartCountdown();
         }
 
         public void StartCountdown()
         {
             _countdownText.gameObject.SetActive(true);
-            _active = true;
             _nextInterval = Time.realtimeSinceStartup + CountdownInterval;
+            _active = true;
             _currentCount = CountdownCount + 1;
-            _countdownText.text = CountdownCount.ToString();
+            _countdownText.text = _currentCount == 2 ? _noCountdownMessage : CountdownCount.ToString();
             _mediator.Send(new CountdownTickedMessage(_currentCount));
         }
     }

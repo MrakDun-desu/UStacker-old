@@ -83,9 +83,9 @@ namespace Blockstacker.Gameplay.GameManagers
             }
         }
         
-        public void Initialize(uint startingLevel, MediatorSO mediator)
+        public void Initialize(string startingLevel, MediatorSO mediator)
         {
-            _startingLevel = startingLevel;
+            uint.TryParse(startingLevel, out _startingLevel);
             _mediator = mediator;
         }
 
@@ -104,7 +104,7 @@ namespace Blockstacker.Gameplay.GameManagers
             _mediator.Send(new ScoreChangedMessage(Convert.ToInt64(score), time));
 
         public void SetLevel(object level, double time) =>
-            _mediator.Send(new LevelChangedMessage(Convert.ToUInt32(level), time));
+            _mediator.Send(new LevelChangedMessage(level.ToString(), time));
 
         public void SetLevelUpCondition(object current, object total, double time, string condName) =>
             _mediator.Send(new LevelUpConditionChangedMessage(

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Blockstacker.Gameplay.Communication;
 using UnityEngine;
 
@@ -9,20 +10,26 @@ namespace Blockstacker.Gameplay
         [SerializeField] private MediatorSO _mediator;
 
         public List<InputActionMessage> ActionList = new();
-
-        private void Awake()
+        private bool _recording;
+        
+        private void AddMessageToList(InputActionMessage message)
         {
-            _mediator.Register<InputActionMessage>(AddMessageToList);
+            ActionList.Add(message);
         }
 
-        private void AddMessageToList(InputActionMessage midgameMessage)
-        {
-            ActionList.Add(midgameMessage);
-        }
-
-        public void ClearActionList()
+        public void StartRecording()
         {
             ActionList.Clear();
+            if (_recording) return;
+            _mediator.Register<InputActionMessage>(AddMessageToList);
+            _recording = true;
+        }
+
+        public void StopRecording()
+        {
+            if (!_recording) return;
+            _mediator.Unregister<InputActionMessage>(AddMessageToList);
+            _recording = false;
         }
     }
 }

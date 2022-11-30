@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Blockstacker.Common.Extensions
@@ -8,7 +9,7 @@ namespace Blockstacker.Common.Extensions
         {
             return res1.width == res2.width &&
                    res1.height == res2.height &&
-                   res1.refreshRate == res2.refreshRate;
+                   Math.Abs(res1.refreshRateRatio.value - res2.refreshRateRatio.value) < .5d;
         }
     }
 }

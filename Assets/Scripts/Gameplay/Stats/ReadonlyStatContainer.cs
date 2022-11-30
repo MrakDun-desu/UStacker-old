@@ -8,7 +8,7 @@ namespace Blockstacker.Gameplay.Stats
         private StatContainer _parent;
 
         public long Score => _parent.Score;
-        public uint Level => _parent.Level;
+        public string Level => _parent.Level;
         public uint LinesCleared => _parent.LinesCleared;
         public uint PiecesPlaced => _parent.PiecesPlaced;
         public uint KeysPressed => _parent.KeysPressed;

@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace Blockstacker.Common.Extensions
@@ -20,6 +22,20 @@ namespace Blockstacker.Common.Extensions
             }
 
             return output.ToString();
+        }
+
+        public static string RemoveDiacritics(this string input)
+        {
+            var normalized = input.Normalize(NormalizationForm.FormKD);
+            var builder = new StringBuilder(normalized.Length);
+
+            foreach (var c in normalized.Select(character =>
+                             new {character, unicodeCat = CharUnicodeInfo.GetUnicodeCategory(character)})
+                         .Where(t => t.unicodeCat != UnicodeCategory.NonSpacingMark)
+                         .Select(t => t.character))
+                builder.Append(c);
+
+            return builder.ToString().Normalize(NormalizationForm.FormC);
         }
     }
 }

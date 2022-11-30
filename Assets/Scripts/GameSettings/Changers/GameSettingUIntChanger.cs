@@ -2,10 +2,9 @@ using UnityEngine;
 
 namespace Blockstacker.GameSettings.Changers
 {
-    public class GameSettingUIntChanger : GameSettingChangerWithField<uint>
+    public class GameSettingUintChanger : GameSettingChangerWithField<uint>
     {
-        [Space] [SerializeField] private bool _clampValue;
-
+        [Space] 
         [SerializeField] private uint _maxValue;
         [SerializeField] private uint _minValue;
 
@@ -15,17 +14,17 @@ namespace Blockstacker.GameSettings.Changers
             if (_minValue > _maxValue) _minValue = _maxValue;
         }
 
-        public void SetValue(string value)
+        protected override void OnValueOverwritten(string value)
         {
-            if (!uint.TryParse(value, out var uintValue)) return;
-            if (_clampValue)
+            if (!uint.TryParse(value, out var uintValue))
             {
-                if (uintValue < _minValue) uintValue = _minValue;
-                if (uintValue > _maxValue) uintValue = _maxValue;
+                RefreshValue();
+                return;
             }
 
             SetValue(uintValue);
-            _valueField.SetTextWithoutNotify(uintValue.ToString());
+            var actualValue = _gameSettingsSO.GetValue<uint>(_controlPath);
+            _valueField.SetTextWithoutNotify(actualValue.ToString());
         }
     }
 }

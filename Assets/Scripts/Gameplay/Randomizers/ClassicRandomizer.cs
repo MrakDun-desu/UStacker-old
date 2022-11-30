@@ -17,7 +17,7 @@ namespace Blockstacker.Gameplay.Randomizers
             "z",
         };
         
-        private readonly Random _random;
+        private Random _random;
         private int _lastIndex;
 
         public ClassicRandomizer(IEnumerable<string> availablePieces, int seed)
@@ -33,6 +33,12 @@ namespace Blockstacker.Gameplay.Randomizers
             if (nextIndex == _lastIndex) nextIndex = _random.Next(0, _availableValues.Count);
             _lastIndex = nextIndex;
             return _availableValues[nextIndex];
+        }
+
+        public void Reset(int newSeed)
+        {
+            _random = new Random(newSeed);
+            _lastIndex = -1;
         }
     }
 }

@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36f7ab6fbbd4e8b40a0d398785ed582d, type: 3}
+  m_Name: game_ClassicMarathon
+  m_EditorClassIdentifier: 
+  GameType: {fileID: 11400000, guid: 9e871d44a98d84541bd957a59c36de9e, type: 2}
+  Settings:
+    <General>k__BackingField:
+      _nextPieceCount: 1
+      _randomizerType: 3
+      _customRandomizerName: 
+      <AllowedSpins>k__BackingField: 0
+      <UseCustomSeed>k__BackingField: 0
+      <CustomSeed>k__BackingField: 0
+      <CustomRandomizerScript>k__BackingField: 
+      <ActiveSeed>k__BackingField: 613045176
+    <Controls>k__BackingField:
+      _rotationSystemType: 0
+      _customRotationSystem: 
+      <Allow180Spins>k__BackingField: 0
+      <AllowHardDrop>k__BackingField: 0
+      <AllowHold>k__BackingField: 0
+      <UnlimitedHold>k__BackingField: 0
+      <ShowGhostPiece>k__BackingField: 1
+      <OverrideHandling>k__BackingField: 1
+      <Handling>k__BackingField:
+        _delayedAutoShift: 0.25
+        _automaticRepeatRate: 0.1
+        _softDropFactor: 5
+        _dasCutDelay: 0
+        _doubleDropPreventionInterval: 0
+        <DelayDasOn>k__BackingField: 0
+        <SimultaneousDasBehavior>k__BackingField: 0
+        <DiagonalLockBehavior>k__BackingField: 0
+        <CancelDelayWithMovement>k__BackingField: 1
+    <BoardDimensions>k__BackingField:
+      _boardWidth: 10
+      _boardHeight: 20
+      _lethalHeight: 20
+      _pieceSpawnHeight: 21
+      _blockCutHeight: 40
+      _boardPadding: 4
+    <Gravity>k__BackingField:
+      _defaultGravity: 0.02
+      _defaultLockDelay: 0
+      _piecePlacementDelay: 0
+      _lineClearDelay: 0.5
+      _hardLockAmount: 0
+      <LockDelayType>k__BackingField: 1
+      <HardLockType>k__BackingField: 0
+      <TopoutCondition>k__BackingField: 0
+      <AllowClutchClears>k__BackingField: 0
+    <Objective>k__BackingField:
+      _gameManagerType: 3
+      _customGameManager: 
+      _garbageGeneration: 0
+      _customGarbageGeneratorName: 
+      _endConditionCount: 40
+      _garbageHeight: 10
+      <MainStat>k__BackingField: 0
+      <GameEndCondition>k__BackingField: 0
+      <CustomGarbageScript>k__BackingField: 
+      <CustomGameManagerScript>k__BackingField: 
+      <ToppingOutIsOkay>k__BackingField: 1
+      <StartingLevel>k__BackingField: 5
+    <Presentation>k__BackingField:
+      _countdownInterval: 0.8
+      _countdownCount: 3
+      <Title>k__BackingField: Classic Marathon
+      <UseCountdown>k__BackingField: 1

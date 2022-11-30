@@ -94,6 +94,7 @@ VideoPlayer:
   m_RenderMode: 2
   m_AspectRatio: 2
   m_DataSource: 1
+  m_TimeUpdateMode: 2
   m_PlaybackSpeed: 1
   m_AudioOutputMode: 0
   m_TargetAudioSources:
@@ -123,3 +124,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _backgroundName: 
+  _defaultBackgrounds:
+  - _videoPath: 
+    _texture: {fileID: 2800000, guid: 0d3eda0a5963f52418a48722210d80b1, type: 3}
+    _type: 0
+  - _videoPath: 
+    _texture: {fileID: 2800000, guid: e6ba41db968df3d40a017f2992bee2ec, type: 3}
+    _type: 0
+  - _videoPath: 
+    _texture: {fileID: 2800000, guid: e3f9369e21e48064ab44c29779422eb2, type: 3}
+    _type: 0
+  - _videoPath: 
+    _texture: {fileID: 2800000, guid: 3597fb7af28560f4ca1cd2d0c453803a, type: 3}
+    _type: 0
+  - _videoPath: 
+    _texture: {fileID: 2800000, guid: cbe902c0c74210b458d18c07341fbf16, type: 3}
+    _type: 0
+  - _videoPath: 
+    _texture: {fileID: 2800000, guid: f8786a1b4002a3a458f2e54c6a4f3352, type: 3}
+    _type: 0
+  - _videoPath: 
+    _texture: {fileID: 2800000, guid: 8f11b2d4e607bcd4fba2e4ee6196acf5, type: 3}
+    _type: 0
+  - _videoPath: 
+    _texture: {fileID: 2800000, guid: 032bd71694a270d4aa64deee01821754, type: 3}
+    _type: 0
+  - _videoPath: 
+    _texture: {fileID: 2800000, guid: 21698a3f0822c4c4f94af1ddbdebe9d1, type: 3}
+    _type: 0
+  - _videoPath: 
+    _texture: {fileID: 2800000, guid: 8d0f9aaf54e863b45801594f50d02bea, type: 3}
+    _type: 0
+  - _videoPath: 
+    _texture: {fileID: 2800000, guid: 36fc8a16b678e5a4fa8dca2e53bf54ee, type: 3}
+    _type: 0
+  - _videoPath: 
+    _texture: {fileID: 2800000, guid: 98e5624c4a3e3974a948f2d15a4c582b, type: 3}
+    _type: 0
+  - _videoPath: 
+    _texture: {fileID: 2800000, guid: 985f1366e94a34642b129a325041bab1, type: 3}
+    _type: 0

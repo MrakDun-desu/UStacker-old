@@ -5,6 +5,6 @@ namespace Blockstacker.GlobalSettings.Groups
     [Serializable]
     public record OtherSettings
     {
-        public bool UseDiscordRichPresence = true;
+        public bool UseDiscordRichPresence { get; set; } = true;
     }
 }

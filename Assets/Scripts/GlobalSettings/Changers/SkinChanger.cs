@@ -1,56 +1,76 @@
+using System.IO;
+using Blockstacker.Common;
 using Blockstacker.GlobalSettings.BlockSkins;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Blockstacker.GlobalSettings.Changers
 {
     public class SkinChanger : AppSettingChangerBase<string>
     {
         [Space] [SerializeField] private TMP_Dropdown _dropdown;
-
-        [SerializeField] private string _emptyPrompt = "No skin available";
-        [SerializeField] private string _default = "Default";
+        [SerializeField] private Button _folderButton;
+        [SerializeField] private Button _docsButton;
 
         private void Start()
         {
             RefreshNames();
 
-            RefreshValue();
             AppSettings.SettingsReloaded += RefreshValue;
+            _dropdown.onValueChanged.AddListener(OptionPicked);
+            _folderButton.onClick.AddListener(OpenSkinFolder);
+            _docsButton.onClick.AddListener(OpenDocumentation);
         }
 
-        public void OptionPicked(int value)
+        private void OptionPicked(int value)
         {
             var newSkin = _dropdown.options[value].text;
-            if (newSkin.Equals(_emptyPrompt)) return;
 
-            if (newSkin.Equals(_default))
-                newSkin = "";
-            
             SetValue(newSkin);
         }
 
-        public void RefreshNames()
-        {
-            _dropdown.ClearOptions();
-            _dropdown.options.Add(new TMP_Dropdown.OptionData(_default));
-            foreach (var path in SkinLoader.EnumerateSkins())
-                _dropdown.options.Add(new TMP_Dropdown.OptionData(path));
-
-            if (_dropdown.options.Count <= 1) 
-                _dropdown.options.Add(new TMP_Dropdown.OptionData(_emptyPrompt));
-        }
-
-        public void RefreshValue()
+        private void RefreshValue()
         {
             for (var i = 0; i < _dropdown.options.Count; i++)
             {
                 if (!_dropdown.options[i].text.Equals(AppSettings.GetValue<string>(_controlPath))) continue;
                 
                 _dropdown.SetValueWithoutNotify(i);
-                _dropdown.RefreshShownValue();
-                return;
+                break;
             }
+            _dropdown.RefreshShownValue();
+        }
+
+        private void OpenSkinFolder()
+        {
+            if (!Directory.Exists(PersistentPaths.Skins))
+                Directory.CreateDirectory(PersistentPaths.Skins);
+
+            var defaultPath = Path.Combine(PersistentPaths.Skins, SkinLoader.DEFAULT_PATH);
+            if (!Directory.Exists(defaultPath))
+                Directory.CreateDirectory(defaultPath);
+            
+            DefaultAppOpener.OpenFile(PersistentPaths.Skins);
+        }
+
+        private void OpenDocumentation()
+        {
+            const string skinDocsUrl = StaticSettings.WikiUrl + "blob/main/Skin-customization.md";
+            Application.OpenURL(skinDocsUrl);
+        }
+        
+        public void RefreshNames()
+        {
+            _dropdown.ClearOptions();
+            _dropdown.SetValueWithoutNotify(0);
+            foreach (var path in SkinLoader.EnumerateSkins())
+                _dropdown.options.Add(new TMP_Dropdown.OptionData(path));
+            
+            if (!_dropdown.options.Exists(item => item.text == SkinLoader.DEFAULT_PATH))
+                _dropdown.options.Insert(0, new TMP_Dropdown.OptionData(SkinLoader.DEFAULT_PATH));
+
+            RefreshValue();
         }
     }
 }

@@ -6,6 +6,7 @@ using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Blocks;
 using Blockstacker.Gameplay.GarbageGeneration;
 using Blockstacker.Gameplay.Communication;
+using Blockstacker.Gameplay.Initialization;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Spins;
 using Blockstacker.GameSettings;
@@ -19,9 +20,8 @@ using UnityEngine.Serialization;
 
 namespace Blockstacker.Gameplay
 {
-    public class Board : MonoBehaviour
+    public class Board : MonoBehaviour, IGameSettingsDependency
     {
-        [SerializeField] private GameSettingsSO _settings;
         [SerializeField] private Transform _helperTransform;
         [FormerlySerializedAs("_manager")] [SerializeField] private GameStateManager _stateManager;
         [SerializeField] private MediatorSO _mediator;
@@ -37,6 +37,9 @@ namespace Blockstacker.Gameplay
         [Range(0.00001f, 1)] [SerializeField] private float _minimumBoardScale = 0.1f;
 
         private readonly List<ClearableBlock[]> Blocks = new();
+        
+        public GameSettingsSO.SettingsContainer GameSettings { set => _settings = value; }
+        private GameSettingsSO.SettingsContainer _settings;
 
         public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots =>
             Blocks
@@ -99,7 +102,7 @@ namespace Blockstacker.Gameplay
 
         public IGarbageGenerator GarbageGenerator;
 
-        private void Start()
+        private void Awake()
         {
             _offset = AppSettings.Gameplay.BoardOffset;
             transform.position += _offset;
@@ -123,7 +126,7 @@ namespace Blockstacker.Gameplay
 
         private void OnDestroy()
         {
-            BackgroundVisibilityApplier.VisibilityChanged -= ChangeVisibility;
+            BoardVisibilityApplier.VisibilityChanged -= ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged -= ChangeBoardZoom;
             WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
 
@@ -233,9 +236,11 @@ namespace Blockstacker.Gameplay
         private void ClearLine(int lineNumber)
         {
             if (Blocks.Count <= lineNumber) return;
+
+            var slots = Slots;
             for (var i = 0; i < Blocks[lineNumber].Length; i++)
             {
-                if (!Slots[lineNumber][i]) continue;
+                if (!slots[lineNumber][i]) continue;
 
                 Blocks[lineNumber][i].Clear();
             }
@@ -244,7 +249,7 @@ namespace Blockstacker.Gameplay
             if (GarbageHeight > lineNumber)
                 GarbageHeight--;
 
-            var slots = Slots;
+            slots = Slots;
             for (var y = lineNumber; y < Blocks.Count; y++)
             for (var x = 0; x < Blocks[y].Length; x++)
             {
@@ -258,6 +263,18 @@ namespace Blockstacker.Gameplay
         {
             linesCleared = 0;
             var cheeseHeightStart = GarbageHeight;
+            var slots = Slots;
+            for (var y = Blocks.Count - 1; y >= _settings.BoardDimensions.BlockCutHeight; y--)
+            {
+                for (var x = 0; x < Blocks[y].Length; x++)
+                {
+                    if (!slots[y][x]) continue;
+                    
+                    Blocks[y][x].Clear();
+                }
+                Blocks.RemoveAt(y);
+            }
+            
             for (var i = 0; i < Blocks.Count; i++)
             {
                 var isFull = Slots[i].All(blockExists => blockExists);
@@ -384,9 +401,9 @@ namespace Blockstacker.Gameplay
             SendPlacementMessage(linesCleared, cheeseLinesCleared, wasAllClear, placementTime, lastSpinResult,
                 piece.Type);
 
-            if (_settings.Rules.BoardDimensions.AllowClutchClears && linesWereCleared) return true;
+            if (_settings.Gravity.AllowClutchClears && linesWereCleared) return true;
 
-            switch (_settings.Rules.BoardDimensions.TopoutCondition)
+            switch (_settings.Gravity.TopoutCondition)
             {
                 case TopoutCondition.PieceSpawn:
                     break;

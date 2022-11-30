@@ -9,14 +9,15 @@ namespace Blockstacker.GlobalSettings.Appliers
 {
     public class BackgroundPackApplier : SettingApplierBase, IAsyncApplier
     {
-        [SerializeField] public UnityEvent _loadingStarted;
-        [SerializeField] public UnityEvent _loadingFinished;
+        [SerializeField] private bool _showAlert = true;
+        public UnityEvent _loadingStarted;
+        public UnityEvent _loadingFinished;
 
         public UnityEvent LoadingStarted => _loadingStarted;
         public UnityEvent LoadingFinished => _loadingFinished;
         public string OngoingMessage => "Backgrounds loading...";
 
-        protected override void OnSettingChanged()
+        public override void OnSettingChanged()
         {
             LoadingStarted.Invoke();
             _ = ReloadAndInvoke();
@@ -24,9 +25,9 @@ namespace Blockstacker.GlobalSettings.Appliers
         
         private async Task ReloadAndInvoke()
         {
-            var backgroundFolder = Path.Combine(CustomizationPaths.BackgroundPacks,
+            var backgroundFolder = Path.Combine(PersistentPaths.BackgroundPacks,
                 AppSettings.Customization.BackgroundFolder);
-            await BackgroundPackLoader.Reload(backgroundFolder);
+            await BackgroundPackLoader.Reload(backgroundFolder, _showAlert);
             LoadingFinished.Invoke();
         }
     }

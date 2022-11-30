@@ -6,7 +6,7 @@ namespace Blockstacker.GlobalSettings.Appliers
     {
         public static event Action<bool> CtrlToChangeBoardZoomChanged;
 
-        protected override void OnSettingChanged()
+        public override void OnSettingChanged()
         {
             CtrlToChangeBoardZoomChanged?.Invoke(AppSettings.Gameplay.CtrlScrollToChangeBoardZoom);
         }
