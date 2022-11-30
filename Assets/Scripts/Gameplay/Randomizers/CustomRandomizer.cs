@@ -12,6 +12,7 @@ namespace Blockstacker.Gameplay.Randomizers
         private readonly Lua _luaState = new();
         private readonly string[] _availableValues;
         private LuaFunction _nextPieceFunction;
+        private LuaFunction _resetFunction;
         private const string SEED_VARIABLE_NAME = "Seed";
         private const string AVAILABLE_PIECES_VARIABLE_NAME = "AvailablePieces";
 
@@ -23,7 +24,9 @@ namespace Blockstacker.Gameplay.Randomizers
             if (validationErrors is not null) return;
             _luaState = new Lua();
             _luaState[SEED_VARIABLE_NAME] = seed;
-            _nextPieceFunction = _luaState.DoString(script)[0] as LuaFunction;
+            var scriptOutput = _luaState.DoString(script);
+            _nextPieceFunction = scriptOutput[0] as LuaFunction;
+            _resetFunction = scriptOutput[1] as LuaFunction;
         }
 
         public string GetNextPiece()
@@ -47,6 +50,11 @@ namespace Blockstacker.Gameplay.Randomizers
             }
         }
 
+        public void Reset(int newSeed)
+        {
+            _resetFunction.Call(newSeed);
+        }
+
         private string ValidateScript(int seed, string script)
         {
             _luaState.RestrictMaliciousFunctions();
@@ -55,11 +63,15 @@ namespace Blockstacker.Gameplay.Randomizers
                 _luaState[AVAILABLE_PIECES_VARIABLE_NAME] = _availableValues;
                 _luaState[SEED_VARIABLE_NAME] = seed;
                 var retValue = _luaState.DoString(script);
-                if (retValue.Length < 1)
-                    return "Error: Randomizer script doesn't return";
+                if (retValue is null || retValue.Length < 2)
+                    return "Error: Randomizer script doesn't return 2 values";
                 _nextPieceFunction = retValue[0] as LuaFunction;
+                _resetFunction = retValue[1] as LuaFunction;
                 if (_nextPieceFunction is null)
-                    return "Error: Randomizer script doesn't return a function";
+                    return "Error: Randomizer script doesn't return next piece function correctly";
+                if (_resetFunction is null)
+                    return "Error: Randomizer script doesn't return reset function correctly";
+                _resetFunction.Call(42);
             }
             catch (LuaException ex)
             {

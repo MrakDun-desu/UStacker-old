@@ -102,7 +102,7 @@ namespace Blockstacker.Gameplay
 
         public IGarbageGenerator GarbageGenerator;
 
-        private void Start()
+        private void Awake()
         {
             _offset = AppSettings.Gameplay.BoardOffset;
             transform.position += _offset;
@@ -126,7 +126,7 @@ namespace Blockstacker.Gameplay
 
         private void OnDestroy()
         {
-            BackgroundVisibilityApplier.VisibilityChanged -= ChangeVisibility;
+            BoardVisibilityApplier.VisibilityChanged -= ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged -= ChangeBoardZoom;
             WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
 

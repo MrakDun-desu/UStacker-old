@@ -26,18 +26,25 @@ namespace Blockstacker.Gameplay
         [SerializeField] private UnityEvent GameRestarted;
         [SerializeField] private UnityEvent GameLost;
         [SerializeField] private UnityEvent GameEnded;
-        
+        [SerializeField] private UnityEvent ReplayStarted;
+        [SerializeField] private UnityEvent ReplayFinished;
+        [SerializeField] private UnityEvent ReplayPaused;
+        [SerializeField] private UnityEvent ReplayUnpaused;
+
         public GameSettingsSO.SettingsContainer GameSettings { set => _settings = value; }
         private GameSettingsSO.SettingsContainer _settings;
         public string GameType { get; set; }
+        public bool IsReplaying { get; set; }
         
         private readonly GameReplay Replay = new();
-        private bool _gameEnded;
 
         private double _lastSentTimeCondition;
 
-        public bool GameRunning { get; private set; }
+        public bool GameRunningActively => !_gamePaused && !_gameEnded;
+        private bool _gameEnded;
         private bool _gamePaused;
+        private bool _gameCurrentlyInProgress;
+        private bool _gamePauseable = true;
 
         #region Game event management
 
@@ -48,11 +55,13 @@ namespace Blockstacker.Gameplay
                 GameResumed.Invoke();
                 _mediator.Send(new GameResumedMessage());
                 _gamePaused = false;
-                return;
             }
+
+            if (_gameCurrentlyInProgress) return;
+
+            _gameCurrentlyInProgress = true;
             
             _gameEnded = false;
-            GameRunning = true;
             
             _lastSentTimeCondition = 0;
             _mediator.Send(new GameStartedMessage(_settings.General.ActiveSeed));
@@ -62,34 +71,47 @@ namespace Blockstacker.Gameplay
                 0,
                 _settings.Objective.GameEndCondition.ToString()));
             GameStarted.Invoke();
+            if (IsReplaying)
+                ReplayStarted.Invoke();
         }
 
         public void TogglePause()
         {
             if (_gameEnded) return;
 
-            if (GameRunning)
+            if (_gamePauseable)
             {
                 GamePaused.Invoke();
+                if (IsReplaying)
+                    ReplayPaused.Invoke();
                 _mediator.Send(new GamePausedMessage());
                 _gamePaused = true;
+                _gamePauseable = false;
             }
             else
             {
-                GameUnpaused.Invoke();
+                _gamePauseable = true;
+                if (IsReplaying)
+                {
+                    ReplayUnpaused.Invoke();
+                    _gamePaused = false;
+                }
+                else
+                    GameUnpaused.Invoke();
             }
-
-            GameRunning = !GameRunning;
         }
         
         public void Restart()
         {
             if (!_gamePaused)
             {
+                _gamePauseable = true;
                 _gamePaused = false;
                 GameResumed.Invoke();
             }
-            
+
+            _gameCurrentlyInProgress = false;
+            _gamePauseable = true;
             GameRestarted.Invoke();
             _mediator.Send(new GameRestartedMessage());
             _mediator.Send(new GameEndConditionChangedMessage(
@@ -108,6 +130,7 @@ namespace Blockstacker.Gameplay
                 EndGame(loseTime);
             else
             {
+                _gameCurrentlyInProgress = false;
                 _mediator.Send(new GameLostMessage());
                 GameLost.Invoke();
             }
@@ -116,14 +139,22 @@ namespace Blockstacker.Gameplay
         public void EndGame(double endTime)
         {
             _gameEnded = true;
-            Replay.GameSettings = _settings with { };
-            Replay.ActionList.Clear();
-            Replay.ActionList.AddRange(_gameRecorder.ActionList);
-            Replay.Stats = _statCounterManager.Stats;
-            Replay.GameLength = endTime;
-            Replay.TimeStamp = DateTime.UtcNow;
-            Replay.Save(GameType);
-            _resultDisplayer.DisplayedReplay = Replay;
+            _gameCurrentlyInProgress = false;
+            if (!IsReplaying)
+            {
+                Replay.GameType = GameType;
+                Replay.GameSettings = _settings with { };
+                Replay.ActionList.Clear();
+                Replay.ActionList.AddRange(_gameRecorder.ActionList);
+                Replay.Stats = _statCounterManager.Stats;
+                Replay.GameLength = endTime;
+                Replay.TimeStamp = DateTime.UtcNow;
+                Replay.Save(GameType);
+                _resultDisplayer.DisplayedReplay = Replay;
+            }
+            else 
+                ReplayFinished.Invoke();
+            
             GameEnded.Invoke();
             _mediator.Send(new GameEndedMessage(endTime));
         }
@@ -136,8 +167,9 @@ namespace Blockstacker.Gameplay
 
         public void Restart(InputAction.CallbackContext ctx)
         {
-            if (ctx.performed)
-                Restart();
+            if (!ctx.performed) return;
+            _gameEnded = false;
+            Restart();
         }
 
         #endregion

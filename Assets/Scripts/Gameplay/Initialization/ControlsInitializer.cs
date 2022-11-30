@@ -11,22 +11,31 @@ namespace Blockstacker.Gameplay.Initialization
         private readonly InputProcessor _inputProcessor;
         private readonly RotationSystem _srsPlusRotationSystem;
         private readonly RotationSystem _srsRotationSystem;
+        private readonly bool _isReplay;
 
         public ControlsInitializer(
             StringBuilder errorBuilder,
             GameSettingsSO.SettingsContainer gameSettings,
             RotationSystem srsRotationSystem,
             RotationSystem srsPlusRotationSystem,
-            InputProcessor inputProcessor)
+            InputProcessor inputProcessor,
+            bool isReplay)
             : base(errorBuilder, gameSettings)
         {
             _srsRotationSystem = srsRotationSystem;
             _srsPlusRotationSystem = srsPlusRotationSystem;
             _inputProcessor = inputProcessor;
+            _isReplay = isReplay;
         }
 
         public override void Execute()
         {
+            if (_isReplay)
+            {
+                _inputProcessor.SpinHandler = new SpinHandler(_gameSettings.Controls.ActiveRotationSystem, _gameSettings.General.AllowedSpins);
+                return;
+            }
+            
             _gameSettings.Controls.ActiveRotationSystem =
                 _gameSettings.Controls.RotationSystemType switch
                 {
@@ -36,7 +45,7 @@ namespace Blockstacker.Gameplay.Initialization
                     RotationSystemType.Custom => _gameSettings.Controls.ActiveRotationSystem,
                     _ => new RotationSystem()
                 };
-
+            
             _inputProcessor.SpinHandler = new SpinHandler(_gameSettings.Controls.ActiveRotationSystem, _gameSettings.General.AllowedSpins);
             
             if (!_gameSettings.Controls.OverrideHandling)

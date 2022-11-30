@@ -1,10 +1,8 @@
 ﻿using System;
-using System.IO;
 using Blockstacker.Common;
-using Blockstacker.Common.Alerts;
 using Blockstacker.Common.Extensions;
+using Blockstacker.Gameplay.Initialization;
 using Blockstacker.GameSettings.Enums;
-using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 
@@ -12,8 +10,12 @@ namespace Blockstacker.Gameplay.Stats
 {
     public class GameResultDisplayer : MonoBehaviour
     {
+        [SerializeField] private TMP_Text _mainStatTitle;
         [SerializeField] private TMP_Text _mainStatText;
+        [SerializeField] private StringReferenceSO _replayGameType;
+        [SerializeField] private GameStateManager _stateManager;
 
+        [Space]
         [SerializeField] private GameResultStatDisplayer _scoreText;
         [SerializeField] private GameResultStatDisplayer _timeText;
         [SerializeField] private GameResultStatDisplayer _levelText;
@@ -63,6 +65,16 @@ namespace Blockstacker.Gameplay.Stats
                     MainStat.PiecesUsed => stats.PiecesPlaced.ToString(),
                     _ => throw new ArgumentOutOfRangeException()
                 };
+
+                _mainStatTitle.text = _displayedReplay.GameSettings.Objective.MainStat switch
+                {
+                    MainStat.Score => "Final score",
+                    MainStat.Time => "Final time",
+                    MainStat.LinesCleared => "Lines cleared",
+                    MainStat.GarbageLinesCleared => "Garbage lines cleared",
+                    MainStat.PiecesUsed => "Pieces used",
+                    _ => throw new ArgumentOutOfRangeException()
+                };
                 
                 _scoreText              .DisplayStat("Score",                 stats.Score);
                 _timeText               .DisplayStat("Time",                  _displayedReplay.GameLength, true);
@@ -96,9 +108,25 @@ namespace Blockstacker.Gameplay.Stats
             }
         }
 
+        public void TakeReplayFromInitializer()
+        {
+            DisplayedReplay = GameInitializer.Replay;
+        }
+
         public void ShowReplay()
         {
-            
+            GameInitializer.Replay = _displayedReplay;
+            GameInitializer.GameType = _replayGameType.Value;
+            GameInitializer.InitAsReplay = true;
+            _stateManager.Restart();
+        }
+
+        public void PlayGameAgain()
+        {
+            GameInitializer.Replay = null;
+            GameInitializer.GameType = _displayedReplay.GameType ?? _replayGameType.Value;
+            GameInitializer.InitAsReplay = false;
+            _stateManager.Restart();
         }
     }
 }

@@ -10,6 +10,8 @@ namespace Blockstacker.Gameplay
         private bool _isPaused;
         private double _pauseStartTime;
         private double _pausedTime;
+
+        public event Action<double> TimeSet;
         
         public double EffectiveStartTime
         {
@@ -21,7 +23,7 @@ namespace Blockstacker.Gameplay
             }
         }
 
-        public double CurrentTime => Time.realtimeSinceStartupAsDouble - EffectiveStartTime;
+        public double CurrentTime => Math.Max(Time.realtimeSinceStartupAsDouble - EffectiveStartTime, 0d);
 
         public TimeSpan CurrentTimeAsSpan => TimeSpan.FromSeconds(CurrentTime);
 
@@ -55,6 +57,18 @@ namespace Blockstacker.Gameplay
             _startTime = Time.realtimeSinceStartupAsDouble;
             _pauseStartTime = Time.realtimeSinceStartupAsDouble;
             _isRunning = false;
+        }
+
+        public void SetTime(float value)
+        {
+            var functionStartTime = Time.realtimeSinceStartupAsDouble;
+            var newTime = (double) value;
+            _startTime = functionStartTime - newTime;
+            _pausedTime = 0d;
+            if (_isPaused)
+                _pauseStartTime = functionStartTime;
+            
+            TimeSet?.Invoke(CurrentTime);
         }
     }
 }

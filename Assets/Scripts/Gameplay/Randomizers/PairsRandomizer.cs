@@ -17,7 +17,7 @@ namespace Blockstacker.Gameplay.Randomizers
             "s",
             "z",
         };
-        private readonly Random _random;
+        private Random _random;
         private int _lastIndex;
         private bool _shouldChange = true;
 
@@ -35,6 +35,12 @@ namespace Blockstacker.Gameplay.Randomizers
 
             _shouldChange = !_shouldChange;
             return _availableValues[_lastIndex];
+        }
+
+        public void Reset(int newSeed)
+        {
+            _random = new Random(newSeed);
+            _shouldChange = true;
         }
     }
 }

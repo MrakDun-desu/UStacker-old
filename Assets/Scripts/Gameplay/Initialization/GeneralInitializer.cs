@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Randomizers;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
@@ -15,9 +16,12 @@ namespace Blockstacker.Gameplay.Initialization
         private readonly PieceDictionary _availablePieces;
         private readonly Board _board;
         private readonly InputProcessor _inputProcessor;
-        private readonly bool _isRestarting;
         private readonly PieceContainer _pieceContainerPrefab;
         private readonly PieceSpawner _spawner;
+        private readonly GameStateManager _stateManager;
+        private readonly List<InputActionMessage> _actionList;
+        private readonly bool _isRestarting;
+        private readonly bool _isReplay;
 
         public GeneralInitializer(
             StringBuilder problemBuilder,
@@ -27,21 +31,36 @@ namespace Blockstacker.Gameplay.Initialization
             Board board,
             PieceContainer pieceContainerPrefab,
             InputProcessor inputProcessor,
-            bool isRestarting = false) : base(problemBuilder, gameSettings)
+            GameStateManager stateManager,
+            List<InputActionMessage> actionList,
+            bool isRestarting,
+            bool isReplay) : base(problemBuilder, gameSettings)
         {
             _availablePieces = availablePieces;
             _spawner = spawner;
             _board = board;
             _pieceContainerPrefab = pieceContainerPrefab;
             _inputProcessor = inputProcessor;
+            _stateManager = stateManager;
+            _actionList = actionList;
             _isRestarting = isRestarting;
+            _isReplay = isReplay;
         }
 
         public override void Execute()
         {
-            InitializeSeed();
-            InitializeRandomizer();
+            _stateManager.IsReplaying = _isReplay;
+            if (_isReplay)
+            {
+                _inputProcessor.ActionList = _actionList;
+            }
+            else
+            {
+                _inputProcessor.ActionList = null;
+                InitializeSeed();
+            }
             
+            InitializeRandomizer();
             if (_isRestarting) return;
             InitializePieceContainers();
             InitializePieceHolder();
@@ -56,6 +75,17 @@ namespace Blockstacker.Gameplay.Initialization
 
         private void InitializeRandomizer()
         {
+            if (_isRestarting)
+            {
+                // if (_spawner is null)
+                // {
+                //     Debug.LogError("Spawner is null");
+                //     return;
+                // }
+                _spawner.Randomizer.Reset(_gameSettings.General.ActiveSeed);
+                return;
+            }
+                
             string validationErrors = null;
             
             var seed = _gameSettings.General.ActiveSeed;
@@ -83,9 +113,6 @@ namespace Blockstacker.Gameplay.Initialization
             }
 
             _spawner.Randomizer = randomizer;
-
-            if (_isRestarting) return;
-            
             _spawner.SetAvailablePieces(_availablePieces);
         }
 

@@ -11,7 +11,7 @@ namespace Blockstacker.GlobalSettings.Groups
         [SerializeField]
         private double _delayedAutoShift = .125d;
         [SerializeField]
-        private double _automaticRepeatRate = .1d;
+        private double _automaticRepeatRate = .05d;
         [SerializeField]
         private double _softDropFactor = 20d;
         [SerializeField]

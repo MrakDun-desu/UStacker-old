@@ -20,7 +20,7 @@ namespace Blockstacker.Gameplay.Randomizers
 
         private readonly int _count;
         private readonly List<string> _currentValues = new();
-        private readonly Random _random;
+        private Random _random;
 
         public CountPerBagRandomizer(IEnumerable<string> availablePieces, int seed, int count = 1)
         {
@@ -38,6 +38,13 @@ namespace Blockstacker.Gameplay.Randomizers
             var nextValue = _currentValues[nextIndex];
             _currentValues.RemoveAt(nextIndex);
             return nextValue;
+        }
+
+        public void Reset(int newSeed)
+        {
+            _random = new Random(newSeed);
+            _currentValues.Clear();
+            InitializeCurrentPieces();
         }
 
         private void InitializeCurrentPieces()

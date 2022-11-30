@@ -60,7 +60,7 @@ namespace Blockstacker.Gameplay.Blocks
 
             var newSpriteIndex = Mathf.FloorToInt(Time.realtimeSinceStartup / _switchFrameTime);
             newSpriteIndex %= _currentSprites.Count;
-            newSpriteIndex = newSpriteIndex < 0 ? 0 : newSpriteIndex;
+            newSpriteIndex = Mathf.Max(newSpriteIndex, 0);
             _renderer.sprite = _currentSprites[newSpriteIndex].Sprite;
         }
 

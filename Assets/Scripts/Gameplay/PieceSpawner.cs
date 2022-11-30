@@ -31,6 +31,11 @@ namespace Blockstacker.Gameplay
 
         private bool _containersEmpty = true;
 
+        public void ResetRandomizer(GameStartedMessage message)
+        {
+            Randomizer.Reset(message.Seed);
+        }
+
         public void SetPreviewContainers(List<PieceContainer> previewContainers)
         {
             _previewContainers = previewContainers;
@@ -53,7 +58,7 @@ namespace Blockstacker.Gameplay
 
         public bool SpawnPiece(double spawnTime)
         {
-            if (!_stateManager.GameRunning || _containersEmpty) return false;
+            if (!_stateManager.GameRunningActively || _containersEmpty) return false;
             
             var nextPieceType = Randomizer.GetNextPiece();
             var swappedPiece = _piecePools[nextPieceType].Get();

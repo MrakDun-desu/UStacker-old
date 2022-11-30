@@ -42,15 +42,29 @@ namespace Blockstacker.Gameplay.Initialization
         [SerializeField] private GameObject[] _gameSettingsDependencies = Array.Empty<GameObject>();
 
         [Header("Events")] public UnityEvent GameInitialized;
+        public UnityEvent ReplayStarted;
+        public UnityEvent ReplayInitialized;
         public UnityEvent<string> GameFailedToInitialize;
 
+        private static GameReplay _replay;
         public static GameSettingsSO.SettingsContainer GameSettings { get; set; }
+
+        public static GameReplay Replay
+        {
+            get => _replay;
+            set
+            {
+                _replay = value;
+                if (_replay is not null)
+                    GameSettings = _replay?.GameSettings;
+            }
+        }
+        
         public static string GameType { get; set; }
         public static bool InitAsReplay { get; set; }
 
         private void Start()
         {
-            // TODO add initialization as replay here
             _loadingOverlay.SetActive(true);
             StringBuilder errorBuilder = new();
             foreach (var dependantObject in _gameSettingsDependencies)
@@ -61,7 +75,10 @@ namespace Blockstacker.Gameplay.Initialization
             }
             if (TryInitialize(errorBuilder))
             {
-                GameInitialized.Invoke();
+                if (InitAsReplay)
+                    ReplayInitialized.Invoke();
+                else
+                    GameInitialized.Invoke();
                 _loadingOverlay.SetActive(false);
                 return;
             }
@@ -76,7 +93,10 @@ namespace Blockstacker.Gameplay.Initialization
             StringBuilder errorBuilder = new();
             if (TryReinitialize(errorBuilder))
             {
-                GameInitialized.Invoke();
+                if (InitAsReplay)
+                    ReplayStarted.Invoke();
+                else
+                    GameInitialized.Invoke();
                 _loadingOverlay.SetActive(false);
                 return;
             }
@@ -86,12 +106,14 @@ namespace Blockstacker.Gameplay.Initialization
 
         private bool TryInitialize(StringBuilder errorBuilder)
         {
+            var actionList = Replay?.ActionList;
+            
             _playerFinder.GameType = GameType;
             _statCounterManager.GameType = GameType;
             _stateManager.GameType = GameType;
             List<InitializerBase> initializers = new()
             {
-                new OverridesInitializer(errorBuilder, GameSettings, GameType),
+                new OverridesInitializer(errorBuilder, GameSettings, GameType, InitAsReplay),
                 new BoardDimensionsInitializer(
                     errorBuilder, GameSettings,
                     _board,
@@ -107,12 +129,17 @@ namespace Blockstacker.Gameplay.Initialization
                     _pieceSpawner,
                     _board,
                     _pieceContainerPrefab,
-                    _inputProcessor),
+                    _inputProcessor,
+                    _stateManager,
+                    actionList,
+                    false,
+                    InitAsReplay),
                 new ControlsInitializer(
                     errorBuilder, GameSettings,
                     _srsRotationSystemSo.RotationSystem,
                     _srsPlusRotationSystemSo.RotationSystem,
-                    _inputProcessor),
+                    _inputProcessor,
+                    InitAsReplay),
                 new PresentationInitializer(
                     errorBuilder, GameSettings,
                     _gameTitle,
@@ -132,6 +159,10 @@ namespace Blockstacker.Gameplay.Initialization
 
         private bool TryReinitialize(StringBuilder errorBuilder)
         {
+            _playerFinder.GameType = GameType;
+
+            var actionList = Replay?.ActionList;
+            
             List<InitializerBase> initializers = new()
             {
                 new GeneralInitializer(
@@ -141,7 +172,10 @@ namespace Blockstacker.Gameplay.Initialization
                     _board,
                     _pieceContainerPrefab,
                     _inputProcessor,
-                    true),
+                    _stateManager,
+                    actionList,
+                    true,
+                    InitAsReplay),
             };
 
             foreach (var initializer in initializers) initializer.Execute();

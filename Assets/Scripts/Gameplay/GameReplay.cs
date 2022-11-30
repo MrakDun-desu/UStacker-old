@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Blockstacker.Common;
 using Blockstacker.Common.Alerts;
 using Blockstacker.Gameplay.Communication;
@@ -16,11 +17,12 @@ namespace Blockstacker.Gameplay
     [Serializable]
     public record GameReplay
     {
-        public List<InputActionMessage> ActionList { get; set; } = new();
-        public GameSettingsSO.SettingsContainer GameSettings { get; set; }
-        public StatContainer Stats { get; set; }
+        public string GameType { get; set; }
         public double GameLength { get; set; }
         public DateTime TimeStamp { get; set; }
+        public StatContainer Stats { get; set; }
+        public GameSettingsSO.SettingsContainer GameSettings { get; set; }
+        public List<InputActionMessage> ActionList { get; set; } = new();
 
         public void Save(string gameType)
         {
@@ -41,7 +43,7 @@ namespace Blockstacker.Gameplay
             var savePath = Path.Combine(PersistentPaths.Replays, gameType, filename);
             if (!File.Exists(savePath))
             {
-                WriteIntoFile(savePath);
+                _ = WriteIntoFileAsync(savePath);
                 return;
             }
 
@@ -49,21 +51,21 @@ namespace Blockstacker.Gameplay
             {
                 var actualSavePath = savePath + $"_{i}";
                 if (File.Exists(actualSavePath)) continue;
-                WriteIntoFile(actualSavePath);
+                _ = WriteIntoFileAsync(actualSavePath);
                 return;
             }
         }
 
-        private void WriteIntoFile(string savePath)
+        private async Task WriteIntoFileAsync(string savePath)
         {
             var directory = Path.GetDirectoryName(savePath);
             if (!Directory.Exists(directory) && directory is not null)
                 Directory.CreateDirectory(directory);
 
             var serializedReplay = JsonConvert.SerializeObject(this, StaticSettings.ReplaySerializerSettings);
-            File.WriteAllBytes(savePath, FileLoading.Zip(serializedReplay));
+            await File.WriteAllBytesAsync(savePath, FileLoading.Zip(serializedReplay));
 
-            AlertDisplayer.Instance.ShowAlert(new Alert(
+            _ = AlertDisplayer.Instance.ShowAlert(new Alert(
                 "Replay saved!",
                 $"Game replay has been saved into a file {savePath}",
                 AlertType.Success));

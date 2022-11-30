@@ -25,7 +25,7 @@ namespace Blockstacker.Common.UI
 
         public void ScrollToElementSmooth(RectTransform target)
         {
-            _scrollRect.ScrollTo(target, _minimalMovement, false);
+            _scrollRect.ScrollTo(target, _minimalMovement);
         }
 
         public void ScrollToSelected()

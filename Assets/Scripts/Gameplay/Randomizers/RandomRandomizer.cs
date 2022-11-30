@@ -16,7 +16,7 @@ namespace Blockstacker.Gameplay.Randomizers
             "s",
             "z",
         };
-        private readonly Random _random;
+        private Random _random;
 
         public RandomRandomizer(IEnumerable<string> availablePieces, int seed)
         {
@@ -27,6 +27,11 @@ namespace Blockstacker.Gameplay.Randomizers
         public string GetNextPiece()
         {
             return _availableValues[_random.Next(0, _availableValues.Count)];
+        }
+
+        public void Reset(int newSeed)
+        {
+            _random = new Random(newSeed);
         }
     }
 }

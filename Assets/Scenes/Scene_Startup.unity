@@ -518,6 +518,8 @@ GameObject:
   - component: {fileID: 1505477394}
   - component: {fileID: 1505477393}
   - component: {fileID: 1505477391}
+  - component: {fileID: 1505477403}
+  - component: {fileID: 1505477404}
   m_Layer: 0
   m_Name: StartupHandler
   m_TagString: Untagged
@@ -695,6 +697,30 @@ MonoBehaviour:
   _loadingFinished:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1505477403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1505477387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1e2b988dd6fc6f48b47f29536b807b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1505477404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1505477387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38c486d15a5a9694fac8aa71bd8d2c96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1556583769
 PrefabInstance:
   m_ObjectHideFlags: 0

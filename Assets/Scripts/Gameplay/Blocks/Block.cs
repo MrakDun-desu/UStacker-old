@@ -8,6 +8,7 @@ namespace Blockstacker.Gameplay.Blocks
         [SerializeField] private GameObject _holdSkinsParent;
 
         private string _originalCollectionType;
+        private bool _firstTimeLoad = true;
 
         private void OnValidate()
         {
@@ -46,9 +47,12 @@ namespace Blockstacker.Gameplay.Blocks
 
         private void ChangeSkin(bool newIsHold)
         {
-            if (TryGetSkins(out var newSkins))
+            if (_firstTimeLoad)
             {
-                ReplaceOldSkins(newSkins, newIsHold ? _holdSkinsParent : _skinsParent);
+                if (TryGetSkins(out var newSkins))
+                    ReplaceOldSkins(newSkins, newIsHold ? _holdSkinsParent : _skinsParent, newIsHold);
+                if (newIsHold)
+                    _firstTimeLoad = false;
             }
 
             _skinsParent.SetActive(!newIsHold);

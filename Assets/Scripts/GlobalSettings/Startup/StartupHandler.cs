@@ -2,6 +2,7 @@ using System;
 using Blockstacker.GlobalSettings.Appliers;
 using Blockstacker.GlobalSettings.Changers;
 using Blockstacker.GlobalSettings.StatCounting;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -41,6 +42,10 @@ namespace Blockstacker.GlobalSettings.Startup
             AddSceneChangeMethods();
             var settingsSaver = new GameObject("OnQuitSettingsSaver");
             settingsSaver.AddComponent<OnQuitSettingsSaver>();
+#if !UNITY_EDITOR
+            var collectorManager = new GameObject("GarbageCollectorManager");
+            collectorManager.AddComponent<GarbageCollectorManager>();
+#endif
             AppSettings.TryLoad();
             SettingChanged?.Invoke();
             if (AppSettings.StatCounting.StatCounterGroups.Count <= 0 && _premadeStatCounters != null)
@@ -65,6 +70,7 @@ namespace Blockstacker.GlobalSettings.Startup
         private void AddSceneChangeMethods()
         {
             SceneManager.sceneLoaded += (_, _) => _actionAsset.LoadBindingOverridesFromJson(AppSettings.Rebinds);
+            SceneManager.sceneLoaded += (_, _) => DOTween.KillAll();
         }
 
         private void RemoveLoader()

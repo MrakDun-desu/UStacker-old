@@ -1,4 +1,6 @@
 ﻿using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using UnityEngine;
 
 namespace Blockstacker.Common.UI
@@ -10,9 +12,10 @@ namespace Blockstacker.Common.UI
         [SerializeField] private float _tweenDuration = 0.5f;
 
         private bool _panelOpened;
+        private TweenerCore<float, float, FloatOptions> _currentTween;
 
         private RectTransform _controlledTransform => (RectTransform) transform;
-        
+
         public void TogglePanel()
         {
             if (_panelOpened)
@@ -20,21 +23,26 @@ namespace Blockstacker.Common.UI
             else
                 OpenPanel();
         }
-        
+
         public void OpenPanel()
         {
             if (_panelOpened) return;
-            
+
             gameObject.SetActive(true);
-            DOTween.To(GetPosX, SetPosX, _openedX, _tweenDuration);
+            _currentTween?.Kill();
+
+            _currentTween = DOTween.To(GetPosX, SetPosX, _openedX, _tweenDuration).OnKill(() => _currentTween = null);
             _panelOpened = true;
         }
 
         public void ClosePanel()
         {
             if (!_panelOpened) return;
-            
-            DOTween.To(GetPosX, SetPosX, _closedX, _tweenDuration).OnComplete(() => gameObject.SetActive(false));
+
+            _currentTween?.Kill();
+
+            _currentTween = DOTween.To(GetPosX, SetPosX, _closedX, _tweenDuration)
+                .OnComplete(() => gameObject.SetActive(false)).OnKill(() => _currentTween = null);
             _panelOpened = false;
         }
 
@@ -48,6 +56,5 @@ namespace Blockstacker.Common.UI
             var position = _controlledTransform.anchoredPosition;
             _controlledTransform.anchoredPosition = new Vector2(value, position.y);
         }
-
     }
 }

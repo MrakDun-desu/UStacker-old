@@ -9,6 +9,7 @@ namespace Blockstacker.Gameplay
     {
         public void OpenGame(GameSettingsSO gameSettingsAsset)
         {
+            GameInitializer.Replay = null;
             GameInitializer.GameSettings = gameSettingsAsset.Settings;
             GameInitializer.GameType = gameSettingsAsset.GameType.Value;
             GameInitializer.InitAsReplay = false;

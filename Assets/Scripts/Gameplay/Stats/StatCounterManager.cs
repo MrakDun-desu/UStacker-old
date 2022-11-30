@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Enums;
-using Blockstacker.Gameplay.Initialization;
-using Blockstacker.GameSettings;
 using Blockstacker.GlobalSettings;
 using Blockstacker.GlobalSettings.StatCounting;
 using UnityEngine;
 
 namespace Blockstacker.Gameplay.Stats
 {
-    public class StatCounterManager : MonoBehaviour, IGameSettingsDependency
+    public class StatCounterManager : MonoBehaviour
     {
         [SerializeField] private Board _board;
         [SerializeField] private Canvas _statCountersCanvas;
@@ -23,13 +21,6 @@ namespace Blockstacker.Gameplay.Stats
 
         public ReadonlyStatContainer Stats;
 
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            set => _settings = value;
-        }
-
-        private GameSettingsSO.SettingsContainer _settings;
-
         public string GameType { get; set; }
 
         private void Start()
@@ -38,7 +29,8 @@ namespace Blockstacker.Gameplay.Stats
             _mediator.Register<InputActionMessage>(OnInputAction, true);
             _mediator.Register<HoldUsedMessage>(OnHold, true);
             _mediator.Register<PiecePlacedMessage>(OnPiecePlaced, true);
-            _mediator.Register<GameRestartedMessage>(OnGameRestarted, true);
+            _mediator.Register<GameStartedMessage>(ResetStats, true);
+            _mediator.Register<GameRestartedMessage>(ResetStats, true);
             _mediator.Register<ScoreChangedMessage>(OnScoreChanged, true);
             _mediator.Register<LevelChangedMessage>(OnLevelChanged, true);
             CreateStatCounters();
@@ -49,9 +41,15 @@ namespace Blockstacker.Gameplay.Stats
             _mediator.Unregister<InputActionMessage>(OnInputAction);
             _mediator.Unregister<HoldUsedMessage>(OnHold);
             _mediator.Unregister<PiecePlacedMessage>(OnPiecePlaced);
-            _mediator.Unregister<GameRestartedMessage>(OnGameRestarted);
+            _mediator.Unregister<GameStartedMessage>(ResetStats);
+            _mediator.Unregister<GameRestartedMessage>(ResetStats);
             _mediator.Unregister<ScoreChangedMessage>(OnScoreChanged);
             _mediator.Unregister<LevelChangedMessage>(OnLevelChanged);
+        }
+
+        private void ResetStats(object obj)
+        {
+            _stats.Reset();
         }
 
         private void CreateStatCounters()
@@ -105,11 +103,6 @@ namespace Blockstacker.Gameplay.Stats
         {
             if (!message.WasSuccessful) return;
             _stats.Holds++;
-        }
-
-        private void OnGameRestarted(GameRestartedMessage _)
-        {
-            _stats.Reset();
         }
 
         private void OnPiecePlaced(PiecePlacedMessage message)
@@ -180,7 +173,7 @@ namespace Blockstacker.Gameplay.Stats
 
         private void Update()
         {
-            if (!_gameStateManager.GameRunning) return;
+            if (!_gameStateManager.GameRunningActively) return;
 
             _stats.LinesPerMinute = _stats.LinesCleared / _timer.CurrentTime;
             _stats.PiecesPerSecond = _stats.PiecesPlaced / _timer.CurrentTime;

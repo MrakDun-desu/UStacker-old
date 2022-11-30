@@ -16,6 +16,8 @@ namespace Blockstacker.GlobalSettings.Appliers
                 Screen.fullScreenMode,
                 newResolution.refreshRateRatio
             );
+
+            QualitySettings.vSyncCount = AppSettings.Video.UseVsync ? 1 : 0;
         }
     }
 }

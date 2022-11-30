@@ -16,8 +16,7 @@ namespace Blockstacker.Gameplay.Initialization
         private readonly RectTransform _statCanvasTransform;
 
         public BoardDimensionsInitializer(
-            StringBuilder errorBuilder,
-            GameSettingsSO.SettingsContainer gameSettings,
+            StringBuilder errorBuilder, GameSettingsSO.SettingsContainer gameSettings,
             Board board,
             GameObject boardBackground,
             BlockBase gridBlock,
