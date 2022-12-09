@@ -54,8 +54,7 @@ namespace Blockstacker.Gameplay.Stats
                 new Vector3(_statCounter.Position.x, _statCounter.Position.y, _textContainer.localPosition.z);
             _textContainer.sizeDelta = _statCounter.Size;
 
-            _luaState = new Lua();
-            _luaState.RestrictMaliciousFunctions();
+            _luaState = CreateLua.WithRestrictions();
             _luaState[UTILITY_NAME] = _statUtility;
             _luaState[STAT_CONTAINER_NAME] = _statContainer;
             _luaState[BOARD_INTERFACE_NAME] = _boardInterface;

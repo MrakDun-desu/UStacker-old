@@ -92,7 +92,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         private bool TryReloadGarbageGenerator()
         {
             const string filenameExtension = ".lua";
-            var filePath = Path.Combine(PersistentPaths.RotationSystems,
+            var filePath = Path.Combine(PersistentPaths.GarbageGenerators,
                 CustomGarbageScriptName + filenameExtension);
 
             if (!File.Exists(filePath)) return false;
@@ -108,26 +108,21 @@ namespace Blockstacker.GameSettings.SettingGroups
                 string.IsNullOrEmpty(_customGarbageGeneratorName))
                 return;
 
-            if (TryReloadGarbageGenerator())
-            {
-                _ = AlertDisplayer.Instance.ShowAlert(
-                    new Alert("Custom garbage script load failed!",
-                        $"Garbage script {CustomGarbageScriptName} couldn't be found.",
-                        AlertType.Error));
-            }
-            else
-            {
-                _ = AlertDisplayer.Instance.ShowAlert(
-                    new Alert("Custom garbage script loaded!",
-                        $"Garbage script {CustomGarbageScriptName} was loaded into game settings.",
-                        AlertType.Success));
-            }
+            var shownAlert = TryReloadGarbageGenerator()
+                ? new Alert("Custom garbage script load failed!",
+                    $"Garbage script {CustomGarbageScriptName} couldn't be found.",
+                    AlertType.Error)
+                : new Alert("Custom garbage script loaded!",
+                    $"Garbage script {CustomGarbageScriptName} was loaded into game settings.",
+                    AlertType.Success);
+
+            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
         }
 
         private bool TryReloadGameManagerScript()
         {
             const string filenameExtension = ".lua";
-            var filePath = Path.Combine(PersistentPaths.RotationSystems,
+            var filePath = Path.Combine(PersistentPaths.GameManagers,
                 CustomGameManager + filenameExtension);
 
             if (!File.Exists(filePath)) return false;
@@ -143,20 +138,15 @@ namespace Blockstacker.GameSettings.SettingGroups
                 string.IsNullOrEmpty(_customGameManager))
                 return;
 
-            if (TryReloadGameManagerScript())
-            {
-                _ = AlertDisplayer.Instance.ShowAlert(
-                    new Alert("Custom game manager load failed!",
-                        $"Game manager {CustomGameManager} couldn't be found.",
-                        AlertType.Error));
-            }
-            else
-            {
-                _ = AlertDisplayer.Instance.ShowAlert(
-                    new Alert("Custom game manager loaded!",
-                        $"Game manager {CustomGameManager} was loaded into game settings.",
-                        AlertType.Success));
-            }
+            var shownAlert = TryReloadGameManagerScript()
+                ? new Alert("Custom game manager load failed!",
+                    $"Game manager {CustomGameManager} couldn't be found.",
+                    AlertType.Error)
+                : new Alert("Custom game manager loaded!",
+                    $"Game manager {CustomGameManager} was loaded into game settings.",
+                    AlertType.Success);
+
+            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
         }
     }
 }

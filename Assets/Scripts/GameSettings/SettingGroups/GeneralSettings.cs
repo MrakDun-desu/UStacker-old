@@ -58,7 +58,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         private bool TryReloadRandomizer()
         {
             const string filenameExtension = ".lua";
-            var filePath = Path.Combine(PersistentPaths.RotationSystems,
+            var filePath = Path.Combine(PersistentPaths.Randomizers,
                 CustomRandomizer + filenameExtension);
 
             if (!File.Exists(filePath)) return false;
@@ -74,20 +74,15 @@ namespace Blockstacker.GameSettings.SettingGroups
                 string.IsNullOrEmpty(_customRandomizerName))
                 return;
 
-            if (TryReloadRandomizer())
-            {
-                _ = AlertDisplayer.Instance.ShowAlert(
-                    new Alert("Custom randomizer load failed!",
-                        $"Randomizer {CustomRandomizer} couldn't be found.",
-                        AlertType.Error));
-            }
-            else
-            {
-                _ = AlertDisplayer.Instance.ShowAlert(
-                    new Alert("Custom randomizer loaded!",
-                        $"Randomizer {CustomRandomizer} was loaded into game settings.",
-                        AlertType.Success));
-            }
+            var shownAlert = TryReloadRandomizer()
+                ? new Alert("Custom randomizer loaded!",
+                    $"Randomizer {CustomRandomizer} was loaded into game settings.",
+                    AlertType.Success)
+                : new Alert("Custom randomizer load failed!",
+                    $"Randomizer {CustomRandomizer} couldn't be found.",
+                    AlertType.Error);
+
+            AlertDisplayer.Instance.ShowAlert(shownAlert);
         }
     }
 }

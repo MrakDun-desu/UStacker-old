@@ -1,6 +1,6 @@
 ﻿using System;
+using Blockstacker.Common;
 using Blockstacker.Common.Alerts;
-using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
 using UnityEngine;
 using NLua;
@@ -22,8 +22,7 @@ namespace Blockstacker.Gameplay.GameManagers
         {
             _stateManager = stateManager;
 
-            _luaState = new Lua();
-            _luaState.RestrictMaliciousFunctions();
+            _luaState = CreateLua.WithRestrictions();
             _luaState[STARTING_LEVEL_NAME] = _startingLevel;
             _luaState[BOARD_INTERFACE_NAME] = new GameManagerBoardInterface(board);
             

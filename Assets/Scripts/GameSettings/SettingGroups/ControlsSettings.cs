@@ -76,20 +76,15 @@ namespace Blockstacker.GameSettings.SettingGroups
                 string.IsNullOrEmpty(_customRotationSystem))
                 return;
 
-            if (TryReloadRotationSystem())
-            {
-                _ = AlertDisplayer.Instance.ShowAlert(
-                    new Alert("Custom rotation system load failed!",
-                        $"Rotation system {CustomRotationSystem} couldn't be found.",
-                        AlertType.Error));
-            }
-            else
-            {
-                _ = AlertDisplayer.Instance.ShowAlert(
-                    new Alert("Custom rotation system loaded!",
-                        $"Rotation system {CustomRotationSystem} was loaded into game settings.",
-                        AlertType.Success));
-            }
+            var shownAlert = TryReloadRotationSystem()
+                ? new Alert("Custom rotation system loaded!",
+                    $"Rotation system {CustomRotationSystem} was loaded into game settings.",
+                    AlertType.Success)
+                : new Alert("Custom rotation system load failed!",
+                    $"Rotation system {CustomRotationSystem} couldn't be found.",
+                    AlertType.Error);
+
+            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
         }
     }
 }

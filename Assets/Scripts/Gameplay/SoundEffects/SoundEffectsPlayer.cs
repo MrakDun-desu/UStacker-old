@@ -1,4 +1,5 @@
 ﻿using System;
+using Blockstacker.Common;
 using Blockstacker.Common.Alerts;
 using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
@@ -42,8 +43,7 @@ namespace Blockstacker.Gameplay.SoundEffects
             if (string.IsNullOrEmpty(SoundPackLoader.SoundEffectsScript))
                 return false;
 
-            _luaState = new Lua();
-            _luaState.RestrictMaliciousFunctions();
+            _luaState = CreateLua.WithRestrictions();
             _luaState.RegisterFunction(nameof(Play), this, GetType().GetMethod(nameof(Play)));
             _luaState.RegisterFunction(nameof(PlayAsAnnouncer), this, GetType().GetMethod(nameof(PlayAsAnnouncer)));
             LuaTable events = null;

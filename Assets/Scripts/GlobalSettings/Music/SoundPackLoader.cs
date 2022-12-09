@@ -5,9 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blockstacker.Common;
 using Blockstacker.Common.Alerts;
-using Blockstacker.Common.Extensions;
 using Newtonsoft.Json;
-using NLua;
 using NLua.Exceptions;
 using UnityEngine;
 
@@ -87,8 +85,7 @@ namespace Blockstacker.GlobalSettings.Music
                 return;
 
             SoundEffectsScript = await File.ReadAllTextAsync(scriptPath);
-            var lua = new Lua();
-            lua.RestrictMaliciousFunctions();
+            var lua = CreateLua.WithRestrictions();
             try
             {
                 lua.DoString(SoundEffectsScript);

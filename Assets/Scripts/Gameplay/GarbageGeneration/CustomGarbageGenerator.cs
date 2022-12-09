@@ -1,4 +1,5 @@
-﻿using Blockstacker.Common.Extensions;
+﻿using Blockstacker.Common;
+using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
 using NLua;
 using NLua.Exceptions;
@@ -7,31 +8,36 @@ namespace Blockstacker.Gameplay.GarbageGeneration
 {
     public class CustomGarbageGenerator : IGarbageGenerator
     {
-        private Lua _luaState;
-        private readonly GarbageBoardInterface _boardInterface;
-        private readonly string _script;
-
+        private readonly Lua _luaState = CreateLua.WithRestrictions();
         private LuaFunction _generationFunction;
+        private LuaFunction _resetFunction;
 
         private const string BOARD_VARIABLE_NAME = "Board";
-        private const string SEED_VARIABLE_NAME = "Seed";
-        
+
         public CustomGarbageGenerator(GarbageBoardInterface boardInterface, string script, out string validationErrors)
         {
-            if (!ValidateScript(script, out validationErrors))
+            validationErrors = ValidateScript(script);
+            if (validationErrors != null)
                 return;
 
-            _script = script;
-            _boardInterface = boardInterface;
+            _luaState = CreateLua.WithRestrictions();
+            _luaState[BOARD_VARIABLE_NAME] = boardInterface;
+            var scriptOutput = _luaState.DoString(script);
+            _generationFunction = scriptOutput[0] as LuaFunction;
+            _resetFunction = scriptOutput[1] as LuaFunction;
+            if (_generationFunction is null)
+            {
+                validationErrors = "Generation function was not returned correctly.";
+                return;
+            }
+
+            if (_resetFunction is not null) return;
+            validationErrors = "Reset function was not returned correctly.";
         }
 
         public void ResetState(int seed)
         {
-            _luaState = new Lua();
-            _luaState.RestrictMaliciousFunctions();
-            _luaState[SEED_VARIABLE_NAME] = seed;
-            _luaState[BOARD_VARIABLE_NAME] = _boardInterface;
-            _generationFunction =  _luaState.DoString(_script)[0] as LuaFunction;
+            _resetFunction.Call(seed);
         }
 
         public void GenerateGarbage(uint amount, PiecePlacedMessage message)
@@ -39,39 +45,34 @@ namespace Blockstacker.Gameplay.GarbageGeneration
             _generationFunction.Call(amount, message);
         }
 
-        private bool ValidateScript(string script, out string validationErrors)
+        private string ValidateScript(string script)
         {
             try
             {
-                _luaState = new Lua();
-                _luaState[SEED_VARIABLE_NAME] = 0;
                 _luaState[BOARD_VARIABLE_NAME] = new GarbageBoardInterface(null);
 
                 var result = _luaState.DoString(script);
-                if (result.Length < 1)
-                {
-                    validationErrors = "Error: Garbage generator script doesn't return";
-                    return false;
-                }
+                if (result.Length < 2)
+                    return "Error: Garbage generator script doesn't return 2 values";
 
                 _generationFunction = result[0] as LuaFunction;
+                _resetFunction = result[0] as LuaFunction;
                 if (_generationFunction is null)
-                {
-                    validationErrors = "Error: Garbage generator script doesn't return a function";
-                    return false;
-                }
+                    return "Error: Garbage generator script doesn't return generation function correctly";
+                if (_resetFunction is null)
+                    return "Error: Garbage generator script doesn't return reset function correctly";
+
+                _resetFunction.Call(42);
 
                 GenerateGarbage(5, new PiecePlacedMessage());
                 GenerateGarbage(5, null);
             }
             catch (LuaException ex)
             {
-                validationErrors = $"Error executing garbage generator script: {ex.Message}";
-                return false;
+                return $"Error executing garbage generator script: {ex.Message}";
             }
 
-            validationErrors = null;
-            return true;
+            return null;
         }
     }
 }
