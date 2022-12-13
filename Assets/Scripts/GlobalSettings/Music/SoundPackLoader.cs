@@ -85,7 +85,7 @@ namespace Blockstacker.GlobalSettings.Music
                 return;
 
             SoundEffectsScript = await File.ReadAllTextAsync(scriptPath);
-            var lua = CreateLua.WithRestrictions();
+            var lua = CreateLua.WithAllPrerequisites();
             try
             {
                 lua.DoString(SoundEffectsScript);

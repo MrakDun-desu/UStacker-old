@@ -22,7 +22,7 @@ namespace Blockstacker.Gameplay.GameManagers
         {
             _stateManager = stateManager;
 
-            _luaState = CreateLua.WithRestrictions();
+            _luaState = CreateLua.WithAllPrerequisites();
             _luaState[STARTING_LEVEL_NAME] = _startingLevel;
             _luaState[BOARD_INTERFACE_NAME] = new GameManagerBoardInterface(board);
             
@@ -30,6 +30,8 @@ namespace Blockstacker.Gameplay.GameManagers
             RegisterMethod(nameof(EndGame));
             RegisterMethod(nameof(SetScore));
             RegisterMethod(nameof(SetLevel));
+            RegisterMethod(nameof(SetGravity));
+            RegisterMethod(nameof(SetLockDelay));
             RegisterMethod(nameof(SetGameEndCondition));
             RegisterMethod(nameof(SetLevelUpCondition));
             
@@ -118,6 +120,16 @@ namespace Blockstacker.Gameplay.GameManagers
                 Convert.ToDouble(total),
                 Convert.ToDouble(current),
                 condName));
+
+        public void SetGravity(object newGravity, double time)
+        {
+            _mediator.Send(new GravityChangedMessage(Convert.ToDouble(newGravity), time));
+        }
+
+        public void SetLockDelay(object newDelay, double time)
+        {
+            _mediator.Send(new LockDelayChangedMessage(Convert.ToDouble(newDelay), time));
+        }
 
         #endregion
     }

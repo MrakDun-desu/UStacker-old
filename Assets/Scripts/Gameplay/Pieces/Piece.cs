@@ -99,6 +99,7 @@ namespace Blockstacker.Gameplay.Pieces
         {
             gameObject.SetActive(true);
             _activeInPool = true;
+            Visibility = 1;
             foreach (var block in Blocks)
             {
                 if (!_activeTransforms.Contains(block.transform))

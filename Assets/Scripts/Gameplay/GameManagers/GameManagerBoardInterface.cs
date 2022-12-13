@@ -16,6 +16,8 @@ namespace Blockstacker.Gameplay.GameManagers
         [UsedImplicitly]
         public uint Height => _source.Height;
         [UsedImplicitly]
+        public uint LethalHeight => _source.LethalHeight;
+        [UsedImplicitly]
         public uint GarbageHeight => _source.GarbageHeight;
         [UsedImplicitly]
         public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots => _source.Slots;

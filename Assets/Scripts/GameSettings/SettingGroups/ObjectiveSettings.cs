@@ -109,12 +109,12 @@ namespace Blockstacker.GameSettings.SettingGroups
                 return;
 
             var shownAlert = TryReloadGarbageGenerator()
-                ? new Alert("Custom garbage script load failed!",
-                    $"Garbage script {CustomGarbageScriptName} couldn't be found.",
-                    AlertType.Error)
-                : new Alert("Custom garbage script loaded!",
+                ? new Alert("Custom garbage script loaded!",
                     $"Garbage script {CustomGarbageScriptName} was loaded into game settings.",
-                    AlertType.Success);
+                    AlertType.Success)
+                : new Alert("Custom garbage script load failed!",
+                    $"Garbage script {CustomGarbageScriptName} couldn't be found.",
+                    AlertType.Error);
 
             _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
         }
@@ -139,12 +139,12 @@ namespace Blockstacker.GameSettings.SettingGroups
                 return;
 
             var shownAlert = TryReloadGameManagerScript()
-                ? new Alert("Custom game manager load failed!",
-                    $"Game manager {CustomGameManager} couldn't be found.",
-                    AlertType.Error)
-                : new Alert("Custom game manager loaded!",
+                ? new Alert("Custom game manager loaded!",
                     $"Game manager {CustomGameManager} was loaded into game settings.",
-                    AlertType.Success);
+                    AlertType.Success)
+                : new Alert("Custom game manager load failed!",
+                    $"Game manager {CustomGameManager} couldn't be found.",
+                    AlertType.Error);
 
             _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
         }

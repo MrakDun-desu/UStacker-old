@@ -7,16 +7,14 @@ namespace Blockstacker.Gameplay.Stats
     public class StatBoardInterface
     {
         private readonly Board _source;
-        
-        [UsedImplicitly]
-        public uint Width => _source.Width;
-        [UsedImplicitly]
-        public uint Height => _source.Height;
-        [UsedImplicitly]
-        public uint GarbageHeight => _source.GarbageHeight;
 
-        [UsedImplicitly]
-        public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots => _source.Slots;
+        [UsedImplicitly] public uint Width => _source.Width;
+        [UsedImplicitly] public uint Height => _source.Height;
+        [UsedImplicitly] public uint GarbageHeight => _source.GarbageHeight;
+
+        [UsedImplicitly] public uint LethalHeight => _source.LethalHeight;
+
+        [UsedImplicitly] public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots => _source.Slots;
 
         public StatBoardInterface(Board source)
         {

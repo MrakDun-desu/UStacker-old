@@ -139,7 +139,7 @@ namespace Blockstacker.GlobalSettings.Changers
                     Value.Filename = "";
                     Value.Script = "";
                     Value.Position = new Vector2();
-                    Value.Size = new Vector2();
+                    Value.Size = new Vector2(5,1);
                     Value.UpdateInterval = 0;
                     break;
                 default:

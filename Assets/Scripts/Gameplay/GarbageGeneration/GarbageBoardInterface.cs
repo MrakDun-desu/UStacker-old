@@ -30,13 +30,17 @@ namespace Blockstacker.Gameplay.GarbageGeneration
         [UsedImplicitly]
         public void AddGarbageLayer(LuaTable slotsTable, bool addToLast)
         {
+            if (_isDummy) return;
             var slots = slotsTable.Values.Cast<LuaTable>()
                 .Select(entry => entry.Values.Cast<bool>().ToList())
-                .Where(line => line.Count == Width && !line.TrueForAll(isOccupied => isOccupied)).ToList();
-
+                .Where(line => line.Count == Width &&
+                               !line.TrueForAll(isOccupied => isOccupied) &&
+                               !line.TrueForAll(isOccupied => !isOccupied))
+                .ToList();
+            
             _source.AddGarbageLayer(slots, addToLast);
         }
-
+        
         public GarbageBoardInterface(Board source)
         {
             _isDummy = source == null;

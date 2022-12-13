@@ -8,7 +8,7 @@ namespace Blockstacker.Gameplay.GarbageGeneration
 {
     public class CustomGarbageGenerator : IGarbageGenerator
     {
-        private readonly Lua _luaState = CreateLua.WithRestrictions();
+        private readonly Lua _luaState = CreateLua.WithAllPrerequisites();
         private LuaFunction _generationFunction;
         private LuaFunction _resetFunction;
 
@@ -20,7 +20,7 @@ namespace Blockstacker.Gameplay.GarbageGeneration
             if (validationErrors != null)
                 return;
 
-            _luaState = CreateLua.WithRestrictions();
+            _luaState = CreateLua.WithAllPrerequisites();
             _luaState[BOARD_VARIABLE_NAME] = boardInterface;
             var scriptOutput = _luaState.DoString(script);
             _generationFunction = scriptOutput[0] as LuaFunction;

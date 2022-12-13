@@ -10,19 +10,7 @@ namespace Blockstacker.Gameplay.Stats
     {
         private readonly GameTimer _timer;
 
-        public StatUtility(GameTimer timer)
-        {
-            _timer = timer;
-        }
-
-        [UsedImplicitly]
-        public string FormatTime(double seconds)
-        {
-            return seconds.FormatAsTime();
-        }
-
-        [UsedImplicitly]
-        public string FormatNumberInternal(double num, int decimals)
+        private string FormatNumberInternal(double num, int decimals)
         {
             const string infinityString = "INF";
             if (double.IsInfinity(num)) return infinityString;
@@ -62,5 +50,16 @@ namespace Blockstacker.Gameplay.Stats
 
         [UsedImplicitly]
         public double GetCurrentTime() => _timer.CurrentTime;
+        
+        [UsedImplicitly]
+        public string FormatTime(object seconds)
+        {
+            return Convert.ToDouble(seconds).FormatAsTime();
+        }
+        
+        public StatUtility(GameTimer timer)
+        {
+            _timer = timer;
+        }
     }
 }

@@ -5,8 +5,6 @@ namespace Blockstacker.Gameplay.GameManagers
 {
     public class ModernGameManagerWithoutLevelling : MonoBehaviour, IGameManager
     {
-        private const double GRAVITY = 1d / 60d;
-
         private long _currentScore;
 
         private MediatorSO _mediator;
@@ -25,7 +23,6 @@ namespace Blockstacker.Gameplay.GameManagers
         {
             _currentScore = 0;
             _mediator.Send(new ScoreChangedMessage(0, 0));
-            _mediator.Send(new GravityChangedMessage(GRAVITY, 0));
             _mediator.Send(new LevelChangedMessage(string.Empty, 0));
             _mediator.Send(new LevelUpConditionChangedMessage(0, 0, 0, "None"));
         }
@@ -55,7 +52,6 @@ namespace Blockstacker.Gameplay.GameManagers
                     1 => 100,
                     2 => 300,
                     3 => 500,
-                    4 => 800,
                     var amount => (int) amount * 200
                 };
             }

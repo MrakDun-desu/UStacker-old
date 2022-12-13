@@ -54,7 +54,7 @@ namespace Blockstacker.Gameplay.Stats
                 new Vector3(_statCounter.Position.x, _statCounter.Position.y, _textContainer.localPosition.z);
             _textContainer.sizeDelta = _statCounter.Size;
 
-            _luaState = CreateLua.WithRestrictions();
+            _luaState = CreateLua.WithAllPrerequisites();
             _luaState[UTILITY_NAME] = _statUtility;
             _luaState[STAT_CONTAINER_NAME] = _statContainer;
             _luaState[BOARD_INTERFACE_NAME] = _boardInterface;
@@ -238,6 +238,8 @@ namespace Blockstacker.Gameplay.Stats
             }
         }
 
+        #region Callable functions
+
         public void SetText(string text)
         {
             _displayText.text = text;
@@ -299,6 +301,8 @@ namespace Blockstacker.Gameplay.Stats
             _displayText.enableAutoSizing = false;
             _displayText.fontSize = Convert.ToSingle(sizeObj);
         }
+        
+        #endregion
 
         public void Initialize(MediatorSO mediator, StatBoardInterface board,
             ReadonlyStatContainer statContainer, StatUtility statUtility,

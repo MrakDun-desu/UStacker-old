@@ -19,7 +19,7 @@ namespace Blockstacker.Gameplay.Randomizers
             "z",
         };
 
-        private readonly Lua _luaState = CreateLua.WithRestrictions();
+        private readonly Lua _luaState = CreateLua.WithAllPrerequisites();
         private LuaFunction _nextPieceFunction;
         private LuaFunction _resetFunction;
         private const string AVAILABLE_PIECES_VARIABLE_NAME = "AvailablePieces";
@@ -31,7 +31,7 @@ namespace Blockstacker.Gameplay.Randomizers
             validationErrors = ValidateScript(script);
             if (validationErrors is not null) return;
 
-            _luaState = CreateLua.WithRestrictions();
+            _luaState = CreateLua.WithAllPrerequisites();
             InsertAvailableValuesIntoLua();
             var scriptOutput = _luaState.DoString(script);
             _nextPieceFunction = scriptOutput[0] as LuaFunction;
