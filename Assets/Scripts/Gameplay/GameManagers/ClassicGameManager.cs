@@ -129,8 +129,8 @@ namespace Blockstacker.Gameplay.GameManagers
 
                 _mediator.Send(new LevelUpConditionChangedMessage(message.Time, _totalLinesToNextLevel,
                     _linesClearedThisLevel, LEVELUP_CONDITION_NAME));
-                _mediator.Send(new GravityChangedMessage(CalculateGravity(), message.Time));
                 _mediator.Send(new LevelChangedMessage(_currentLevel.ToString(), message.Time));
+                _mediator.Send(new GravityChangedMessage(CalculateGravity(), message.Time));
             }
             else if (message.LinesCleared > 0)
             {

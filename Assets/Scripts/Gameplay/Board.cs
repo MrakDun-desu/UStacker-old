@@ -23,7 +23,10 @@ namespace Blockstacker.Gameplay
     public class Board : MonoBehaviour, IGameSettingsDependency
     {
         [SerializeField] private Transform _helperTransform;
-        [FormerlySerializedAs("_manager")] [SerializeField] private GameStateManager _stateManager;
+
+        [FormerlySerializedAs("_manager")] [SerializeField]
+        private GameStateManager _stateManager;
+
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private SpriteRenderer _backgroundRenderer;
         [SerializeField] private Camera _camera;
@@ -37,8 +40,12 @@ namespace Blockstacker.Gameplay
         [Range(0.00001f, 1)] [SerializeField] private float _minimumBoardScale = 0.1f;
 
         private readonly List<ClearableBlock[]> Blocks = new();
-        
-        public GameSettingsSO.SettingsContainer GameSettings { set => _settings = value; }
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            set => _settings = value;
+        }
+
         private GameSettingsSO.SettingsContainer _settings;
 
         public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots =>
@@ -269,12 +276,13 @@ namespace Blockstacker.Gameplay
                 for (var x = 0; x < Blocks[y].Length; x++)
                 {
                     if (!slots[y][x]) continue;
-                    
+
                     Blocks[y][x].Clear();
                 }
+
                 Blocks.RemoveAt(y);
             }
-            
+
             for (var i = 0; i < Blocks.Count; i++)
             {
                 var isFull = Slots[i].All(blockExists => blockExists);
@@ -398,7 +406,12 @@ namespace Blockstacker.Gameplay
 
             HandleWarningPiece();
 
-            SendPlacementMessage(linesCleared, cheeseLinesCleared, wasAllClear, placementTime, lastSpinResult,
+            SendPlacementMessage(
+                linesCleared,
+                cheeseLinesCleared,
+                wasAllClear,
+                placementTime,
+                lastSpinResult,
                 piece.Type);
 
             if (_settings.Gravity.AllowClutchClears && linesWereCleared) return true;

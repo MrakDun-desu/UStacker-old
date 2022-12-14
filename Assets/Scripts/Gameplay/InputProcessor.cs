@@ -64,6 +64,7 @@ namespace Blockstacker.Gameplay
         private int _lowestPosition;
         private bool _pieceIsNull = true;
         private bool _isLocking => _lockTime < double.PositiveInfinity;
+        private double _lastDroppedTime;
 
         private double _pieceSpawnTime = double.PositiveInfinity;
         private bool _usedHold;
@@ -166,19 +167,29 @@ namespace Blockstacker.Gameplay
         private void OnGravityChanged(GravityChangedMessage message)
         {
             Update(message.Time);
-            var oldDropTime = _dropTime;
             _normalGravity = message.Gravity;
             if (_normalGravity <= 0)
                 _currentGravity = _holdingSoftDrop ? ZERO_GRAVITY_REPLACEMENT * _handling.SoftDropFactor : _normalGravity;
             else
                 _currentGravity = _holdingSoftDrop ? _normalGravity * _handling.SoftDropFactor : _normalGravity;
             
+            AdjustPieceAfterGravityChange(message.Time);
+        }
+
+        private void AdjustPieceAfterGravityChange(double time)
+        {
+            var oldDropTime = _dropTime;
             _dropTime = ComputeDroptimeFromGravity();
 
-            var dropTimeDifference = _dropTime - oldDropTime;
-            _dropTimer += dropTimeDifference;
+            _dropTimer = time + _dropTime;
+            // TODO make this work properly. More thinking required
+
+            while (_lastDroppedTime > _dropTimer)
+            {
+                MovePiece(Vector2Int.up, false, time, false);
+                _lastDroppedTime -= oldDropTime;
+            }
         }
-        
 
         private void OnLockDelayChanged(LockDelayChangedMessage message)
         {
@@ -385,7 +396,7 @@ namespace Blockstacker.Gameplay
                     switch (message.KeyActionType)
                     {
                         case KeyActionType.KeyUp:
-                            SoftDropKeyUp();
+                            SoftDropKeyUp(message.Time);
                             break;
                         case KeyActionType.KeyDown:
                             SoftDropKeyDown(message.Time);
@@ -463,11 +474,12 @@ namespace Blockstacker.Gameplay
             UpdatePiecePlacementVars(actionTime);
         }
 
-        private void SoftDropKeyUp()
+        private void SoftDropKeyUp(double actionTime)
         {
             _holdingSoftDrop = false;
             _currentGravity = _normalGravity;
-            _dropTime = ComputeDroptimeFromGravity();
+            
+            AdjustPieceAfterGravityChange(actionTime);
         }
 
         private void SoftDropKeyDown(double actionTime)
@@ -482,10 +494,8 @@ namespace Blockstacker.Gameplay
                 _currentGravity = ZERO_GRAVITY_REPLACEMENT * _handling.SoftDropFactor;
             else
                 _currentGravity = _normalGravity * _handling.SoftDropFactor;
-            
-            _dropTime = ComputeDroptimeFromGravity();
 
-            _dropTimer = actionTime;
+            AdjustPieceAfterGravityChange(actionTime);
         }
 
         private void HardDropKeyDown(double actionTime)
@@ -564,13 +574,13 @@ namespace Blockstacker.Gameplay
 
         private void SendActionMessage(InputAction.CallbackContext ctx, ActionType actionType)
         {
-            if (!_controlsActive) return;
             KeyActionType? keyActionType = ctx switch
             {
                 {performed: true} => KeyActionType.KeyDown,
                 {canceled: true} => KeyActionType.KeyUp,
                 _ => null
             };
+            if (!_controlsActive && keyActionType == KeyActionType.KeyDown) return;
             if (keyActionType is null) return;
             var actionMessage = new InputActionMessage(
                 actionType,
@@ -761,7 +771,10 @@ namespace Blockstacker.Gameplay
 
             var lowestPosBeforeMovement = _lowestPosition;
             if (movementVector != Vector2Int.zero)
+            {
                 MovePiece(movementVector, true, _dropTimer, false);
+                _lastDroppedTime = _dropTimer;
+            }
 
             if (!_isLocking && !_isHardLocking) return;
 
