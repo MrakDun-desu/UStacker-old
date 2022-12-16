@@ -60,10 +60,10 @@ namespace Blockstacker.Gameplay
         {
             if (!_stateManager.GameRunningActively || _containersEmpty) return false;
             
-            var nextPieceType = Randomizer.GetNextPiece();
-            var swappedPiece = _piecePools[nextPieceType].Get();
-            swappedPiece.SetBoard(_board);
-            var nextPiece = _previews.AddPiece(swappedPiece);
+            var newPieceType = Randomizer.GetNextPiece();
+            var newPiece = _piecePools[newPieceType].Get();
+            newPiece.SetBoard(_board);
+            var nextPiece = _previews.AddPiece(newPiece);
 
             SpawnPiece(nextPiece, spawnTime);
             return true;
@@ -91,7 +91,7 @@ namespace Blockstacker.Gameplay
 
             _warningPiece.SetPiece(_previews.GetFirstPiece());
 
-            var nextPiece = AppSettings.Sound.HearNextPieces ? _previews.GetFirstPieceType() : "";
+            var nextPiece = AppSettings.Sound.HearNextPieces ? _previews.GetFirstPieceType() : string.Empty;
 
             _mediator.Send(new PieceSpawnedMessage(piece.Type, nextPiece, spawnTime));
 

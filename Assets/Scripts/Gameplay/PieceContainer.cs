@@ -59,7 +59,8 @@ namespace Blockstacker.Gameplay
             pieceTransform.rotation = transform.rotation;
             
             // rotating to reset state
-            newPiece.Rotate(0);
+            Piece.Rotate(0);
+            Piece.Visibility = 1;
             
             return temp;
         }

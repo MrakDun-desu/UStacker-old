@@ -50,7 +50,8 @@ namespace Blockstacker.Common.Alerts
         private IEnumerator WaitForRemoveAlertCor()
         {
             yield return new WaitForSeconds(_visibleInterval);
-            RemoveAlert();
+            if (_controlledTransform != null)
+                RemoveAlert();
         }
 
         private void RemoveAlert()

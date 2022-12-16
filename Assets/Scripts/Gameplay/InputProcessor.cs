@@ -64,7 +64,6 @@ namespace Blockstacker.Gameplay
         private int _lowestPosition;
         private bool _pieceIsNull = true;
         private bool _isLocking => _lockTime < double.PositiveInfinity;
-        private double _lastDroppedTime;
 
         private double _pieceSpawnTime = double.PositiveInfinity;
         private bool _usedHold;
@@ -159,8 +158,8 @@ namespace Blockstacker.Gameplay
             {
                 var currentAction = ActionList[_currentActionIndex];
                 if (!(currentAction.Time < time)) break;
-                HandleInputAction(currentAction);
                 _currentActionIndex++;
+                HandleInputAction(currentAction);
             }
         }
 
@@ -173,22 +172,8 @@ namespace Blockstacker.Gameplay
             else
                 _currentGravity = _holdingSoftDrop ? _normalGravity * _handling.SoftDropFactor : _normalGravity;
             
-            AdjustPieceAfterGravityChange(message.Time);
-        }
-
-        private void AdjustPieceAfterGravityChange(double time)
-        {
-            var oldDropTime = _dropTime;
             _dropTime = ComputeDroptimeFromGravity();
-
-            _dropTimer = time + _dropTime;
-            // TODO make this work properly. More thinking required
-
-            while (_lastDroppedTime > _dropTimer)
-            {
-                MovePiece(Vector2Int.up, false, time, false);
-                _lastDroppedTime -= oldDropTime;
-            }
+            _dropTimer = message.Time + _dropTime;
         }
 
         private void OnLockDelayChanged(LockDelayChangedMessage message)
@@ -211,6 +196,7 @@ namespace Blockstacker.Gameplay
 
         public void ResetProcessor()
         {
+            _holdingSoftDrop = false;
             _lowestPosition = int.MaxValue;
             _handling = _settings.Controls.Handling;
             _normalGravity = _settings.Gravity.DefaultGravity;
@@ -296,14 +282,15 @@ namespace Blockstacker.Gameplay
         {
             if (_pieceIsNull) return;
 
-            StopLockdown(true);
-
             _dropDisabledUntil = placementTime + _handling.DoubleDropPreventionInterval;
+            
             var movementVector = Vector2Int.down;
-            while (_board.CanPlace(ActivePiece, movementVector)) movementVector += Vector2Int.down;
+            while (_board.CanPlace(ActivePiece, movementVector)) 
+                movementVector += Vector2Int.down;
 
             movementVector -= Vector2Int.down;
-            MovePiece(movementVector, true, placementTime, false, wasHarddrop);
+            if (movementVector != Vector2Int.zero)
+                MovePiece(movementVector, true, placementTime, false, wasHarddrop);
 
             var linesCleared = _lastWasRotation
                 ? _board.Place(ActivePiece, placementTime, _lastSpinResult)
@@ -479,7 +466,8 @@ namespace Blockstacker.Gameplay
             _holdingSoftDrop = false;
             _currentGravity = _normalGravity;
             
-            AdjustPieceAfterGravityChange(actionTime);
+            _dropTime = ComputeDroptimeFromGravity();
+            _dropTimer = actionTime + _dropTime;
         }
 
         private void SoftDropKeyDown(double actionTime)
@@ -495,7 +483,9 @@ namespace Blockstacker.Gameplay
             else
                 _currentGravity = _normalGravity * _handling.SoftDropFactor;
 
-            AdjustPieceAfterGravityChange(actionTime);
+            _dropTime = ComputeDroptimeFromGravity();
+            _dropTimer = actionTime;
+            Update(actionTime);
         }
 
         private void HardDropKeyDown(double actionTime)
@@ -566,7 +556,7 @@ namespace Blockstacker.Gameplay
                 _spawner.SpawnPiece(actionTime);
             else
                 _spawner.SpawnPiece(newPiece, actionTime);
-
+            
             _dropTimer = actionTime + _dropTime;
             _usedHold = true;
             StopLockdown(true);
@@ -739,9 +729,7 @@ namespace Blockstacker.Gameplay
         private void HandleGravity(double functionStartTime)
         {
             if (_board.CanPlace(ActivePiece, Vector2Int.down) && _isLocking) // there is an empty space below piece
-            {
                 StopLockdown(false); // stop lockdown even if piece doesn't want to move down
-            }
 
             var movementVector = Vector2Int.zero;
             var lockdownStartedNow = false;
@@ -771,10 +759,7 @@ namespace Blockstacker.Gameplay
 
             var lowestPosBeforeMovement = _lowestPosition;
             if (movementVector != Vector2Int.zero)
-            {
                 MovePiece(movementVector, true, _dropTimer, false);
-                _lastDroppedTime = _dropTimer;
-            }
 
             if (!_isLocking && !_isHardLocking) return;
 
@@ -784,19 +769,18 @@ namespace Blockstacker.Gameplay
             if (_lockTime <= functionStartTime &&
                 _settings.Gravity.HardLockType != HardLockType.InfiniteMovement)
                 HandlePiecePlacement(_lockTime);
-
-            if (_settings.Gravity.HardLockType == HardLockType.LimitedTime
+            else if (_settings.Gravity.HardLockType == HardLockType.LimitedTime
                 && _hardLockAmount <= functionStartTime)
                 HandlePiecePlacement(_hardLockAmount);
         }
 
         private void HandlePieceLockdownAnimation(double functionStartTime)
         {
-            if (!_isLocking) return;
+            if (!_isLocking || _pieceIsNull) return;
 
             var lockProgress = (_lockTime - functionStartTime) / _lockDelay;
 
-            ActivePiece.Visibility = Mathf.Lerp(.5f, 0f, (float) lockProgress);
+            ActivePiece.Visibility = Mathf.Lerp(.5f, 1f, (float) lockProgress);
         }
 
         private void StartLockdown(double lockStart)
@@ -844,6 +828,7 @@ namespace Blockstacker.Gameplay
             _lowestPosition = int.MaxValue;
             if (!_spawner.SpawnPiece(_pieceSpawnTime))
                 return;
+            
             _dropTimer = _pieceSpawnTime + _dropTime;
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Placement))
             {
