@@ -59,6 +59,12 @@ namespace Blockstacker.Gameplay
         private double _holdingRightStart = double.PositiveInfinity;
         private double _holdingRightTimer;
 
+        private bool _holdingLeft;
+        private bool _holdingRight;
+
+        private bool _bufferedHold;
+        private RotateDirection? _bufferedRotation;
+
         private double _lockTime = double.PositiveInfinity;
         private double _lockDelay;
         private int _lowestPosition;
@@ -127,12 +133,31 @@ namespace Blockstacker.Gameplay
             if (!_isReplaying)
                 _controlsActive = true;
         }
+        
+        public void ExecuteBufferedActions(double time, out bool cancelSpawn)
+        {
+            cancelSpawn = false;
+            if (_bufferedHold)
+            {
+                _bufferedHold = false;
+                cancelSpawn = true;
+                HoldKeyDown(time);
+            }
+
+            if (_bufferedRotation is { } direction)
+            {
+                _bufferedRotation = null;
+                SpinHandler.RotateWithFirstKick(ActivePiece, direction);
+                _ghostPiece.Render();
+            }
+        }
 
         private void Awake()
         {
             _mediator.Register<GravityChangedMessage>(OnGravityChanged);
             _mediator.Register<LockDelayChangedMessage>(OnLockDelayChanged);
             _timer.TimeSet += RestartAndCatchUpWithTime;
+            _timer.BeforeStarted += OnGameStart;
         }
 
         private void OnDestroy()
@@ -140,6 +165,15 @@ namespace Blockstacker.Gameplay
             _mediator.Unregister<GravityChangedMessage>(OnGravityChanged);
             _mediator.Unregister<LockDelayChangedMessage>(OnLockDelayChanged);
             _timer.TimeSet -= RestartAndCatchUpWithTime;
+            _timer.BeforeStarted -= OnGameStart;
+        }
+
+        private void OnGameStart()
+        {
+            if (_holdingLeft)
+                HandleInputAction(new InputActionMessage(ActionType.MoveLeft, KeyActionType.KeyDown, 0d));
+            if (_holdingRight)
+                HandleInputAction(new InputActionMessage(ActionType.MoveRight, KeyActionType.KeyDown, 0d));
         }
 
         private void RestartAndCatchUpWithTime(double newTime)
@@ -165,7 +199,6 @@ namespace Blockstacker.Gameplay
 
         private void OnGravityChanged(GravityChangedMessage message)
         {
-            Update(message.Time);
             _normalGravity = message.Gravity;
             if (_normalGravity <= 0)
                 _currentGravity = _holdingSoftDrop ? ZERO_GRAVITY_REPLACEMENT * _handling.SoftDropFactor : _normalGravity;
@@ -197,6 +230,8 @@ namespace Blockstacker.Gameplay
         public void ResetProcessor()
         {
             _holdingSoftDrop = false;
+            _holdingLeft = false;
+            _holdingRight = false;
             _lowestPosition = int.MaxValue;
             _handling = _settings.Controls.Handling;
             _normalGravity = _settings.Gravity.DefaultGravity;
@@ -282,6 +317,7 @@ namespace Blockstacker.Gameplay
         {
             if (_pieceIsNull) return;
 
+            ActivePiece.Visibility = 1;
             _dropDisabledUntil = placementTime + _handling.DoubleDropPreventionInterval;
             
             var movementVector = Vector2Int.down;
@@ -299,6 +335,9 @@ namespace Blockstacker.Gameplay
             var spawnTime = _settings.Gravity.PiecePlacementDelay;
             if (linesCleared)
                 spawnTime += _settings.Gravity.LineClearDelay;
+
+            if (_dasLeftActive || _dasRightActive)
+                _arrTimer += spawnTime;
 
             if (_settings.Controls.AllowHold)
                 PieceHolder.UnmarkUsed();
@@ -501,7 +540,11 @@ namespace Blockstacker.Gameplay
 
         private void RotateKeyDown(double actionTime, int rotationAngle, RotateDirection direction)
         {
-            if (_pieceIsNull) return;
+            if (_pieceIsNull)
+            {
+                _bufferedRotation = direction;
+                return;
+            }
             ActivePiece.Rotate(rotationAngle);
             if (!SpinHandler.TryKick(
                     ActivePiece,
@@ -540,6 +583,11 @@ namespace Blockstacker.Gameplay
 
         private void HoldKeyDown(double actionTime)
         {
+            if (_pieceIsNull)
+            {
+                _bufferedHold = true;
+                return;
+            }
             if (_usedHold && !_settings.Controls.UnlimitedHold)
             {
                 _mediator.Send(new HoldUsedMessage(false, actionTime));
@@ -579,9 +627,35 @@ namespace Blockstacker.Gameplay
             HandleInputAction(actionMessage);
         }
 
-        public void OnMovePieceLeft(InputAction.CallbackContext ctx) => SendActionMessage(ctx, ActionType.MoveLeft);
+        public void OnMovePieceLeft(InputAction.CallbackContext ctx)
+        {
+            switch (ctx)
+            {
+                case {performed: true}:
+                    _holdingLeft = true;
+                    _holdingRight = false;
+                    break;
+                case {canceled: true}:
+                    _holdingLeft = false;
+                    break;
+            }
+            SendActionMessage(ctx, ActionType.MoveLeft);
+        }
 
-        public void OnMovePieceRight(InputAction.CallbackContext ctx) => SendActionMessage(ctx, ActionType.MoveRight);
+        public void OnMovePieceRight(InputAction.CallbackContext ctx)
+        {
+            switch (ctx)
+            {
+                case {performed: true}:
+                    _holdingRight = true;
+                    _holdingLeft = false;
+                    break;
+                case {canceled: true}:
+                    _holdingRight = false;
+                    break;
+            }
+            SendActionMessage(ctx, ActionType.MoveRight);
+        }
 
         public void OnSoftDrop(InputAction.CallbackContext ctx) => SendActionMessage(ctx, ActionType.Softdrop);
 
@@ -770,7 +844,7 @@ namespace Blockstacker.Gameplay
                 _settings.Gravity.HardLockType != HardLockType.InfiniteMovement)
                 HandlePiecePlacement(_lockTime);
             else if (_settings.Gravity.HardLockType == HardLockType.LimitedTime
-                && _hardLockAmount <= functionStartTime)
+                     && _hardLockAmount <= functionStartTime)
                 HandlePiecePlacement(_hardLockAmount);
         }
 
@@ -780,7 +854,7 @@ namespace Blockstacker.Gameplay
 
             var lockProgress = (_lockTime - functionStartTime) / _lockDelay;
 
-            ActivePiece.Visibility = Mathf.Lerp(.5f, 1f, (float) lockProgress);
+            ActivePiece.Visibility = Mathf.Lerp(1f, .5f, (float) lockProgress);
         }
 
         private void StartLockdown(double lockStart)
@@ -809,9 +883,6 @@ namespace Blockstacker.Gameplay
 
         private void StopLockdown(bool stopHardlock)
         {
-            if (!_pieceIsNull)
-                ActivePiece.Visibility = 1;
-
             _lockTime = double.PositiveInfinity;
             if (stopHardlock)
                 _hardLockAmount = double.PositiveInfinity;
@@ -826,6 +897,7 @@ namespace Blockstacker.Gameplay
             _lockTime = double.PositiveInfinity;
             _hardLockAmount = double.PositiveInfinity;
             _lowestPosition = int.MaxValue;
+            
             if (!_spawner.SpawnPiece(_pieceSpawnTime))
                 return;
             
@@ -844,5 +916,6 @@ namespace Blockstacker.Gameplay
         }
 
         #endregion
+
     }
 }

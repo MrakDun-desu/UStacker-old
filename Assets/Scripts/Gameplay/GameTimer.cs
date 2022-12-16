@@ -12,6 +12,7 @@ namespace Blockstacker.Gameplay
         private double _pausedTime;
 
         public event Action<double> TimeSet;
+        public event Action BeforeStarted;
         
         public double EffectiveStartTime
         {
@@ -29,6 +30,7 @@ namespace Blockstacker.Gameplay
 
         public void StartTiming()
         {
+            BeforeStarted?.Invoke();
             _pausedTime = 0d;
             _startTime = Time.realtimeSinceStartupAsDouble;
             _isRunning = true;

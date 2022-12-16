@@ -89,6 +89,10 @@ namespace Blockstacker.Gameplay
             var rotation = rotationSystem.GetKickTable(piece.Type).StartState;
             piece.Rotate((int) rotation);
 
+            _inputProcessor.ExecuteBufferedActions(spawnTime, out var cancelSpawn);
+
+            if (cancelSpawn) return;
+
             _warningPiece.SetPiece(_previews.GetFirstPiece());
 
             var nextPiece = AppSettings.Sound.HearNextPieces ? _previews.GetFirstPieceType() : string.Empty;
