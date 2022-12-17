@@ -1,7 +1,7 @@
-using Blockstacker.Common;
+using UStacker.Common;
 using Discord;
 
-namespace Blockstacker.DiscordPresence
+namespace UStacker.DiscordPresence
 {
     public class DiscordController : MonoSingleton<DiscordController>
     {

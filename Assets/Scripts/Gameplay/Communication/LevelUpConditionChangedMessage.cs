@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace Blockstacker.Gameplay.Communication
+namespace UStacker.Gameplay.Communication
 {
     public record LevelUpConditionChangedMessage : MidgameMessage
     {

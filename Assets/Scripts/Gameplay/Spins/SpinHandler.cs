@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Gameplay.Enums;
-using Blockstacker.Gameplay.Pieces;
-using Blockstacker.GameSettings;
-using Blockstacker.GameSettings.Enums;
+using UStacker.Gameplay.Enums;
+using UStacker.Gameplay.Pieces;
+using UStacker.GameSettings;
+using UStacker.GameSettings.Enums;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.Spins
+namespace UStacker.Gameplay.Spins
 {
     public class SpinHandler
     {

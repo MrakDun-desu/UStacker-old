@@ -1,6 +1,6 @@
 ﻿using UnityEngine.Events;
 
-namespace Blockstacker.GlobalSettings.Appliers
+namespace UStacker.GlobalSettings.Appliers
 {
     public interface IAsyncApplier
     {

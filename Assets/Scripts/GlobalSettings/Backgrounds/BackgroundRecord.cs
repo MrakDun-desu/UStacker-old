@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Backgrounds
+namespace UStacker.GlobalSettings.Backgrounds
 {
     [Serializable]
     public record BackgroundRecord

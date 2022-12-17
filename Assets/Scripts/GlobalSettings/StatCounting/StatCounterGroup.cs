@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Blockstacker.Common;
+using UStacker.Common;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.StatCounting
+namespace UStacker.GlobalSettings.StatCounting
 {
     [Serializable]
     public class StatCounterGroup : ISerializationCallbackReceiver

@@ -1,11 +1,11 @@
 using System.IO;
 using System.Threading.Tasks;
-using Blockstacker.Common;
-using Blockstacker.GlobalSettings.Backgrounds;
+using UStacker.Common;
+using UStacker.GlobalSettings.Backgrounds;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Blockstacker.GlobalSettings.Appliers
+namespace UStacker.GlobalSettings.Appliers
 {
     public class BackgroundPackApplier : SettingApplierBase, IAsyncApplier
     {

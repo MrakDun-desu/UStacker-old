@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using JetBrains.Annotations;
 
-namespace Blockstacker.Gameplay.Stats
+namespace UStacker.Gameplay.Stats
 {
     public class StatBoardInterface
     {

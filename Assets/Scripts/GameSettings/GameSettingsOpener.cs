@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Blockstacker.GameSettings
+namespace UStacker.GameSettings
 {
     public class GameSettingsOpener : MonoBehaviour
     {

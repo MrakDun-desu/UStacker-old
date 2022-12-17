@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using UnityEngine;
 
-namespace Blockstacker.Common
+namespace UStacker.Common
 {
     public static class PersistentPaths
     {

@@ -1,8 +1,8 @@
-﻿using Blockstacker.Common;
+﻿using UStacker.Common;
 using UnityEngine.SceneManagement;
 using UnityEngine.Scripting;
 
-namespace Blockstacker.GlobalSettings.Startup
+namespace UStacker.GlobalSettings.Startup
 {
     public class GarbageCollectorManager : MonoSingleton<GarbageCollectorManager>
     {

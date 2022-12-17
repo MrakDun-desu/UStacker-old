@@ -1,13 +1,13 @@
 using System;
 using System.IO;
-using Blockstacker.Common;
-using Blockstacker.Common.Alerts;
-using Blockstacker.GameSettings.Enums;
-using Blockstacker.GlobalSettings.Groups;
+using UStacker.Common;
+using UStacker.Common.Alerts;
+using UStacker.GameSettings.Enums;
+using UStacker.GlobalSettings.Groups;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace Blockstacker.GameSettings.SettingGroups
+namespace UStacker.GameSettings.SettingGroups
 {
     [Serializable]
     public record ControlsSettings

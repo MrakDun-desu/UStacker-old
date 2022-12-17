@@ -1,13 +1,13 @@
-﻿using Blockstacker.Common;
-using Blockstacker.Common.Alerts;
-using Blockstacker.Gameplay.Initialization;
-using Blockstacker.GlobalSettings.Changers;
+﻿using UStacker.Common;
+using UStacker.Common.Alerts;
+using UStacker.Gameplay.Initialization;
+using UStacker.GlobalSettings.Changers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Blockstacker.Gameplay
+namespace UStacker.Gameplay
 {
     public class CustomReplayOpener : MonoBehaviour
     {

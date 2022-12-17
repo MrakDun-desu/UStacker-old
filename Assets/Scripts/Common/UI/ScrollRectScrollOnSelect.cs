@@ -1,9 +1,9 @@
-﻿using Blockstacker.Common.Extensions;
+﻿using UStacker.Common.Extensions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Blockstacker.Common.UI
+namespace UStacker.Common.UI
 {
     [RequireComponent(typeof(ScrollRect))]
     public class ScrollRectScrollOnSelect : MonoBehaviour

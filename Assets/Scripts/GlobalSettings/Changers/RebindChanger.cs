@@ -1,13 +1,13 @@
 using System;
 using System.Collections;
 using System.Linq;
-using Blockstacker.Common.Extensions;
+using UStacker.Common.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputActionRebindingExtensions;
 
-namespace Blockstacker.GlobalSettings.Changers
+namespace UStacker.GlobalSettings.Changers
 {
     public class RebindChanger : MonoBehaviour
     {

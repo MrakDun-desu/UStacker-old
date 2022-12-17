@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Blockstacker.Gameplay.Stats
+namespace UStacker.Gameplay.Stats
 {
     [Serializable]
     public record ReadonlyStatContainer

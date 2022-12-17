@@ -1,7 +1,7 @@
 ﻿using System;
-using Blockstacker.Common.Attributes;
+using UStacker.Common.Attributes;
 
-namespace Blockstacker.GlobalSettings.Enums
+namespace UStacker.GlobalSettings.Enums
 {
     [Flags]
     public enum DelayDasOn : byte

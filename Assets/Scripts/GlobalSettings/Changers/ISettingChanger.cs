@@ -1,6 +1,6 @@
 using System;
 
-namespace Blockstacker.GlobalSettings.Changers
+namespace UStacker.GlobalSettings.Changers
 {
     public interface ISettingChanger
     {

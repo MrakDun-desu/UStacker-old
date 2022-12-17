@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Blockstacker.Common.Extensions
+namespace UStacker.Common.Extensions
 {
     public static class IEnumerableExtensions
     {

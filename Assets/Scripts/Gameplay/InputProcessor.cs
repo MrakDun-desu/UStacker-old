@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Gameplay.Communication;
-using Blockstacker.Gameplay.Enums;
-using Blockstacker.Gameplay.Initialization;
-using Blockstacker.Gameplay.Pieces;
-using Blockstacker.Gameplay.Spins;
-using Blockstacker.GameSettings;
-using Blockstacker.GameSettings.Enums;
-using Blockstacker.GlobalSettings.Enums;
-using Blockstacker.GlobalSettings.Groups;
+using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Enums;
+using UStacker.Gameplay.Initialization;
+using UStacker.Gameplay.Pieces;
+using UStacker.Gameplay.Spins;
+using UStacker.GameSettings;
+using UStacker.GameSettings.Enums;
+using UStacker.GlobalSettings.Enums;
+using UStacker.GlobalSettings.Groups;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Blockstacker.Gameplay
+namespace UStacker.Gameplay
 {
     public class InputProcessor : MonoBehaviour, IGameSettingsDependency
     {

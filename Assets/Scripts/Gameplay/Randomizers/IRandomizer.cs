@@ -1,4 +1,4 @@
-namespace Blockstacker.Gameplay.Randomizers
+namespace UStacker.Gameplay.Randomizers
 {
     public interface IRandomizer
     {

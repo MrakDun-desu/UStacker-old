@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace Blockstacker.Common
+namespace UStacker.Common
 {
-    [CreateAssetMenu(fileName = "StringReference", menuName = "Blockstacker/String reference")]
+    [CreateAssetMenu(fileName = "StringReference", menuName = "UStacker/String reference")]
     public class StringReferenceSO : ScriptableObject
     {
         public string Value;

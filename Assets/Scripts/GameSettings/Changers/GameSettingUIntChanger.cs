@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Blockstacker.GameSettings.Changers
+namespace UStacker.GameSettings.Changers
 {
     public class GameSettingUintChanger : GameSettingChangerWithField<uint>
     {

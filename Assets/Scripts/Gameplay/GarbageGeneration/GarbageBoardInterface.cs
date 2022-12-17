@@ -4,7 +4,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using NLua;
 
-namespace Blockstacker.Gameplay.GarbageGeneration
+namespace UStacker.Gameplay.GarbageGeneration
 {
     public class GarbageBoardInterface
     {

@@ -1,9 +1,9 @@
-using Blockstacker.Gameplay.Communication;
+using UStacker.Gameplay.Communication;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Blockstacker.Gameplay.Presentation
+namespace UStacker.Gameplay.Presentation
 {
     [RequireComponent(typeof(TMP_Text))]
     public class GameCountdown : MonoBehaviour

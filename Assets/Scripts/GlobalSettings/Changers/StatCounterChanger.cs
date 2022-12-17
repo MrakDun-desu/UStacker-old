@@ -2,13 +2,13 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Blockstacker.Common;
-using Blockstacker.GlobalSettings.StatCounting;
+using UStacker.Common;
+using UStacker.GlobalSettings.StatCounting;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Blockstacker.GlobalSettings.Changers
+namespace UStacker.GlobalSettings.Changers
 {
     public class StatCounterChanger : MonoBehaviour
     {

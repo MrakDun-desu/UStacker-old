@@ -1,7 +1,7 @@
-using Blockstacker.Common.Extensions;
+using UStacker.Common.Extensions;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Appliers
+namespace UStacker.GlobalSettings.Appliers
 {
     public class ResolutionApplier : SettingApplierBase
     {

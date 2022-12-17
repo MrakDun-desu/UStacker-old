@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Blockstacker.Common;
+using UStacker.Common;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Blockstacker.GameSettings.Changers
+namespace UStacker.GameSettings.Changers
 {
     public abstract class GameSettingFileChanger : GameSettingChangerBase<string>
     {

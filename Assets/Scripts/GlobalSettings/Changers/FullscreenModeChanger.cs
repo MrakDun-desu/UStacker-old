@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Changers
+namespace UStacker.GlobalSettings.Changers
 {
     public class FullscreenModeChanger : AppSettingEnumChanger<FullScreenMode>
     {

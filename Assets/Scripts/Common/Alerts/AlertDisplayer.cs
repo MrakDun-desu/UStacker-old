@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Blockstacker.Common.Alerts
+namespace UStacker.Common.Alerts
 {
     public class AlertDisplayer : MonoSingleton<AlertDisplayer>
     {

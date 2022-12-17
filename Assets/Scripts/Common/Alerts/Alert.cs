@@ -1,4 +1,4 @@
-﻿namespace Blockstacker.Common.Alerts
+﻿namespace UStacker.Common.Alerts
 {
     public record Alert(string Title, string Text, AlertType AlertType)
     {

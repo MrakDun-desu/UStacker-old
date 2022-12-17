@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Gameplay.Communication;
-using Blockstacker.Gameplay.Enums;
-using Blockstacker.GlobalSettings;
-using Blockstacker.GlobalSettings.StatCounting;
+using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Enums;
+using UStacker.GlobalSettings;
+using UStacker.GlobalSettings.StatCounting;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.Stats
+namespace UStacker.Gameplay.Stats
 {
     public class StatCounterManager : MonoBehaviour
     {

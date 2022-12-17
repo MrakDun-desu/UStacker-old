@@ -1,12 +1,12 @@
 using System;
 using System.IO;
 using System.Reflection;
-using Blockstacker.Common;
-using Blockstacker.GlobalSettings.Groups;
+using UStacker.Common;
+using UStacker.GlobalSettings.Groups;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings
+namespace UStacker.GlobalSettings
 {
     public static class AppSettings
     {

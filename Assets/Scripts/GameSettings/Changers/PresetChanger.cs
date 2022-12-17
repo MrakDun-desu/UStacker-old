@@ -1,11 +1,11 @@
 ﻿using System.Linq;
-using Blockstacker.Common;
-using Blockstacker.Common.Alerts;
+using UStacker.Common;
+using UStacker.Common.Alerts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Blockstacker.GameSettings.Changers
+namespace UStacker.GameSettings.Changers
 {
     public class PresetChanger : MonoBehaviour
     {

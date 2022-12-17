@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Blockstacker.Gameplay.Communication;
+using UStacker.Gameplay.Communication;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay
+namespace UStacker.Gameplay
 {
     public class GameRecorder : MonoBehaviour
     {

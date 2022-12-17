@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Blockstacker.Common.UI
+namespace UStacker.Common.UI
 {
     [RequireComponent(typeof(Slider))]
     public class BetterSlider : MonoBehaviour

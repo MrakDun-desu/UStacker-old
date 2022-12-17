@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace Blockstacker.Common.Extensions
+namespace UStacker.Common.Extensions
 {
     public static class StringExtensions
     {

@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Common;
+using UStacker.Common;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace Blockstacker.GameSettings
+namespace UStacker.GameSettings
 {
-    [CreateAssetMenu(fileName = "Rotation", menuName = "Blockstacker/Rotation system")]
+    [CreateAssetMenu(fileName = "Rotation", menuName = "UStacker/Rotation system")]
     public class RotationSystemSO : ScriptableObject, ISerializationCallbackReceiver
     {
         [SerializeField] private List<KeyValuePair> _kickTables = new();

@@ -1,11 +1,11 @@
 using System;
 using System.IO;
-using Blockstacker.Common;
-using Blockstacker.Common.Alerts;
-using Blockstacker.GameSettings.Enums;
+using UStacker.Common;
+using UStacker.Common.Alerts;
+using UStacker.GameSettings.Enums;
 using UnityEngine;
 
-namespace Blockstacker.GameSettings.SettingGroups
+namespace UStacker.GameSettings.SettingGroups
 {
     [Serializable]
     public record GeneralSettings

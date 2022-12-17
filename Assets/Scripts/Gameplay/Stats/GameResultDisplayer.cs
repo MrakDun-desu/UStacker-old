@@ -1,12 +1,12 @@
 ﻿using System;
-using Blockstacker.Common;
-using Blockstacker.Common.Extensions;
-using Blockstacker.Gameplay.Initialization;
-using Blockstacker.GameSettings.Enums;
+using UStacker.Common;
+using UStacker.Common.Extensions;
+using UStacker.Gameplay.Initialization;
+using UStacker.GameSettings.Enums;
 using TMPro;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.Stats
+namespace UStacker.Gameplay.Stats
 {
     public class GameResultDisplayer : MonoBehaviour
     {

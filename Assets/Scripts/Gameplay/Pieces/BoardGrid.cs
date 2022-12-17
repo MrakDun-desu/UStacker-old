@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Gameplay.Blocks;
+using UStacker.Gameplay.Blocks;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.Pieces
+namespace UStacker.Gameplay.Pieces
 {
     public class BoardGrid : MonoBehaviour, IBlockCollection
     {

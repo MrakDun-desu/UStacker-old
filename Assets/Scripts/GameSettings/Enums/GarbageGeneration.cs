@@ -1,6 +1,6 @@
 using System;
 
-namespace Blockstacker.GameSettings.Enums
+namespace UStacker.GameSettings.Enums
 {
     [Flags]
     public enum GarbageGeneration : short

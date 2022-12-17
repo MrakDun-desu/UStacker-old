@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.GlobalSettings.StatCounting;
+using UStacker.GlobalSettings.StatCounting;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Blockstacker.GlobalSettings.Changers
+namespace UStacker.GlobalSettings.Changers
 {
     public class StatCountingChanger : MonoBehaviour
     {

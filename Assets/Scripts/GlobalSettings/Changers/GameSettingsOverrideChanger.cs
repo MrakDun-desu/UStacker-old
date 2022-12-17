@@ -1,10 +1,10 @@
 ﻿using System.Globalization;
-using Blockstacker.Common;
-using Blockstacker.GlobalSettings.Groups;
+using UStacker.Common;
+using UStacker.GlobalSettings.Groups;
 using TMPro;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Changers
+namespace UStacker.GlobalSettings.Changers
 {
     public class GameSettingsOverrideChanger : MonoBehaviour
     {

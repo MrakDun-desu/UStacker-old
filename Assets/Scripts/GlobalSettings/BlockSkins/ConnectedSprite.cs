@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Blockstacker.GlobalSettings.Enums;
+using UStacker.GlobalSettings.Enums;
 
-namespace Blockstacker.GlobalSettings.BlockSkins
+namespace UStacker.GlobalSettings.BlockSkins
 {
     [Serializable]
     public class ConnectedSprite

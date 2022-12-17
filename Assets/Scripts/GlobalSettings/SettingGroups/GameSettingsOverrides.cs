@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Groups
+namespace UStacker.GlobalSettings.Groups
 {
     [Serializable]
     public record GameSettingsOverrides

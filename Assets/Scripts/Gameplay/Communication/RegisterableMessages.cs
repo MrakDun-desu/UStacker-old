@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Blockstacker.Gameplay.Communication
+namespace UStacker.Gameplay.Communication
 {
     public static class RegisterableMessages
     {

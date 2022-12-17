@@ -1,6 +1,6 @@
-﻿using Blockstacker.Gameplay.Communication;
+﻿using UStacker.Gameplay.Communication;
 
-namespace Blockstacker.Gameplay.GameManagers
+namespace UStacker.Gameplay.GameManagers
 {
     public interface IGameManager
     {

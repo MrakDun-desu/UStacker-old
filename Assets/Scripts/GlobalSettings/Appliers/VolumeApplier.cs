@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace Blockstacker.GlobalSettings.Appliers
+namespace UStacker.GlobalSettings.Appliers
 {
     public class VolumeApplier : SettingApplierBase
     {

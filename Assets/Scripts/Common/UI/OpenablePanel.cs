@@ -3,7 +3,7 @@ using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using UnityEngine;
 
-namespace Blockstacker.Common.UI
+namespace UStacker.Common.UI
 {
     public class OpenablePanel : MonoBehaviour
     {

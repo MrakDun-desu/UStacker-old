@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Gameplay.Communication;
-using Blockstacker.Gameplay.Initialization;
-using Blockstacker.Gameplay.Pieces;
-using Blockstacker.Gameplay.Randomizers;
-using Blockstacker.GameSettings;
-using Blockstacker.GlobalSettings;
+using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Initialization;
+using UStacker.Gameplay.Pieces;
+using UStacker.Gameplay.Randomizers;
+using UStacker.GameSettings;
+using UStacker.GlobalSettings;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.Serialization;
 
-namespace Blockstacker.Gameplay
+namespace UStacker.Gameplay
 {
     public class PieceSpawner : MonoBehaviour, IGameSettingsDependency
     {

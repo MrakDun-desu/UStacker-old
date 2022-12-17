@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.StatCounting
+namespace UStacker.GlobalSettings.StatCounting
 {
     [Serializable]
     public class StatCounterRecord : IEquatable<StatCounterRecord>

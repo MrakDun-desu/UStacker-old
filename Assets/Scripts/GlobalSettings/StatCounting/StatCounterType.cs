@@ -1,4 +1,4 @@
-﻿namespace Blockstacker.GlobalSettings.StatCounting
+﻿namespace UStacker.GlobalSettings.StatCounting
 {
     public enum StatCounterType
     {

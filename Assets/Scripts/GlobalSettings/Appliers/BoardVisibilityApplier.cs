@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Blockstacker.GlobalSettings.Appliers
+namespace UStacker.GlobalSettings.Appliers
 {
     public class BoardVisibilityApplier : SettingApplierBase
     {

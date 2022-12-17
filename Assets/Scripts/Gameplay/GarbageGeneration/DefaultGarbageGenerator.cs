@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Blockstacker.Gameplay.Communication;
+using UStacker.Gameplay.Communication;
 
-namespace Blockstacker.Gameplay.GarbageGeneration
+namespace UStacker.Gameplay.GarbageGeneration
 {
     public class DefaultGarbageGenerator : IGarbageGenerator
     {

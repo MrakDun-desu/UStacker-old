@@ -1,7 +1,7 @@
-﻿using Blockstacker.Gameplay.Communication;
+﻿using UStacker.Gameplay.Communication;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.GameManagers
+namespace UStacker.Gameplay.GameManagers
 {
     public class ModernGameManagerWithoutLevelling : MonoBehaviour, IGameManager
     {

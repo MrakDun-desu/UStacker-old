@@ -1,8 +1,8 @@
 using System;
-using Blockstacker.GlobalSettings.Enums;
+using UStacker.GlobalSettings.Enums;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Groups
+namespace UStacker.GlobalSettings.Groups
 {
     [Serializable]
     public record HandlingSettings

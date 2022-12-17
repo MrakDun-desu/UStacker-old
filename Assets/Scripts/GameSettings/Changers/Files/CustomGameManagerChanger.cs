@@ -1,6 +1,6 @@
-﻿using Blockstacker.Common;
+﻿using UStacker.Common;
 
-namespace Blockstacker.GameSettings.Changers.Files
+namespace UStacker.GameSettings.Changers.Files
 {
     public class CustomGameManagerChanger : GameSettingFileChanger
     {

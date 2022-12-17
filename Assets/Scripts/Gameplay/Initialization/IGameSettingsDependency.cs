@@ -1,6 +1,6 @@
-﻿using Blockstacker.GameSettings;
+﻿using UStacker.GameSettings;
 
-namespace Blockstacker.Gameplay.Initialization
+namespace UStacker.Gameplay.Initialization
 {
     public interface IGameSettingsDependency
     {

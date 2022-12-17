@@ -1,4 +1,4 @@
-﻿namespace Blockstacker.GameSettings.Changers
+﻿namespace UStacker.GameSettings.Changers
 {
     public class GameSettingStringChanger : GameSettingChangerWithField<string>
     {

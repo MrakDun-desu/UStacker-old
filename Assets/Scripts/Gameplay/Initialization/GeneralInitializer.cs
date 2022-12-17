@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Blockstacker.Gameplay.Communication;
-using Blockstacker.Gameplay.Randomizers;
-using Blockstacker.GameSettings;
-using Blockstacker.GameSettings.Enums;
+using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Randomizers;
+using UStacker.GameSettings;
+using UStacker.GameSettings.Enums;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
-namespace Blockstacker.Gameplay.Initialization
+namespace UStacker.Gameplay.Initialization
 {
     public class GeneralInitializer : InitializerBase
     {

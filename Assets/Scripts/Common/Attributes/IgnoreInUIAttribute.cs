@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Blockstacker.Common.Attributes
+namespace UStacker.Common.Attributes
 {
     public class IgnoreInUIAttribute : Attribute
     {

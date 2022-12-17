@@ -1,11 +1,11 @@
 using System.IO;
 using System.Threading.Tasks;
-using Blockstacker.Common;
-using Blockstacker.GlobalSettings.BlockSkins;
+using UStacker.Common;
+using UStacker.GlobalSettings.BlockSkins;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Blockstacker.GlobalSettings.Appliers
+namespace UStacker.GlobalSettings.Appliers
 {
     public class SkinApplier : SettingApplierBase, IAsyncApplier
     {

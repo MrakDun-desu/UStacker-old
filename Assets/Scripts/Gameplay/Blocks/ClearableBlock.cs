@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine.Events;
 
-namespace Blockstacker.Gameplay.Blocks
+namespace UStacker.Gameplay.Blocks
 {
     public class ClearableBlock : BlockBase
     {

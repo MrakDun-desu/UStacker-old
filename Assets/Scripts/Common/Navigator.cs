@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Blockstacker.Common
+namespace UStacker.Common
 {
     public class Navigator : MonoBehaviour
     {

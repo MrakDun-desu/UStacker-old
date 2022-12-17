@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Common;
+using UStacker.Common;
 using TMPro;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Changers
+namespace UStacker.GlobalSettings.Changers
 {
     public class StatCountingGroupChanger : AppSettingChangerBase<Dictionary<string, Guid>>
     {

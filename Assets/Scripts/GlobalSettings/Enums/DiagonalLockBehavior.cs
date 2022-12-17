@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Enums
+namespace UStacker.GlobalSettings.Enums
 {
     public enum DiagonalLockBehavior : byte
     {

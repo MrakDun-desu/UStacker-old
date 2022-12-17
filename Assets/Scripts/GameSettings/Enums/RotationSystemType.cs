@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using UnityEngine;
 
-namespace Blockstacker.GameSettings.Enums
+namespace UStacker.GameSettings.Enums
 {
     public enum RotationSystemType : byte
     {

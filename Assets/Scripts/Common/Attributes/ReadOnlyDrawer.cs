@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Blockstacker.Common.Attributes
+namespace UStacker.Common.Attributes
 {
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyDrawer : PropertyDrawer

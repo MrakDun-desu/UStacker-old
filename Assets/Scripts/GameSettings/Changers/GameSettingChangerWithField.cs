@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 
-namespace Blockstacker.GameSettings.Changers
+namespace UStacker.GameSettings.Changers
 {
     public abstract class GameSettingChangerWithField<T> : GameSettingChangerBase<T>
     {

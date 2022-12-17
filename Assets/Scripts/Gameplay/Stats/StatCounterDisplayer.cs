@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections;
-using Blockstacker.Common;
-using Blockstacker.Common.Alerts;
-using Blockstacker.Common.Extensions;
-using Blockstacker.Gameplay.Communication;
-using Blockstacker.GlobalSettings.StatCounting;
+using UStacker.Common;
+using UStacker.Common.Alerts;
+using UStacker.Common.Extensions;
+using UStacker.Gameplay.Communication;
+using UStacker.GlobalSettings.StatCounting;
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
@@ -14,7 +14,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Blockstacker.Gameplay.Stats
+namespace UStacker.Gameplay.Stats
 {
     public class StatCounterDisplayer : MonoBehaviour
     {

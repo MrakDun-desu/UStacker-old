@@ -1,7 +1,7 @@
 ﻿using System;
-using Blockstacker.Gameplay.Enums;
+using UStacker.Gameplay.Enums;
 
-namespace Blockstacker.Gameplay.Communication
+namespace UStacker.Gameplay.Communication
 {
     [Serializable]
     public record InputActionMessage : MidgameMessage

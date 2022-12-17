@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Blockstacker.GameSettings.Changers
+namespace UStacker.GameSettings.Changers
 {
     public class GameSettingBoolChanger : GameSettingChangerBase<bool>
     {

@@ -1,9 +1,9 @@
 using System;
-using Blockstacker.Common.Extensions;
+using UStacker.Common.Extensions;
 using TMPro;
 using UnityEngine;
 
-namespace Blockstacker.GameSettings.Changers
+namespace UStacker.GameSettings.Changers
 {
     public abstract class GameSettingChangerBase<T> : MonoBehaviour
     {

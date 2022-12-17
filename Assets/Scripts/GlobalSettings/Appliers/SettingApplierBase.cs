@@ -1,7 +1,7 @@
-using Blockstacker.GlobalSettings.Changers;
+using UStacker.GlobalSettings.Changers;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Appliers
+namespace UStacker.GlobalSettings.Appliers
 {
     public abstract class SettingApplierBase : MonoBehaviour
     {

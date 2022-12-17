@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Gameplay.Pieces;
+using UStacker.Gameplay.Pieces;
 
-namespace Blockstacker.Gameplay
+namespace UStacker.Gameplay
 {
     public class PiecePreviews
     {

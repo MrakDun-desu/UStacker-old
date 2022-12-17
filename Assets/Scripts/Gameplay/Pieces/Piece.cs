@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Gameplay.Blocks;
-using Blockstacker.GameSettings.Enums;
+using UStacker.Gameplay.Blocks;
+using UStacker.GameSettings.Enums;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Pool;
 
-namespace Blockstacker.Gameplay.Pieces
+namespace UStacker.Gameplay.Pieces
 {
     public class Piece : MonoBehaviour, IBlockCollection
     {

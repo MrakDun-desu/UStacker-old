@@ -1,12 +1,12 @@
 ﻿using System;
-using Blockstacker.Common;
-using Blockstacker.Common.Alerts;
-using Blockstacker.Gameplay.Communication;
+using UStacker.Common;
+using UStacker.Common.Alerts;
+using UStacker.Gameplay.Communication;
 using NLua;
 using NLua.Exceptions;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.GameManagers
+namespace UStacker.Gameplay.GameManagers
 {
     public class CustomGameManager : MonoBehaviour, IGameManager
     {

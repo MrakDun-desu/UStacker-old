@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Blockstacker.GlobalSettings.StatCounting;
+using UStacker.GlobalSettings.StatCounting;
 
-namespace Blockstacker.GlobalSettings.Groups
+namespace UStacker.GlobalSettings.Groups
 {
     [Serializable]
     public record StatCountingSettings

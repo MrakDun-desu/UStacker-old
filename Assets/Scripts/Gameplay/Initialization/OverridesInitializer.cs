@@ -1,8 +1,8 @@
 ﻿using System.Text;
-using Blockstacker.GameSettings;
-using Blockstacker.GlobalSettings;
+using UStacker.GameSettings;
+using UStacker.GlobalSettings;
 
-namespace Blockstacker.Gameplay.Initialization
+namespace UStacker.Gameplay.Initialization
 {
     public class OverridesInitializer : InitializerBase
     {

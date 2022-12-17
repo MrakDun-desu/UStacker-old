@@ -1,11 +1,11 @@
 using System.IO;
-using Blockstacker.Common;
-using Blockstacker.GlobalSettings.BlockSkins;
+using UStacker.Common;
+using UStacker.GlobalSettings.BlockSkins;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Blockstacker.GlobalSettings.Changers
+namespace UStacker.GlobalSettings.Changers
 {
     public class SkinChanger : AppSettingChangerBase<string>
     {

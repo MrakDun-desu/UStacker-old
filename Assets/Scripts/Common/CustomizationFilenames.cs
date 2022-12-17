@@ -1,4 +1,4 @@
-﻿namespace Blockstacker.Common
+﻿namespace UStacker.Common
 {
     public static class CustomizationFilenames
     {

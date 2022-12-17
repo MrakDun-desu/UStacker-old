@@ -4,15 +4,15 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Blockstacker.Common;
-using Blockstacker.Common.Alerts;
-using Blockstacker.Gameplay.Communication;
-using Blockstacker.Gameplay.Stats;
-using Blockstacker.GameSettings;
-using Blockstacker.GlobalSettings;
+using UStacker.Common;
+using UStacker.Common.Alerts;
+using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Stats;
+using UStacker.GameSettings;
+using UStacker.GlobalSettings;
 using Newtonsoft.Json;
 
-namespace Blockstacker.Gameplay
+namespace UStacker.Gameplay
 {
     [Serializable]
     public record GameReplay

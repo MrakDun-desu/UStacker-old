@@ -1,7 +1,7 @@
 using System.Text;
-using Blockstacker.GameSettings;
+using UStacker.GameSettings;
 
-namespace Blockstacker.Gameplay.Initialization
+namespace UStacker.Gameplay.Initialization
 {
     public abstract class InitializerBase
     {

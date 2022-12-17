@@ -1,14 +1,14 @@
 using System;
-using Blockstacker.GlobalSettings.Appliers;
-using Blockstacker.GlobalSettings.Changers;
-using Blockstacker.GlobalSettings.StatCounting;
+using UStacker.GlobalSettings.Appliers;
+using UStacker.GlobalSettings.Changers;
+using UStacker.GlobalSettings.StatCounting;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-namespace Blockstacker.GlobalSettings.Startup
+namespace UStacker.GlobalSettings.Startup
 {
     public class StartupHandler : MonoBehaviour, ISettingChanger
     {

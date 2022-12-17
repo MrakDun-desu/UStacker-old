@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Globalization;
-using Blockstacker.Common.Extensions;
+using UStacker.Common.Extensions;
 using TMPro;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.Stats
+namespace UStacker.Gameplay.Stats
 {
     public class GameResultStatDisplayer : MonoBehaviour
     {

@@ -1,6 +1,6 @@
 {
-  "name": "Blockstacker.GameSettings",
-  "rootNamespace": "Blockstacker.GameSettings",
+  "name": "UStacker.GameSettings",
+  "rootNamespace": "UStacker.GameSettings",
   "references": [
     "GUID:6055be8ebefd69e48b49212b09b47b2f",
     "GUID:3b1ccb2572982554ea16427ef70e2576",

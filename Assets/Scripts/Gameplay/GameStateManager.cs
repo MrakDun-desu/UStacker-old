@@ -1,14 +1,14 @@
 using System;
-using Blockstacker.Gameplay.Communication;
-using Blockstacker.Gameplay.Initialization;
-using Blockstacker.Gameplay.Stats;
-using Blockstacker.GameSettings;
-using Blockstacker.GameSettings.Enums;
+using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Initialization;
+using UStacker.Gameplay.Stats;
+using UStacker.GameSettings;
+using UStacker.GameSettings.Enums;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-namespace Blockstacker.Gameplay
+namespace UStacker.Gameplay
 {
     public class GameStateManager : MonoBehaviour, IGameSettingsDependency
     {

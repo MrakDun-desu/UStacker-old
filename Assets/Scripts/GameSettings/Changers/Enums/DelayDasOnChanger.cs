@@ -1,6 +1,6 @@
-﻿using Blockstacker.GlobalSettings.Enums;
+﻿using UStacker.GlobalSettings.Enums;
 
-namespace Blockstacker.GameSettings.Changers.Enums
+namespace UStacker.GameSettings.Changers.Enums
 {
     public class DelayDasOnChanger : GameSettingEnumChanger<DelayDasOn>
     {

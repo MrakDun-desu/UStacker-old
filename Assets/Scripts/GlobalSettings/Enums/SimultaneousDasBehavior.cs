@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Blockstacker.GlobalSettings.Enums
+namespace UStacker.GlobalSettings.Enums
 {
     public enum SimultaneousDasBehavior : byte
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.StatCounting
+namespace UStacker.GlobalSettings.StatCounting
 {
-    [CreateAssetMenu(fileName = "PremadeStatCounters", menuName = "Blockstacker/Premade stat counters", order = 0)]
+    [CreateAssetMenu(fileName = "PremadeStatCounters", menuName = "UStacker/Premade stat counters", order = 0)]
     public class PremadeStatCountersSo : ScriptableObject
     {
         public StatCounterGroup[] PremadeGroups = Array.Empty<StatCounterGroup>();

@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Blockstacker.Common;
+using UStacker.Common;
 using TMPro;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Changers
+namespace UStacker.GlobalSettings.Changers
 {
     public class InputPresetChanger : MonoBehaviour, ISettingChanger
     {

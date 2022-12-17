@@ -1,6 +1,6 @@
 {
-  "name": "Blockstacker.Gameplay",
-  "rootNamespace": "Blockstacker.Gameplay",
+  "name": "UStacker.Gameplay",
+  "rootNamespace": "UStacker.Gameplay",
   "references": [
     "GUID:75469ad4d38634e559750d17036d5f7c",
     "GUID:35280ebff7eeb5f42821ca180823349c",

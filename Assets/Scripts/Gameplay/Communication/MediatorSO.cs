@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.Communication
+namespace UStacker.Gameplay.Communication
 {
-    [CreateAssetMenu(menuName = "Blockstacker/Mediator", fileName = "Mediator")]
+    [CreateAssetMenu(menuName = "UStacker/Mediator", fileName = "Mediator")]
     public class MediatorSO : ScriptableObject
     {
         private readonly Dictionary<Type, List<Delegate>> _registeredActions = new();

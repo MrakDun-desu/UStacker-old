@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.Spins
+namespace UStacker.Gameplay.Spins
 {
     [Serializable]
     public record SpinResult

@@ -1,10 +1,10 @@
 using System.Text;
-using Blockstacker.Gameplay.Spins;
-using Blockstacker.GameSettings;
-using Blockstacker.GameSettings.Enums;
-using Blockstacker.GlobalSettings;
+using UStacker.Gameplay.Spins;
+using UStacker.GameSettings;
+using UStacker.GameSettings.Enums;
+using UStacker.GlobalSettings;
 
-namespace Blockstacker.Gameplay.Initialization
+namespace UStacker.Gameplay.Initialization
 {
     public class ControlsInitializer : InitializerBase
     {

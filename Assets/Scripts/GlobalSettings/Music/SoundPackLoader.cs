@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Blockstacker.Common;
-using Blockstacker.Common.Alerts;
+using UStacker.Common;
+using UStacker.Common.Alerts;
 using Newtonsoft.Json;
 using NLua.Exceptions;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Music
+namespace UStacker.GlobalSettings.Music
 {
     public static class SoundPackLoader
     {

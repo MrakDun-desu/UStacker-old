@@ -1,12 +1,12 @@
-﻿using Blockstacker.Common.Converters;
+﻿using UStacker.Common.Converters;
 using Newtonsoft.Json;
 
-namespace Blockstacker.Common
+namespace UStacker.Common
 {
     public static class StaticSettings
     {
 
-        public const string WikiUrl = "https://github.com/MrakDun-desu/BlockstackerDocs/";
+        public const string WikiUrl = "https://github.com/MrakDun-desu/UStackerDocs/";
         public static readonly JsonSerializerSettings DefaultSerializerSettings = new()
         {
 #if UNITY_EDITOR

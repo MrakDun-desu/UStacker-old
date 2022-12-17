@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.IO;
 using UnityEngine;
 
-namespace Blockstacker.Common
+namespace UStacker.Common
 {
     public class DefaultAppOpener : MonoBehaviour
     {

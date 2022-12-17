@@ -1,7 +1,7 @@
-﻿using Blockstacker.Gameplay.Pieces;
+﻿using UStacker.Gameplay.Pieces;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay
+namespace UStacker.Gameplay
 {
     public class PieceContainer : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 ﻿using System;
-using Blockstacker.Common;
+using UStacker.Common;
 
-namespace Blockstacker.GlobalSettings.Groups
+namespace UStacker.GlobalSettings.Groups
 {
     [Serializable]
     public class OverridesDictionary : SerializableDictionary<string, GameSettingsOverrides>

@@ -1,6 +1,6 @@
-using Blockstacker.DiscordPresence;
+using UStacker.DiscordPresence;
 
-namespace Blockstacker.GlobalSettings.Appliers
+namespace UStacker.GlobalSettings.Appliers
 {
     public class DiscordActivityApplier : SettingApplierBase
     {

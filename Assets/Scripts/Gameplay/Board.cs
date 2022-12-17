@@ -2,23 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Blockstacker.Common.Extensions;
-using Blockstacker.Gameplay.Blocks;
-using Blockstacker.Gameplay.Communication;
-using Blockstacker.Gameplay.GarbageGeneration;
-using Blockstacker.Gameplay.Initialization;
-using Blockstacker.Gameplay.Pieces;
-using Blockstacker.Gameplay.Spins;
-using Blockstacker.GameSettings;
-using Blockstacker.GameSettings.Enums;
-using Blockstacker.GlobalSettings;
-using Blockstacker.GlobalSettings.Appliers;
+using UStacker.Common.Extensions;
+using UStacker.Gameplay.Blocks;
+using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.GarbageGeneration;
+using UStacker.Gameplay.Initialization;
+using UStacker.Gameplay.Pieces;
+using UStacker.Gameplay.Spins;
+using UStacker.GameSettings;
+using UStacker.GameSettings.Enums;
+using UStacker.GlobalSettings;
+using UStacker.GlobalSettings.Appliers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 using UnityEngine.Serialization;
 
-namespace Blockstacker.Gameplay
+namespace UStacker.Gameplay
 {
     public class Board : MonoBehaviour, IGameSettingsDependency
     {

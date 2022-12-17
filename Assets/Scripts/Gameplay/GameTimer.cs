@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay
+namespace UStacker.Gameplay
 {
     public class GameTimer : MonoBehaviour
     {

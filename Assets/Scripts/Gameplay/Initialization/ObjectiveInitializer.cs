@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Text;
-using Blockstacker.Gameplay.Communication;
-using Blockstacker.Gameplay.GameManagers;
-using Blockstacker.Gameplay.GarbageGeneration;
-using Blockstacker.GameSettings;
-using Blockstacker.GameSettings.Enums;
+using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.GameManagers;
+using UStacker.Gameplay.GarbageGeneration;
+using UStacker.GameSettings;
+using UStacker.GameSettings.Enums;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Blockstacker.Gameplay.Initialization
+namespace UStacker.Gameplay.Initialization
 {
     public class ObjectiveInitializer : InitializerBase
     {

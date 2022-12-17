@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Gameplay.Blocks;
-using Blockstacker.Gameplay.Initialization;
-using Blockstacker.GameSettings;
-using Blockstacker.GameSettings.Enums;
+using UStacker.Gameplay.Blocks;
+using UStacker.Gameplay.Initialization;
+using UStacker.GameSettings;
+using UStacker.GameSettings.Enums;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Blockstacker.Gameplay.Pieces
+namespace UStacker.Gameplay.Pieces
 {
     public class WarningPiece : MonoBehaviour, IBlockCollection, IGameSettingsDependency
     {

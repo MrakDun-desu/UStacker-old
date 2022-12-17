@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Blockstacker.GameSettings
+namespace UStacker.GameSettings
 {
     [Serializable]
     public class RotationSystem

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Blockstacker.Common.Extensions
+namespace UStacker.Common.Extensions
 {
     public static class ScrollRectExtensions
     {
@@ -10,8 +10,7 @@ namespace Blockstacker.Common.Extensions
             RectTransform target,
             bool minimalMovement = true,
             bool scrollSmooth = true,
-            float time = 0.5f,
-            AnimationCurve easeCurve = null)
+            float time = 0.5f)
         {
             var contentPanel = self.content;
 

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using Blockstacker.Common;
-using Blockstacker.Common.Extensions;
+using UStacker.Common;
+using UStacker.Common.Extensions;
 using NLua;
 using NLua.Exceptions;
 
-namespace Blockstacker.Gameplay.Randomizers
+namespace UStacker.Gameplay.Randomizers
 {
     public class CustomRandomizer : IRandomizer
     {

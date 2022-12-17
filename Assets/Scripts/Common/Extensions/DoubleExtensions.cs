@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Blockstacker.Common.Extensions
+namespace UStacker.Common.Extensions
 {
     public static class DoubleExtensions
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.Pieces
+namespace UStacker.Gameplay.Pieces
 {
     public interface IBlockCollection
     {

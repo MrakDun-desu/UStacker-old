@@ -1,11 +1,11 @@
 using System;
 using System.Globalization;
-using Blockstacker.Common.UI;
+using UStacker.Common.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Blockstacker.GlobalSettings.Changers
+namespace UStacker.GlobalSettings.Changers
 {
     public class AppSettingDoubleChanger : AppSettingChangerBase<double>
     {

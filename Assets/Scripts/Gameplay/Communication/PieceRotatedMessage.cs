@@ -1,6 +1,6 @@
-﻿using Blockstacker.GameSettings.Enums;
+﻿using UStacker.GameSettings.Enums;
 
-namespace Blockstacker.Gameplay.Communication
+namespace UStacker.Gameplay.Communication
 {
     public record PieceRotatedMessage : MidgameMessage
     {

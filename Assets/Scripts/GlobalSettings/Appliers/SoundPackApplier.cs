@@ -1,11 +1,11 @@
 using System.IO;
 using System.Threading.Tasks;
-using Blockstacker.Common;
-using Blockstacker.GlobalSettings.Music;
+using UStacker.Common;
+using UStacker.GlobalSettings.Music;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Blockstacker.GlobalSettings.Appliers
+namespace UStacker.GlobalSettings.Appliers
 {
     public class SoundPackApplier : SettingApplierBase, IAsyncApplier
     {

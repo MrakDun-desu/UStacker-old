@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace Blockstacker.GameSettings.Changers
+namespace UStacker.GameSettings.Changers
 {
     public class GameSettingEnumChanger<TEnum> : GameSettingChangerBase<TEnum> where TEnum : Enum
     {

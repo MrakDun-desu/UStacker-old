@@ -1,7 +1,7 @@
 ﻿using NLua;
 using UnityEngine;
 
-namespace Blockstacker.Common
+namespace UStacker.Common
 {
     public static class CreateLua
     {

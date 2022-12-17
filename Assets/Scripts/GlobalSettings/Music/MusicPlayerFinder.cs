@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Music
+namespace UStacker.GlobalSettings.Music
 {
     public class MusicPlayerFinder : MonoBehaviour
     {

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Blockstacker.Common;
+using UStacker.Common;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.BlockSkins
+namespace UStacker.GlobalSettings.BlockSkins
 {
     [Serializable]
     public class SpriteRecord

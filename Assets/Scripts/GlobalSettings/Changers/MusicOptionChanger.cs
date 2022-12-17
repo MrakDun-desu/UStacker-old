@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Blockstacker.Common;
-using Blockstacker.GlobalSettings.Music;
+using UStacker.Common;
+using UStacker.GlobalSettings.Music;
 using TMPro;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Changers
+namespace UStacker.GlobalSettings.Changers
 {
     public class MusicOptionChanger : AppSettingChangerBase<Dictionary<string, MusicOption>>
     {

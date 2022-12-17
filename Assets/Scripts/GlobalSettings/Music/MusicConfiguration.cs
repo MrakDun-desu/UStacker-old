@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace Blockstacker.GlobalSettings.Music
+namespace UStacker.GlobalSettings.Music
 {
     [Serializable]
     public class MusicConfiguration

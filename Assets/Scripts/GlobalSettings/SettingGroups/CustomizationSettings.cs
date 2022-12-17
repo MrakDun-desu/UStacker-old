@@ -1,6 +1,6 @@
 using System;
 
-namespace Blockstacker.GlobalSettings.Groups
+namespace UStacker.GlobalSettings.Groups
 {
     [Serializable]
     public record CustomizationSettings

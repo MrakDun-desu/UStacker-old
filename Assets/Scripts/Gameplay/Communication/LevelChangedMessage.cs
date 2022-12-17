@@ -1,6 +1,6 @@
 using System;
 
-namespace Blockstacker.Gameplay.Communication
+namespace UStacker.Gameplay.Communication
 {
     [Serializable]
     public record LevelChangedMessage : MidgameMessage

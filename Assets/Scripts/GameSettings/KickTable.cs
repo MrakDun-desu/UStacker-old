@@ -1,8 +1,8 @@
 using System;
-using Blockstacker.GameSettings.Enums;
+using UStacker.GameSettings.Enums;
 using UnityEngine;
 
-namespace Blockstacker.GameSettings
+namespace UStacker.GameSettings
 {
     [Serializable]
     public record KickTable

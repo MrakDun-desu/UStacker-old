@@ -1,9 +1,9 @@
-﻿using Blockstacker.Common;
-using Blockstacker.Gameplay.Communication;
+﻿using UStacker.Common;
+using UStacker.Gameplay.Communication;
 using NLua;
 using NLua.Exceptions;
 
-namespace Blockstacker.Gameplay.GarbageGeneration
+namespace UStacker.Gameplay.GarbageGeneration
 {
     public class CustomGarbageGenerator : IGarbageGenerator
     {

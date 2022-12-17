@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Blockstacker.Common
+namespace UStacker.Common
 {
     public static class FileLoading
     {

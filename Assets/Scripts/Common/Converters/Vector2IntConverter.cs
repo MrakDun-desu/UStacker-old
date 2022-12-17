@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace Blockstacker.Common.Converters
+namespace UStacker.Common.Converters
 {
     public class Vector2IntConverter : JsonConverter<Vector2Int>
     {

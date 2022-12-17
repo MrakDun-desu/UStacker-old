@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Gameplay.Pieces;
-using Blockstacker.GlobalSettings.BlockSkins;
+using UStacker.Gameplay.Pieces;
+using UStacker.GlobalSettings.BlockSkins;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Blockstacker.Gameplay.Blocks
+namespace UStacker.Gameplay.Blocks
 {
     public class BlockBase : MonoBehaviour
     {

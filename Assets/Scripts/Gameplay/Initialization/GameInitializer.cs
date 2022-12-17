@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Blockstacker.Gameplay.Blocks;
-using Blockstacker.Gameplay.Communication;
-using Blockstacker.Gameplay.Pieces;
-using Blockstacker.Gameplay.Presentation;
-using Blockstacker.Gameplay.Stats;
-using Blockstacker.GameSettings;
-using Blockstacker.GlobalSettings.Music;
+using UStacker.Gameplay.Blocks;
+using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Pieces;
+using UStacker.Gameplay.Presentation;
+using UStacker.Gameplay.Stats;
+using UStacker.GameSettings;
+using UStacker.GlobalSettings.Music;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Blockstacker.Gameplay.Initialization
+namespace UStacker.Gameplay.Initialization
 {
     public class GameInitializer : MonoBehaviour
     {

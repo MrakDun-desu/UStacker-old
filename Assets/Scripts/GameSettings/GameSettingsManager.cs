@@ -1,10 +1,10 @@
-﻿using Blockstacker.GlobalSettings.Changers;
+﻿using UStacker.GlobalSettings.Changers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace Blockstacker.GameSettings
+namespace UStacker.GameSettings
 {
     public class GameSettingsManager : MonoBehaviour
     {

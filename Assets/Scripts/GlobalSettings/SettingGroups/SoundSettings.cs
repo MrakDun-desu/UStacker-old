@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Blockstacker.GlobalSettings.Music;
+using UStacker.GlobalSettings.Music;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Groups
+namespace UStacker.GlobalSettings.Groups
 {
     [Serializable]
     public record SoundSettings

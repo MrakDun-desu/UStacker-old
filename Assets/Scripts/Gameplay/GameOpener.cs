@@ -1,9 +1,9 @@
-﻿using Blockstacker.Gameplay.Initialization;
-using Blockstacker.GameSettings;
+﻿using UStacker.Gameplay.Initialization;
+using UStacker.GameSettings;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Blockstacker.Gameplay
+namespace UStacker.Gameplay
 {
     public class GameOpener : MonoBehaviour
     {

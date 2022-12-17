@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Blockstacker.Common.Extensions;
+using UStacker.Common.Extensions;
 
-namespace Blockstacker.Gameplay.Randomizers
+namespace UStacker.Gameplay.Randomizers
 {
     public class RandomRandomizer : IRandomizer
     {

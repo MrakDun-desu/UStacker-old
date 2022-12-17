@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Blockstacker.Common;
-using Blockstacker.Common.Alerts;
+using UStacker.Common;
+using UStacker.Common.Alerts;
 
-namespace Blockstacker.GlobalSettings.Backgrounds
+namespace UStacker.GlobalSettings.Backgrounds
 {
     public static class BackgroundPackLoader
     {

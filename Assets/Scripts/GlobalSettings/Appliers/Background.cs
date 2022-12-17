@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Blockstacker.Common.Extensions;
-using Blockstacker.GlobalSettings.Backgrounds;
+using UStacker.Common.Extensions;
+using UStacker.GlobalSettings.Backgrounds;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using Random = UnityEngine.Random;
 
-namespace Blockstacker.GlobalSettings.Appliers
+namespace UStacker.GlobalSettings.Appliers
 {
     [RequireComponent(typeof(RawImage), typeof(VideoPlayer))]
     public class Background : MonoBehaviour

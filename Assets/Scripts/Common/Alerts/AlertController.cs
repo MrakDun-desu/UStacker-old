@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections;
-using Blockstacker.Common.Extensions;
+using UStacker.Common.Extensions;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Blockstacker.Common.Alerts
+namespace UStacker.Common.Alerts
 {
     public class AlertController : MonoBehaviour
     {

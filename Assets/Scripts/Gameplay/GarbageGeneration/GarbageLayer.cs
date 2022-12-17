@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Blockstacker.Gameplay.Blocks;
-using Blockstacker.Gameplay.Pieces;
+using UStacker.Gameplay.Blocks;
+using UStacker.Gameplay.Pieces;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Blockstacker.Gameplay.GarbageGeneration
+namespace UStacker.Gameplay.GarbageGeneration
 {
     public class GarbageLayer : MonoBehaviour, IBlockCollection
     {

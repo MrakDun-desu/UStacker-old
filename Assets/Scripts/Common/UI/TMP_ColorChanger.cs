@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 
-namespace Blockstacker.Common.UI
+namespace UStacker.Common.UI
 {
     public class TMP_ColorChanger : MonoBehaviour
     {

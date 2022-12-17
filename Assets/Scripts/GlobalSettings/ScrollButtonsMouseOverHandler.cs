@@ -3,7 +3,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Blockstacker.GlobalSettings
+namespace UStacker.GlobalSettings
 {
     public class ScrollButtonsMouseOverHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {

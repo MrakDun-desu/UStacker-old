@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings
+namespace UStacker.GlobalSettings
 {
     public class SettingSaver : MonoBehaviour
     {

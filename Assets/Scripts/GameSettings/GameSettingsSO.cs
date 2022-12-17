@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Blockstacker.Common;
-using Blockstacker.GameSettings.SettingGroups;
+using UStacker.Common;
+using UStacker.GameSettings.SettingGroups;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace Blockstacker.GameSettings
+namespace UStacker.GameSettings
 {
-    [CreateAssetMenu(fileName = "GameSettings", menuName = "Blockstacker/Game settings asset")]
+    [CreateAssetMenu(fileName = "GameSettings", menuName = "UStacker/Game settings asset")]
     public class GameSettingsSO : ScriptableObject
     {
         private const string FILENAME_EXTENSION = ".json";

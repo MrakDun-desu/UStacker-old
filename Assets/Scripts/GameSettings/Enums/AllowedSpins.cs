@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Blockstacker.GameSettings.Enums
+namespace UStacker.GameSettings.Enums
 {
     [Flags]
     public enum AllowedSpins : byte

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.Appliers
+namespace UStacker.GlobalSettings.Appliers
 {
     public class NotFocusedWarning : MonoBehaviour
     {

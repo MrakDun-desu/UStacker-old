@@ -1,8 +1,8 @@
 ﻿using System;
-using Blockstacker.Common;
-using Blockstacker.Gameplay.Pieces;
+using UStacker.Common;
+using UStacker.Gameplay.Pieces;
 
-namespace Blockstacker.Gameplay.Initialization
+namespace UStacker.Gameplay.Initialization
 {
     [Serializable]
     public class PieceDictionary : SerializableDictionary<string, Piece>

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Blockstacker.Common;
-using Blockstacker.Common.Alerts;
+using UStacker.Common;
+using UStacker.Common.Alerts;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace Blockstacker.GlobalSettings.BlockSkins
+namespace UStacker.GlobalSettings.BlockSkins
 {
     public static class SkinLoader
     {

@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using Color = UnityEngine.Color;
 
-namespace Blockstacker.Common
+namespace UStacker.Common
 {
     public static class CreateColor
     {

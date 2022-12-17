@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Blockstacker.GlobalSettings.Music
+namespace UStacker.GlobalSettings.Music
 {
     [Serializable]
     public record MusicOption(OptionType OptionType, string Name)

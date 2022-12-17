@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace Blockstacker.GameSettings
+namespace UStacker.GameSettings
 {
-    [CreateAssetMenu(fileName = "GameAsset", menuName = "Blockstacker/Singleplayer game asset")]
+    [CreateAssetMenu(fileName = "GameAsset", menuName = "UStacker/Singleplayer game asset")]
     public class SingleplayerGameAsset : ScriptableObject
     {
         public GameSettingsSO GameSettings;

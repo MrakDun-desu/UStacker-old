@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Blockstacker.GlobalSettings.BlockSkins
+namespace UStacker.GlobalSettings.BlockSkins
 {
     [Serializable]
     public class SkinRecord

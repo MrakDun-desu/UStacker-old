@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Blockstacker.GameSettings.SettingGroups
+namespace UStacker.GameSettings.SettingGroups
 {
     [Serializable]
     public record PresentationSettings

@@ -1,9 +1,9 @@
 using System.Text;
-using Blockstacker.Gameplay.Presentation;
-using Blockstacker.GameSettings;
+using UStacker.Gameplay.Presentation;
+using UStacker.GameSettings;
 using TMPro;
 
-namespace Blockstacker.Gameplay.Initialization
+namespace UStacker.Gameplay.Initialization
 {
     public class PresentationInitializer : InitializerBase
     {

@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Common.Extensions;
-using Blockstacker.Gameplay.GarbageGeneration;
-using Blockstacker.Gameplay.Pieces;
-using Blockstacker.GlobalSettings;
-using Blockstacker.GlobalSettings.Appliers;
-using Blockstacker.GlobalSettings.BlockSkins;
-using Blockstacker.GlobalSettings.Enums;
+using UStacker.Common.Extensions;
+using UStacker.Gameplay.GarbageGeneration;
+using UStacker.Gameplay.Pieces;
+using UStacker.GlobalSettings;
+using UStacker.GlobalSettings.Appliers;
+using UStacker.GlobalSettings.BlockSkins;
+using UStacker.GlobalSettings.Enums;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.Blocks
+namespace UStacker.Gameplay.Blocks
 {
     [RequireComponent(typeof(SpriteRenderer))]
     public class BlockSkin : MonoBehaviour

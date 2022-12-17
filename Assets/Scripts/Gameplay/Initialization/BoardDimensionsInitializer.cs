@@ -1,10 +1,10 @@
 ﻿using System.Text;
-using Blockstacker.Gameplay.Blocks;
-using Blockstacker.Gameplay.Pieces;
-using Blockstacker.GameSettings;
+using UStacker.Gameplay.Blocks;
+using UStacker.Gameplay.Pieces;
+using UStacker.GameSettings;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.Initialization
+namespace UStacker.Gameplay.Initialization
 {
     public class BoardDimensionsInitializer : InitializerBase
     {

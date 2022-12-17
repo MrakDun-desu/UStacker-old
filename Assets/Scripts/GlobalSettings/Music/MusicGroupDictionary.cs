@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Blockstacker.Common;
+using UStacker.Common;
 
-namespace Blockstacker.GlobalSettings.Music
+namespace UStacker.GlobalSettings.Music
 {
     [Serializable]
     public class MusicGroupDictionary : SerializableDictionary<string, List<string>>

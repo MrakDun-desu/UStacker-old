@@ -1,13 +1,13 @@
 ﻿using System;
-using Blockstacker.Common;
-using Blockstacker.Common.Alerts;
-using Blockstacker.Gameplay.Communication;
-using Blockstacker.GlobalSettings.Music;
+using UStacker.Common;
+using UStacker.Common.Alerts;
+using UStacker.Gameplay.Communication;
+using UStacker.GlobalSettings.Music;
 using NLua;
 using NLua.Exceptions;
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.SoundEffects
+namespace UStacker.Gameplay.SoundEffects
 {
     [RequireComponent(typeof(AudioSource))]
     public class SoundEffectsPlayer : MonoBehaviour

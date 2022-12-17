@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:editor="UnityEditor.UIElements" xmlns:engine="UnityEngine.UIElements" xmlns="UnityEditor.Overlays" elementFormDefault="qualified" targetNamespace="Blockstacker.GlobalSettings.StatCounting.UI" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:editor="UnityEditor.UIElements" xmlns:engine="UnityEngine.UIElements" xmlns="UnityEditor.Overlays" elementFormDefault="qualified" targetNamespace="UStacker.GlobalSettings.StatCounting.UI" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="UnityEngine.UIElements.xsd" namespace="UnityEngine.UIElements" />
   <xs:complexType name="StatCounterChangerType">
     <xs:complexContent mixed="false">
@@ -21,7 +21,7 @@
       </xs:restriction>
     </xs:complexContent>
   </xs:complexType>
-  <xs:element name="StatCounterChanger" substitutionGroup="engine:VisualElement" xmlns:q1="Blockstacker.GlobalSettings.StatCounting.UI" type="q1:StatCounterChangerType" />
+  <xs:element name="StatCounterChanger" substitutionGroup="engine:VisualElement" xmlns:q1="UStacker.GlobalSettings.StatCounting.UI" type="q1:StatCounterChangerType" />
   <xs:complexType name="StatCounterGroupChangerType">
     <xs:complexContent mixed="false">
       <xs:restriction base="engine:VisualElementType">
@@ -42,7 +42,7 @@
       </xs:restriction>
     </xs:complexContent>
   </xs:complexType>
-  <xs:element name="StatCounterGroupChanger" substitutionGroup="engine:VisualElement" xmlns:q2="Blockstacker.GlobalSettings.StatCounting.UI" type="q2:StatCounterGroupChangerType" />
+  <xs:element name="StatCounterGroupChanger" substitutionGroup="engine:VisualElement" xmlns:q2="UStacker.GlobalSettings.StatCounting.UI" type="q2:StatCounterGroupChangerType" />
   <xs:complexType name="StatCountingChangerType">
     <xs:complexContent mixed="false">
       <xs:restriction base="engine:VisualElementType">
@@ -63,5 +63,5 @@
       </xs:restriction>
     </xs:complexContent>
   </xs:complexType>
-  <xs:element name="StatCountingChanger" substitutionGroup="engine:VisualElement" xmlns:q3="Blockstacker.GlobalSettings.StatCounting.UI" type="q3:StatCountingChangerType" />
+  <xs:element name="StatCountingChanger" substitutionGroup="engine:VisualElement" xmlns:q3="UStacker.GlobalSettings.StatCounting.UI" type="q3:StatCountingChangerType" />
 </xs:schema>

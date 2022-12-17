@@ -4,7 +4,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using NLua;
 
-namespace Blockstacker.Gameplay.GameManagers
+namespace UStacker.Gameplay.GameManagers
 {
     public class GameManagerBoardInterface
     {

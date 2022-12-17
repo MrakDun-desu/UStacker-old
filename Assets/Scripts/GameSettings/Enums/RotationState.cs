@@ -1,4 +1,4 @@
-namespace Blockstacker.GameSettings.Enums
+namespace UStacker.GameSettings.Enums
 {
     public enum RotationState
     {

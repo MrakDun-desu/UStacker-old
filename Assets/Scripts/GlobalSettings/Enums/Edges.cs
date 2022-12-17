@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Blockstacker.GlobalSettings.Enums
+namespace UStacker.GlobalSettings.Enums
 {
     [Flags]
     public enum Edges : byte

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Blockstacker.Common.Attributes
+namespace UStacker.Common.Attributes
 {
     public class ReadOnlyAttribute : PropertyAttribute
     {

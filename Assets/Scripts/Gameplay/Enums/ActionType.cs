@@ -1,4 +1,4 @@
-﻿namespace Blockstacker.Gameplay.Enums
+﻿namespace UStacker.Gameplay.Enums
 {
     public enum ActionType : short
     {

@@ -1,6 +1,6 @@
-﻿using Blockstacker.Common;
+﻿using UStacker.Common;
 
-namespace Blockstacker.GlobalSettings.Startup
+namespace UStacker.GlobalSettings.Startup
 {
     public class OnQuitSettingsSaver : MonoSingleton<OnQuitSettingsSaver>
     {

@@ -2,13 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Blockstacker.Common;
-using Blockstacker.Common.Extensions;
+using UStacker.Common;
+using UStacker.Common.Extensions;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Blockstacker.GlobalSettings.Music
+namespace UStacker.GlobalSettings.Music
 {
     [RequireComponent(typeof(AudioSource))]
     public class MusicPlayer : MonoSingleton<MusicPlayer>

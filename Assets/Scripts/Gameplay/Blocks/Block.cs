@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Blockstacker.Gameplay.Blocks
+namespace UStacker.Gameplay.Blocks
 {
     public class Block : ClearableBlock
     {

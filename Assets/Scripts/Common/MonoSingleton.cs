@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Blockstacker.Common
+namespace UStacker.Common
 {
     public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
     {

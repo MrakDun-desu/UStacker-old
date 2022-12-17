@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Blockstacker.GameSettings.Enums
+namespace UStacker.GameSettings.Enums
 {
     public enum TopoutCondition : byte
     {

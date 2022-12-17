@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Blockstacker.Common.UI
+namespace UStacker.Common.UI
 {
     public class CommunityLinkOpener : MonoBehaviour
     {
@@ -11,7 +11,7 @@ namespace Blockstacker.Common.UI
 
         public void OpenItchIo()
         {
-            Application.OpenURL("https://mrakdun-desu.itch.io/blockstacker");
+            Application.OpenURL("https://mrakdun-desu.itch.io/UStacker");
         }
     }
 }
