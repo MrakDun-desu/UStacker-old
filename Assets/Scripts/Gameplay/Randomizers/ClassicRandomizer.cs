@@ -14,11 +14,11 @@ namespace Blockstacker.Gameplay.Randomizers
             "l",
             "j",
             "s",
-            "z",
+            "z"
         };
-        
-        private Random _random;
         private int _lastIndex;
+
+        private Random _random;
 
         public ClassicRandomizer(IEnumerable<string> availablePieces, int seed)
         {

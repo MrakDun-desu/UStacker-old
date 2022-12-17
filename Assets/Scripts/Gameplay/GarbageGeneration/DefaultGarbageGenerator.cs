@@ -6,11 +6,11 @@ namespace Blockstacker.Gameplay.GarbageGeneration
 {
     public class DefaultGarbageGenerator : IGarbageGenerator
     {
-        private Random _random;
-        private int _lastHole = -1;
-        private int _linesLeft;
         private readonly GarbageBoardInterface _boardInterface;
         private readonly List<int> _holeSizes = new();
+        private int _lastHole = -1;
+        private int _linesLeft;
+        private Random _random;
 
         public DefaultGarbageGenerator(GarbageBoardInterface boardInterface, GameSettings.Enums.GarbageGeneration garbageGeneration)
         {

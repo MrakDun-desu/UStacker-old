@@ -11,14 +11,11 @@ namespace Blockstacker.GlobalSettings.Changers
         private TMP_Dropdown _dropdown;
 
         [SerializeField] private EnumWithName[] _values;
-        
+
         protected virtual void Start()
         {
             _dropdown.ClearOptions();
-            foreach (var value in _values)
-            {
-                _dropdown.options.Add(new TMP_Dropdown.OptionData(value.Name));
-            }
+            foreach (var value in _values) _dropdown.options.Add(new TMP_Dropdown.OptionData(value.Name));
 
             RefreshDropdownValue();
             AppSettings.SettingsReloaded += RefreshDropdownValue;
@@ -33,7 +30,7 @@ namespace Blockstacker.GlobalSettings.Changers
                 if (Convert.ToInt64(value.Value) == Convert.ToInt64(AppSettings.GetValue<TEnum>(_controlPath)))
                     _dropdown.SetValueWithoutNotify(i);
             }
-            
+
             _dropdown.RefreshShownValue();
         }
 
@@ -54,6 +51,5 @@ namespace Blockstacker.GlobalSettings.Changers
                 Name = name;
             }
         }
-
     }
 }

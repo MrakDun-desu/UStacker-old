@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Diagnostics;
-using System.Globalization;
+﻿using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -11,9 +8,9 @@ namespace Blockstacker.Common.UI
     public class FpsCounter : MonoBehaviour
     {
         [SerializeField] private float _interval = 1f;
+        private float _currentFps;
 
         private TMP_Text _text;
-        private float _currentFps;
 
         private void Awake()
         {
@@ -25,6 +22,11 @@ namespace Blockstacker.Common.UI
             StartCoroutine(ShowFpsCor());
         }
 
+        private void Update()
+        {
+            _currentFps = 1 / Time.deltaTime;
+        }
+
         private IEnumerator ShowFpsCor()
         {
             while (true)
@@ -32,11 +34,6 @@ namespace Blockstacker.Common.UI
                 _text.text = $"FPS: {_currentFps}";
                 yield return new WaitForSeconds(_interval);
             }
-        }
-
-        private void Update()
-        {
-            _currentFps = 1 / Time.deltaTime;
         }
     }
 }

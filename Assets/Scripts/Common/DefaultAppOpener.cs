@@ -19,8 +19,19 @@ namespace Blockstacker.Common
             Process.Start(path);
         }
 
-        public void OpenBlockSkinFolder() => OpenFile(PersistentPaths.Skins);
-        public void OpenBackgroundFolder() => OpenFile(PersistentPaths.BackgroundPacks);
-        public void OpenSoundPackFolder() => OpenFile(PersistentPaths.SoundPacks);
+        public void OpenBlockSkinFolder()
+        {
+            OpenFile(PersistentPaths.Skins);
+        }
+
+        public void OpenBackgroundFolder()
+        {
+            OpenFile(PersistentPaths.BackgroundPacks);
+        }
+
+        public void OpenSoundPackFolder()
+        {
+            OpenFile(PersistentPaths.SoundPacks);
+        }
     }
 }

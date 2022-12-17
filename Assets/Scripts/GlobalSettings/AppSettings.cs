@@ -10,6 +10,7 @@ namespace Blockstacker.GlobalSettings
 {
     public static class AppSettings
     {
+        private const char INVALID_CHAR_REPLACEMENT = '_';
         private static SettingsContainer Settings = new();
         public static HandlingSettings Handling => Settings.Handling;
         public static SoundSettings Sound => Settings.Sound;
@@ -20,14 +21,13 @@ namespace Blockstacker.GlobalSettings
         public static OtherSettings Other => Settings.Others;
         public static OverridesDictionary GameOverrides => Settings.GameOverrrides;
 
-        public static event Action SettingsReloaded;
-        private const char INVALID_CHAR_REPLACEMENT = '_';
-
         public static string Rebinds
         {
             get => Settings.Rebinds;
             set => Settings.Rebinds = value;
         }
+
+        public static event Action SettingsReloaded;
 
         public static bool TrySave(string path = null)
         {

@@ -14,29 +14,20 @@ namespace Blockstacker.GameSettings
         [SerializeField] private List<KeyValuePair> _duplicateTables = new();
         [SerializeField] private KickTable DefaultKickTable = new();
 
-        [ContextMenu("Copy JSON to clipboard")]
-        public void CopyToClipboard()
-        {
-            GUIUtility.systemCopyBuffer = JsonConvert.SerializeObject(RotationSystem, StaticSettings.DefaultSerializerSettings);
-        }
-        
         public readonly RotationSystem RotationSystem = new();
 
         public void OnBeforeSerialize()
         {
             DefaultKickTable = RotationSystem.DefaultTable;
             _kickTables.Clear();
-            foreach (var keyValuePair in RotationSystem.KickTables)
-            {
-                _kickTables.Add(new KeyValuePair(keyValuePair.Key, keyValuePair.Value));
-            }
+            foreach (var keyValuePair in RotationSystem.KickTables) _kickTables.Add(new KeyValuePair(keyValuePair.Key, keyValuePair.Value));
         }
 
         public void OnAfterDeserialize()
         {
             RotationSystem.DefaultTable = DefaultKickTable;
             RotationSystem.KickTables.Clear();
-            
+
             foreach (var keyValuePair in _kickTables)
             {
                 if (RotationSystem.KickTables.ContainsKey(keyValuePair.Key))
@@ -54,20 +45,24 @@ namespace Blockstacker.GameSettings
                 RotationSystem.KickTables.Add(keyValuePair.Key, keyValuePair.Value);
             }
         }
-        
+
+        [ContextMenu("Copy JSON to clipboard")]
+        public void CopyToClipboard()
+        {
+            GUIUtility.systemCopyBuffer = JsonConvert.SerializeObject(RotationSystem, StaticSettings.DefaultSerializerSettings);
+        }
+
         [Serializable]
         public struct KeyValuePair
         {
             public string Key;
             public KickTable Value;
-            
+
             public KeyValuePair(string key, KickTable value)
             {
                 Key = key;
                 Value = value;
             }
-            
         }
-
     }
 }

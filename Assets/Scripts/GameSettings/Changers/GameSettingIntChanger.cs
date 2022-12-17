@@ -4,7 +4,7 @@ namespace Blockstacker.GameSettings.Changers
 {
     public class GameSettingIntChanger : GameSettingChangerWithField<int>
     {
-        [Space] 
+        [Space]
         [SerializeField] private int _maxValue;
         [SerializeField] private int _minValue;
 

@@ -12,12 +12,12 @@ namespace Blockstacker.Gameplay.GarbageGeneration
     public class GarbageLayer : MonoBehaviour, IBlockCollection
     {
         private readonly List<ClearableBlock> _blocks = new();
+        public ObjectPool<ClearableBlock> BlockSourcePool;
+
+        public ObjectPool<GarbageLayer> SourcePool;
         public ReadOnlyCollection<ClearableBlock> Blocks => _blocks.AsReadOnly();
         public string Type => "garbage";
         public IEnumerable<Vector3> BlockPositions => _blocks.Select(block => block.transform.position);
-
-        public ObjectPool<GarbageLayer> SourcePool;
-        public ObjectPool<ClearableBlock> BlockSourcePool;
 
         public event Action BlocksAdded;
 
@@ -41,7 +41,7 @@ namespace Blockstacker.Gameplay.GarbageGeneration
         {
             foreach (var block in _blocks)
                 block.RefreshSkins();
-            
+
             BlocksAdded?.Invoke();
         }
     }

@@ -35,7 +35,7 @@ namespace Blockstacker.GlobalSettings.Changers
             for (var i = 0; i < _dropdown.options.Count; i++)
             {
                 if (!_dropdown.options[i].text.Equals(AppSettings.GetValue<string>(_controlPath))) continue;
-                
+
                 _dropdown.SetValueWithoutNotify(i);
                 break;
             }
@@ -50,7 +50,7 @@ namespace Blockstacker.GlobalSettings.Changers
             var defaultPath = Path.Combine(PersistentPaths.Skins, SkinLoader.DEFAULT_PATH);
             if (!Directory.Exists(defaultPath))
                 Directory.CreateDirectory(defaultPath);
-            
+
             DefaultAppOpener.OpenFile(PersistentPaths.Skins);
         }
 
@@ -59,14 +59,14 @@ namespace Blockstacker.GlobalSettings.Changers
             const string skinDocsUrl = StaticSettings.WikiUrl + "blob/main/Skin-customization.md";
             Application.OpenURL(skinDocsUrl);
         }
-        
+
         public void RefreshNames()
         {
             _dropdown.ClearOptions();
             _dropdown.SetValueWithoutNotify(0);
             foreach (var path in SkinLoader.EnumerateSkins())
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(path));
-            
+
             if (!_dropdown.options.Exists(item => item.text == SkinLoader.DEFAULT_PATH))
                 _dropdown.options.Insert(0, new TMP_Dropdown.OptionData(SkinLoader.DEFAULT_PATH));
 

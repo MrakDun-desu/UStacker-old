@@ -13,12 +13,12 @@ namespace Blockstacker.GlobalSettings.Music
 {
     public static class SoundPackLoader
     {
+        public const string DEFAULT_PATH = "Default";
         public static readonly Dictionary<string, AudioClip> Music = new();
         public static readonly Dictionary<string, AudioClip> SoundEffects = new();
 
         public static string SoundEffectsScript;
         public static event Action SoundPackChanged;
-        public const string DEFAULT_PATH = "Default";
 
         public static IEnumerable<string> EnumerateSoundPacks()
         {
@@ -57,15 +57,14 @@ namespace Blockstacker.GlobalSettings.Music
             }
             var taskList = new List<Task>
             {
-                LoadSoundEffectsAsync(Path.Combine(path, CustomizationFilenames.SoundEffects)),
-                LoadMusicAsync(Path.Combine(path, CustomizationFilenames.Music))
+                LoadSoundEffectsAsync(Path.Combine(path, CustomizationFilenames.SoundEffects)), LoadMusicAsync(Path.Combine(path, CustomizationFilenames.Music))
             };
 
             await Task.WhenAll(taskList);
 
             SoundPackChanged?.Invoke();
             if (!showAlert) return;
-            
+
             var shownAlert = Path.GetFileNameWithoutExtension(path) == DEFAULT_PATH
                 ? defaultAlert
                 : new Alert(

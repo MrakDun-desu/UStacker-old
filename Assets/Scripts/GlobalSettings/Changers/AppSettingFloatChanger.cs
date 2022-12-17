@@ -29,20 +29,12 @@ namespace Blockstacker.GlobalSettings.Changers
         private void Start()
         {
             OnValidate();
-            
+
             RefreshValue();
 
             _slider.ValueChanged += _ => OnSliderMoved();
             _valueField.onEndEdit.AddListener(OnValueRewritten);
             AppSettings.SettingsReloaded += RefreshValue;
-        }
-
-        private void RefreshValue()
-        {
-            var value = AppSettings.GetValue<float>(_controlPath);
-            _slider.SetRealValue(value);
-            _valueField.SetTextWithoutNotify(FormatValue(value));
-            _valueChanged.Invoke(value);
         }
 
         private new void OnValidate()
@@ -51,6 +43,14 @@ namespace Blockstacker.GlobalSettings.Changers
             _slider.MaxValue = _maxValue;
             _slider.MinValue = _minValue;
             _slider.Range = _range;
+        }
+
+        private void RefreshValue()
+        {
+            var value = AppSettings.GetValue<float>(_controlPath);
+            _slider.SetRealValue(value);
+            _valueField.SetTextWithoutNotify(FormatValue(value));
+            _valueChanged.Invoke(value);
         }
 
         private string FormatValue(float value)
@@ -62,7 +62,7 @@ namespace Blockstacker.GlobalSettings.Changers
         private void OnValueRewritten(string value)
         {
             if (string.IsNullOrEmpty(value)) value = "0";
-            
+
             value = value.Replace('.', ',');
             var isValid = float.TryParse(value, out var newValue);
 
@@ -71,7 +71,7 @@ namespace Blockstacker.GlobalSettings.Changers
                 _valueField.SetTextWithoutNotify(FormatValue(AppSettings.GetValue<float>(_controlPath)));
                 return;
             }
-            
+
             newValue /= _multiplier;
 
             SetValue(newValue);

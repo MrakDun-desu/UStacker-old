@@ -69,7 +69,9 @@ namespace Blockstacker.Common.Alerts
                 text.alpha = value;
         }
 
-        private float GetAlpha() => _controlledImages[0].color.a;
-        
+        private float GetAlpha()
+        {
+            return _controlledImages[0].color.a;
+        }
     }
 }

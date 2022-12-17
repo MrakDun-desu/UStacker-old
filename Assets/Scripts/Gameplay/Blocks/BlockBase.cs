@@ -11,13 +11,13 @@ namespace Blockstacker.Gameplay.Blocks
     {
         [SerializeField] private BlockSkin _blockSkinPrefab;
         [SerializeField] protected GameObject _skinsParent;
+        private readonly List<BlockSkin> _currentSkins = new();
+        private IBlockCollection _blockCollection;
 
         private string _collectionType;
-        private IBlockCollection _blockCollection;
         private BlockSkin[] _defaultSkins;
-        private readonly List<BlockSkin> _currentSkins = new();
-        private float _visibility = 1;
         private ObjectPool<BlockSkin> _skinsPool;
+        private float _visibility = 1;
 
         [field: SerializeField]
         public uint BlockNumber { get; set; }
@@ -27,10 +27,7 @@ namespace Blockstacker.Gameplay.Blocks
             set
             {
                 _visibility = value;
-                foreach (var skin in _currentSkins)
-                {
-                    skin.Visibility = _visibility;
-                }
+                foreach (var skin in _currentSkins) skin.Visibility = _visibility;
             }
         }
         public string CollectionType
@@ -55,12 +52,6 @@ namespace Blockstacker.Gameplay.Blocks
                 skin => Destroy(skin.gameObject));
         }
 
-        private void OnSkinRelease(BlockSkin skin)
-        {
-            skin.gameObject.SetActive(false);
-            skin.UnregisterEvents();
-        }
-
         protected virtual void Start()
         {
             CollectionType = _blockCollection.Type;
@@ -72,6 +63,12 @@ namespace Blockstacker.Gameplay.Blocks
             SkinLoader.SkinChanged -= UpdateBlockSkin;
         }
 
+        private void OnSkinRelease(BlockSkin skin)
+        {
+            skin.gameObject.SetActive(false);
+            skin.UnregisterEvents();
+        }
+
         protected virtual void UpdateBlockSkin()
         {
             if (!TryGetSkins(out var newSkins))
@@ -79,7 +76,7 @@ namespace Blockstacker.Gameplay.Blocks
                 foreach (var skin in _currentSkins)
                     _skinsPool.Release(skin);
                 _currentSkins.Clear();
-                
+
                 foreach (var skin in _defaultSkins)
                 {
                     skin.Board = Board;
@@ -114,10 +111,7 @@ namespace Blockstacker.Gameplay.Blocks
         {
             if (_currentSkins.Count <= 0 || forceDestroyOld)
             {
-                foreach (Transform tf in parent.transform)
-                {
-                    Destroy(tf.gameObject);
-                }
+                foreach (Transform tf in parent.transform) Destroy(tf.gameObject);
             }
             else
             {
@@ -125,7 +119,7 @@ namespace Blockstacker.Gameplay.Blocks
                     _skinsPool.Release(skin);
                 _currentSkins.Clear();
             }
-            
+
             AddNewSkins(newSkins, parent);
         }
 

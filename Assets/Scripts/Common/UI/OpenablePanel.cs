@@ -10,9 +10,9 @@ namespace Blockstacker.Common.UI
         [SerializeField] private float _openedX = 1150f;
         [SerializeField] private float _closedX = 150f;
         [SerializeField] private float _tweenDuration = 0.5f;
+        private TweenerCore<float, float, FloatOptions> _currentTween;
 
         private bool _panelOpened;
-        private TweenerCore<float, float, FloatOptions> _currentTween;
 
         private RectTransform _controlledTransform => (RectTransform) transform;
 

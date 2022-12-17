@@ -16,6 +16,8 @@ namespace Blockstacker.Gameplay.Initialization
 {
     public class GameInitializer : MonoBehaviour
     {
+
+        private static GameReplay _replay;
         [Space] [SerializeField] private PieceDictionary _availablePieces = new();
 
         [Header("Board")] [SerializeField] private PieceSpawner _pieceSpawner;
@@ -45,8 +47,6 @@ namespace Blockstacker.Gameplay.Initialization
         public UnityEvent ReplayStarted;
         public UnityEvent ReplayInitialized;
         public UnityEvent<string> GameFailedToInitialize;
-
-        private static GameReplay _replay;
         public static GameSettingsSO.SettingsContainer GameSettings { get; set; }
 
         public static GameReplay Replay
@@ -59,7 +59,7 @@ namespace Blockstacker.Gameplay.Initialization
                     GameSettings = _replay?.GameSettings;
             }
         }
-        
+
         public static string GameType { get; set; }
         public static bool InitAsReplay { get; set; }
 
@@ -107,7 +107,7 @@ namespace Blockstacker.Gameplay.Initialization
         private bool TryInitialize(StringBuilder errorBuilder)
         {
             var actionList = Replay?.ActionList;
-            
+
             _playerFinder.GameType = GameType;
             _statCounterManager.GameType = GameType;
             _stateManager.GameType = GameType;
@@ -162,7 +162,7 @@ namespace Blockstacker.Gameplay.Initialization
             _playerFinder.GameType = GameType;
 
             var actionList = Replay?.ActionList;
-            
+
             List<InitializerBase> initializers = new()
             {
                 new GeneralInitializer(
@@ -175,7 +175,7 @@ namespace Blockstacker.Gameplay.Initialization
                     _stateManager,
                     actionList,
                     true,
-                    InitAsReplay),
+                    InitAsReplay)
             };
 
             foreach (var initializer in initializers) initializer.Execute();

@@ -12,19 +12,19 @@ namespace Blockstacker.GlobalSettings.Appliers
     [RequireComponent(typeof(RawImage), typeof(VideoPlayer))]
     public class Background : MonoBehaviour
     {
+
+        private const float REFERENCE_HEIGHT = 1080f;
         [SerializeField] private string _backgroundName;
         [SerializeField] private List<BackgroundRecord> _defaultBackgrounds;
 
         private RawImage _backgroundImage;
+        private Camera _camera;
+        private float _heightToWidthRatio = 9f / 16f;
+        private float _lastFrameRatio;
+        private RectTransform _myTransform;
+        private float _textureWidth;
         private VideoPlayer _videoPlayer;
         private float _widthToHeightRatio = 16f / 9f;
-        private float _heightToWidthRatio = 9f / 16f;
-        private Camera _camera;
-        private RectTransform _myTransform;
-        private float _lastFrameRatio;
-        private float _textureWidth;
-
-        private const float REFERENCE_HEIGHT = 1080f;
 
         private void Awake()
         {
@@ -32,6 +32,18 @@ namespace Blockstacker.GlobalSettings.Appliers
             _myTransform = GetComponent<RectTransform>();
             _backgroundImage = GetComponent<RawImage>();
             _videoPlayer = GetComponent<VideoPlayer>();
+        }
+
+        private void Update()
+        {
+            var pixelHeight = _camera.pixelHeight;
+            var realWidthToHeightRatio = (float) _camera.pixelWidth / pixelHeight;
+
+            if (Math.Abs(realWidthToHeightRatio - _lastFrameRatio) < float.Epsilon)
+                return;
+
+            _lastFrameRatio = realWidthToHeightRatio;
+            UpdateBackgroundSize(realWidthToHeightRatio);
         }
 
         private void OnEnable()
@@ -58,10 +70,7 @@ namespace Blockstacker.GlobalSettings.Appliers
             if (string.IsNullOrEmpty(_backgroundName)) return;
             if (!BackgroundPackLoader.Backgrounds.TryGetValue(_backgroundName, out var newBackgrounds))
             {
-                if (!BackgroundPackLoader.Backgrounds.TryGetValue("default", out newBackgrounds))
-                {
-                    newBackgrounds = _defaultBackgrounds;
-                }
+                if (!BackgroundPackLoader.Backgrounds.TryGetValue("default", out newBackgrounds)) newBackgrounds = _defaultBackgrounds;
             }
 
             if (newBackgrounds.Count == 0) return;
@@ -92,18 +101,6 @@ namespace Blockstacker.GlobalSettings.Appliers
             _heightToWidthRatio = (float) newTexture.height / newTexture.width;
 
             UpdateBackgroundSize((float) _camera.pixelWidth / _camera.pixelHeight);
-        }
-
-        private void Update()
-        {
-            var pixelHeight = _camera.pixelHeight;
-            var realWidthToHeightRatio = (float) _camera.pixelWidth / pixelHeight;
-
-            if (Math.Abs(realWidthToHeightRatio - _lastFrameRatio) < float.Epsilon)
-                return;
-
-            _lastFrameRatio = realWidthToHeightRatio;
-            UpdateBackgroundSize(realWidthToHeightRatio);
         }
 
         private void UpdateBackgroundSize(float realRatio)

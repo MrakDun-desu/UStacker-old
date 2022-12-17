@@ -10,9 +10,9 @@ namespace Blockstacker.Gameplay.Initialization
     {
         private readonly Board _board;
         private readonly GameObject _boardBackground;
+        private readonly BoardGrid _boardGrid;
         private readonly Camera _camera;
         private readonly BlockBase _gridBlock;
-        private readonly BoardGrid _boardGrid;
         private readonly RectTransform _statCanvasTransform;
 
         public BoardDimensionsInitializer(
@@ -65,7 +65,7 @@ namespace Blockstacker.Gameplay.Initialization
 
                 var blockTransform = gridBlock.transform;
                 blockTransform.localPosition = new Vector3(x + .5f, y + .5f, blockTransform.localPosition.z);
-                
+
                 _boardGrid.AddBlock(gridBlock);
             }
 

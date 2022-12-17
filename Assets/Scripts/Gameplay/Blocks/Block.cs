@@ -6,19 +6,19 @@ namespace Blockstacker.Gameplay.Blocks
     {
         [SerializeField] private Vector2 _initialPosition;
         [SerializeField] private GameObject _holdSkinsParent;
-
-        private string _originalCollectionType;
         private bool _firstTimeLoad = true;
 
-        private void OnValidate()
-        {
-            ResetPosition();
-        }
+        private string _originalCollectionType;
 
         protected override void Start()
         {
             base.Start();
             _originalCollectionType = CollectionType;
+        }
+
+        private void OnValidate()
+        {
+            ResetPosition();
         }
 
         public void ResetPosition()

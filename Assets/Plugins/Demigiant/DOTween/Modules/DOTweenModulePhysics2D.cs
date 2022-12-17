@@ -120,7 +120,8 @@ namespace DG.Tweening
             int len = path.Length;
             Vector3[] path3D = new Vector3[len];
             for (int i = 0; i < len; ++i) path3D[i] = path[i];
-            TweenerCore<Vector3, Path, PathOptions> t = DOTween.To(PathPlugin.Get(), () => target.position, x => target.MovePosition(x), new Path(pathType, path3D, resolution, gizmoColor), duration)
+            TweenerCore<Vector3, Path, PathOptions> t =
+ DOTween.To(PathPlugin.Get(), () => target.position, x => target.MovePosition(x), new Path(pathType, path3D, resolution, gizmoColor), duration)
                 .SetTarget(target).SetUpdate(UpdateType.Fixed);
 
             t.plugOptions.isRigidbody2D = true;
@@ -149,7 +150,8 @@ namespace DG.Tweening
             Vector3[] path3D = new Vector3[len];
             for (int i = 0; i < len; ++i) path3D[i] = path[i];
             Transform trans = target.transform;
-            TweenerCore<Vector3, Path, PathOptions> t = DOTween.To(PathPlugin.Get(), () => trans.localPosition, x => target.MovePosition(trans.parent == null ? x : trans.parent.TransformPoint(x)), new Path(pathType, path3D, resolution, gizmoColor), duration)
+            TweenerCore<Vector3, Path, PathOptions> t =
+ DOTween.To(PathPlugin.Get(), () => trans.localPosition, x => target.MovePosition(trans.parent == null ? x : trans.parent.TransformPoint(x)), new Path(pathType, path3D, resolution, gizmoColor), duration)
                 .SetTarget(target).SetUpdate(UpdateType.Fixed);
 
             t.plugOptions.isRigidbody2D = true;
@@ -174,7 +176,8 @@ namespace DG.Tweening
         )
         {
             Transform trans = target.transform;
-            TweenerCore<Vector3, Path, PathOptions> t = DOTween.To(PathPlugin.Get(), () => trans.localPosition, x => target.MovePosition(trans.parent == null ? x : trans.parent.TransformPoint(x)), path, duration)
+            TweenerCore<Vector3, Path, PathOptions> t =
+ DOTween.To(PathPlugin.Get(), () => trans.localPosition, x => target.MovePosition(trans.parent == null ? x : trans.parent.TransformPoint(x)), path, duration)
                 .SetTarget(target);
 
             t.plugOptions.isRigidbody2D = true;

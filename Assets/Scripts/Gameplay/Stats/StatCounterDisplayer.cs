@@ -18,34 +18,72 @@ namespace Blockstacker.Gameplay.Stats
 {
     public class StatCounterDisplayer : MonoBehaviour
     {
-        [SerializeField] private TMP_Text _displayText;
-        [SerializeField] private RectTransform _textContainer;
-        [SerializeField] private RectTransform _moveHandle;
-        [SerializeField] private RectTransform _sizeHandle;
 
         private const string UPDATED_KEY = "CounterUpdated";
         private const string UTILITY_NAME = "StatUtility";
         private const string BOARD_INTERFACE_NAME = "Board";
         private const string STAT_CONTAINER_NAME = "Stats";
-
-        private Lua _luaState;
-        private LuaFunction _updateFunction;
-
-        private MediatorSO _mediator;
+        private static StatCounterDisplayer _currentlyUnderMouse;
+        [SerializeField] private TMP_Text _displayText;
+        [SerializeField] private RectTransform _textContainer;
+        [SerializeField] private RectTransform _moveHandle;
+        [SerializeField] private RectTransform _sizeHandle;
         private StatBoardInterface _boardInterface;
-        private ReadonlyStatContainer _statContainer;
         private Camera _camera;
-        private StatCounterRecord _statCounter;
-        private StatUtility _statUtility;
+        private TweenerCore<Color, Color, ColorOptions> _colorTween;
 
         private Vector3 _dragStartPosition;
         private Vector3 _dragStartTransformPosition;
         private bool _isDraggingPosition;
         private bool _isDraggingSize;
-        private static StatCounterDisplayer _currentlyUnderMouse;
-        
+
+        private Lua _luaState;
+
+        private MediatorSO _mediator;
+        private ReadonlyStatContainer _statContainer;
+        private StatCounterRecord _statCounter;
+        private StatUtility _statUtility;
+        private LuaFunction _updateFunction;
+
         private TweenerCore<Color, Color, ColorOptions> _visibilityTween;
-        private TweenerCore<Color, Color, ColorOptions> _colorTween;
+
+        private void Awake()
+        {
+            _camera = FindObjectOfType<Camera>();
+        }
+
+        private void Update()
+        {
+            Vector2 mousePos = _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            if (_currentlyUnderMouse is null)
+            {
+                if (_textContainer.GetWorldSpaceRect().Contains(mousePos))
+                {
+                    _currentlyUnderMouse = this;
+                    _moveHandle.gameObject.SetActive(true);
+                    _sizeHandle.gameObject.SetActive(true);
+                }
+            }
+
+            if (_currentlyUnderMouse != this) return;
+
+            if (_textContainer.GetWorldSpaceRect().Contains(mousePos) || _isDraggingPosition || _isDraggingSize)
+            {
+                HandlePositionDrag(mousePos);
+                HandleSizeDrag(mousePos);
+                return;
+            }
+
+            _currentlyUnderMouse = null;
+            _moveHandle.gameObject.SetActive(false);
+            _sizeHandle.gameObject.SetActive(false);
+        }
+
+        private void OnDestroy()
+        {
+            if (_currentlyUnderMouse == this)
+                _currentlyUnderMouse = null;
+        }
 
 
         private void RefreshStatCounter()
@@ -70,10 +108,7 @@ namespace Blockstacker.Gameplay.Stats
             {
                 var returnedValue = _luaState.DoString(_statCounter.Script);
                 if (returnedValue.Length == 0) return;
-                if (returnedValue[0] is LuaTable eventTable)
-                {
-                    events = eventTable;
-                }
+                if (returnedValue[0] is LuaTable eventTable) events = eventTable;
             }
             catch (LuaException ex)
             {
@@ -155,44 +190,6 @@ namespace Blockstacker.Gameplay.Stats
             _displayText.text = outText;
         }
 
-        private void Awake()
-        {
-            _camera = FindObjectOfType<Camera>();
-        }
-
-        private void Update()
-        {
-            Vector2 mousePos = _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            if (_currentlyUnderMouse is null)
-            {
-                if (_textContainer.GetWorldSpaceRect().Contains(mousePos))
-                {
-                    _currentlyUnderMouse = this;
-                    _moveHandle.gameObject.SetActive(true);
-                    _sizeHandle.gameObject.SetActive(true);
-                }
-            }
-
-            if (_currentlyUnderMouse != this) return;
-
-            if (_textContainer.GetWorldSpaceRect().Contains(mousePos) || _isDraggingPosition || _isDraggingSize)
-            {
-                HandlePositionDrag(mousePos);
-                HandleSizeDrag(mousePos);
-                return;
-            }
-
-            _currentlyUnderMouse = null;
-            _moveHandle.gameObject.SetActive(false);
-            _sizeHandle.gameObject.SetActive(false);
-        }
-
-        private void OnDestroy()
-        {
-            if (_currentlyUnderMouse == this)
-                _currentlyUnderMouse = null;
-        }
-
         private void HandlePositionDrag(Vector2 mousePos)
         {
             if (Mouse.current.leftButton.wasPressedThisFrame && _moveHandle.GetWorldSpaceRect().Contains(mousePos))
@@ -210,18 +207,13 @@ namespace Blockstacker.Gameplay.Stats
                 _textContainer.localPosition = newPos;
                 _statCounter.Position = newPos;
             }
-            else if (Mouse.current.leftButton.wasReleasedThisFrame)
-            {
-                _isDraggingPosition = false;
-            }
+            else if (Mouse.current.leftButton.wasReleasedThisFrame) _isDraggingPosition = false;
         }
 
         private void HandleSizeDrag(Vector2 mousePos)
         {
             if (Mouse.current.leftButton.wasPressedThisFrame && _sizeHandle.GetWorldSpaceRect().Contains(mousePos))
-            {
                 _isDraggingSize = true;
-            }
             else if (Mouse.current.leftButton.isPressed && _isDraggingSize)
             {
                 var containerPos = (Vector2) _textContainer.position;
@@ -232,10 +224,19 @@ namespace Blockstacker.Gameplay.Stats
                 _textContainer.sizeDelta = sizeDelta;
                 _statCounter.Size = sizeDelta;
             }
-            else if (Mouse.current.leftButton.wasReleasedThisFrame)
-            {
-                _isDraggingSize = false;
-            }
+            else if (Mouse.current.leftButton.wasReleasedThisFrame) _isDraggingSize = false;
+        }
+
+        public void Initialize(MediatorSO mediator, StatBoardInterface board,
+            ReadonlyStatContainer statContainer, StatUtility statUtility,
+            StatCounterRecord statCounter)
+        {
+            _mediator = mediator;
+            _boardInterface = board;
+            _statContainer = statContainer;
+            _statCounter = statCounter;
+            _statUtility = statUtility;
+            RefreshStatCounter();
         }
 
         #region Callable functions
@@ -301,19 +302,7 @@ namespace Blockstacker.Gameplay.Stats
             _displayText.enableAutoSizing = false;
             _displayText.fontSize = Convert.ToSingle(sizeObj);
         }
-        
-        #endregion
 
-        public void Initialize(MediatorSO mediator, StatBoardInterface board,
-            ReadonlyStatContainer statContainer, StatUtility statUtility,
-            StatCounterRecord statCounter)
-        {
-            _mediator = mediator;
-            _boardInterface = board;
-            _statContainer = statContainer;
-            _statCounter = statCounter;
-            _statUtility = statUtility;
-            RefreshStatCounter();
-        }
+        #endregion
     }
 }

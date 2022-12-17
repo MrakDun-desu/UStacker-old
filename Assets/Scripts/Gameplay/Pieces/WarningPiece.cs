@@ -16,35 +16,11 @@ namespace Blockstacker.Gameplay.Pieces
         [SerializeField] private Board _board;
         [SerializeField] private SpriteRenderer _warningLine;
 
-        public GameSettingsSO.SettingsContainer GameSettings { set => _settings = value; }
-        private GameSettingsSO.SettingsContainer _settings;
-
         private readonly List<BlockBase> _blocks = new();
+        private ObjectPool<BlockBase> _blockPool;
         private string _currentPieceType = "";
         private bool _isEnabled = true;
-        private ObjectPool<BlockBase> _blockPool;
-
-        public event Action PieceChanged;
-
-        public IEnumerable<Vector3> BlockPositions => _blocks.Select(block => block.transform.position);
-        public string Type => "warning";
-
-        public void MakeVisible()
-        {
-            if (!_isEnabled) return;
-            gameObject.SetActive(true);
-            
-            if (_settings.Gravity.TopoutCondition == TopoutCondition.PieceSpawn) return;
-            _warningLine.gameObject.SetActive(true);
-        }
-
-        public void MakeInvisible()
-        {
-            if (!_isEnabled) return;
-            
-            gameObject.SetActive(false);
-            _warningLine.gameObject.SetActive(false);
-        }
+        private GameSettingsSO.SettingsContainer _settings;
 
         private void Awake()
         {
@@ -61,9 +37,9 @@ namespace Blockstacker.Gameplay.Pieces
 
         private void Start()
         {
-            if (_settings.General.NextPieceCount <= 0) 
+            if (_settings.General.NextPieceCount <= 0)
                 _isEnabled = false;
-            
+
             MakeInvisible();
 
             var warningLineTransform = _warningLine.transform;
@@ -71,12 +47,39 @@ namespace Blockstacker.Gameplay.Pieces
             warningLineTransform.localPosition = new Vector3(_settings.BoardDimensions.BoardWidth / 2f,
                 _settings.BoardDimensions.BoardHeight);
         }
-        
+
+        public IEnumerable<Vector3> BlockPositions => _blocks.Select(block => block.transform.position);
+        public string Type => "warning";
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            set => _settings = value;
+        }
+
+        public event Action PieceChanged;
+
+        public void MakeVisible()
+        {
+            if (!_isEnabled) return;
+            gameObject.SetActive(true);
+
+            if (_settings.Gravity.TopoutCondition == TopoutCondition.PieceSpawn) return;
+            _warningLine.gameObject.SetActive(true);
+        }
+
+        public void MakeInvisible()
+        {
+            if (!_isEnabled) return;
+
+            gameObject.SetActive(false);
+            _warningLine.gameObject.SetActive(false);
+        }
+
         private BlockBase CreateBlock()
         {
             var newBlock = Instantiate(_blockPrefab, transform);
             newBlock.Board = _board;
-            newBlock.BlockNumber = (uint)Mathf.Min(_blocks.Count, 3);
+            newBlock.BlockNumber = (uint) Mathf.Min(_blocks.Count, 3);
             return newBlock;
         }
 
@@ -119,10 +122,7 @@ namespace Blockstacker.Gameplay.Pieces
                 _blocks.RemoveAt(_blocks.Count - 1);
             }
 
-            while (_blocks.Count < blocksCount)
-            {
-                _blocks.Add(_blockPool.Get());
-            }
+            while (_blocks.Count < blocksCount) _blocks.Add(_blockPool.Get());
         }
     }
 }

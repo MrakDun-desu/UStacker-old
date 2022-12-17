@@ -36,13 +36,14 @@ namespace Blockstacker.Common.UI
         }
 
         private float RealRange => _maxValue - _minValue;
-        public event Action<float> ValueChanged;
 
         private void Awake()
         {
             _slider = GetComponent<Slider>();
-            _slider.onValueChanged.AddListener((val) => ValueChanged?.Invoke(val));
+            _slider.onValueChanged.AddListener(val => ValueChanged?.Invoke(val));
         }
+
+        public event Action<float> ValueChanged;
 
         public float GetRealValue()
         {

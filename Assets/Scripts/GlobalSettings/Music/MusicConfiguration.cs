@@ -8,12 +8,12 @@ namespace Blockstacker.GlobalSettings.Music
     [Serializable]
     public class MusicConfiguration
     {
-        [JsonIgnore] private List<string> _defaultMusic = new();
         public List<string> GameMusic = new();
         public List<string> MenuMusic = new();
         public List<string> VictoryMusic = new();
         public List<string> LossMusic = new();
         public MusicGroupDictionary GameMusicGroups = new();
+        [JsonIgnore] private List<string> _defaultMusic = new();
 
         public void SetDefaultMusic(List<string> value)
         {
@@ -28,7 +28,7 @@ namespace Blockstacker.GlobalSettings.Music
             UpdateGroup(LossMusic, other.LossMusic);
 
             if (other.GameMusicGroups.Count == 0) return;
-            
+
             GameMusicGroups.Clear();
             foreach (var (key, group) in other.GameMusicGroups)
             {
@@ -54,11 +54,8 @@ namespace Blockstacker.GlobalSettings.Music
             ).ToArray();
             mine.AddRange(newMusic);
             if (!removeFromGame) return;
-            
-            foreach (var clipName in newMusic)
-            {
-                GameMusic.Remove(clipName);
-            }
+
+            foreach (var clipName in newMusic) GameMusic.Remove(clipName);
         }
     }
 }

@@ -11,6 +11,18 @@ namespace Blockstacker.GlobalSettings.Backgrounds
         [CanBeNull] [SerializeField] private Texture2D _texture;
         [SerializeField] private BackgroundType _type;
 
+        public BackgroundRecord(string videoPath)
+        {
+            VideoPath = videoPath;
+            Type = BackgroundType.Video;
+        }
+
+        public BackgroundRecord(Texture2D texture)
+        {
+            Texture = texture;
+            Type = BackgroundType.Texture;
+        }
+
         public BackgroundType Type
         {
             get => _type;
@@ -37,18 +49,6 @@ namespace Blockstacker.GlobalSettings.Backgrounds
                 _ => null
             };
             private set => _texture = value;
-        }
-
-        public BackgroundRecord(string videoPath)
-        {
-            VideoPath = videoPath;
-            Type = BackgroundType.Video;
-        }
-
-        public BackgroundRecord(Texture2D texture)
-        {
-            Texture = texture;
-            Type = BackgroundType.Texture;
         }
     }
 

@@ -9,8 +9,8 @@ namespace Blockstacker.Common.UI
     public class AutoScroller : MonoBehaviour
     {
         [SerializeField] private bool _minimalMovement = true;
-        private ScrollRect _scrollRect;
         private EventSystem _activeEventSystem;
+        private ScrollRect _scrollRect;
 
         private void Awake()
         {
@@ -33,31 +33,31 @@ namespace Blockstacker.Common.UI
             var current = _activeEventSystem.currentSelectedGameObject;
 
             if (current == null) return;
-            
-            _scrollRect.ScrollTo((RectTransform)current.transform, _minimalMovement, false);
+
+            _scrollRect.ScrollTo((RectTransform) current.transform, _minimalMovement, false);
         }
-        
+
         public void ScrollLeft(float amount)
         {
             var contentPos = _scrollRect.content.localPosition;
             contentPos.x += amount;
             _scrollRect.content.anchoredPosition = contentPos;
         }
-        
+
         public void ScrollRight(float amount)
         {
             var contentPos = _scrollRect.content.localPosition;
             contentPos.x -= amount;
             _scrollRect.content.anchoredPosition = contentPos;
         }
-        
+
         public void ScrollUp(float amount)
         {
             var contentPos = _scrollRect.content.anchoredPosition;
-            contentPos.y += amount; 
+            contentPos.y += amount;
             _scrollRect.content.anchoredPosition = contentPos;
         }
-        
+
         public void ScrollDown(float amount)
         {
             var contentPos = _scrollRect.content.anchoredPosition;

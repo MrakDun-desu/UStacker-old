@@ -7,6 +7,5 @@ namespace Blockstacker.GlobalSettings.Music
     [Serializable]
     public class MusicGroupDictionary : SerializableDictionary<string, List<string>>
     {
-        
     }
 }

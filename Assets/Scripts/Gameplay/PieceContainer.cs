@@ -28,7 +28,7 @@ namespace Blockstacker.Gameplay
         {
             if (_pieceIsNull)
                 return;
-            
+
             _piece.Type = USED_HOLD_TYPE;
             // rotating to reset state
             _piece.Rotate(0);
@@ -36,9 +36,9 @@ namespace Blockstacker.Gameplay
 
         public void UnmarkUsed()
         {
-            if (_pieceIsNull) 
+            if (_pieceIsNull)
                 return;
-            
+
             _piece.RevertType();
             // rotating to reset state
             _piece.Rotate(0);
@@ -57,11 +57,11 @@ namespace Blockstacker.Gameplay
                 _piece.ContainerOffset.y + Height * .5f);
             pieceTransform.localScale = new Vector3(1, 1, 1);
             pieceTransform.rotation = transform.rotation;
-            
+
             // rotating to reset state
             Piece.Rotate(0);
             Piece.Visibility = 1;
-            
+
             return temp;
         }
     }

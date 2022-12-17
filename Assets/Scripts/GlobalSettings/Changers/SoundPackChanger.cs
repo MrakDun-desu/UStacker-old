@@ -16,7 +16,7 @@ namespace Blockstacker.GlobalSettings.Changers
         private void Start()
         {
             RefreshNames();
-            
+
             AppSettings.SettingsReloaded += RefreshValue;
             _dropdown.onValueChanged.AddListener(OptionPicked);
             _folderButton.onClick.AddListener(OpenSoundFolder);
@@ -28,7 +28,7 @@ namespace Blockstacker.GlobalSettings.Changers
             for (var i = 0; i < _dropdown.options.Count; i++)
             {
                 if (!_dropdown.options[i].text.Equals(AppSettings.GetValue<string>(_controlPath))) continue;
-                
+
                 _dropdown.SetValueWithoutNotify(i);
                 break;
             }
@@ -41,7 +41,7 @@ namespace Blockstacker.GlobalSettings.Changers
 
             SetValue(newSoundPack);
         }
-        
+
         private void OpenSoundFolder()
         {
             if (!Directory.Exists(PersistentPaths.SoundPacks))
@@ -54,7 +54,7 @@ namespace Blockstacker.GlobalSettings.Changers
                 Directory.CreateDirectory(Path.Combine(defaultPath, CustomizationFilenames.Music));
                 Directory.CreateDirectory(Path.Combine(defaultPath, CustomizationFilenames.SoundEffects));
             }
-            
+
             DefaultAppOpener.OpenFile(PersistentPaths.SoundPacks);
         }
 
@@ -70,10 +70,10 @@ namespace Blockstacker.GlobalSettings.Changers
             _dropdown.SetValueWithoutNotify(0);
             foreach (var path in SoundPackLoader.EnumerateSoundPacks())
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(path));
-            
+
             if (!_dropdown.options.Exists(item => item.text == SoundPackLoader.DEFAULT_PATH))
                 _dropdown.options.Insert(0, new TMP_Dropdown.OptionData(SoundPackLoader.DEFAULT_PATH));
-            
+
             RefreshValue();
         }
     }

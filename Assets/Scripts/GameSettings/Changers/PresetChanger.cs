@@ -65,7 +65,7 @@ namespace Blockstacker.GameSettings.Changers
 
             if (presetName == _defaultPrompt || presetName == _emptyPrompt)
                 return;
-            
+
             if (_targetSo.TryLoad(presetName))
             {
                 _ = AlertDisplayer.Instance.ShowAlert(

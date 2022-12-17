@@ -34,7 +34,7 @@ namespace Blockstacker.Gameplay
                     AlertType.Error));
                 return;
             }
-            
+
             GameInitializer.Replay = replay;
             GameInitializer.GameType = _replayGameType.Value;
             GameInitializer.InitAsReplay = true;

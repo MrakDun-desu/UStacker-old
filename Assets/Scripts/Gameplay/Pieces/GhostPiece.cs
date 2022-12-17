@@ -13,18 +13,16 @@ namespace Blockstacker.Gameplay.Pieces
 {
     public class GhostPiece : MonoBehaviour, IBlockCollection, IGameSettingsDependency
     {
+
+        private static readonly Color _defaultColor = Color.white;
         [SerializeField] private BlockBase _blockPrefab;
         [SerializeField] private Board _board;
-
-        public GameSettingsSO.SettingsContainer GameSettings { set => _settings = value; }
-        private GameSettingsSO.SettingsContainer _settings;
-        
-        private static readonly Color _defaultColor = Color.white;
         private readonly List<BlockBase> _blocks = new();
         private Piece _activePiece;
-        private Color _currentColor = _defaultColor;
-        private bool _colorGhostPiece;
         private ObjectPool<BlockBase> _blockPool;
+        private bool _colorGhostPiece;
+        private Color _currentColor = _defaultColor;
+        private GameSettingsSO.SettingsContainer _settings;
 
         public Piece ActivePiece
         {
@@ -53,13 +51,6 @@ namespace Blockstacker.Gameplay.Pieces
             }
         }
 
-        public IEnumerable<Vector3> BlockPositions =>
-            _blocks.Select(block => block.transform.position);
-
-        public string Type => "ghost";
-        public event Action<Color> ColorChanged;
-        public event Action Rendered;
-
         private void Awake()
         {
             _blockPool = new ObjectPool<BlockBase>(
@@ -82,11 +73,23 @@ namespace Blockstacker.Gameplay.Pieces
             ColorGhostPieceApplier.ColorGhostPieceChanged += ChangeColoring;
         }
 
+        public IEnumerable<Vector3> BlockPositions =>
+            _blocks.Select(block => block.transform.position);
+
+        public string Type => "ghost";
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            set => _settings = value;
+        }
+        public event Action<Color> ColorChanged;
+        public event Action Rendered;
+
         private BlockBase CreateBlock()
         {
             var newBlock = Instantiate(_blockPrefab, transform);
             newBlock.Board = _board;
-            newBlock.BlockNumber = (uint)Mathf.Min(_blocks.Count, 3);
+            newBlock.BlockNumber = (uint) Mathf.Min(_blocks.Count, 3);
             return newBlock;
         }
 
@@ -104,16 +107,13 @@ namespace Blockstacker.Gameplay.Pieces
                 _blocks.RemoveAt(_blocks.Count - 1);
             }
 
-            while (_blocks.Count < ActivePiece.Blocks.Count)
-            {
-                _blocks.Add(_blockPool.Get());
-            }
+            while (_blocks.Count < ActivePiece.Blocks.Count) _blocks.Add(_blockPool.Get());
         }
-        
+
         public void Render()
         {
             if (!_settings.Controls.ShowGhostPiece) return;
-            
+
             transform.position = ActivePiece.transform.position;
             for (var i = 0; i < _blocks.Count; i++)
             {
@@ -132,7 +132,7 @@ namespace Blockstacker.Gameplay.Pieces
                 piecePosition.y + moveVector.y,
                 piecePosition.z);
             pieceTransform.localPosition = piecePosition;
-            
+
             Rendered?.Invoke();
         }
     }

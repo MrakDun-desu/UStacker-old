@@ -14,11 +14,11 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private StatCounterGroupChanger _groupChangerPrefab;
         [SerializeField] private RectTransform _layoutRoot;
         [SerializeField] private float _groupChangerSpacing = 10;
-
-        private Dictionary<Guid, StatCounterGroup> _statCounterGroups;
         private readonly Dictionary<Guid, StatCounterGroupChanger> _groupChangers = new();
         private RectTransform _parentTransform;
         private RectTransform _selfTransform;
+
+        private Dictionary<Guid, StatCounterGroup> _statCounterGroups;
 
         private void Awake()
         {
@@ -47,7 +47,8 @@ namespace Blockstacker.GlobalSettings.Changers
                 AddGroup(id, group);
         }
 
-        private void OnSizeChanged(float sizeDelta) {
+        private void OnSizeChanged(float sizeDelta)
+        {
             var selfSizeDelta = _selfTransform.sizeDelta;
             selfSizeDelta = new Vector2(
                 selfSizeDelta.x,
@@ -87,7 +88,7 @@ namespace Blockstacker.GlobalSettings.Changers
             var sizeDelta = ((RectTransform) newGroupChanger.transform).sizeDelta.y;
             if (_groupChangers.Count >= 2)
                 sizeDelta += _groupChangerSpacing;
-            
+
             OnSizeChanged(sizeDelta);
 
             if (addToValue)
@@ -107,7 +108,7 @@ namespace Blockstacker.GlobalSettings.Changers
             }
 
             var removedChanger = _groupChangers[groupId];
-            
+
             removedChanger.GroupRemoved -= OnGroupRemoved;
             removedChanger.SizeChanged -= OnSizeChanged;
 
@@ -115,9 +116,9 @@ namespace Blockstacker.GlobalSettings.Changers
 
             if (_groupChangers.Count > 0)
                 sizeDelta += _groupChangerSpacing;
-            
+
             Destroy(removedChanger.gameObject);
-            
+
             OnSizeChanged(-sizeDelta);
 
             _groupChangers.Remove(groupId);
@@ -133,6 +134,5 @@ namespace Blockstacker.GlobalSettings.Changers
             } while (_statCounterGroups.ContainsKey(newGuid));
             AddGroup(newGuid, new StatCounterGroup(), true);
         }
-
     }
 }

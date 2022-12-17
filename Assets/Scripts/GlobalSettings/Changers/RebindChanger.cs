@@ -21,12 +21,10 @@ namespace Blockstacker.GlobalSettings.Changers
 
         [SerializeField] private TMP_Text _bindingName;
         [SerializeField] private TMP_Text[] _bindingTexts = new TMP_Text[3];
-        private RebindingOperation _currentOperation;
 
         [Header("Colors")] [SerializeField] private Color _defaultColor = Color.white;
         [SerializeField] private Color _conflictColor = Color.red;
-        
-        private static event Action RebindChanged;
+        private RebindingOperation _currentOperation;
 
         private void Start()
         {
@@ -55,7 +53,11 @@ namespace Blockstacker.GlobalSettings.Changers
 
             if (_bindingName != null)
             {
-                var slashIndex = _action.name.LastIndexOfAny(new[] {'/', '\\'}) + 1;
+                var slashIndex = _action.name.LastIndexOfAny(new[]
+                {
+                    '/',
+                    '\\'
+                }) + 1;
                 var nameString = _action.name[slashIndex..];
                 _bindingName.text = nameString.FormatCamelCase();
             }
@@ -63,6 +65,8 @@ namespace Blockstacker.GlobalSettings.Changers
             RefreshNames();
             CheckBindingOverlaps();
         }
+
+        private static event Action RebindChanged;
 
         private void RefreshNames()
         {

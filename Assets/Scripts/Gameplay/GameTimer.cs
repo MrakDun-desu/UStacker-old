@@ -5,15 +5,12 @@ namespace Blockstacker.Gameplay
 {
     public class GameTimer : MonoBehaviour
     {
-        private bool _isRunning;
-        private double _startTime;
         private bool _isPaused;
-        private double _pauseStartTime;
+        private bool _isRunning;
         private double _pausedTime;
+        private double _pauseStartTime;
+        private double _startTime;
 
-        public event Action<double> TimeSet;
-        public event Action BeforeStarted;
-        
         public double EffectiveStartTime
         {
             get
@@ -27,6 +24,9 @@ namespace Blockstacker.Gameplay
         public double CurrentTime => Math.Max(Time.realtimeSinceStartupAsDouble - EffectiveStartTime, 0d);
 
         public TimeSpan CurrentTimeAsSpan => TimeSpan.FromSeconds(CurrentTime);
+
+        public event Action<double> TimeSet;
+        public event Action BeforeStarted;
 
         public void StartTiming()
         {
@@ -47,7 +47,7 @@ namespace Blockstacker.Gameplay
         public void PauseTiming()
         {
             if (!_isRunning) return;
-            
+
             _pauseStartTime = Time.realtimeSinceStartupAsDouble;
             _isRunning = false;
             _isPaused = true;
@@ -69,7 +69,7 @@ namespace Blockstacker.Gameplay
             _pausedTime = 0d;
             if (_isPaused)
                 _pauseStartTime = functionStartTime;
-            
+
             TimeSet?.Invoke(CurrentTime);
         }
     }

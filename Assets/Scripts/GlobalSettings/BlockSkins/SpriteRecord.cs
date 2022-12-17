@@ -29,12 +29,12 @@ namespace Blockstacker.GlobalSettings.BlockSkins
             Sprite = Sprite.Create(sourceTexture, spriteRect, PivotPoint, PixelsPerUnit, 0, SpriteMeshType.FullRect);
             return Sprite != null;
         }
-        
+
         public async Task<bool> TryLoadSpriteAsync()
         {
             var sourceTexture = await FileLoading.LoadTextureFromUrl(Filename, !LoadFromUrl);
-                if (sourceTexture is null)
-                    return false;
+            if (sourceTexture is null)
+                return false;
 
             var spriteRect = new Rect(SpriteStart, SpriteSize);
             Sprite = Sprite.Create(sourceTexture, spriteRect, PivotPoint, PixelsPerUnit, 0, SpriteMeshType.FullRect);

@@ -14,11 +14,11 @@ namespace Blockstacker.Gameplay.Randomizers
             "l",
             "j",
             "s",
-            "z",
+            "z"
         };
         private readonly List<string> _currentValues = new();
-        private Random _random;
         private int _ignoreSzoFor = 2;
+        private Random _random;
 
         public StrideRandomizer(IEnumerable<string> availablePieces, int seed)
         {
@@ -43,7 +43,7 @@ namespace Blockstacker.Gameplay.Randomizers
 
                 _ignoreSzoFor--;
             }
-            
+
             _currentValues.RemoveAt(nextIndex);
             return nextValue;
         }

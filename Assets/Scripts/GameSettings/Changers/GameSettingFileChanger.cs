@@ -12,9 +12,9 @@ namespace Blockstacker.GameSettings.Changers
     {
         [SerializeField] protected TMP_Dropdown _dropdown;
         [SerializeField] private Button _openDirectoryButton;
-        
+
         protected abstract string TargetDir { get; }
-        
+
         private void Start()
         {
             RefreshValue();
@@ -27,7 +27,7 @@ namespace Blockstacker.GameSettings.Changers
         private void OnApplicationFocus(bool hasFocus)
         {
             if (!hasFocus) return;
-            
+
             RefreshValue();
         }
 
@@ -42,7 +42,7 @@ namespace Blockstacker.GameSettings.Changers
 
             if (string.IsNullOrEmpty(optionName))
                 return;
-            
+
             SetValue(optionName);
         }
 
@@ -55,7 +55,7 @@ namespace Blockstacker.GameSettings.Changers
             var options = Array.Empty<string>();
             if (Directory.Exists(TargetDir))
                 options = Directory.EnumerateFiles(TargetDir).Select(Path.GetFileNameWithoutExtension).ToArray();
-            
+
             for (var i = 0; i < options.Length; i++)
             {
                 var optionName = options[i];
@@ -63,9 +63,8 @@ namespace Blockstacker.GameSettings.Changers
                 if (optionName == _gameSettingsSO.GetValue<string>(_controlPath))
                     _dropdown.SetValueWithoutNotify(i);
             }
-            
+
             _dropdown.RefreshShownValue();
         }
-
     }
 }

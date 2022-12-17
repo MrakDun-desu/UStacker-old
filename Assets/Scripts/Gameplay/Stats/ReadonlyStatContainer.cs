@@ -7,6 +7,11 @@ namespace Blockstacker.Gameplay.Stats
     {
         private StatContainer _parent;
 
+        public ReadonlyStatContainer(StatContainer parent)
+        {
+            _parent = parent;
+        }
+
         public long Score => _parent.Score;
         public string Level => _parent.Level;
         public uint LinesCleared => _parent.LinesCleared;
@@ -35,17 +40,14 @@ namespace Blockstacker.Gameplay.Stats
         public double KeysPerPiece => _parent.KeysPerPiece;
         public double KeysPerSecond => _parent.KeysPerSecond;
         public double LinesPerMinute => _parent.LinesPerMinute;
-        
-        public ReadonlyStatContainer(StatContainer parent)
-        {
-            _parent = parent;
-        }
 
         public static implicit operator StatContainer(ReadonlyStatContainer source)
         {
-            return source._parent with {};
+            return source._parent with
+            {
+            };
         }
-        
+
         public static implicit operator ReadonlyStatContainer(StatContainer source)
         {
             return new ReadonlyStatContainer(source);

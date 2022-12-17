@@ -13,6 +13,6 @@ namespace Blockstacker.GameSettings.Enums
         [Description("SRS+")]
         SRSPlus = 2,
         [Tooltip("Custom rotation system will be used")]
-        Custom = 3,
+        Custom = 3
     }
 }

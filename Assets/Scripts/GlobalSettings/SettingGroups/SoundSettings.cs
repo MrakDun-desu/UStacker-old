@@ -8,10 +8,10 @@ namespace Blockstacker.GlobalSettings.Groups
     [Serializable]
     public record SoundSettings
     {
-        private float _masterVolume = .3f;
-        private float _musicVolume = .3f;
         private float _effectsVolume = 1;
+        private float _masterVolume = .3f;
         private float _menuSoundsVolume = 1;
+        private float _musicVolume = .3f;
 
         public float MasterVolume
         {

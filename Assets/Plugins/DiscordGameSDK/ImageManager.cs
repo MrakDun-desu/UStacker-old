@@ -15,9 +15,7 @@ namespace Discord
         {
             return new ImageHandle
             {
-                Type = ImageType.User,
-                Id = id,
-                Size = size
+                Type = ImageType.User, Id = id, Size = size
             };
         }
     }

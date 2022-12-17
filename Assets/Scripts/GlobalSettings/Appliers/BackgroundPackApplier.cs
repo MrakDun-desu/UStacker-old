@@ -22,7 +22,7 @@ namespace Blockstacker.GlobalSettings.Appliers
             LoadingStarted.Invoke();
             _ = ReloadAndInvoke();
         }
-        
+
         private async Task ReloadAndInvoke()
         {
             var backgroundFolder = Path.Combine(PersistentPaths.BackgroundPacks,

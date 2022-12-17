@@ -13,14 +13,14 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private TMP_Dropdown _nameDropdown;
         [SerializeField] private StringReferenceSO _gameTypeStr;
 
+        private readonly List<MusicOption> _groupOptions = new();
+        private readonly List<MusicOption> _trackOptions = new();
+
         public StringReferenceSO GameTypeStr
         {
             get => _gameTypeStr;
             set => _gameTypeStr = value;
         }
-
-        private readonly List<MusicOption> _groupOptions = new();
-        private readonly List<MusicOption> _trackOptions = new();
 
         private string _gameType => GameTypeStr.Value;
 

@@ -38,21 +38,21 @@ namespace Blockstacker.GlobalSettings.Changers
             }
         }
 
-        public event Action<StatCounterChanger> Removed;
-        public event Action<float> SizeChanged;
-
         private void Start()
         {
             AddListenersToFields();
         }
 
+        public event Action<StatCounterChanger> Removed;
+        public event Action<float> SizeChanged;
+
         private void ChangeSize(float sizeDelta)
         {
-            var selfSizeDelta= _selfTransform.sizeDelta;
+            var selfSizeDelta = _selfTransform.sizeDelta;
             selfSizeDelta = new Vector2(
                 selfSizeDelta.x,
                 selfSizeDelta.y + sizeDelta
-                );
+            );
             _selfTransform.sizeDelta = selfSizeDelta;
         }
 
@@ -88,20 +88,20 @@ namespace Blockstacker.GlobalSettings.Changers
                     sizeDelta -= ((RectTransform) _filenameContainer.transform).sizeDelta.y;
                     break;
             }
-            
+
             _nameContainer.SetActive(displayCustomFields);
             _filenameContainer.SetActive(displayCustomFields);
-            
+
             SizeChanged?.Invoke(sizeDelta);
             ChangeSize(sizeDelta);
-            
+
             _nameField.SetTextWithoutNotify(_value.Name);
             _filenameField.SetTextWithoutNotify(_value.Filename);
             _posXField.SetTextWithoutNotify(_value.Position.x.ToString(CultureInfo.InvariantCulture));
             _posYField.SetTextWithoutNotify(_value.Position.y.ToString(CultureInfo.InvariantCulture));
             _sizeXField.SetTextWithoutNotify(_value.Size.x.ToString(CultureInfo.InvariantCulture));
             _sizeYField.SetTextWithoutNotify(_value.Size.y.ToString(CultureInfo.InvariantCulture));
-            
+
             _updateIntervalField.SetTextWithoutNotify(_value.UpdateInterval.ToString(CultureInfo.InvariantCulture));
         }
 
@@ -115,7 +115,7 @@ namespace Blockstacker.GlobalSettings.Changers
             _sizeXField.onValueChanged.AddListener(OnSizeXChanged);
             _sizeYField.onValueChanged.AddListener(OnSizeYChanged);
             _updateIntervalField.onValueChanged.AddListener(OnUpdateIntervalChanged);
-            
+
             _removeButton.onClick.AddListener(() => Removed?.Invoke(this));
         }
 
@@ -139,13 +139,13 @@ namespace Blockstacker.GlobalSettings.Changers
                     Value.Filename = "";
                     Value.Script = "";
                     Value.Position = new Vector2();
-                    Value.Size = new Vector2(5,1);
+                    Value.Size = new Vector2(5, 1);
                     Value.UpdateInterval = 0;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
             RefreshValue(false);
         }
 
@@ -153,7 +153,7 @@ namespace Blockstacker.GlobalSettings.Changers
         {
             Value.Name = newValue;
         }
-        
+
         private void OnFilenameChanged(string newValue)
         {
             Value.Filename = newValue;
@@ -187,7 +187,7 @@ namespace Blockstacker.GlobalSettings.Changers
             }
             _value.Position.y = converted;
         }
-        
+
         private void OnSizeXChanged(string newValue)
         {
             newValue = newValue.Replace('.', ',');

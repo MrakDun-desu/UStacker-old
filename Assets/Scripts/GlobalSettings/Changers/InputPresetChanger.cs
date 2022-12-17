@@ -44,7 +44,7 @@ namespace Blockstacker.GlobalSettings.Changers
             var filenames = new List<string>();
             if (Directory.Exists(PersistentPaths.InputPresets))
                 filenames.AddRange(Directory.EnumerateFiles(PersistentPaths.InputPresets));
-            
+
             foreach (var filename in filenames) yield return Path.GetFileNameWithoutExtension(filename);
         }
 

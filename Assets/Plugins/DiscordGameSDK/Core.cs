@@ -659,59 +659,67 @@ namespace Discord
     {
         public delegate void SetLogHookHandler(LogLevel level, string message);
 
-        private ActivityManager.FFIEvents ActivityEvents;
-
         private readonly IntPtr ActivityEventsPtr;
-
-        internal ActivityManager ActivityManagerInstance;
-
-        private AchievementManager.FFIEvents AchievementEvents;
 
         private readonly IntPtr AchievementEventsPtr;
 
-        internal AchievementManager AchievementManagerInstance;
-
-        private ApplicationManager.FFIEvents ApplicationEvents;
-
         private readonly IntPtr ApplicationEventsPtr;
-
-        internal ApplicationManager ApplicationManagerInstance;
 
         private readonly FFIEvents Events;
 
         private readonly IntPtr EventsPtr;
 
-        private ImageManager.FFIEvents ImageEvents;
-
         private readonly IntPtr ImageEventsPtr;
+
+        private readonly IntPtr LobbyEventsPtr;
+
+        private readonly IntPtr MethodsPtr;
+
+        private readonly IntPtr NetworkEventsPtr;
+
+        private readonly IntPtr OverlayEventsPtr;
+
+        private readonly IntPtr RelationshipEventsPtr;
+
+        private readonly IntPtr StorageEventsPtr;
+
+        private readonly IntPtr StoreEventsPtr;
+
+        private readonly IntPtr UserEventsPtr;
+
+        private readonly IntPtr VoiceEventsPtr;
+
+        private ActivityManager.FFIEvents ActivityEvents;
+
+        internal ActivityManager ActivityManagerInstance;
+
+        private AchievementManager.FFIEvents AchievementEvents;
+
+        internal AchievementManager AchievementManagerInstance;
+
+        private ApplicationManager.FFIEvents ApplicationEvents;
+
+        internal ApplicationManager ApplicationManagerInstance;
+
+        private ImageManager.FFIEvents ImageEvents;
 
         internal ImageManager ImageManagerInstance;
 
         private LobbyManager.FFIEvents LobbyEvents;
 
-        private readonly IntPtr LobbyEventsPtr;
-
         internal LobbyManager LobbyManagerInstance;
-
-        private readonly IntPtr MethodsPtr;
 
         private object MethodsStructure;
 
         private NetworkManager.FFIEvents NetworkEvents;
 
-        private readonly IntPtr NetworkEventsPtr;
-
         internal NetworkManager NetworkManagerInstance;
 
         private OverlayManager.FFIEvents OverlayEvents;
 
-        private readonly IntPtr OverlayEventsPtr;
-
         internal OverlayManager OverlayManagerInstance;
 
         private RelationshipManager.FFIEvents RelationshipEvents;
-
-        private readonly IntPtr RelationshipEventsPtr;
 
         internal RelationshipManager RelationshipManagerInstance;
 
@@ -721,25 +729,17 @@ namespace Discord
 
         private StorageManager.FFIEvents StorageEvents;
 
-        private readonly IntPtr StorageEventsPtr;
-
         internal StorageManager StorageManagerInstance;
 
         private StoreManager.FFIEvents StoreEvents;
-
-        private readonly IntPtr StoreEventsPtr;
 
         internal StoreManager StoreManagerInstance;
 
         private UserManager.FFIEvents UserEvents;
 
-        private readonly IntPtr UserEventsPtr;
-
         internal UserManager UserManagerInstance;
 
         private VoiceManager.FFIEvents VoiceEvents;
-
-        private readonly IntPtr VoiceEventsPtr;
 
         internal VoiceManager VoiceManagerInstance;
 
@@ -871,132 +871,156 @@ namespace Discord
         public ApplicationManager GetApplicationManager()
         {
             if (ApplicationManagerInstance == null)
+            {
                 ApplicationManagerInstance = new ApplicationManager(
                     Methods.GetApplicationManager(MethodsPtr),
                     ApplicationEventsPtr,
                     ref ApplicationEvents
                 );
+            }
             return ApplicationManagerInstance;
         }
 
         public UserManager GetUserManager()
         {
             if (UserManagerInstance == null)
+            {
                 UserManagerInstance = new UserManager(
                     Methods.GetUserManager(MethodsPtr),
                     UserEventsPtr,
                     ref UserEvents
                 );
+            }
             return UserManagerInstance;
         }
 
         public ImageManager GetImageManager()
         {
             if (ImageManagerInstance == null)
+            {
                 ImageManagerInstance = new ImageManager(
                     Methods.GetImageManager(MethodsPtr),
                     ImageEventsPtr,
                     ref ImageEvents
                 );
+            }
             return ImageManagerInstance;
         }
 
         public ActivityManager GetActivityManager()
         {
             if (ActivityManagerInstance == null)
+            {
                 ActivityManagerInstance = new ActivityManager(
                     Methods.GetActivityManager(MethodsPtr),
                     ActivityEventsPtr,
                     ref ActivityEvents
                 );
+            }
             return ActivityManagerInstance;
         }
 
         public RelationshipManager GetRelationshipManager()
         {
             if (RelationshipManagerInstance == null)
+            {
                 RelationshipManagerInstance = new RelationshipManager(
                     Methods.GetRelationshipManager(MethodsPtr),
                     RelationshipEventsPtr,
                     ref RelationshipEvents
                 );
+            }
             return RelationshipManagerInstance;
         }
 
         public LobbyManager GetLobbyManager()
         {
             if (LobbyManagerInstance == null)
+            {
                 LobbyManagerInstance = new LobbyManager(
                     Methods.GetLobbyManager(MethodsPtr),
                     LobbyEventsPtr,
                     ref LobbyEvents
                 );
+            }
             return LobbyManagerInstance;
         }
 
         public NetworkManager GetNetworkManager()
         {
             if (NetworkManagerInstance == null)
+            {
                 NetworkManagerInstance = new NetworkManager(
                     Methods.GetNetworkManager(MethodsPtr),
                     NetworkEventsPtr,
                     ref NetworkEvents
                 );
+            }
             return NetworkManagerInstance;
         }
 
         public OverlayManager GetOverlayManager()
         {
             if (OverlayManagerInstance == null)
+            {
                 OverlayManagerInstance = new OverlayManager(
                     Methods.GetOverlayManager(MethodsPtr),
                     OverlayEventsPtr,
                     ref OverlayEvents
                 );
+            }
             return OverlayManagerInstance;
         }
 
         public StorageManager GetStorageManager()
         {
             if (StorageManagerInstance == null)
+            {
                 StorageManagerInstance = new StorageManager(
                     Methods.GetStorageManager(MethodsPtr),
                     StorageEventsPtr,
                     ref StorageEvents
                 );
+            }
             return StorageManagerInstance;
         }
 
         public StoreManager GetStoreManager()
         {
             if (StoreManagerInstance == null)
+            {
                 StoreManagerInstance = new StoreManager(
                     Methods.GetStoreManager(MethodsPtr),
                     StoreEventsPtr,
                     ref StoreEvents
                 );
+            }
             return StoreManagerInstance;
         }
 
         public VoiceManager GetVoiceManager()
         {
             if (VoiceManagerInstance == null)
+            {
                 VoiceManagerInstance = new VoiceManager(
                     Methods.GetVoiceManager(MethodsPtr),
                     VoiceEventsPtr,
                     ref VoiceEvents
                 );
+            }
             return VoiceManagerInstance;
         }
 
         public AchievementManager GetAchievementManager()
         {
             if (AchievementManagerInstance == null)
+            {
                 AchievementManagerInstance = new AchievementManager(
                     Methods.GetAchievementManager(MethodsPtr),
                     AchievementEventsPtr,
                     ref AchievementEvents
                 );
+            }
             return AchievementManagerInstance;
         }
 
@@ -3073,9 +3097,10 @@ namespace Discord
 
     public partial class StorageManager
     {
-        public delegate void ReadAsyncHandler(Result result, byte[] data);
 
         public delegate void ReadAsyncPartialHandler(Result result, byte[] data);
+
+        public delegate void ReadAsyncHandler(Result result, byte[] data);
 
         public delegate void WriteAsyncHandler(Result result);
 

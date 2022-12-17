@@ -11,6 +11,7 @@ namespace Blockstacker.GlobalSettings.Changers
     {
         [Space] [SerializeField] private TMP_Dropdown _dropdown;
         [SerializeField] private StringReferenceSO _gameTypeStr;
+        private List<KeyValuePair<Guid, string>> _availableGroups;
 
         public StringReferenceSO GameTypeStr
         {
@@ -19,7 +20,6 @@ namespace Blockstacker.GlobalSettings.Changers
         }
 
         private string _gameType => GameTypeStr.Value;
-        private List<KeyValuePair<Guid, string>> _availableGroups;
 
         private Guid ChangedGroupId
         {

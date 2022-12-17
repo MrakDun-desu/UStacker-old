@@ -31,9 +31,7 @@ namespace Blockstacker.Gameplay.GameManagers
         {
             long scoreAddition;
             if (message.WasSpin)
-            {
                 scoreAddition = ((int) message.LinesCleared + 1) * 400;
-            }
             else if (message.WasSpinMini)
             {
                 scoreAddition = message.LinesCleared switch

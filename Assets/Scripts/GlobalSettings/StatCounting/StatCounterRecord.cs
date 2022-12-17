@@ -14,6 +14,15 @@ namespace Blockstacker.GlobalSettings.StatCounting
         public Vector2 Size;
         public float UpdateInterval;
 
+        public bool Equals(StatCounterRecord other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Name == other.Name && Type == other.Type && Filename == other.Filename && Script == other.Script &&
+                   Position.Equals(other.Position) && Size.Equals(other.Size) &&
+                   UpdateInterval.Equals(other.UpdateInterval);
+        }
+
         public StatCounterRecord Copy()
         {
             return new StatCounterRecord
@@ -26,15 +35,6 @@ namespace Blockstacker.GlobalSettings.StatCounting
                 Size = Size,
                 UpdateInterval = UpdateInterval
             };
-        }
-
-        public bool Equals(StatCounterRecord other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Name == other.Name && Type == other.Type && Filename == other.Filename && Script == other.Script &&
-                   Position.Equals(other.Position) && Size.Equals(other.Size) &&
-                   UpdateInterval.Equals(other.UpdateInterval);
         }
 
         public override bool Equals(object obj)

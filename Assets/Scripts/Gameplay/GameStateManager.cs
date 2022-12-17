@@ -1,9 +1,9 @@
 using System;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Initialization;
+using Blockstacker.Gameplay.Stats;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
-using Blockstacker.Gameplay.Stats;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -18,7 +18,7 @@ namespace Blockstacker.Gameplay
         [SerializeField] private GameRecorder _gameRecorder;
         [SerializeField] private GameResultDisplayer _resultDisplayer;
 
-        [Space] 
+        [Space]
         [SerializeField] private UnityEvent GameStarted;
         [SerializeField] private UnityEvent GamePaused;
         [SerializeField] private UnityEvent GameUnpaused;
@@ -31,20 +31,23 @@ namespace Blockstacker.Gameplay
         [SerializeField] private UnityEvent ReplayPaused;
         [SerializeField] private UnityEvent ReplayUnpaused;
 
-        public GameSettingsSO.SettingsContainer GameSettings { set => _settings = value; }
+        private readonly GameReplay Replay = new();
+        private bool _gameCurrentlyInProgress;
+        private bool _gameEnded;
+        private bool _gamePauseable = true;
+        private bool _gamePaused;
+
+        private double _lastSentTimeCondition;
         private GameSettingsSO.SettingsContainer _settings;
         public string GameType { get; set; }
         public bool IsReplaying { get; set; }
-        
-        private readonly GameReplay Replay = new();
-
-        private double _lastSentTimeCondition;
 
         public bool GameRunningActively => !_gamePaused && !_gameEnded;
-        private bool _gameEnded;
-        private bool _gamePaused;
-        private bool _gameCurrentlyInProgress;
-        private bool _gamePauseable = true;
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            set => _settings = value;
+        }
 
         #region Game event management
 
@@ -60,9 +63,9 @@ namespace Blockstacker.Gameplay
             if (_gameCurrentlyInProgress) return;
 
             _gameCurrentlyInProgress = true;
-            
+
             _gameEnded = false;
-            
+
             _lastSentTimeCondition = 0;
             _mediator.Send(new GameStartedMessage(_settings.General.ActiveSeed));
             _mediator.Send(new GameEndConditionChangedMessage(
@@ -100,7 +103,7 @@ namespace Blockstacker.Gameplay
                     GameUnpaused.Invoke();
             }
         }
-        
+
         public void Restart()
         {
             if (!_gamePaused)
@@ -115,8 +118,8 @@ namespace Blockstacker.Gameplay
             GameRestarted.Invoke();
             _mediator.Send(new GameRestartedMessage());
             _mediator.Send(new GameEndConditionChangedMessage(
-                0, 
-                _settings.Objective.EndConditionCount, 
+                0,
+                _settings.Objective.EndConditionCount,
                 0,
                 _settings.Objective.GameEndCondition.ToString()));
         }
@@ -124,7 +127,7 @@ namespace Blockstacker.Gameplay
         public void LoseGame(double loseTime)
         {
             if (_gameEnded) return;
-            
+
             _gameEnded = true;
             if (_settings.Objective.ToppingOutIsOkay)
                 EndGame(loseTime);
@@ -143,7 +146,9 @@ namespace Blockstacker.Gameplay
             if (!IsReplaying)
             {
                 Replay.GameType = GameType;
-                Replay.GameSettings = _settings with { };
+                Replay.GameSettings = _settings with
+                {
+                };
                 Replay.ActionList.Clear();
                 Replay.ActionList.AddRange(_gameRecorder.ActionList);
                 Replay.Stats = _statCounterManager.Stats;
@@ -152,9 +157,9 @@ namespace Blockstacker.Gameplay
                 Replay.Save(GameType);
                 _resultDisplayer.DisplayedReplay = Replay;
             }
-            else 
+            else
                 ReplayFinished.Invoke();
-            
+
             GameEnded.Invoke();
             _mediator.Send(new GameEndedMessage(endTime));
         }

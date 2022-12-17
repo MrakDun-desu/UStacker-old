@@ -5,11 +5,11 @@ using Blockstacker.Gameplay.Communication;
 using Blockstacker.Gameplay.Enums;
 using Blockstacker.Gameplay.Initialization;
 using Blockstacker.Gameplay.Pieces;
+using Blockstacker.Gameplay.Spins;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
 using Blockstacker.GlobalSettings.Enums;
 using Blockstacker.GlobalSettings.Groups;
-using Blockstacker.Gameplay.Spins;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,6 +17,8 @@ namespace Blockstacker.Gameplay
 {
     public class InputProcessor : MonoBehaviour, IGameSettingsDependency
     {
+
+        private const double ZERO_GRAVITY_REPLACEMENT = .02d;
         [Header("Dependencies")] [SerializeField]
         private Board _board;
 
@@ -27,16 +29,19 @@ namespace Blockstacker.Gameplay
 
         [Header("Dependencies filled by initializer")]
         public PieceContainer PieceHolder;
-
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            set => _settings = value;
-        }
-
-        private GameSettingsSO.SettingsContainer _settings;
+        private List<InputActionMessage> _actionList;
 
         private Piece _activePiece;
         private double _arrTimer = double.PositiveInfinity;
+
+        private bool _bufferedHold;
+        private RotateDirection? _bufferedRotation;
+
+        private bool _controlsActive;
+
+        private int _currentActionIndex;
+
+        private double _currentGravity;
         private double _dasDelay;
         private bool _dasLeftActive;
         private double _dasLeftStart;
@@ -47,42 +52,36 @@ namespace Blockstacker.Gameplay
         private double _dasRightTimer;
 
         private double _dropDisabledUntil;
-        private double _dropTimer;
         private double _dropTime;
-        private bool _holdingSoftDrop;
+        private double _dropTimer;
 
         private HandlingSettings _handling;
         private double _hardLockAmount = double.PositiveInfinity;
-        private bool _isHardLocking => _hardLockAmount < double.PositiveInfinity;
-        private double _holdingLeftStart = double.PositiveInfinity;
-        private double _holdingLeftTimer;
-        private double _holdingRightStart = double.PositiveInfinity;
-        private double _holdingRightTimer;
 
         private bool _holdingLeft;
+        private double _holdingLeftStart = double.PositiveInfinity;
+        private double _holdingLeftTimer;
         private bool _holdingRight;
-
-        private bool _bufferedHold;
-        private RotateDirection? _bufferedRotation;
-
-        private double _lockTime = double.PositiveInfinity;
-        private double _lockDelay;
-        private int _lowestPosition;
-        private bool _pieceIsNull = true;
-        private bool _isLocking => _lockTime < double.PositiveInfinity;
-
-        private double _pieceSpawnTime = double.PositiveInfinity;
-        private bool _usedHold;
-
-        private double _currentGravity;
-        private double _normalGravity;
-
-        private bool _controlsActive;
-
-        private bool _lastWasRotation;
+        private double _holdingRightStart = double.PositiveInfinity;
+        private double _holdingRightTimer;
+        private bool _holdingSoftDrop;
+        private bool _isReplaying;
         private SpinResult _lastSpinResult;
 
-        private const double ZERO_GRAVITY_REPLACEMENT = .02d;
+        private bool _lastWasRotation;
+        private double _lockDelay;
+
+        private double _lockTime = double.PositiveInfinity;
+        private int _lowestPosition;
+        private double _normalGravity;
+        private bool _pieceIsNull = true;
+
+        private double _pieceSpawnTime = double.PositiveInfinity;
+
+        private GameSettingsSO.SettingsContainer _settings;
+        private bool _usedHold;
+        private bool _isHardLocking => _hardLockAmount < double.PositiveInfinity;
+        private bool _isLocking => _lockTime < double.PositiveInfinity;
 
         public SpinHandler SpinHandler { get; set; }
 
@@ -98,10 +97,6 @@ namespace Blockstacker.Gameplay
                     _controlsActive = false;
             }
         }
-
-        private int _currentActionIndex;
-        private bool _isReplaying;
-        private List<InputActionMessage> _actionList;
 
         public Piece ActivePiece
         {
@@ -123,6 +118,27 @@ namespace Blockstacker.Gameplay
             }
         }
 
+        private void Awake()
+        {
+            _mediator.Register<GravityChangedMessage>(OnGravityChanged);
+            _mediator.Register<LockDelayChangedMessage>(OnLockDelayChanged);
+            _timer.TimeSet += RestartAndCatchUpWithTime;
+            _timer.BeforeStarted += OnGameStart;
+        }
+
+        private void OnDestroy()
+        {
+            _mediator.Unregister<GravityChangedMessage>(OnGravityChanged);
+            _mediator.Unregister<LockDelayChangedMessage>(OnLockDelayChanged);
+            _timer.TimeSet -= RestartAndCatchUpWithTime;
+            _timer.BeforeStarted -= OnGameStart;
+        }
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            set => _settings = value;
+        }
+
         public void DisablePieceControls()
         {
             _controlsActive = false;
@@ -133,7 +149,7 @@ namespace Blockstacker.Gameplay
             if (!_isReplaying)
                 _controlsActive = true;
         }
-        
+
         public void ExecuteBufferedActions(double time, out bool cancelSpawn)
         {
             cancelSpawn = false;
@@ -150,22 +166,6 @@ namespace Blockstacker.Gameplay
                 SpinHandler.RotateWithFirstKick(ActivePiece, direction);
                 _ghostPiece.Render();
             }
-        }
-
-        private void Awake()
-        {
-            _mediator.Register<GravityChangedMessage>(OnGravityChanged);
-            _mediator.Register<LockDelayChangedMessage>(OnLockDelayChanged);
-            _timer.TimeSet += RestartAndCatchUpWithTime;
-            _timer.BeforeStarted += OnGameStart;
-        }
-
-        private void OnDestroy()
-        {
-            _mediator.Unregister<GravityChangedMessage>(OnGravityChanged);
-            _mediator.Unregister<LockDelayChangedMessage>(OnLockDelayChanged);
-            _timer.TimeSet -= RestartAndCatchUpWithTime;
-            _timer.BeforeStarted -= OnGameStart;
         }
 
         private void OnGameStart()
@@ -204,7 +204,7 @@ namespace Blockstacker.Gameplay
                 _currentGravity = _holdingSoftDrop ? ZERO_GRAVITY_REPLACEMENT * _handling.SoftDropFactor : _normalGravity;
             else
                 _currentGravity = _holdingSoftDrop ? _normalGravity * _handling.SoftDropFactor : _normalGravity;
-            
+
             _dropTime = ComputeDroptimeFromGravity();
             _dropTimer = message.Time + _dropTime;
         }
@@ -319,9 +319,9 @@ namespace Blockstacker.Gameplay
 
             ActivePiece.Visibility = 1;
             _dropDisabledUntil = placementTime + _handling.DoubleDropPreventionInterval;
-            
+
             var movementVector = Vector2Int.down;
-            while (_board.CanPlace(ActivePiece, movementVector)) 
+            while (_board.CanPlace(ActivePiece, movementVector))
                 movementVector += Vector2Int.down;
 
             movementVector -= Vector2Int.down;
@@ -372,7 +372,10 @@ namespace Blockstacker.Gameplay
             return (RotationState) (output % 360);
         }
 
-        private double ComputeDroptimeFromGravity() => 1d / 60d / _currentGravity;
+        private double ComputeDroptimeFromGravity()
+        {
+            return 1d / 60d / _currentGravity;
+        }
 
         #region Input event handling
 
@@ -504,7 +507,7 @@ namespace Blockstacker.Gameplay
         {
             _holdingSoftDrop = false;
             _currentGravity = _normalGravity;
-            
+
             _dropTime = ComputeDroptimeFromGravity();
             _dropTimer = actionTime + _dropTime;
         }
@@ -604,7 +607,7 @@ namespace Blockstacker.Gameplay
                 _spawner.SpawnPiece(actionTime);
             else
                 _spawner.SpawnPiece(newPiece, actionTime);
-            
+
             _dropTimer = actionTime + _dropTime;
             _usedHold = true;
             StopLockdown(true);
@@ -657,7 +660,10 @@ namespace Blockstacker.Gameplay
             SendActionMessage(ctx, ActionType.MoveRight);
         }
 
-        public void OnSoftDrop(InputAction.CallbackContext ctx) => SendActionMessage(ctx, ActionType.Softdrop);
+        public void OnSoftDrop(InputAction.CallbackContext ctx)
+        {
+            SendActionMessage(ctx, ActionType.Softdrop);
+        }
 
         public void OnHardDrop(InputAction.CallbackContext ctx)
         {
@@ -665,10 +671,15 @@ namespace Blockstacker.Gameplay
                 SendActionMessage(ctx, ActionType.Harddrop);
         }
 
-        public void OnRotateCounterclockwise(InputAction.CallbackContext ctx) =>
+        public void OnRotateCounterclockwise(InputAction.CallbackContext ctx)
+        {
             SendActionMessage(ctx, ActionType.RotateCCW);
+        }
 
-        public void OnRotateClockwise(InputAction.CallbackContext ctx) => SendActionMessage(ctx, ActionType.RotateCW);
+        public void OnRotateClockwise(InputAction.CallbackContext ctx)
+        {
+            SendActionMessage(ctx, ActionType.RotateCW);
+        }
 
         public void OnRotate180(InputAction.CallbackContext ctx)
         {
@@ -678,21 +689,24 @@ namespace Blockstacker.Gameplay
 
         public void OnSwapHoldPiece(InputAction.CallbackContext ctx)
         {
-            if (_settings.Controls.AllowHold) 
+            if (_settings.Controls.AllowHold)
                 SendActionMessage(ctx, ActionType.Hold);
         }
 
         #endregion
 
         #region Update
-        
-        private void Update() => Update(_timer.CurrentTime);
-        
+
+        private void Update()
+        {
+            Update(_timer.CurrentTime);
+        }
+
         private void Update(double time)
         {
             if (_isReplaying)
                 CatchUpWithTime(time);
-            
+
             if (!_pieceIsNull)
             {
                 HandleDas(time);
@@ -713,9 +727,7 @@ namespace Blockstacker.Gameplay
                 _holdingLeftTimer = functionStartTime - _holdingLeftStart;
             }
             else
-            {
                 _dasLeftTimer = 0;
-            }
 
             if (_holdingRightStart < functionStartTime)
             {
@@ -723,9 +735,7 @@ namespace Blockstacker.Gameplay
                 _holdingRightTimer = functionStartTime - _holdingRightStart;
             }
             else
-            {
                 _dasRightTimer = 0;
-            }
 
             if (_pieceIsNull) return;
 
@@ -763,17 +773,13 @@ namespace Blockstacker.Gameplay
             {
                 var movementVector = Vector2Int.zero;
                 while (_arrTimer < functionStartTime)
-                {
                     if (_board.CanPlace(ActivePiece, movementVector + Vector2Int.right))
                     {
                         _arrTimer += _handling.AutomaticRepeatRate;
                         movementVector += Vector2Int.right;
                     }
                     else
-                    {
                         break;
-                    }
-                }
 
                 if (movementVector != Vector2Int.zero)
                     MovePiece(movementVector, true, _arrTimer - _handling.AutomaticRepeatRate);
@@ -783,17 +789,13 @@ namespace Blockstacker.Gameplay
             {
                 var movementVector = Vector2Int.zero;
                 while (_arrTimer < functionStartTime)
-                {
                     if (_board.CanPlace(ActivePiece, movementVector + Vector2Int.left))
                     {
                         _arrTimer += _handling.AutomaticRepeatRate;
                         movementVector += Vector2Int.left;
                     }
                     else
-                    {
                         break;
-                    }
-                }
 
                 if (movementVector != Vector2Int.zero)
                     MovePiece(movementVector, true, _arrTimer - _handling.AutomaticRepeatRate);
@@ -897,10 +899,10 @@ namespace Blockstacker.Gameplay
             _lockTime = double.PositiveInfinity;
             _hardLockAmount = double.PositiveInfinity;
             _lowestPosition = int.MaxValue;
-            
+
             if (!_spawner.SpawnPiece(_pieceSpawnTime))
                 return;
-            
+
             _dropTimer = _pieceSpawnTime + _dropTime;
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Placement))
             {
@@ -916,6 +918,5 @@ namespace Blockstacker.Gameplay
         }
 
         #endregion
-
     }
 }

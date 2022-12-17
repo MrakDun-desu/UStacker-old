@@ -36,6 +36,15 @@ namespace Blockstacker.Gameplay.Stats
             CreateStatCounters();
         }
 
+        private void Update()
+        {
+            if (!_gameStateManager.GameRunningActively) return;
+
+            _stats.LinesPerMinute = _stats.LinesCleared / _timer.CurrentTime;
+            _stats.PiecesPerSecond = _stats.PiecesPlaced / _timer.CurrentTime;
+            _stats.KeysPerPiece = (double) _stats.KeysPressed / _stats.PiecesPlaced;
+        }
+
         private void OnDestroy()
         {
             _mediator.Unregister<InputActionMessage>(OnInputAction);
@@ -83,7 +92,7 @@ namespace Blockstacker.Gameplay.Stats
                 .ToArray();
             if (usedCounters.Length <= 0)
                 return;
-            
+
             var statUtility = new StatUtility(_timer);
             foreach (var statCounter in usedCounters)
             {
@@ -169,15 +178,6 @@ namespace Blockstacker.Gameplay.Stats
         private void OnLevelChanged(LevelChangedMessage message)
         {
             _stats.Level = message.Level;
-        }
-
-        private void Update()
-        {
-            if (!_gameStateManager.GameRunningActively) return;
-
-            _stats.LinesPerMinute = _stats.LinesCleared / _timer.CurrentTime;
-            _stats.PiecesPerSecond = _stats.PiecesPlaced / _timer.CurrentTime;
-            _stats.KeysPerPiece = (double) _stats.KeysPressed / _stats.PiecesPlaced;
         }
     }
 }

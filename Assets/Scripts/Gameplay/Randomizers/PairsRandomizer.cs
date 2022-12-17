@@ -6,7 +6,7 @@ namespace Blockstacker.Gameplay.Randomizers
 {
     public class PairsRandomizer : IRandomizer
     {
-        
+
         private readonly List<string> _availableValues = new()
         {
             "i",
@@ -15,16 +15,16 @@ namespace Blockstacker.Gameplay.Randomizers
             "l",
             "j",
             "s",
-            "z",
+            "z"
         };
-        private Random _random;
         private int _lastIndex;
+        private Random _random;
         private bool _shouldChange = true;
 
         public PairsRandomizer(IEnumerable<string> availablePieces, int seed)
         {
             _availableValues = _availableValues.Filter(availablePieces);
-            
+
             _random = new Random(seed);
         }
 

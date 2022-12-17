@@ -10,6 +10,11 @@ namespace Blockstacker.Gameplay.Stats
     {
         private readonly GameTimer _timer;
 
+        public StatUtility(GameTimer timer)
+        {
+            _timer = timer;
+        }
+
         private string FormatNumberInternal(double num, int decimals)
         {
             const string infinityString = "INF";
@@ -17,15 +22,19 @@ namespace Blockstacker.Gameplay.Stats
 
             const int MIN_ROUNDABLE_DECIMALS = 0;
             const int MAX_ROUNDABLE_DECIMALS = 15;
-            
+
             decimals = Mathf.Clamp(decimals, MIN_ROUNDABLE_DECIMALS, MAX_ROUNDABLE_DECIMALS);
-            
+
             if (double.IsNaN(num)) num = 0;
             var output = Math.Round(num, decimals).ToString(CultureInfo.InvariantCulture);
 
             if (decimals == 0) return output;
 
-            var dotIndex = output.LastIndexOfAny(new[] {'.', ','});
+            var dotIndex = output.LastIndexOfAny(new[]
+            {
+                '.',
+                ','
+            });
             int missingZeroes;
             if (dotIndex == -1)
             {
@@ -46,20 +55,21 @@ namespace Blockstacker.Gameplay.Stats
         }
 
         [UsedImplicitly]
-        public string GetFormattedTime() => FormatTime(GetCurrentTime());
+        public string GetFormattedTime()
+        {
+            return FormatTime(GetCurrentTime());
+        }
 
         [UsedImplicitly]
-        public double GetCurrentTime() => _timer.CurrentTime;
-        
+        public double GetCurrentTime()
+        {
+            return _timer.CurrentTime;
+        }
+
         [UsedImplicitly]
         public string FormatTime(object seconds)
         {
             return Convert.ToDouble(seconds).FormatAsTime();
-        }
-        
-        public StatUtility(GameTimer timer)
-        {
-            _timer = timer;
         }
     }
 }

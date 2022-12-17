@@ -10,7 +10,7 @@ namespace Blockstacker.Common
         {
             if (_instance == null)
             {
-                _instance = (T)this;
+                _instance = (T) this;
                 DontDestroyOnLoad(gameObject);
             }
 
@@ -19,10 +19,10 @@ namespace Blockstacker.Common
                 Destroy(gameObject);
                 return;
             }
-            
+
             if (transform is RectTransform rectTransform)
                 rectTransform.SetParent(null, false);
-            else 
+            else
                 transform.SetParent(null, true);
         }
     }

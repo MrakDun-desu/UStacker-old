@@ -6,8 +6,8 @@ namespace Blockstacker.GameSettings
     [Serializable]
     public class RotationSystem
     {
-        public Dictionary<string, KickTable> KickTables = new();
         public KickTable DefaultTable = new();
+        public Dictionary<string, KickTable> KickTables = new();
 
         public KickTable GetKickTable(string pieceType)
         {

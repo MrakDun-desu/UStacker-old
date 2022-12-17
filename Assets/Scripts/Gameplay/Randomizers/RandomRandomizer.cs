@@ -6,7 +6,7 @@ namespace Blockstacker.Gameplay.Randomizers
 {
     public class RandomRandomizer : IRandomizer
     {
-        private readonly List<string> _availableValues = new ()
+        private readonly List<string> _availableValues = new()
         {
             "i",
             "t",
@@ -14,7 +14,7 @@ namespace Blockstacker.Gameplay.Randomizers
             "l",
             "j",
             "s",
-            "z",
+            "z"
         };
         private Random _random;
 

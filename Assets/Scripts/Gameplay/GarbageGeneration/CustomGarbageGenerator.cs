@@ -1,5 +1,4 @@
 ﻿using Blockstacker.Common;
-using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
 using NLua;
 using NLua.Exceptions;
@@ -8,11 +7,11 @@ namespace Blockstacker.Gameplay.GarbageGeneration
 {
     public class CustomGarbageGenerator : IGarbageGenerator
     {
+
+        private const string BOARD_VARIABLE_NAME = "Board";
         private readonly Lua _luaState = CreateLua.WithAllPrerequisites();
         private LuaFunction _generationFunction;
         private LuaFunction _resetFunction;
-
-        private const string BOARD_VARIABLE_NAME = "Board";
 
         public CustomGarbageGenerator(GarbageBoardInterface boardInterface, string script, out string validationErrors)
         {

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Blockstacker.Common.Extensions;
 
 namespace Blockstacker.Gameplay.Randomizers
@@ -15,7 +14,7 @@ namespace Blockstacker.Gameplay.Randomizers
             "l",
             "j",
             "s",
-            "z",
+            "z"
         };
 
         private readonly int _count;
@@ -25,7 +24,7 @@ namespace Blockstacker.Gameplay.Randomizers
         public CountPerBagRandomizer(IEnumerable<string> availablePieces, int seed, int count = 1)
         {
             _availableValues = _availableValues.Filter(availablePieces);
-            
+
             _random = new Random(seed);
             _count = count;
             InitializeCurrentPieces();

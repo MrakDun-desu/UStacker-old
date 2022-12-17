@@ -13,6 +13,8 @@ namespace Blockstacker.GlobalSettings.Music
     [RequireComponent(typeof(AudioSource))]
     public class MusicPlayer : MonoSingleton<MusicPlayer>
     {
+        private const string MENU_STRING = "Scene_Menu";
+        private const string GAME_STRING = "Scene_Game";
         [ContextMenuItem("Copy JSON to clipboard", nameof(CopyToClipboard))]
         [SerializeField] private MusicConfiguration _musicConfiguration;
         [Range(0, 10)] [SerializeField] private float _switchInterval;
@@ -20,22 +22,37 @@ namespace Blockstacker.GlobalSettings.Music
         [Range(0, 0.1f)] [SerializeField] private float _quietenInterval = .01f;
         [SerializeField] private AudioClipCollection _defaultMusic = new();
 
-        public static MusicConfiguration Configuration { get; private set; }
-        public static MusicPlayer Instance => _instance;
-
         private AudioSource _audioSource;
-        private const string MENU_STRING = "Scene_Menu";
-        private const string GAME_STRING = "Scene_Game";
         private string _currentSceneType = MENU_STRING;
         private float _nextSongStartTime;
         private float _timeUntilQuiet;
+
+        public static MusicConfiguration Configuration { get; private set; }
+        public static MusicPlayer Instance => _instance;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _audioSource = GetComponent<AudioSource>();
+            Configuration = _musicConfiguration;
+            Configuration.SetDefaultMusic(_defaultMusic.Select(entry => entry.Key).ToList());
+        }
+
+        public void Start()
+        {
+            SceneManager.sceneLoaded += OnSceneChanged;
+            if (Configuration.MenuMusic.TryGetRandomElement(out var nextTrack))
+                PlayNextTrack(nextTrack);
+
+            SoundPackLoader.SoundPackChanged += () => PlayTrackByScene(_currentSceneType);
+        }
 
         private void CopyToClipboard()
         {
             var output = JsonConvert.SerializeObject(_musicConfiguration, StaticSettings.DefaultSerializerSettings);
             GUIUtility.systemCopyBuffer = output;
         }
-        
+
         public static List<MusicOption> ListAvailableOptions()
         {
             var outList =
@@ -75,7 +92,7 @@ namespace Blockstacker.GlobalSettings.Music
 
                 return;
             }
-            
+
             if (gameMusicOption is null || string.IsNullOrEmpty(gameMusicOption.Name))
             {
                 if (Configuration.GameMusic.TryGetRandomElement(out var trackName))
@@ -83,7 +100,7 @@ namespace Blockstacker.GlobalSettings.Music
 
                 return;
             }
-            
+
             switch (gameMusicOption.OptionType)
             {
                 case OptionType.Track:
@@ -129,23 +146,6 @@ namespace Blockstacker.GlobalSettings.Music
         {
             _audioSource.Play();
             _audioSource.loop = true;
-        }
-
-        protected override void Awake()
-        {
-            base.Awake();
-            _audioSource = GetComponent<AudioSource>();
-            Configuration = _musicConfiguration;
-            Configuration.SetDefaultMusic(_defaultMusic.Select(entry => entry.Key).ToList());
-        }
-
-        public void Start()
-        {
-            SceneManager.sceneLoaded += OnSceneChanged;
-            if (Configuration.MenuMusic.TryGetRandomElement(out var nextTrack))
-                PlayNextTrack(nextTrack);
-
-            SoundPackLoader.SoundPackChanged += () => PlayTrackByScene(_currentSceneType);
         }
 
         private void PlayNextTrack(string trackName)
@@ -195,7 +195,7 @@ namespace Blockstacker.GlobalSettings.Music
 
         private void PlayTrackByScene(string sceneName)
         {
-            
+
             if (sceneName.StartsWith(MENU_STRING))
             {
                 if (Configuration.MenuMusic.TryGetRandomElement(out var nextTrack))
@@ -208,6 +208,5 @@ namespace Blockstacker.GlobalSettings.Music
                 _currentSceneType = GAME_STRING;
             }
         }
-
     }
 }

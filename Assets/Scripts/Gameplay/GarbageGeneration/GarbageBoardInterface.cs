@@ -8,9 +8,15 @@ namespace Blockstacker.Gameplay.GarbageGeneration
 {
     public class GarbageBoardInterface
     {
-        private readonly Board _source;
         private readonly bool _isDummy;
-        
+        private readonly Board _source;
+
+        public GarbageBoardInterface(Board source)
+        {
+            _isDummy = source == null;
+            _source = source;
+        }
+
         public uint Width => _isDummy ? 10u : _source.Width;
 
         [UsedImplicitly]
@@ -37,15 +43,8 @@ namespace Blockstacker.Gameplay.GarbageGeneration
                                !line.TrueForAll(isOccupied => isOccupied) &&
                                !line.TrueForAll(isOccupied => !isOccupied))
                 .ToList();
-            
+
             _source.AddGarbageLayer(slots, addToLast);
         }
-        
-        public GarbageBoardInterface(Board source)
-        {
-            _isDummy = source == null;
-            _source = source;
-        }
-
     }
 }

@@ -43,7 +43,7 @@ MonoBehaviour:
         0 or not message.WasBtbClear then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
         2)\n\treturn \"Back to Back x\" .. message.CurrentBackToBack\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
         {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 16}
+      Position: {x: -10, y: 15}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Clear type action text
@@ -58,7 +58,7 @@ MonoBehaviour:
         message.LinesCleared == 4 then\n\t\treturn output .. \"Quad\"\n\telse\n\t\treturn
         output .. \"Quad+\" .. message.LinesCleared\n\tend\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
         {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 14}
+      Position: {x: -10, y: 13}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Combo action text
@@ -67,7 +67,7 @@ MonoBehaviour:
       Script: "function OnPiecePlaced(message)\n\tif message.CurrentCombo == 0 then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
         2)\n\treturn \"Combo \" .. message.CurrentCombo\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
         {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 12}
+      Position: {x: -10, y: 11}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Holds
@@ -122,7 +122,7 @@ MonoBehaviour:
         remaining = message.TotalCount - message.CurrentCount\n\tif remaining < 0
         then remaining = 0 end\n\treturn StatUtility:FormatNumber(remaining, 0)\nend\nSetText(\"\")\nSetAlignment(\"center\")\nSetVisibility(0.4)\nreturn
         {\n\t[\"GameEndConditionChanged\"] = OnChange\n}"
-      Position: {x: 3, y: 16}
+      Position: {x: 3, y: 15}
       Size: {x: 4, y: 4}
       UpdateInterval: 0
     - Name: Stopwatch
@@ -161,7 +161,7 @@ MonoBehaviour:
         0 or not message.WasBtbClear then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
         2)\n\treturn \"Back to Back x\" .. message.CurrentBackToBack\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
         {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 16}
+      Position: {x: -10, y: 15}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Clear type action text
@@ -176,7 +176,7 @@ MonoBehaviour:
         message.LinesCleared == 4 then\n\t\treturn output .. \"Quad\"\n\telse\n\t\treturn
         output .. \"Quad+\" .. message.LinesCleared\n\tend\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
         {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 14}
+      Position: {x: -10, y: 13}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Combo action text
@@ -185,7 +185,7 @@ MonoBehaviour:
       Script: "function OnPiecePlaced(message)\n\tif message.CurrentCombo == 0 then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
         2)\n\treturn \"Combo \" .. message.CurrentCombo\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
         {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 12}
+      Position: {x: -10, y: 11}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Lines cleared
@@ -218,7 +218,7 @@ MonoBehaviour:
         remaining = message.TotalCount - message.CurrentCount\n\tif remaining < 0
         then remaining = 0 end\n\treturn StatUtility:FormatNumber(remaining, 0)\nend\nSetText(\"\")\nSetAlignment(\"center\")\nSetVisibility(0.4)\nreturn
         {\n\t[\"GameEndConditionChanged\"] = OnChange\n}"
-      Position: {x: 3, y: 16}
+      Position: {x: 3, y: 15}
       Size: {x: 4, y: 4}
       UpdateInterval: 0
     - Name: Stopwatch
@@ -251,7 +251,7 @@ MonoBehaviour:
         message.LinesCleared == 4 then\n\t\treturn output .. \"Quad\"\n\telse\n\t\treturn
         output .. \"Quad+\" .. message.LinesCleared\n\tend\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
         {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 16}
+      Position: {x: -10, y: 15}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Level
@@ -299,7 +299,7 @@ MonoBehaviour:
         \"Score: \" .. Stats.Score .. \"\\n\" .. StatUtility:FormatNumber(spp, 0)
         .. \" per piece\"\nend\nSetText(\"Score: 0\\n0 per piece\")\nreturn {\n\t[\"ScoreChanged\"]
         = OnUpdated,\n\t[\"PiecePlaced\"] = OnUpdated\n}"
-      Position: {x: -10, y: 10}
+      Position: {x: -10, y: 9}
       Size: {x: 9, y: 3}
       UpdateInterval: 0
     - Name: Stopwatch
@@ -335,7 +335,7 @@ MonoBehaviour:
         message.LinesCleared == 4 then\n\t\treturn output .. \"Quad\"\n\telse\n\t\treturn
         output .. \"Quad+\" .. message.LinesCleared\n\tend\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
         {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 14}
+      Position: {x: -10, y: 13}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Level
@@ -361,7 +361,7 @@ MonoBehaviour:
         OnPiecePlaced(message)\n\tLinesCleared = LinesCleared + message.LinesCleared\n\treturn
         \"Lines cleared: \" .. LinesCleared\nend\nSetText(Reset())\nreturn {\n\t[\"GameStarted\"]
         = Reset,\n\t[\"GameRestarted\"] = Reset,\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 3}
+      Position: {x: -10, y: 2}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Pieces
@@ -373,7 +373,7 @@ MonoBehaviour:
         PiecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\nend\nSetText(Reset())\nreturn
         {\n\t[\"CounterUpdated\"] = OnUpdated,\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStarted\"]
         = Reset,\n\t[\"GameRestarted\"] = Reset\n}"
-      Position: {x: -9, y: 6}
+      Position: {x: -9, y: 4}
       Size: {x: 8, y: 3}
       UpdateInterval: 0.1
     - Name: Score
@@ -383,7 +383,7 @@ MonoBehaviour:
         \"Score: \" .. Stats.Score .. \"\\n\" .. StatUtility:FormatNumber(spp, 0)
         .. \" per piece\"\nend\nSetText(\"Score: 0\\n0 per piece\")\nreturn {\n\t[\"ScoreChanged\"]
         = OnUpdated,\n\t[\"PiecePlaced\"] = OnUpdated\n}"
-      Position: {x: -10, y: 10}
+      Position: {x: -10, y: 7}
       Size: {x: 9, y: 3}
       UpdateInterval: 0
     - Name: Stopwatch
@@ -410,7 +410,7 @@ MonoBehaviour:
         0 or not message.WasBtbClear then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
         2)\n\treturn \"Back to Back x\" .. message.CurrentBackToBack\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
         {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 16}
+      Position: {x: -10, y: 15}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Combo action text
@@ -419,7 +419,7 @@ MonoBehaviour:
       Script: "function OnPiecePlaced(message)\n\tif message.CurrentCombo == 0 then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
         2)\n\treturn \"Combo \" .. message.CurrentCombo\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
         {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 12}
+      Position: {x: -10, y: 11}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
   - _name: Ultra
@@ -447,7 +447,7 @@ MonoBehaviour:
         message.LinesCleared == 4 then\n\t\treturn output .. \"Quad\"\n\telse\n\t\treturn
         output .. \"Quad+\" .. message.LinesCleared\n\tend\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
         {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 14}
+      Position: {x: -10, y: 13}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Lines cleared
@@ -457,7 +457,7 @@ MonoBehaviour:
         OnPiecePlaced(message)\n\tLinesCleared = LinesCleared + message.LinesCleared\n\treturn
         \"Lines cleared: \" .. LinesCleared\nend\nSetText(Reset())\nreturn {\n\t[\"GameStarted\"]
         = Reset,\n\t[\"GameRestarted\"] = Reset,\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 3}
+      Position: {x: -10, y: 2}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Pieces
@@ -469,7 +469,7 @@ MonoBehaviour:
         PiecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\nend\nSetText(Reset())\nreturn
         {\n\t[\"CounterUpdated\"] = OnUpdated,\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStarted\"]
         = Reset,\n\t[\"GameRestarted\"] = Reset\n}"
-      Position: {x: -9, y: 6}
+      Position: {x: -9, y: 4}
       Size: {x: 8, y: 3}
       UpdateInterval: 0.1
     - Name: Score
@@ -479,7 +479,7 @@ MonoBehaviour:
         \"Score: \" .. Stats.Score .. \"\\n\" .. StatUtility:FormatNumber(spp, 0)
         .. \" per piece\"\nend\nSetText(\"Score: 0\\n0 per piece\")\nreturn {\n\t[\"ScoreChanged\"]
         = OnUpdated,\n\t[\"PiecePlaced\"] = OnUpdated\n}"
-      Position: {x: -10, y: 10}
+      Position: {x: -10, y: 7}
       Size: {x: 9, y: 3}
       UpdateInterval: 0
     - Name: Stopwatch
@@ -506,7 +506,7 @@ MonoBehaviour:
         0 or not message.WasBtbClear then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
         2)\n\treturn \"Back to Back x\" .. message.CurrentBackToBack\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
         {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 16}
+      Position: {x: -10, y: 15}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Combo action text
@@ -515,7 +515,7 @@ MonoBehaviour:
       Script: "function OnPiecePlaced(message)\n\tif message.CurrentCombo == 0 then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
         2)\n\treturn \"Combo \" .. message.CurrentCombo\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
         {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 12}
+      Position: {x: -10, y: 11}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Remaining end condition
@@ -526,7 +526,7 @@ MonoBehaviour:
         remaining = message.TotalCount - message.CurrentCount\n\tif remaining < 0
         then remaining = 0 end\n\treturn StatUtility:FormatNumber(remaining, 0)\nend\nSetText(\"\")\nSetAlignment(\"center\")\nSetVisibility(0.4)\nreturn
         {\n\t[\"GameEndConditionChanged\"] = OnChange\n}"
-      Position: {x: 3, y: 16}
+      Position: {x: 3, y: 15}
       Size: {x: 4, y: 4}
       UpdateInterval: 0
   DefaultGroup:
@@ -556,7 +556,7 @@ MonoBehaviour:
         0 or not message.WasBtbClear then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
         2)\n\treturn \"Back to Back x\" .. message.CurrentBackToBack\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
         {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 16}
+      Position: {x: -10, y: 15}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Clear type action text
@@ -571,7 +571,7 @@ MonoBehaviour:
         message.LinesCleared == 4 then\n\t\treturn output .. \"Quad\"\n\telse\n\t\treturn
         output .. \"Quad+\" .. message.LinesCleared\n\tend\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
         {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 14}
+      Position: {x: -10, y: 13}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Combo action text
@@ -580,7 +580,7 @@ MonoBehaviour:
       Script: "function OnPiecePlaced(message)\n\tif message.CurrentCombo == 0 then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
         2)\n\treturn \"Combo \" .. message.CurrentCombo\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
         {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 12}
+      Position: {x: -10, y: 11}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Pieces

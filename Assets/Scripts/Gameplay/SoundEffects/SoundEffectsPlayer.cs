@@ -1,7 +1,6 @@
 ﻿using System;
 using Blockstacker.Common;
 using Blockstacker.Common.Alerts;
-using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Communication;
 using Blockstacker.GlobalSettings.Music;
 using NLua;
@@ -51,10 +50,7 @@ namespace Blockstacker.Gameplay.SoundEffects
             {
                 var returnedValue = _luaState.DoString(SoundPackLoader.SoundEffectsScript);
                 if (returnedValue.Length == 0) return false;
-                if (returnedValue[0] is LuaTable eventTable)
-                {
-                    events = eventTable;
-                }
+                if (returnedValue[0] is LuaTable eventTable) events = eventTable;
             }
             catch (LuaException ex)
             {
@@ -98,7 +94,7 @@ namespace Blockstacker.Gameplay.SoundEffects
                     }
                 }
 
-                _mediator.Register((Action<Message>)Action, entry.Value);
+                _mediator.Register((Action<Message>) Action, entry.Value);
             }
 
             return true;
@@ -120,12 +116,12 @@ namespace Blockstacker.Gameplay.SoundEffects
                 if (SoundPackLoader.SoundEffects.ContainsKey(countdownKey))
                 {
                     found = true;
-                     break;
+                    break;
                 }
                 if (_defaultEffects.ContainsKey(countdownKey))
                 {
                     found = true;
-                     break;
+                    break;
                 }
             }
 
@@ -146,10 +142,7 @@ namespace Blockstacker.Gameplay.SoundEffects
             switch (message.LinesCleared)
             {
                 case 0:
-                    if (message.BrokenCombo)
-                    {
-                        TryPlayClip("combobreak");
-                    }
+                    if (message.BrokenCombo) TryPlayClip("combobreak");
 
                     TryPlayClip("floor");
                     break;
@@ -245,7 +238,10 @@ namespace Blockstacker.Gameplay.SoundEffects
             _audioSource.Play();
         }
 
-        private void Play(string clipName) => TryPlayClip(clipName);
+        private void Play(string clipName)
+        {
+            TryPlayClip(clipName);
+        }
 
         private void TryPlayClip(string clipName)
         {
@@ -254,11 +250,13 @@ namespace Blockstacker.Gameplay.SoundEffects
             else if (_defaultEffects.TryGetValue(clipName, out clip))
                 _audioSource.PlayOneShot(clip);
             else
+            {
                 _ = AlertDisplayer.Instance.ShowAlert(new Alert(
                     "Clip not found!",
                     $"Sound effect with a name {clipName} was not found.",
                     AlertType.Warning
                 ));
+            }
         }
     }
 }

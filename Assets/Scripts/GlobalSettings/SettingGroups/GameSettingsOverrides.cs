@@ -8,11 +8,11 @@ namespace Blockstacker.GlobalSettings.Groups
     public record GameSettingsOverrides
     {
         [SerializeField]
-        private float? _countdownInterval;
-        [SerializeField]
         private uint? _countdownCount;
+        [SerializeField]
+        private float? _countdownInterval;
         [field: SerializeField] [CanBeNull] public string StartingLevel { get; set; }
-        
+
         public float? CountdownInterval
         {
             get => _countdownInterval;
@@ -25,7 +25,7 @@ namespace Blockstacker.GlobalSettings.Groups
                 }
 
                 _countdownInterval = null;
-            } 
+            }
         }
 
         public uint? CountdownCount
@@ -42,6 +42,5 @@ namespace Blockstacker.GlobalSettings.Groups
                 _countdownCount = null;
             }
         }
-
     }
 }

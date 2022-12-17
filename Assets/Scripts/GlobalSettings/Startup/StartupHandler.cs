@@ -18,7 +18,6 @@ namespace Blockstacker.GlobalSettings.Startup
         [SerializeField] private PremadeStatCountersSo _premadeStatCounters;
 
         private uint _loadersActive;
-        public event Action SettingChanged;
 
         private void Start()
         {
@@ -53,13 +52,17 @@ namespace Blockstacker.GlobalSettings.Startup
                 AppSettings.StatCounting.DefaultGroup = _premadeStatCounters.DefaultGroup;
 
                 foreach (var group in _premadeStatCounters.PremadeGroups)
+                {
                     while (!AppSettings.StatCounting.StatCounterGroups.TryAdd(Guid.NewGuid(), group))
                     {
                     }
+                }
             }
 
             FinishStartup();
         }
+
+        public event Action SettingChanged;
 
         private void FinishStartup()
         {

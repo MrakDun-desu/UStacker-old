@@ -8,5 +8,5 @@ namespace Blockstacker.GlobalSettings.Music
     public class AudioClipCollection : SerializableDictionary<string, AudioClip>
     {
     }
-    
+
 }

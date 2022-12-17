@@ -14,7 +14,7 @@ namespace Blockstacker.GlobalSettings
         [SerializeField] private float _openTime = .2f;
 
         private bool _pointerOver;
-        
+
         public void OnPointerEnter(PointerEventData eventData)
         {
             _pointerOver = true;
@@ -25,7 +25,7 @@ namespace Blockstacker.GlobalSettings
         {
             _pointerOver = false;
             DOTween.To(
-                () => _controlledTransform.sizeDelta, 
+                () => _controlledTransform.sizeDelta,
                 value => _controlledTransform.sizeDelta = value,
                 new Vector2(_closedSize, _controlledTransform.sizeDelta.y),
                 _openTime);
@@ -36,9 +36,9 @@ namespace Blockstacker.GlobalSettings
             yield return new WaitForSeconds(_waitTime);
             if (!_pointerOver)
                 yield break;
-            
+
             DOTween.To(
-                () => _controlledTransform.sizeDelta, 
+                () => _controlledTransform.sizeDelta,
                 value => _controlledTransform.sizeDelta = value,
                 new Vector2(_openedSize, _controlledTransform.sizeDelta.y),
                 _openTime);

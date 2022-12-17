@@ -8,9 +8,14 @@ namespace Blockstacker.Gameplay.GameManagers
 {
     public class GameManagerBoardInterface
     {
-        
+
         private readonly Board _source;
-        
+
+        public GameManagerBoardInterface(Board source)
+        {
+            _source = source;
+        }
+
         [UsedImplicitly]
         public uint Width => _source.Width;
         [UsedImplicitly]
@@ -21,8 +26,12 @@ namespace Blockstacker.Gameplay.GameManagers
         public uint GarbageHeight => _source.GarbageHeight;
         [UsedImplicitly]
         public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots => _source.Slots;
+
         [UsedImplicitly]
-        public void AddGarbageLayer(List<List<bool>> slots, bool addToLast) => _source.AddGarbageLayer(slots, addToLast);
+        public void AddGarbageLayer(List<List<bool>> slots, bool addToLast)
+        {
+            _source.AddGarbageLayer(slots, addToLast);
+        }
 
         [UsedImplicitly]
         public void AddGarbageLayer(LuaTable slotsTable, bool addToLast)
@@ -35,11 +44,9 @@ namespace Blockstacker.Gameplay.GameManagers
         }
 
         [UsedImplicitly]
-        public void ClearAllBlocks() => _source.ClearAllBlocks();
-
-        public GameManagerBoardInterface(Board source)
+        public void ClearAllBlocks()
         {
-            _source = source;
+            _source.ClearAllBlocks();
         }
     }
 }

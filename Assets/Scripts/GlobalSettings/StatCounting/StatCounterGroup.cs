@@ -26,29 +26,17 @@ namespace Blockstacker.GlobalSettings.StatCounting
 
         public List<StatCounterRecord> StatCounters => _statCounters;
 
-
-        public StatCounterGroup Copy()
-        {
-            var output = new StatCounterGroup
-            {
-                _name = _name,
-                _gameType = _gameType
-            };
-
-            foreach (var counter in StatCounters)
-            {
-                output.StatCounters.Add(counter.Copy());
-            }
-
-            return output;
-        }
-
         public void OnBeforeSerialize()
         {
             foreach (var counterSo in _statCounterSos)
             {
                 if (counterSo is null) continue;
-                bool Predicate(StatCounterRecord counter) => counter.Name == counterSo.Value.Name;
+
+                bool Predicate(StatCounterRecord counter)
+                {
+                    return counter.Name == counterSo.Value.Name;
+                }
+
                 if (!_statCounters.Exists(Predicate))
                     _statCounters.Add(counterSo.Value.Copy());
                 else
@@ -65,6 +53,19 @@ namespace Blockstacker.GlobalSettings.StatCounting
 
         public void OnAfterDeserialize()
         {
+        }
+
+
+        public StatCounterGroup Copy()
+        {
+            var output = new StatCounterGroup
+            {
+                _name = _name, _gameType = _gameType
+            };
+
+            foreach (var counter in StatCounters) output.StatCounters.Add(counter.Copy());
+
+            return output;
         }
     }
 }

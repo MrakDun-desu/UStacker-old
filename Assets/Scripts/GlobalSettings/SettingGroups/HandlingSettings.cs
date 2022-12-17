@@ -15,10 +15,10 @@ namespace Blockstacker.GlobalSettings.Groups
         [SerializeField]
         private double _softDropFactor = 20d;
         [SerializeField]
-        private double _dasCutDelay = 0d;
+        private double _dasCutDelay;
         [SerializeField]
-        private double _doubleDropPreventionInterval = 0;
-        
+        private double _doubleDropPreventionInterval;
+
         [field: SerializeField]
         public DelayDasOn DelayDasOn { get; set; } = DelayDasOn.Nothing;
         [field: SerializeField]
@@ -27,7 +27,7 @@ namespace Blockstacker.GlobalSettings.Groups
         public DiagonalLockBehavior DiagonalLockBehavior { get; set; } = DiagonalLockBehavior.DontLock;
         [field: SerializeField]
         public bool CancelDelayWithMovement { get; set; } = true;
-        
+
         public double DelayedAutoShift
         {
             get => _delayedAutoShift;

@@ -1,5 +1,5 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 
 namespace Blockstacker.GameSettings.Enums
 {
@@ -15,7 +15,7 @@ namespace Blockstacker.GameSettings.Enums
         SSpins = 1 << 5,
         ZSpins = 1 << 6,
         StupidSpinsFlag = 1 << 7,
-        All    = 0b0111111,
+        All = 0b0111111,
         [Tooltip("Allows even spins that would normally not be considered")]
         Stupid = 0b1111111
     }

@@ -6,11 +6,11 @@ namespace Blockstacker.Common.Extensions
 {
     public static class ScrollRectExtensions
     {
-        public static void ScrollTo(this ScrollRect self, 
-            RectTransform target, 
+        public static void ScrollTo(this ScrollRect self,
+            RectTransform target,
             bool minimalMovement = true,
-            bool scrollSmooth = true, 
-            float time = 0.5f, 
+            bool scrollSmooth = true,
+            float time = 0.5f,
             AnimationCurve easeCurve = null)
         {
             var contentPanel = self.content;
@@ -27,15 +27,11 @@ namespace Blockstacker.Common.Extensions
                 if (targetRect.xMin < viewportRect.xMin)
                     targetPos.x = targetRect.xMin;
                 else if (targetRect.xMax > viewportRect.xMax)
-                {
                     targetPos.x = targetRect.xMax + viewportRect.width - targetRect.width;
-                }
                 else setX = false;
 
                 if (targetRect.yMin < viewportRect.yMin)
-                {
                     targetPos.y = targetRect.yMin + viewportRect.height - targetRect.height;
-                }
                 else if (targetRect.yMax > viewportRect.yMax)
                     targetPos.y = targetRect.yMax;
                 else setY = false;
@@ -67,8 +63,15 @@ namespace Blockstacker.Common.Extensions
 
             var newPos = contentPanel.anchoredPosition + posDifference;
 
-            void SetPos(Vector2 value) => contentPanel.anchoredPosition = value;
-            Vector2 GetPos() => contentPanel.anchoredPosition;
+            void SetPos(Vector2 value)
+            {
+                contentPanel.anchoredPosition = value;
+            }
+
+            Vector2 GetPos()
+            {
+                return contentPanel.anchoredPosition;
+            }
 
             DOTween.To(GetPos, SetPos, newPos, time);
         }

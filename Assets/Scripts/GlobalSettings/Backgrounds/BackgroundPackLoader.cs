@@ -10,10 +10,8 @@ namespace Blockstacker.GlobalSettings.Backgrounds
 {
     public static class BackgroundPackLoader
     {
-        public static readonly Dictionary<string, List<BackgroundRecord>> Backgrounds = new();
-
-        public static event Action BackgroundPackChanged;
         public const string DEFAULT_PATH = "Default";
+        public static readonly Dictionary<string, List<BackgroundRecord>> Backgrounds = new();
 
         // needs to be manually updated every time a new background is added
         private static readonly string[] SupportedBackgroundNames =
@@ -23,6 +21,8 @@ namespace Blockstacker.GlobalSettings.Backgrounds
             "gameSettings",
             "gameCustom"
         };
+
+        public static event Action BackgroundPackChanged;
 
         public static IEnumerable<string> EnumerateBackgroundPacks()
         {
@@ -84,7 +84,10 @@ namespace Blockstacker.GlobalSettings.Backgrounds
 
             var newBackground = await LoadBackgroundRecordAsync(path);
             if (newBackground is null) return;
-            Backgrounds[backgroundName] = new List<BackgroundRecord> {newBackground};
+            Backgrounds[backgroundName] = new List<BackgroundRecord>
+            {
+                newBackground
+            };
         }
 
         private static async Task HandleBackgroundFolderLoadAsync(string path)

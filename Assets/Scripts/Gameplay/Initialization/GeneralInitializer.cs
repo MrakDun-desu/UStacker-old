@@ -13,15 +13,15 @@ namespace Blockstacker.Gameplay.Initialization
 {
     public class GeneralInitializer : InitializerBase
     {
+        private readonly List<InputActionMessage> _actionList;
         private readonly PieceDictionary _availablePieces;
         private readonly Board _board;
         private readonly InputProcessor _inputProcessor;
+        private readonly bool _isReplay;
+        private readonly bool _isRestarting;
         private readonly PieceContainer _pieceContainerPrefab;
         private readonly PieceSpawner _spawner;
         private readonly GameStateManager _stateManager;
-        private readonly List<InputActionMessage> _actionList;
-        private readonly bool _isRestarting;
-        private readonly bool _isReplay;
 
         public GeneralInitializer(
             StringBuilder problemBuilder,
@@ -51,15 +51,13 @@ namespace Blockstacker.Gameplay.Initialization
         {
             _stateManager.IsReplaying = _isReplay;
             if (_isReplay)
-            {
                 _inputProcessor.ActionList = _actionList;
-            }
             else
             {
                 _inputProcessor.ActionList = null;
                 InitializeSeed();
             }
-            
+
             InitializeRandomizer();
             if (_isRestarting) return;
             InitializePieceContainers();
@@ -68,7 +66,7 @@ namespace Blockstacker.Gameplay.Initialization
 
         private void InitializeSeed()
         {
-             _gameSettings.General.ActiveSeed = _gameSettings.General.UseCustomSeed
+            _gameSettings.General.ActiveSeed = _gameSettings.General.UseCustomSeed
                 ? _gameSettings.General.CustomSeed
                 : Random.Range(int.MinValue, int.MaxValue);
         }
@@ -85,9 +83,9 @@ namespace Blockstacker.Gameplay.Initialization
                 _spawner.Randomizer.Reset(_gameSettings.General.ActiveSeed);
                 return;
             }
-                
+
             string validationErrors = null;
-            
+
             var seed = _gameSettings.General.ActiveSeed;
 
             IRandomizer randomizer = _gameSettings.General.RandomizerType switch

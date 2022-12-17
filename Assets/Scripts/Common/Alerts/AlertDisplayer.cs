@@ -7,7 +7,7 @@ namespace Blockstacker.Common.Alerts
     {
         [SerializeField] private AlertController _alertPrefab;
         [SerializeField] private RectTransform _alertsParent;
-        
+
         public static AlertDisplayer Instance => _instance;
 
         public Task ShowAlert(Alert alert)
@@ -23,6 +23,5 @@ namespace Blockstacker.Common.Alerts
             var newAlert = Instantiate(_alertPrefab, _alertsParent);
             newAlert.Initialize(new Alert("Example", "This is an example alert", AlertType.Info));
         }
-        
     }
 }

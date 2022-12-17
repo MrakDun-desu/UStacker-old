@@ -36,12 +36,7 @@ namespace Blockstacker.Gameplay.Stats
 
         public void Reset()
         {
-            foreach (var fieldInfo in GetType().GetFields())
-            {
-                fieldInfo.SetValue(this, default);
-            }
+            foreach (var fieldInfo in GetType().GetFields()) fieldInfo.SetValue(this, default);
         }
-        
-
     }
 }

@@ -18,6 +18,13 @@ namespace Blockstacker.GlobalSettings.Changers
         [SerializeField] private ContentSizeFitter _containerSizeFitter;
         [SerializeField] private StatCounterChanger _counterChangerPrefab;
         [SerializeField] private float _statCounterSpacing = 10;
+        private readonly List<StatCounterChanger> _statCounterChangers = new();
+
+        private float _formerHeight;
+        private bool _isMinimized;
+        private RectTransform _selfTransform;
+
+        private StatCounterGroup _value;
 
         public StatCounterGroup Value
         {
@@ -31,15 +38,6 @@ namespace Blockstacker.GlobalSettings.Changers
         }
 
         public Guid Id { get; set; }
-        public event Action<Guid> GroupRemoved;
-        public event Action<float> SizeChanged;
-
-        private StatCounterGroup _value;
-        private RectTransform _selfTransform;
-
-        private float _formerHeight;
-        private bool _isMinimized;
-        private readonly List<StatCounterChanger> _statCounterChangers = new();
 
         private void Awake()
         {
@@ -55,6 +53,9 @@ namespace Blockstacker.GlobalSettings.Changers
             _groupRemoveButton.onClick.AddListener(() => GroupRemoved?.Invoke(Id));
             _counterAddButton.onClick.AddListener(OnStatCounterAdded);
         }
+
+        public event Action<Guid> GroupRemoved;
+        public event Action<float> SizeChanged;
 
         private void ChangeHeight(float sizeDelta)
         {
@@ -125,7 +126,7 @@ namespace Blockstacker.GlobalSettings.Changers
             newCounterChanger.Value = newCounter;
 
             _statCounterChangers.Add(newCounterChanger);
-            
+
             var addedSize = ((RectTransform) newCounterChanger.transform).sizeDelta.y;
             newCounterChanger.SizeChanged += SizeChanged;
 
@@ -145,7 +146,7 @@ namespace Blockstacker.GlobalSettings.Changers
             var reducedSize = ((RectTransform) changer.transform).sizeDelta.y;
             if (_statCounterChangers.Count > 0)
                 reducedSize += _statCounterSpacing;
-            
+
             SizeChanged?.Invoke(-reducedSize);
 
             Destroy(changer.gameObject);
@@ -157,7 +158,7 @@ namespace Blockstacker.GlobalSettings.Changers
         private void OnStatCounterAdded()
         {
             AddStatCounter(new StatCounterRecord(), true);
-            if (_isMinimized) 
+            if (_isMinimized)
                 OnMinimize();
         }
     }

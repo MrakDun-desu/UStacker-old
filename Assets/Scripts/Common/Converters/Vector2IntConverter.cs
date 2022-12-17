@@ -10,12 +10,12 @@ namespace Blockstacker.Common.Converters
         public override void WriteJson(JsonWriter writer, Vector2Int value, JsonSerializer serializer)
         {
             writer.WriteStartObject();
-            
+
             writer.WritePropertyName("x");
             writer.WriteValue(value.x);
             writer.WritePropertyName("y");
             writer.WriteValue(value.y);
-            
+
             writer.WriteEndObject();
         }
 
@@ -43,16 +43,16 @@ namespace Blockstacker.Common.Converters
                         var x = reader.ReadAsInt32();
                         if (x is null)
                             throw new JsonReaderException();
-                            
-                        output.x = (int)x;
+
+                        output.x = (int) x;
                         xSet = true;
                         break;
                     case "y":
                         var y = reader.ReadAsInt32();
                         if (y is null)
                             throw new JsonReaderException();
-                        
-                        output.y = (int)y;
+
+                        output.y = (int) y;
                         ySet = true;
                         break;
                     default:

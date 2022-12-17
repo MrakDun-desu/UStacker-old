@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using UnityEngine;
 
@@ -6,7 +5,7 @@ namespace Blockstacker.GameSettings.Changers
 {
     public class GameSettingDoubleChanger : GameSettingChangerWithField<double>
     {
-        [Space] 
+        [Space]
         [SerializeField] private float _maxValue;
         [SerializeField] private float _minValue;
 

@@ -8,6 +8,5 @@
         {
             EndTime = endTime;
         }
-
     }
 }

@@ -16,20 +16,24 @@ namespace Blockstacker.Gameplay
     {
         [SerializeField] private Board _board;
         [SerializeField] private InputProcessor _inputProcessor;
-        [FormerlySerializedAs("_manager")] [SerializeField] private GameStateManager _stateManager;
+        [FormerlySerializedAs("_manager")] [SerializeField]
+        private GameStateManager _stateManager;
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private WarningPiece _warningPiece;
-
-        public IRandomizer Randomizer;
-        
-        public GameSettingsSO.SettingsContainer GameSettings { set => _settings = value; }
-        private GameSettingsSO.SettingsContainer _settings;
-        private List<PieceContainer> _previewContainers;
-        private PiecePreviews _previews;
         private readonly Dictionary<string, ObjectPool<Piece>> _piecePools = new();
-        private int _defaultPoolCapacity;
 
         private bool _containersEmpty = true;
+        private int _defaultPoolCapacity;
+        private List<PieceContainer> _previewContainers;
+        private PiecePreviews _previews;
+        private GameSettingsSO.SettingsContainer _settings;
+
+        public IRandomizer Randomizer;
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            set => _settings = value;
+        }
 
         public void ResetRandomizer(GameStartedMessage message)
         {
@@ -54,12 +58,15 @@ namespace Blockstacker.Gameplay
             _containersEmpty = false;
         }
 
-        public void SpawnPiece() => SpawnPiece(0d);
+        public void SpawnPiece()
+        {
+            SpawnPiece(0d);
+        }
 
         public bool SpawnPiece(double spawnTime)
         {
             if (!_stateManager.GameRunningActively || _containersEmpty) return false;
-            
+
             var newPieceType = Randomizer.GetNextPiece();
             var newPiece = _piecePools[newPieceType].Get();
             newPiece.SetBoard(_board);

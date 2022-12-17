@@ -21,11 +21,11 @@ namespace Blockstacker.Gameplay.Pieces
         public Transform[] SpinDetectors = Array.Empty<Transform>();
         public Transform[] FullSpinDetectors = Array.Empty<Transform>();
         public UnityEvent PieceCleared;
+        private readonly List<Transform> _activeTransforms = new();
 
         private bool _activeInPool = true;
         private string _currentType;
-        private readonly List<Transform> _activeTransforms = new();
-        
+
         private float _visibility;
         public float Visibility
         {
@@ -33,31 +33,11 @@ namespace Blockstacker.Gameplay.Pieces
             set
             {
                 _visibility = value;
-                foreach (var block in Blocks)
-                {
-                    block.Visibility = _visibility;
-                }
+                foreach (var block in Blocks) block.Visibility = _visibility;
             }
         }
-        public event Action Rotated;
-        
+
         public ObjectPool<Piece> SourcePool { get; set; }
-        
-        public string Type
-        {
-            get => _currentType;
-            set
-            {
-                if (string.Equals(_currentType, value))
-                    return;
-                
-                _currentType = value;
-                foreach (var block in Blocks)
-                    block.CollectionType = _currentType;
-            }
-        }
-        public IEnumerable<Vector3> BlockPositions => 
-            _activeTransforms.Select(tf => tf.position);
 
         private void Awake()
         {
@@ -67,9 +47,26 @@ namespace Blockstacker.Gameplay.Pieces
             {
                 var block = Blocks[i];
                 block.Cleared += OnBlockCleared;
-                block.BlockNumber = (uint)Mathf.Min(i, 3);
+                block.BlockNumber = (uint) Mathf.Min(i, 3);
             }
         }
+
+        public string Type
+        {
+            get => _currentType;
+            set
+            {
+                if (string.Equals(_currentType, value))
+                    return;
+
+                _currentType = value;
+                foreach (var block in Blocks)
+                    block.CollectionType = _currentType;
+            }
+        }
+        public IEnumerable<Vector3> BlockPositions =>
+            _activeTransforms.Select(tf => tf.position);
+        public event Action Rotated;
 
         private void OnBlockCleared(ClearableBlock sender)
         {
@@ -87,13 +84,13 @@ namespace Blockstacker.Gameplay.Pieces
 
         public void SetBoard(Board board)
         {
-            foreach (var block in Blocks)
-            {
-                block.Board = board;
-            }
+            foreach (var block in Blocks) block.Board = board;
         }
 
-        public void RevertType() => Type = _type;
+        public void RevertType()
+        {
+            Type = _type;
+        }
 
         public void ResetState()
         {
@@ -104,7 +101,7 @@ namespace Blockstacker.Gameplay.Pieces
             {
                 if (!_activeTransforms.Contains(block.transform))
                     _activeTransforms.Add(block.transform);
-                    
+
                 block.gameObject.SetActive(true);
                 block.ResetPosition();
                 Rotated?.Invoke();
@@ -115,7 +112,7 @@ namespace Blockstacker.Gameplay.Pieces
         public void ReleaseFromPool()
         {
             if (!_activeInPool) return;
-            
+
             SourcePool.Release(this);
             _activeInPool = false;
         }
@@ -123,10 +120,7 @@ namespace Blockstacker.Gameplay.Pieces
         [ContextMenu("Log block positions")]
         private void LogBlockPositions()
         {
-            foreach (var block in Blocks.Where(block => _activeTransforms.Contains(block.transform)))
-            {
-                Debug.Log(block.Board.WorldSpaceToBoardPosition(block.transform.position));
-            }
+            foreach (var block in Blocks.Where(block => _activeTransforms.Contains(block.transform))) Debug.Log(block.Board.WorldSpaceToBoardPosition(block.transform.position));
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Blockstacker.Common.Extensions
             for (var i = 0; i < outList.Count; i++)
             {
                 if (filterArray.Contains(outList[i])) continue;
-                
+
                 outList.RemoveAt(i);
                 i--;
             }

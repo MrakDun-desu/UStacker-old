@@ -1,19 +1,19 @@
 {
-    "name": "Blockstacker.DiscordPresence",
-    "rootNamespace": "Blockstacker.DiscordPresence",
-    "references": [
-        "GUID:3b1ccb2572982554ea16427ef70e2576",
-        "GUID:c2cce5ea68c89224e96df575d31bcc32"
-    ],
-    "includePlatforms": [],
-    "excludePlatforms": [],
-    "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [
-        ""
-    ],
-    "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
-    "noEngineReferences": false
+  "name": "Blockstacker.DiscordPresence",
+  "rootNamespace": "Blockstacker.DiscordPresence",
+  "references": [
+    "GUID:3b1ccb2572982554ea16427ef70e2576",
+    "GUID:c2cce5ea68c89224e96df575d31bcc32"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [
+    ""
+  ],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
 }

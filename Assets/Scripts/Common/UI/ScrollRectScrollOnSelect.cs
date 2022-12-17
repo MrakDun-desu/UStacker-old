@@ -9,9 +9,9 @@ namespace Blockstacker.Common.UI
     public class ScrollRectScrollOnSelect : MonoBehaviour
     {
         [SerializeField] private bool _minimalMovement = true;
-        private ScrollRect _scrollRect;
         private EventSystem _activeEventSystem;
         private GameObject _lastSelected;
+        private ScrollRect _scrollRect;
 
         private void Awake()
         {
@@ -25,10 +25,10 @@ namespace Blockstacker.Common.UI
 
             _lastSelected = _activeEventSystem.currentSelectedGameObject;
             if (_lastSelected == null) return;
-            
+
             if (!_lastSelected.transform.IsChildOf(_scrollRect.content)) return;
 
-            _scrollRect.ScrollTo((RectTransform)_lastSelected.transform, _minimalMovement, false);
+            _scrollRect.ScrollTo((RectTransform) _lastSelected.transform, _minimalMovement, false);
         }
     }
 }

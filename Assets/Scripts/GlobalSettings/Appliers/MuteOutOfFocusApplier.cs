@@ -37,9 +37,7 @@ namespace Blockstacker.GlobalSettings.Appliers
                     mixer.SetFloat(fieldName, Mathf.Log10(volume) * 20);
                 }
                 else
-                {
                     mixer.SetFloat(fieldName, -80f);
-                }
             }
         }
     }

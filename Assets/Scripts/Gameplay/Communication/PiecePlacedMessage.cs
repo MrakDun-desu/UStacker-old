@@ -5,19 +5,18 @@ namespace Blockstacker.Gameplay.Communication
     [Serializable]
     public record PiecePlacedMessage : MidgameMessage
     {
-        public readonly uint LinesCleared;
-        public readonly uint GarbageLinesCleared;
-        public readonly uint CurrentCombo;
+        public readonly bool BrokenBackToBack;
+        public readonly bool BrokenCombo;
         public readonly uint CurrentBackToBack;
+        public readonly uint CurrentCombo;
+        public readonly uint GarbageLinesCleared;
+        public readonly uint LinesCleared;
         public readonly string PieceType;
         public readonly bool WasAllClear;
         public readonly bool WasSpin;
         public readonly bool WasSpinMini;
-        public readonly bool WasSpinRaw;
         public readonly bool WasSpinMiniRaw;
-        public readonly bool BrokenCombo;
-        public readonly bool BrokenBackToBack;
-        public bool WasBtbClear => WasSpin || WasSpinMini || LinesCleared > 3;
+        public readonly bool WasSpinRaw;
 
         public PiecePlacedMessage(uint linesCleared, uint garbageLinesCleared, uint currentCombo,
             uint currentBackToBack, string pieceType, bool wasAllClear, bool wasSpin, bool wasSpinMini, bool wasSpinRaw,
@@ -53,5 +52,7 @@ namespace Blockstacker.Gameplay.Communication
             WasSpinMiniRaw = wasSpinMiniRaw;
             PieceType = pieceType;
         }
+
+        public bool WasBtbClear => WasSpin || WasSpinMini || LinesCleared > 3;
     }
 }

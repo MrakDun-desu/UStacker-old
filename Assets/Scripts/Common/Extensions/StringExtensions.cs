@@ -30,7 +30,10 @@ namespace Blockstacker.Common.Extensions
             var builder = new StringBuilder(normalized.Length);
 
             foreach (var c in normalized.Select(character =>
-                             new {character, unicodeCat = CharUnicodeInfo.GetUnicodeCategory(character)})
+                             new
+                             {
+                                 character, unicodeCat = CharUnicodeInfo.GetUnicodeCategory(character)
+                             })
                          .Where(t => t.unicodeCat != UnicodeCategory.NonSpacingMark)
                          .Select(t => t.character))
                 builder.Append(c);

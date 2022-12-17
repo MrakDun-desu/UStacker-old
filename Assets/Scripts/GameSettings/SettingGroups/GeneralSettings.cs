@@ -28,7 +28,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         public string CustomRandomizerScript { get; set; } = "";
         [field: SerializeField]
         public int ActiveSeed { get; set; }
-        
+
         public RandomizerType RandomizerType
         {
             get => _randomizerType;

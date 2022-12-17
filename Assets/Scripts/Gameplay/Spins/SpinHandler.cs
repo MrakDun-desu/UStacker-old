@@ -11,8 +11,8 @@ namespace Blockstacker.Gameplay.Spins
 {
     public class SpinHandler
     {
-        private readonly RotationSystem _rotationSystem;
         private readonly AllowedSpins _allowedSpins;
+        private readonly RotationSystem _rotationSystem;
 
         public SpinHandler(RotationSystem rotationSystem, AllowedSpins allowedSpins)
         {
@@ -53,7 +53,7 @@ namespace Blockstacker.Gameplay.Spins
                 var actualKick = kick;
                 if (piece.Type.StartsWith("giant"))
                     actualKick *= 2;
-                
+
                 if (!board.CanPlace(piece, actualKick)) continue;
 
                 result.Kick = actualKick;
@@ -68,13 +68,13 @@ namespace Blockstacker.Gameplay.Spins
                     result.WasSpinMiniRaw = true;
 
                 CheckSpinResult(result, piece.Type);
-                
+
                 return true;
             }
 
             return false;
         }
-        
+
         private void CheckSpinResult(SpinResult formerResult, string pieceType)
         {
             switch (_allowedSpins)
@@ -116,7 +116,7 @@ namespace Blockstacker.Gameplay.Spins
         {
             if (pieceType.StartsWith("giant"))
                 pieceType = pieceType[^1].ToString().ToLowerInvariant();
-            
+
             return pieceType switch
             {
                 "i" => _allowedSpins.HasFlag(AllowedSpins.ISpins),

@@ -13,9 +13,9 @@ namespace Blockstacker.GameSettings.SettingGroups
         [SerializeField]
         private double _defaultLockDelay = .5d;
         [SerializeField]
-        private double _piecePlacementDelay = 0;
+        private double _piecePlacementDelay;
         [SerializeField]
-        private double _lineClearDelay = 0;
+        private double _lineClearDelay;
         [SerializeField]
         private double _hardLockAmount = 5d;
 
@@ -27,7 +27,7 @@ namespace Blockstacker.GameSettings.SettingGroups
         public TopoutCondition TopoutCondition { get; set; } = TopoutCondition.PieceSpawn;
         [field: SerializeField]
         public bool AllowClutchClears { get; set; } = true;
-        
+
         public double DefaultGravity
         {
             get => _defaultGravity;

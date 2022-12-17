@@ -6,12 +6,12 @@ namespace Blockstacker.Common.Extensions
     {
         public static Color WithAlpha(this Color color, float newAlpha)
         {
-            return new(color.r, color.g, color.b, newAlpha);
+            return new Color(color.r, color.g, color.b, newAlpha);
         }
 
         public static Color WithValue(this Color color, Color other)
         {
-            return new(other.r, other.g, other.b, color.a);
+            return new Color(other.r, other.g, other.b, color.a);
         }
     }
 }

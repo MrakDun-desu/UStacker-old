@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using NLua;
+﻿using NLua;
 using UnityEngine;
 
 namespace Blockstacker.Common
@@ -20,7 +18,7 @@ namespace Blockstacker.Common
             output.RegisterFunction(nameof(DebugLog), typeof(CreateLua).GetMethod(nameof(DebugLog)));
             return output;
         }
-        
+
         public static Lua WithRestrictions()
         {
             var output = new Lua();

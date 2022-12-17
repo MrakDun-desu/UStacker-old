@@ -75,36 +75,36 @@ namespace Blockstacker.Gameplay.Stats
                     MainStat.PiecesUsed => "Pieces used",
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                
-                _scoreText              .DisplayStat("Score",                 stats.Score);
-                _timeText               .DisplayStat("Time",                  _displayedReplay.GameLength, true);
-                _levelText              .DisplayStat("Final level",           stats.Level);
-                _linesText              .DisplayStat("Lines cleared",         stats.LinesCleared);
-                _piecesPlacedText       .DisplayStat("Pieces placed",         stats.PiecesPlaced);
-                _keysPressedText        .DisplayStat("Keys pressed",          stats.KeysPressed);
-                _singlesText            .DisplayStat("Singles",               stats.Singles);
-                _doublesText            .DisplayStat("Doubles",               stats.Doubles);
-                _triplesText            .DisplayStat("Triples",               stats.Triples);
-                _quadsText              .DisplayStat("Quads",                 stats.Quads);
-                _spinsText              .DisplayStat("Spins",                 stats.Spins);
-                _miniSpinsText          .DisplayStat("Mini spins",            stats.MiniSpins);
-                _spinSinglesText        .DisplayStat("Spin singles",          stats.SpinSingles);
-                _spinDoublesText        .DisplayStat("Spin doubles",          stats.SpinDoubles);
-                _spinTriplesText        .DisplayStat("Spin triples",          stats.SpinTriples);
-                _spinQuadsText          .DisplayStat("Spin quads",            stats.SpinQuads);
-                _miniSpinSinglesText    .DisplayStat("Mini spin singles",     stats.MiniSpinSingles);
-                _miniSpinDoublesText    .DisplayStat("Mini spin doubles",     stats.MiniSpinDoubles);
-                _miniSpinTriplesText    .DisplayStat("Mini spin triples",     stats.MiniSpinTriples);
-                _miniSpinQuadsText      .DisplayStat("Mini spin quads",       stats.MiniSpinQuads);
-                _longestComboText       .DisplayStat("Longest combo",         stats.LongestCombo);
-                _longestBackToBackText  .DisplayStat("Longest back to back",  stats.LongestBackToBack);
-                _allClearsText          .DisplayStat("All clears",            stats.AllClears);
-                _holdsText              .DisplayStat("Holds used",            stats.Holds);
+
+                _scoreText.DisplayStat("Score", stats.Score);
+                _timeText.DisplayStat("Time", _displayedReplay.GameLength, true);
+                _levelText.DisplayStat("Final level", stats.Level);
+                _linesText.DisplayStat("Lines cleared", stats.LinesCleared);
+                _piecesPlacedText.DisplayStat("Pieces placed", stats.PiecesPlaced);
+                _keysPressedText.DisplayStat("Keys pressed", stats.KeysPressed);
+                _singlesText.DisplayStat("Singles", stats.Singles);
+                _doublesText.DisplayStat("Doubles", stats.Doubles);
+                _triplesText.DisplayStat("Triples", stats.Triples);
+                _quadsText.DisplayStat("Quads", stats.Quads);
+                _spinsText.DisplayStat("Spins", stats.Spins);
+                _miniSpinsText.DisplayStat("Mini spins", stats.MiniSpins);
+                _spinSinglesText.DisplayStat("Spin singles", stats.SpinSingles);
+                _spinDoublesText.DisplayStat("Spin doubles", stats.SpinDoubles);
+                _spinTriplesText.DisplayStat("Spin triples", stats.SpinTriples);
+                _spinQuadsText.DisplayStat("Spin quads", stats.SpinQuads);
+                _miniSpinSinglesText.DisplayStat("Mini spin singles", stats.MiniSpinSingles);
+                _miniSpinDoublesText.DisplayStat("Mini spin doubles", stats.MiniSpinDoubles);
+                _miniSpinTriplesText.DisplayStat("Mini spin triples", stats.MiniSpinTriples);
+                _miniSpinQuadsText.DisplayStat("Mini spin quads", stats.MiniSpinQuads);
+                _longestComboText.DisplayStat("Longest combo", stats.LongestCombo);
+                _longestBackToBackText.DisplayStat("Longest back to back", stats.LongestBackToBack);
+                _allClearsText.DisplayStat("All clears", stats.AllClears);
+                _holdsText.DisplayStat("Holds used", stats.Holds);
                 _garbageLinesClearedText.DisplayStat("Garbage lines cleared", stats.GarbageLinesCleared);
-                _piecesPerSecondText    .DisplayStat("Pieces per second",     stats.PiecesPerSecond);
-                _keysPerPieceText       .DisplayStat("Keys per piece",        stats.KeysPerPiece);
-                _keysPerSecondText      .DisplayStat("Keys per second",       stats.KeysPerSecond);
-                _linesPerMinuteText     .DisplayStat("Lines per minute",      stats.LinesPerMinute);
+                _piecesPerSecondText.DisplayStat("Pieces per second", stats.PiecesPerSecond);
+                _keysPerPieceText.DisplayStat("Keys per piece", stats.KeysPerPiece);
+                _keysPerSecondText.DisplayStat("Keys per second", stats.KeysPerSecond);
+                _linesPerMinuteText.DisplayStat("Lines per minute", stats.LinesPerMinute);
             }
         }
 

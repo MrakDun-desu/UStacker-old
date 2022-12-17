@@ -8,6 +8,7 @@ namespace Blockstacker.Gameplay.Randomizers
 {
     public class CustomRandomizer : IRandomizer
     {
+        private const string AVAILABLE_PIECES_VARIABLE_NAME = "AvailablePieces";
         private readonly List<string> _availableValues = new()
         {
             "i",
@@ -16,13 +17,12 @@ namespace Blockstacker.Gameplay.Randomizers
             "l",
             "j",
             "s",
-            "z",
+            "z"
         };
 
         private readonly Lua _luaState = CreateLua.WithAllPrerequisites();
         private LuaFunction _nextPieceFunction;
         private LuaFunction _resetFunction;
-        private const string AVAILABLE_PIECES_VARIABLE_NAME = "AvailablePieces";
 
         public CustomRandomizer(IEnumerable<string> availablePieces, string script, int seed,
             out string validationErrors)
@@ -78,11 +78,11 @@ namespace Blockstacker.Gameplay.Randomizers
         private void InsertAvailableValuesIntoLua()
         {
             _luaState.DoString($"{AVAILABLE_PIECES_VARIABLE_NAME} = {{}}");
-            var availablePiecesTable = (LuaTable)_luaState[AVAILABLE_PIECES_VARIABLE_NAME];
+            var availablePiecesTable = (LuaTable) _luaState[AVAILABLE_PIECES_VARIABLE_NAME];
             for (var i = 0; i < _availableValues.Count; i++)
                 availablePiecesTable[i + 1] = _availableValues[i];
         }
-        
+
         private string ValidateScript(string script)
         {
             try
@@ -110,7 +110,7 @@ namespace Blockstacker.Gameplay.Randomizers
 
             if (result[0] is not string nextPiece)
                 return $"Error: next piece function doesn't return a valid value. Returned value: {result[0]}";
-            
+
             return _availableValues.Contains(nextPiece)
                 ? null
                 : $"Error: next piece function returns a non-existent piece type. Returned value: {result[0]}";

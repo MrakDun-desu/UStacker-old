@@ -16,7 +16,7 @@ namespace Blockstacker.GlobalSettings.Changers
         private void Start()
         {
             RefreshNames();
-            
+
             AppSettings.SettingsReloaded += RefreshValue;
             _dropdown.onValueChanged.AddListener(OnOptionPicked);
             _folderButton.onClick.AddListener(OpenBackgroundFolder);
@@ -35,13 +35,13 @@ namespace Blockstacker.GlobalSettings.Changers
             for (var i = 0; i < _dropdown.options.Count; i++)
             {
                 if (!_dropdown.options[i].text.Equals(AppSettings.GetValue<string>(_controlPath))) continue;
-                
+
                 _dropdown.SetValueWithoutNotify(i);
                 break;
             }
             _dropdown.RefreshShownValue();
         }
-        
+
         private void OpenBackgroundFolder()
         {
             if (!Directory.Exists(PersistentPaths.BackgroundPacks))
@@ -50,7 +50,7 @@ namespace Blockstacker.GlobalSettings.Changers
             var defaultPath = Path.Combine(PersistentPaths.BackgroundPacks, BackgroundPackLoader.DEFAULT_PATH);
             if (!Directory.Exists(defaultPath))
                 Directory.CreateDirectory(defaultPath);
-            
+
             DefaultAppOpener.OpenFile(PersistentPaths.BackgroundPacks);
         }
 

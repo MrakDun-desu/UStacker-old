@@ -8,9 +8,9 @@ namespace Blockstacker.GlobalSettings.Groups
     {
         // backing fields
         private float _boardVisibility = .8f;
-        private float _gridVisibility = .6f;
-        private float _ghostPieceVisibility = .5f;
         private float _boardZoom = 1f;
+        private float _ghostPieceVisibility = .5f;
+        private float _gridVisibility = .6f;
         private float _warningPieceTreshhold = 2f;
 
 

@@ -15,10 +15,7 @@ namespace Blockstacker.Common
         public void OnBeforeSerialize()
         {
             _entries.Clear();
-            foreach (var keyValuePair in this)
-            {
-                _entries.Add(new Entry(keyValuePair.Key, keyValuePair.Value));
-            }
+            foreach (var keyValuePair in this) _entries.Add(new Entry(keyValuePair.Key, keyValuePair.Value));
         }
 
         public void OnAfterDeserialize()
@@ -41,18 +38,18 @@ namespace Blockstacker.Common
             {
                 var keyValuePair = _duplicateEntries[i];
                 if (ContainsKey(keyValuePair.Key)) continue;
-                
+
                 _duplicateEntries.Remove(keyValuePair);
                 Add(keyValuePair.Key, keyValuePair.Value);
             }
         }
-        
+
         [Serializable]
         public class Entry
         {
             public TKey Key;
             public TValue Value;
-            
+
             public Entry(TKey key, TValue value)
             {
                 Key = key;

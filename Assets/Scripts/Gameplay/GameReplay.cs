@@ -33,7 +33,11 @@ namespace Blockstacker.Gameplay
             var invalidChars = new List<char>();
             invalidChars.AddRange(Path.GetInvalidPathChars());
             invalidChars.AddRange(Path.GetInvalidFileNameChars());
-            invalidChars.AddRange(new []{'/', '\\'});
+            invalidChars.AddRange(new[]
+            {
+                '/',
+                '\\'
+            });
             const char invalidCharReplacement = '_';
 
             filename = invalidChars.Aggregate(filename,

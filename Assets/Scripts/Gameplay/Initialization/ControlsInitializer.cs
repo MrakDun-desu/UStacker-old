@@ -1,7 +1,7 @@
 using System.Text;
+using Blockstacker.Gameplay.Spins;
 using Blockstacker.GameSettings;
 using Blockstacker.GameSettings.Enums;
-using Blockstacker.Gameplay.Spins;
 using Blockstacker.GlobalSettings;
 
 namespace Blockstacker.Gameplay.Initialization
@@ -9,9 +9,9 @@ namespace Blockstacker.Gameplay.Initialization
     public class ControlsInitializer : InitializerBase
     {
         private readonly InputProcessor _inputProcessor;
+        private readonly bool _isReplay;
         private readonly RotationSystem _srsPlusRotationSystem;
         private readonly RotationSystem _srsRotationSystem;
-        private readonly bool _isReplay;
 
         public ControlsInitializer(
             StringBuilder errorBuilder,
@@ -35,7 +35,7 @@ namespace Blockstacker.Gameplay.Initialization
                 _inputProcessor.SpinHandler = new SpinHandler(_gameSettings.Controls.ActiveRotationSystem, _gameSettings.General.AllowedSpins);
                 return;
             }
-            
+
             _gameSettings.Controls.ActiveRotationSystem =
                 _gameSettings.Controls.RotationSystemType switch
                 {
@@ -45,11 +45,13 @@ namespace Blockstacker.Gameplay.Initialization
                     RotationSystemType.Custom => _gameSettings.Controls.ActiveRotationSystem,
                     _ => new RotationSystem()
                 };
-            
+
             _inputProcessor.SpinHandler = new SpinHandler(_gameSettings.Controls.ActiveRotationSystem, _gameSettings.General.AllowedSpins);
-            
+
             if (!_gameSettings.Controls.OverrideHandling)
-                _gameSettings.Controls.Handling = AppSettings.Handling with {};
+                _gameSettings.Controls.Handling = AppSettings.Handling with
+                {
+                };
         }
     }
 }

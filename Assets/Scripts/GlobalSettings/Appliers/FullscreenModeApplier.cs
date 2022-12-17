@@ -1,5 +1,3 @@
-using System;
-using Blockstacker.GlobalSettings.Enums;
 using UnityEngine;
 
 namespace Blockstacker.GlobalSettings.Appliers

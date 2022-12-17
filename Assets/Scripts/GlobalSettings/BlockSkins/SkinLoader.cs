@@ -12,10 +12,10 @@ namespace Blockstacker.GlobalSettings.BlockSkins
 {
     public static class SkinLoader
     {
+        public const string DEFAULT_PATH = "Default";
         public static List<SkinRecord> SkinRecords { get; private set; } = new();
 
         public static event Action SkinChanged;
-        public const string DEFAULT_PATH = "Default";
 
         public static IEnumerable<string> EnumerateSkins()
         {

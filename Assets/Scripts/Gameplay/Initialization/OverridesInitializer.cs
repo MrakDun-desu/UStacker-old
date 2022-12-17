@@ -26,7 +26,7 @@ namespace Blockstacker.Gameplay.Initialization
                 _gameSettings.Presentation.CountdownCount = count;
             if (overrides.CountdownInterval is { } interval)
                 _gameSettings.Presentation.CountdownInterval = interval;
-            
+
             if (_isReplay) return;
             if (overrides.StartingLevel is not null)
                 _gameSettings.Objective.StartingLevel = overrides.StartingLevel;

@@ -5,6 +5,8 @@ namespace Blockstacker.Common
 {
     public static class StaticSettings
     {
+
+        public const string WikiUrl = "https://github.com/MrakDun-desu/BlockstackerDocs/";
         public static readonly JsonSerializerSettings DefaultSerializerSettings = new()
         {
 #if UNITY_EDITOR
@@ -16,10 +18,7 @@ namespace Blockstacker.Common
                 new Vector2Converter(),
                 new Vector2IntConverter()
             },
-            Error = (_, args) =>
-            {
-                args.ErrorContext.Handled = true;
-            }
+            Error = (_, args) => { args.ErrorContext.Handled = true; }
         };
 
         public static readonly JsonSerializerSettings ReplaySerializerSettings = new()
@@ -34,8 +33,5 @@ namespace Blockstacker.Common
                 new Vector2IntConverter()
             }
         };
-
-        public const string WikiUrl = "https://github.com/MrakDun-desu/BlockstackerDocs/";
-
     }
 }

@@ -4,8 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Blockstacker.Common.Extensions;
 using Blockstacker.Gameplay.Blocks;
-using Blockstacker.Gameplay.GarbageGeneration;
 using Blockstacker.Gameplay.Communication;
+using Blockstacker.Gameplay.GarbageGeneration;
 using Blockstacker.Gameplay.Initialization;
 using Blockstacker.Gameplay.Pieces;
 using Blockstacker.Gameplay.Spins;
@@ -40,35 +40,32 @@ namespace Blockstacker.Gameplay
         [Range(0.00001f, 1)] [SerializeField] private float _minimumBoardScale = 0.1f;
 
         private readonly List<ClearableBlock[]> Blocks = new();
+        private bool _backToBackActive;
+        private bool _comboActive;
+        private uint _currentBackToBack;
 
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            set => _settings = value;
-        }
+        private uint _currentCombo;
+
+        private Vector3 _dragStartPosition;
+        private Vector3 _dragStartTransformPosition;
+        private ObjectPool<ClearableBlock> _garbageBlockPool;
+
+        private ObjectPool<GarbageLayer> _garbageLayerPool;
+        private uint _height;
+
+        private GarbageLayer _lastGarbageLayer;
+        private Vector3 _offset;
 
         private GameSettingsSO.SettingsContainer _settings;
+        private float _warningPieceTreshhold;
+        private uint _width;
+
+        public IGarbageGenerator GarbageGenerator;
 
         public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots =>
             Blocks
                 .Select(line => line.Select(block => block is not null).ToList().AsReadOnly())
                 .ToList().AsReadOnly();
-
-        private Vector3 _dragStartPosition;
-        private Vector3 _dragStartTransformPosition;
-        private uint _height;
-        private Vector3 _offset;
-        private uint _width;
-
-        private uint _currentCombo;
-        private uint _currentBackToBack;
-        private bool _comboActive;
-        private bool _backToBackActive;
-        private float _warningPieceTreshhold;
-
-        private ObjectPool<GarbageLayer> _garbageLayerPool;
-        private ObjectPool<ClearableBlock> _garbageBlockPool;
-
-        private GarbageLayer _lastGarbageLayer;
 
         public uint Width
         {
@@ -105,10 +102,6 @@ namespace Blockstacker.Gameplay
             transform.position.y + Height * .5f * transform.localScale.y
         );
 
-        public event Action LinesCleared;
-
-        public IGarbageGenerator GarbageGenerator;
-
         private void Awake()
         {
             _offset = AppSettings.Gameplay.BoardOffset;
@@ -139,6 +132,13 @@ namespace Blockstacker.Gameplay
 
             _mediator.Unregister<GameStartedMessage>(OnGameStarted);
         }
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            set => _settings = value;
+        }
+
+        public event Action LinesCleared;
 
         private void OnGameStarted(GameStartedMessage message)
         {
@@ -505,10 +505,7 @@ namespace Blockstacker.Gameplay
             for (var i = 0; i < height; i++)
                 Blocks.Insert(0, new ClearableBlock[Width]);
 
-            foreach (var block in newGarbageLayer.Blocks)
-            {
-                Place(block);
-            }
+            foreach (var block in newGarbageLayer.Blocks) Place(block);
 
             newGarbageLayer.TriggerBlocksAdded();
         }

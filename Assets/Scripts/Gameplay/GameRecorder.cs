@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Blockstacker.Gameplay.Communication;
 using UnityEngine;
 
@@ -11,7 +10,7 @@ namespace Blockstacker.Gameplay
 
         public List<InputActionMessage> ActionList = new();
         private bool _recording;
-        
+
         private void AddMessageToList(InputActionMessage message)
         {
             ActionList.Add(message);

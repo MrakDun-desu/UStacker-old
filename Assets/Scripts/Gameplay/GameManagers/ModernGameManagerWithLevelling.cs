@@ -13,17 +13,17 @@ namespace Blockstacker.Gameplay.GameManagers
         private const uint MIN_LEVEL = 1;
         private const uint MAX_LEVEL = 20;
 
+        private const string LEVEUP_CONDITION_NAME = "Lines";
+
         private uint _currentLevel;
         private long _currentScore;
         private int _linesToNextLevel;
-        private int _totalLinesToNextLevel;
-        private uint _startingLevel;
-
-        private int _linesClearedThisLevel => _totalLinesToNextLevel - _linesToNextLevel;
-
-        private const string LEVEUP_CONDITION_NAME = "Lines";
 
         private MediatorSO _mediator;
+        private uint _startingLevel;
+        private int _totalLinesToNextLevel;
+
+        private int _linesClearedThisLevel => _totalLinesToNextLevel - _linesToNextLevel;
 
         public void Initialize(string startingLevel, MediatorSO mediator)
         {
@@ -54,9 +54,7 @@ namespace Blockstacker.Gameplay.GameManagers
         {
             long scoreAddition;
             if (message.WasSpin)
-            {
                 scoreAddition = ((int) message.LinesCleared + 1) * 400;
-            }
             else if (message.WasSpinMini)
             {
                 scoreAddition = message.LinesCleared switch
@@ -91,7 +89,7 @@ namespace Blockstacker.Gameplay.GameManagers
 
             if (message.WasAllClear)
                 scoreAddition += 3000;
-            
+
             scoreAddition *= (int) _currentLevel;
             _currentScore += scoreAddition;
             _mediator.Send(new ScoreChangedMessage(_currentScore, message.Time));
@@ -109,7 +107,7 @@ namespace Blockstacker.Gameplay.GameManagers
                 }
 
                 _mediator.Send(new LevelUpConditionChangedMessage(message.Time, _totalLinesToNextLevel,
-                        _linesClearedThisLevel, LEVEUP_CONDITION_NAME));
+                    _linesClearedThisLevel, LEVEUP_CONDITION_NAME));
                 _mediator.Send(new LevelChangedMessage(_currentLevel.ToString(), message.Time));
                 _mediator.Send(new GravityChangedMessage(CalculateGravity(), message.Time));
             }
@@ -145,6 +143,5 @@ namespace Blockstacker.Gameplay.GameManagers
             _totalLinesToNextLevel = (int) _currentLevel * LINES_PER_LEVEL_INCREASE;
             _linesToNextLevel += _totalLinesToNextLevel;
         }
-
     }
 }

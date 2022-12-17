@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using JetBrains.Annotations;
 
 namespace Blockstacker.Gameplay.Stats
@@ -8,6 +7,11 @@ namespace Blockstacker.Gameplay.Stats
     {
         private readonly Board _source;
 
+        public StatBoardInterface(Board source)
+        {
+            _source = source;
+        }
+
         [UsedImplicitly] public uint Width => _source.Width;
         [UsedImplicitly] public uint Height => _source.Height;
         [UsedImplicitly] public uint GarbageHeight => _source.GarbageHeight;
@@ -15,10 +19,5 @@ namespace Blockstacker.Gameplay.Stats
         [UsedImplicitly] public uint LethalHeight => _source.LethalHeight;
 
         [UsedImplicitly] public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots => _source.Slots;
-
-        public StatBoardInterface(Board source)
-        {
-            _source = source;
-        }
     }
 }

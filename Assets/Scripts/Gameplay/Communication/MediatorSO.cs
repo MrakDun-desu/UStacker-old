@@ -16,7 +16,7 @@ namespace Blockstacker.Gameplay.Communication
             if (!_registeredActions.ContainsKey(key)) _registeredActions[key] = new List<Delegate>();
             if (putFirst)
                 _registeredActions[key].Insert(0, action);
-            else 
+            else
                 _registeredActions[key].Add(action);
         }
 
@@ -24,7 +24,7 @@ namespace Blockstacker.Gameplay.Communication
         {
             if (!typeof(Message).IsAssignableFrom(type)) return;
             if (!_registeredActions.ContainsKey(type)) _registeredActions[type] = new List<Delegate>();
-            
+
             _registeredActions[type].Add(action as Delegate);
         }
 

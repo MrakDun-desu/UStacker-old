@@ -1,7 +1,5 @@
-﻿using System.Drawing;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
-using Color = UnityEngine.Color;
 
 namespace Blockstacker.Common.UI
 {

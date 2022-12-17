@@ -12,6 +12,8 @@ namespace Blockstacker.GameSettings
     [CreateAssetMenu(fileName = "GameSettings", menuName = "Blockstacker/Game settings asset")]
     public class GameSettingsSO : ScriptableObject
     {
+        private const string FILENAME_EXTENSION = ".json";
+        private const char INVALID_CHAR_REPLACEMENT = '_';
         public StringReferenceSO GameType;
         public SettingsContainer Settings = new();
         public GeneralSettings General => Settings.General;
@@ -22,18 +24,13 @@ namespace Blockstacker.GameSettings
         public PresentationSettings Presentation => Settings.Presentation;
 
         public event Action SettingsReloaded;
-        private const string FILENAME_EXTENSION = ".json";
-        private const char INVALID_CHAR_REPLACEMENT = '_';
 
         public static IEnumerable<string> EnumeratePresets()
         {
             if (!Directory.Exists(PersistentPaths.GameSettingsPresets))
                 Directory.CreateDirectory(PersistentPaths.GameSettingsPresets);
 
-            foreach (var filename in Directory.EnumerateFiles(PersistentPaths.GameSettingsPresets))
-            {
-                yield return Path.GetFileNameWithoutExtension(filename);
-            }
+            foreach (var filename in Directory.EnumerateFiles(PersistentPaths.GameSettingsPresets)) yield return Path.GetFileNameWithoutExtension(filename);
         }
 
         public string Save(string presetName)
@@ -113,7 +110,7 @@ namespace Blockstacker.GameSettings
                 type = obj.GetType();
             }
 
-            if (type == typeof(T)) return (T)obj;
+            if (type == typeof(T)) return (T) obj;
             return default;
         }
 
@@ -139,18 +136,18 @@ namespace Blockstacker.GameSettings
         [Serializable]
         public record SettingsContainer
         {
-            [field:SerializeField]
-            public GeneralSettings General {get;set;} = new();
-            [field:SerializeField]
-            public ControlsSettings Controls {get;set;}= new();
-            [field:SerializeField]
-            public BoardDimensionsSettings BoardDimensions {get;set;}= new();
-            [field:SerializeField]
-            public GravitySettings Gravity {get;set;} =new();
-            [field:SerializeField]
-            public ObjectiveSettings Objective {get;set;}= new();
-            [field:SerializeField]
-            public PresentationSettings Presentation {get;set;}= new();
+            [field: SerializeField]
+            public GeneralSettings General { get; set; } = new();
+            [field: SerializeField]
+            public ControlsSettings Controls { get; set; } = new();
+            [field: SerializeField]
+            public BoardDimensionsSettings BoardDimensions { get; set; } = new();
+            [field: SerializeField]
+            public GravitySettings Gravity { get; set; } = new();
+            [field: SerializeField]
+            public ObjectiveSettings Objective { get; set; } = new();
+            [field: SerializeField]
+            public PresentationSettings Presentation { get; set; } = new();
         }
     }
 }

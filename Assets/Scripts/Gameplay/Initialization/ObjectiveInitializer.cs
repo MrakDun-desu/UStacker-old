@@ -12,9 +12,9 @@ namespace Blockstacker.Gameplay.Initialization
 {
     public class ObjectiveInitializer : InitializerBase
     {
+        private readonly Board _board;
         private readonly MediatorSO _mediator;
         private readonly GameStateManager _stateManager;
-        private readonly Board _board;
 
         public ObjectiveInitializer(
             StringBuilder errorBuilder, GameSettingsSO.SettingsContainer gameSettings,
@@ -33,7 +33,7 @@ namespace Blockstacker.Gameplay.Initialization
             InitializeGameManager();
             InitializeGarbageGenerator();
         }
-        
+
         private void InitializeGameManager()
         {
             var managerObject = new GameObject("GameManager");
@@ -53,9 +53,9 @@ namespace Blockstacker.Gameplay.Initialization
                 Object.Destroy(managerObject.gameObject);
                 return;
             }
-            
+
             manager.Initialize(_gameSettings.Objective.StartingLevel, _mediator);
-            
+
             if (manager is CustomGameManager custom)
                 custom.CustomInitialize(_stateManager, _board, _gameSettings.Objective.CustomGameManagerScript);
         }
@@ -64,19 +64,23 @@ namespace Blockstacker.Gameplay.Initialization
         {
             if (_gameSettings.Objective.GarbageGeneration == GameSettings.Enums.GarbageGeneration.None)
                 return;
-            
+
             _board.InitializeGarbagePools();
-            
+
             var readonlyBoard = new GarbageBoardInterface(_board);
             string validationErrors = null;
 
             IGarbageGenerator garbageGenerator;
             if (_gameSettings.Objective.GarbageGeneration.HasFlag(GameSettings.Enums.GarbageGeneration.CustomFlag))
+            {
                 garbageGenerator = new CustomGarbageGenerator(readonlyBoard,
                     _gameSettings.Objective.CustomGarbageScript, out validationErrors);
+            }
             else
+            {
                 garbageGenerator = new DefaultGarbageGenerator(
                     readonlyBoard, _gameSettings.Objective.GarbageGeneration);
+            }
 
             if (validationErrors is not null)
             {

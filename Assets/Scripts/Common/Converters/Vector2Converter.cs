@@ -9,12 +9,12 @@ namespace Blockstacker.Common.Converters
         public override void WriteJson(JsonWriter writer, Vector2 value, JsonSerializer serializer)
         {
             writer.WriteStartObject();
-            
+
             writer.WritePropertyName("x");
             writer.WriteValue(value.x);
             writer.WritePropertyName("y");
             writer.WriteValue(value.y);
-            
+
             writer.WriteEndObject();
         }
 
@@ -42,16 +42,16 @@ namespace Blockstacker.Common.Converters
                         var x = reader.ReadAsDouble();
                         if (x is null)
                             throw new JsonReaderException();
-                            
-                        output.x = (float)x;
+
+                        output.x = (float) x;
                         xSet = true;
                         break;
                     case "y":
                         var y = reader.ReadAsDouble();
                         if (y is null)
                             throw new JsonReaderException();
-                        
-                        output.y = (float)y;
+
+                        output.y = (float) y;
                         ySet = true;
                         break;
                     default:
@@ -65,6 +65,5 @@ namespace Blockstacker.Common.Converters
 
             throw new JsonReaderException();
         }
-
     }
 }

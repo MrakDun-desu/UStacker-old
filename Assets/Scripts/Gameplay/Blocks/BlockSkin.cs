@@ -16,9 +16,9 @@ namespace Blockstacker.Gameplay.Blocks
     {
         [SerializeField] private SkinRecord _skinRecord;
         [SerializeField] private SpriteRenderer _renderer;
+        private List<SpriteRecord> _currentSprites = new();
 
         private float _switchFrameTime;
-        private List<SpriteRecord> _currentSprites = new();
         private float _visibility;
 
         public float Visibility
@@ -62,6 +62,11 @@ namespace Blockstacker.Gameplay.Blocks
             newSpriteIndex %= _currentSprites.Count;
             newSpriteIndex = Mathf.Max(newSpriteIndex, 0);
             _renderer.sprite = _currentSprites[newSpriteIndex].Sprite;
+        }
+
+        private void OnDestroy()
+        {
+            UnregisterEvents();
         }
 
         public void RefreshSkin()
@@ -153,6 +158,35 @@ namespace Blockstacker.Gameplay.Blocks
             return (pos1 - pos2).sqrMagnitude < Mathf.Pow(Board.transform.localScale.x, 2) * .5f;
         }
 
+        public void UnregisterEvents()
+        {
+            if (Board != null)
+                Board.LinesCleared -= PickConnectedPart;
+
+            switch (BlockCollection)
+            {
+                case Piece piece:
+                    piece.Rotated -= ResetRotation;
+                    piece.Rotated -= PickConnectedPart;
+                    break;
+                case GhostPiece ghostPiece:
+                    ghostPiece.ColorChanged -= ChangeColor;
+                    ghostPiece.Rendered -= PickConnectedPart;
+                    ghostPiece.Rendered -= ResetRotation;
+                    GhostPieceVisibilityApplier.VisibilityChanged -= ChangeAlpha;
+                    break;
+                case WarningPiece warningPiece:
+                    warningPiece.PieceChanged -= PickConnectedPart;
+                    break;
+                case GarbageLayer garbageLayer:
+                    garbageLayer.BlocksAdded -= PickConnectedPart;
+                    break;
+                case BoardGrid:
+                    GridVisibilityApplier.VisibilityChanged -= ChangeAlpha;
+                    break;
+            }
+        }
+
         #region Event subscriber functions
 
         private void PickConnectedPart()
@@ -201,39 +235,5 @@ namespace Blockstacker.Gameplay.Blocks
         }
 
         #endregion
-
-        public void UnregisterEvents()
-        {
-            if (Board != null)
-                Board.LinesCleared -= PickConnectedPart;
-
-            switch (BlockCollection)
-            {
-                case Piece piece:
-                    piece.Rotated -= ResetRotation;
-                    piece.Rotated -= PickConnectedPart;
-                    break;
-                case GhostPiece ghostPiece:
-                    ghostPiece.ColorChanged -= ChangeColor;
-                    ghostPiece.Rendered -= PickConnectedPart;
-                    ghostPiece.Rendered -= ResetRotation;
-                    GhostPieceVisibilityApplier.VisibilityChanged -= ChangeAlpha;
-                    break;
-                case WarningPiece warningPiece:
-                    warningPiece.PieceChanged -= PickConnectedPart;
-                    break;
-                case GarbageLayer garbageLayer:
-                    garbageLayer.BlocksAdded -= PickConnectedPart;
-                    break;
-                case BoardGrid:
-                    GridVisibilityApplier.VisibilityChanged -= ChangeAlpha;
-                    break;
-            }
-        }
-
-        private void OnDestroy()
-        {
-            UnregisterEvents();
-        }
     }
 }
