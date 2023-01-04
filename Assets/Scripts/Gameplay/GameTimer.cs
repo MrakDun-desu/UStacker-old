@@ -1,37 +1,56 @@
 ﻿using System;
 using UnityEngine;
+using UStacker.Common.Extensions;
+using UStacker.Gameplay.SoundEffects;
 
 namespace UStacker.Gameplay
 {
     public class GameTimer : MonoBehaviour
     {
+        [SerializeField] private SoundEffectsPlayer _sfxPlayer;
+        [SerializeField] private InputProcessor _inputProcessor;
+        [SerializeField] private GameStateManager _stateManager;
+
         private bool _isPaused;
         private bool _isRunning;
-        private double _pausedTime;
         private double _pauseStartTime;
         private double _startTime;
+        private double _timeScale = 1d;
 
         public double EffectiveStartTime
         {
             get
             {
                 if (_isRunning)
-                    return _startTime + _pausedTime;
-                return _startTime + _pausedTime + Time.realtimeSinceStartupAsDouble - _pauseStartTime;
+                    return _startTime;
+                return _startTime + Time.realtimeSinceStartupAsDouble - _pauseStartTime;
             }
         }
 
-        public double CurrentTime => Math.Max(Time.realtimeSinceStartupAsDouble - EffectiveStartTime, 0d);
+        public double TimeScale
+        {
+            get => _timeScale;
+            set
+            {
+                var newRealtime = Time.realtimeSinceStartupAsDouble;
+                var newTime = CurrentTime / value;
+                _timeScale = value;
+                _startTime = newRealtime - newTime;
+
+                if (_isPaused)
+                    _pauseStartTime = newRealtime;
+            }
+        }
+
+        public double CurrentTime => Math.Max((Time.realtimeSinceStartupAsDouble - EffectiveStartTime) * TimeScale, 0d);
 
         public TimeSpan CurrentTimeAsSpan => TimeSpan.FromSeconds(CurrentTime);
 
-        public event Action<double> TimeSet;
         public event Action BeforeStarted;
 
         public void StartTiming()
         {
             BeforeStarted?.Invoke();
-            _pausedTime = 0d;
             _startTime = Time.realtimeSinceStartupAsDouble;
             _isRunning = true;
         }
@@ -39,7 +58,7 @@ namespace UStacker.Gameplay
         public void ResumeTiming()
         {
             if (_isRunning || !_isPaused) return;
-            _pausedTime += Time.realtimeSinceStartupAsDouble - _pauseStartTime;
+            _startTime += Time.realtimeSinceStartupAsDouble - _pauseStartTime;
             _isRunning = true;
             _isPaused = false;
         }
@@ -55,22 +74,28 @@ namespace UStacker.Gameplay
 
         public void ResetTiming()
         {
-            _pausedTime = 0d;
+            TimeScale = 1d;
             _startTime = Time.realtimeSinceStartupAsDouble;
             _pauseStartTime = Time.realtimeSinceStartupAsDouble;
             _isRunning = false;
         }
 
-        public void SetTime(float value)
+        public void SetTime(double value)
         {
-            var functionStartTime = Time.realtimeSinceStartupAsDouble;
-            var newTime = (double) value;
-            _startTime = functionStartTime - newTime;
-            _pausedTime = 0d;
-            if (_isPaused)
-                _pauseStartTime = functionStartTime;
+            Debug.Log($"Time has been set to {value.FormatAsTime()}");
+            _sfxPlayer.RepressSfx = true;
+            var oldTime = CurrentTime;
+            var newRealtime = Time.realtimeSinceStartupAsDouble;
+            _startTime = newRealtime - (value / TimeScale);
 
-            TimeSet?.Invoke(CurrentTime);
+            if (_isPaused)
+                _pauseStartTime = newRealtime;
+
+            if (CurrentTime < oldTime)
+                _stateManager.Restart();
+
+            _inputProcessor.Update(value, true);
+            _sfxPlayer.RepressSfx = false;
         }
     }
 }

@@ -130,7 +130,6 @@ namespace UStacker.GlobalSettings.Changers
                 .WithControlsExcluding("Mouse")
                 .WithControlsExcluding("<Keyboard>/printScreen")
                 .WithCancelingThrough("<Mouse>/leftButton")
-                .WithoutGeneralizingPathOfSelectedControl()
                 .OnMatchWaitForAnother(.1f)
                 .OnCancel(_ => RebindCancelled(index))
                 .OnComplete(_ => EndRebind())

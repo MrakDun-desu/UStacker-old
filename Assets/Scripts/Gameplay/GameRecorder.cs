@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using UStacker.Gameplay.Communication;
 using UnityEngine;
+using UStacker.Gameplay.Communication;
 
 namespace UStacker.Gameplay
 {
@@ -9,25 +9,36 @@ namespace UStacker.Gameplay
         [SerializeField] private MediatorSO _mediator;
 
         public List<InputActionMessage> ActionList = new();
+        public List<PiecePlacementInfo> PiecePlacementList = new();
+
         private bool _recording;
 
-        private void AddMessageToList(InputActionMessage message)
+        private void AddInputActionToList(InputActionMessage message)
         {
             ActionList.Add(message);
+        }
+
+        private void AddPiecePlacementToList(PiecePlacedMessage message)
+        {
+            var placementInfo = new PiecePlacementInfo(message.Time, message.TotalRotation, message.TotalMovement);
+            PiecePlacementList.Add(placementInfo);
         }
 
         public void StartRecording()
         {
             ActionList.Clear();
+            PiecePlacementList.Clear();
             if (_recording) return;
-            _mediator.Register<InputActionMessage>(AddMessageToList);
+            _mediator.Register<InputActionMessage>(AddInputActionToList);
+            _mediator.Register<PiecePlacedMessage>(AddPiecePlacementToList);
             _recording = true;
         }
 
         public void StopRecording()
         {
             if (!_recording) return;
-            _mediator.Unregister<InputActionMessage>(AddMessageToList);
+            _mediator.Unregister<InputActionMessage>(AddInputActionToList);
+            _mediator.Unregister<PiecePlacedMessage>(AddPiecePlacementToList);
             _recording = false;
         }
     }

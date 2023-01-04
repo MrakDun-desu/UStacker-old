@@ -1,12 +1,13 @@
 using System;
-using UStacker.Gameplay.Communication;
-using UStacker.Gameplay.Initialization;
-using UStacker.Gameplay.Stats;
-using UStacker.GameSettings;
-using UStacker.GameSettings.Enums;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Initialization;
+using UStacker.Gameplay.SoundEffects;
+using UStacker.Gameplay.Stats;
+using UStacker.GameSettings;
+using UStacker.GameSettings.Enums;
 
 namespace UStacker.Gameplay
 {
@@ -28,8 +29,8 @@ namespace UStacker.Gameplay
         [SerializeField] private UnityEvent GameEnded;
         [SerializeField] private UnityEvent ReplayStarted;
         [SerializeField] private UnityEvent ReplayFinished;
-        [SerializeField] private UnityEvent ReplayPaused;
-        [SerializeField] private UnityEvent ReplayUnpaused;
+        [SerializeField] public UnityEvent ReplayPaused;
+        [SerializeField] public UnityEvent ReplayUnpaused;
 
         private readonly GameReplay Replay = new();
         private bool _gameCurrentlyInProgress;
@@ -90,18 +91,18 @@ namespace UStacker.Gameplay
                 _mediator.Send(new GamePausedMessage());
                 _gamePaused = true;
                 _gamePauseable = false;
+                return;
+            }
+            _gamePauseable = true;
+            if (IsReplaying)
+            {
+                ReplayUnpaused.Invoke();
+                _gamePaused = false;
             }
             else
-            {
-                _gamePauseable = true;
-                if (IsReplaying)
-                {
-                    ReplayUnpaused.Invoke();
-                    _gamePaused = false;
-                }
-                else
-                    GameUnpaused.Invoke();
-            }
+                GameUnpaused.Invoke();
+
+            return;
         }
 
         public void Restart()
@@ -151,10 +152,12 @@ namespace UStacker.Gameplay
                 };
                 Replay.ActionList.Clear();
                 Replay.ActionList.AddRange(_gameRecorder.ActionList);
+                Replay.PiecePlacementList.Clear();
+                Replay.PiecePlacementList.AddRange(_gameRecorder.PiecePlacementList);
                 Replay.Stats = _statCounterManager.Stats;
                 Replay.GameLength = endTime;
                 Replay.TimeStamp = DateTime.UtcNow;
-                Replay.Save(GameType);
+                Replay.Save();
                 _resultDisplayer.DisplayedReplay = Replay;
             }
             else
@@ -193,7 +196,7 @@ namespace UStacker.Gameplay
 
             var functionStartTime = _timer.CurrentTime;
 
-            double currentTimeRounded = (int) functionStartTime;
+            double currentTimeRounded = (int)functionStartTime;
             if (_lastSentTimeCondition < currentTimeRounded)
             {
                 _lastSentTimeCondition = currentTimeRounded;

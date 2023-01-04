@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace UStacker.Gameplay.Communication
 {
@@ -17,10 +18,13 @@ namespace UStacker.Gameplay.Communication
         public readonly bool WasSpinMini;
         public readonly bool WasSpinMiniRaw;
         public readonly bool WasSpinRaw;
+        public readonly int TotalRotation;
+        public readonly Vector2Int TotalMovement;
+        public bool WasBtbClear => WasSpin || WasSpinMini || LinesCleared > 3;
 
         public PiecePlacedMessage(uint linesCleared, uint garbageLinesCleared, uint currentCombo,
             uint currentBackToBack, string pieceType, bool wasAllClear, bool wasSpin, bool wasSpinMini, bool wasSpinRaw,
-            bool wasSpinMiniRaw, bool brokenCombo, bool brokenBackToBack, double time) : base(time)
+            bool wasSpinMiniRaw, bool brokenCombo, bool brokenBackToBack, int totalRotation, Vector2Int totalMovement, double time) : base(time)
         {
             LinesCleared = linesCleared;
             GarbageLinesCleared = garbageLinesCleared;
@@ -34,25 +38,13 @@ namespace UStacker.Gameplay.Communication
             WasSpinMiniRaw = wasSpinMiniRaw;
             BrokenCombo = brokenCombo;
             BrokenBackToBack = brokenBackToBack;
+            TotalRotation = totalRotation;
+            TotalMovement = totalMovement;
         }
 
         public PiecePlacedMessage() : base(0)
         {
         }
 
-        public PiecePlacedMessage(uint linesCleared, uint garbageLinesCleared, bool wasAllClear, double time,
-            bool wasSpin, bool wasSpinMini, bool wasSpinRaw, bool wasSpinMiniRaw, string pieceType) : base(time)
-        {
-            LinesCleared = linesCleared;
-            GarbageLinesCleared = garbageLinesCleared;
-            WasAllClear = wasAllClear;
-            WasSpin = wasSpin;
-            WasSpinMini = wasSpinMini;
-            WasSpinRaw = wasSpinRaw;
-            WasSpinMiniRaw = wasSpinMiniRaw;
-            PieceType = pieceType;
-        }
-
-        public bool WasBtbClear => WasSpin || WasSpinMini || LinesCleared > 3;
     }
 }

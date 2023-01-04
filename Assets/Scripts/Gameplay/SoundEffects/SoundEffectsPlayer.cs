@@ -1,11 +1,11 @@
 ﻿using System;
+using NLua;
+using NLua.Exceptions;
+using UnityEngine;
 using UStacker.Common;
 using UStacker.Common.Alerts;
 using UStacker.Gameplay.Communication;
 using UStacker.GlobalSettings.Music;
-using NLua;
-using NLua.Exceptions;
-using UnityEngine;
 
 namespace UStacker.Gameplay.SoundEffects
 {
@@ -15,6 +15,7 @@ namespace UStacker.Gameplay.SoundEffects
         [SerializeField] private AudioClipCollection _defaultEffects = new();
         [SerializeField] private MediatorSO _mediator;
 
+        public bool RepressSfx;
         private AudioSource _audioSource;
         private Lua _luaState;
 
@@ -94,7 +95,7 @@ namespace UStacker.Gameplay.SoundEffects
                     }
                 }
 
-                _mediator.Register((Action<Message>) Action, entry.Value);
+                _mediator.Register((Action<Message>)Action, entry.Value);
             }
 
             return true;
@@ -245,6 +246,9 @@ namespace UStacker.Gameplay.SoundEffects
 
         private void TryPlayClip(string clipName)
         {
+            if (RepressSfx)
+                return;
+
             if (SoundPackLoader.SoundEffects.TryGetValue(clipName, out var clip))
                 _audioSource.PlayOneShot(clip);
             else if (_defaultEffects.TryGetValue(clipName, out clip))

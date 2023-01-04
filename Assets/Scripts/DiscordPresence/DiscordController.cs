@@ -10,7 +10,14 @@ namespace UStacker.DiscordPresence
 
         private void Update()
         {
-            discord?.RunCallbacks();
+            try
+            {
+                discord?.RunCallbacks();
+            }
+            catch (ResultException)
+            {
+                DisconnectFromDiscord();
+            }
         }
 
         private void OnDisable()

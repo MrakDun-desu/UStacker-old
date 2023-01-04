@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Pool;
+using UnityEngine.Serialization;
 using UStacker.Common.Extensions;
 using UStacker.Gameplay.Blocks;
 using UStacker.Gameplay.Communication;
@@ -13,10 +17,6 @@ using UStacker.GameSettings;
 using UStacker.GameSettings.Enums;
 using UStacker.GlobalSettings;
 using UStacker.GlobalSettings.Appliers;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Pool;
-using UnityEngine.Serialization;
 
 namespace UStacker.Gameplay
 {
@@ -24,7 +24,8 @@ namespace UStacker.Gameplay
     {
         [SerializeField] private Transform _helperTransform;
 
-        [FormerlySerializedAs("_manager")] [SerializeField]
+        [FormerlySerializedAs("_manager")]
+        [SerializeField]
         private GameStateManager _stateManager;
 
         [SerializeField] private MediatorSO _mediator;
@@ -34,10 +35,12 @@ namespace UStacker.Gameplay
         [SerializeField] private ClearableBlock _garbageBlockPrefab;
         [SerializeField] private GarbageLayer _garbageLayerPrefab;
 
-        [Tooltip("Zoom percentage change with one scroll unit")] [Range(0, 1)] [SerializeField]
+        [Tooltip("Zoom percentage change with one scroll unit")]
+        [Range(0, 1)]
+        [SerializeField]
         private float _boardZoomFactor = .05f;
 
-        [Range(0.00001f, 1)] [SerializeField] private float _minimumBoardScale = 0.1f;
+        [Range(0.00001f, 1)][SerializeField] private float _minimumBoardScale = 0.1f;
 
         private readonly List<ClearableBlock[]> Blocks = new();
         private bool _backToBackActive;
@@ -258,12 +261,12 @@ namespace UStacker.Gameplay
 
             slots = Slots;
             for (var y = lineNumber; y < Blocks.Count; y++)
-            for (var x = 0; x < Blocks[y].Length; x++)
-            {
-                if (!slots[y][x]) continue;
+                for (var x = 0; x < Blocks[y].Length; x++)
+                {
+                    if (!slots[y][x]) continue;
 
-                Blocks[y][x].transform.position -= Up;
-            }
+                    Blocks[y][x].transform.position -= Up;
+                }
         }
 
         private void CheckAndClearLines(out uint linesCleared, out uint cheeseLinesCleared)
@@ -299,7 +302,7 @@ namespace UStacker.Gameplay
         }
 
         private void SendPlacementMessage(uint linesCleared, uint garbageLinesCleared, bool wasAllClear,
-            double placementTime, SpinResult lastResult, string pieceType)
+            double placementTime, SpinResult lastResult, string pieceType, int totalRotation, Vector2Int totalMovement)
         {
             var brokenBtb = false;
             var brokenCombo = false;
@@ -335,7 +338,7 @@ namespace UStacker.Gameplay
                 _currentCombo, _currentBackToBack,
                 pieceType, wasAllClear, lastResult.WasSpin,
                 lastResult.WasSpinMini, lastResult.WasSpinRaw, lastResult.WasSpinMiniRaw,
-                brokenCombo, brokenBtb, placementTime);
+                brokenCombo, brokenBtb, totalRotation, totalMovement, placementTime);
             _mediator.Send(newMessage);
             GarbageGenerator?.GenerateGarbage(_settings.Objective.GarbageHeight - GarbageHeight, newMessage);
         }
@@ -383,7 +386,7 @@ namespace UStacker.Gameplay
             Blocks[blockPos.y][blockPos.x] = block;
         }
 
-        public bool Place(Piece piece, double placementTime, SpinResult lastSpinResult = null)
+        public bool Place(Piece piece, double placementTime, int totalRotation, Vector2Int totalMovement, SpinResult lastSpinResult)
         {
             if (!CanPlace(piece)) return false;
             lastSpinResult ??= new SpinResult();
@@ -412,7 +415,9 @@ namespace UStacker.Gameplay
                 wasAllClear,
                 placementTime,
                 lastSpinResult,
-                piece.Type);
+                piece.Type,
+                totalRotation,
+                totalMovement);
 
             if (_settings.Gravity.AllowClutchClears && linesWereCleared) return true;
 
@@ -491,16 +496,16 @@ namespace UStacker.Gameplay
                 return;
 
             _lastGarbageLayer = newGarbageLayer;
-            GarbageHeight += (uint) height;
+            GarbageHeight += (uint)height;
 
             var activeSlots = Slots;
             for (var y = 0; y < Blocks.Count; y++)
-            for (var x = 0; x < Blocks[y].Length; x++)
-            {
-                if (!activeSlots[y][x]) continue;
+                for (var x = 0; x < Blocks[y].Length; x++)
+                {
+                    if (!activeSlots[y][x]) continue;
 
-                Blocks[y][x].transform.position += Up * height;
-            }
+                    Blocks[y][x].transform.position += Up * height;
+                }
 
             for (var i = 0; i < height; i++)
                 Blocks.Insert(0, new ClearableBlock[Width]);
@@ -518,8 +523,8 @@ namespace UStacker.Gameplay
                 cc => cc.gameObject.SetActive(false),
                 DestroyGarbageLayer,
                 true,
-                (int) (_height / 2u),
-                (int) _height);
+                (int)(_height / 2u),
+                (int)_height);
 
             _garbageBlockPool = new ObjectPool<ClearableBlock>(
                 CreateGarbageBlock,
@@ -527,8 +532,8 @@ namespace UStacker.Gameplay
                 null,
                 b => Destroy(b.gameObject),
                 true,
-                (int) (_height * _width / 2u),
-                (int) (_height * _width));
+                (int)(_height * _width / 2u),
+                (int)(_height * _width));
         }
     }
 }

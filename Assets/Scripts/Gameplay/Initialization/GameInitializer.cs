@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
 using UStacker.Gameplay.Blocks;
 using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Pieces;
@@ -8,9 +11,6 @@ using UStacker.Gameplay.Presentation;
 using UStacker.Gameplay.Stats;
 using UStacker.GameSettings;
 using UStacker.GlobalSettings.Music;
-using TMPro;
-using UnityEngine;
-using UnityEngine.Events;
 
 namespace UStacker.Gameplay.Initialization
 {
@@ -18,9 +18,9 @@ namespace UStacker.Gameplay.Initialization
     {
 
         private static GameReplay _replay;
-        [Space] [SerializeField] private PieceDictionary _availablePieces = new();
+        [Space][SerializeField] private PieceDictionary _availablePieces = new();
 
-        [Header("Board")] [SerializeField] private PieceSpawner _pieceSpawner;
+        [Header("Board")][SerializeField] private PieceSpawner _pieceSpawner;
         [SerializeField] private Board _board;
         [SerializeField] private RectTransform _statsCanvasTransform;
         [SerializeField] private GameObject _boardBackground;
@@ -29,18 +29,20 @@ namespace UStacker.Gameplay.Initialization
         [SerializeField] private PieceContainer _pieceContainerPrefab;
         [SerializeField] private InputProcessor _inputProcessor;
 
-        [Header("Rotation systems")] [SerializeField]
+        [Header("Rotation systems")]
+        [SerializeField]
         private RotationSystemSO _srsRotationSystemSo;
 
         [SerializeField] private RotationSystemSO _srsPlusRotationSystemSo;
 
-        [Header("Others")] [SerializeField] private GameCountdown _countdown;
+        [Header("Others")][SerializeField] private GameCountdown _countdown;
         [SerializeField] private TMP_Text _gameTitle;
         [SerializeField] private GameObject _loadingOverlay;
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private GameStateManager _stateManager;
         [SerializeField] private MusicPlayerFinder _playerFinder;
         [SerializeField] private StatCounterManager _statCounterManager;
+        [SerializeField] private ReplayController _replayController;
         [SerializeField] private GameObject[] _gameSettingsDependencies = Array.Empty<GameObject>();
 
         [Header("Events")] public UnityEvent GameInitialized;
@@ -94,7 +96,10 @@ namespace UStacker.Gameplay.Initialization
             if (TryReinitialize(errorBuilder))
             {
                 if (InitAsReplay)
+                {
                     ReplayStarted.Invoke();
+                    _replayController.SetReplay(Replay);
+                }
                 else
                     GameInitialized.Invoke();
                 _loadingOverlay.SetActive(false);
@@ -106,8 +111,6 @@ namespace UStacker.Gameplay.Initialization
 
         private bool TryInitialize(StringBuilder errorBuilder)
         {
-            var actionList = Replay?.ActionList;
-
             _playerFinder.GameType = GameType;
             _statCounterManager.GameType = GameType;
             _stateManager.GameType = GameType;
@@ -131,9 +134,8 @@ namespace UStacker.Gameplay.Initialization
                     _pieceContainerPrefab,
                     _inputProcessor,
                     _stateManager,
-                    actionList,
-                    false,
-                    InitAsReplay),
+                    Replay,
+                    false),
                 new ControlsInitializer(
                     errorBuilder, GameSettings,
                     _srsRotationSystemSo.RotationSystem,
@@ -161,8 +163,6 @@ namespace UStacker.Gameplay.Initialization
         {
             _playerFinder.GameType = GameType;
 
-            var actionList = Replay?.ActionList;
-
             List<InitializerBase> initializers = new()
             {
                 new GeneralInitializer(
@@ -173,9 +173,8 @@ namespace UStacker.Gameplay.Initialization
                     _pieceContainerPrefab,
                     _inputProcessor,
                     _stateManager,
-                    actionList,
-                    true,
-                    InitAsReplay)
+                    Replay,
+                    true)
             };
 
             foreach (var initializer in initializers) initializer.Execute();

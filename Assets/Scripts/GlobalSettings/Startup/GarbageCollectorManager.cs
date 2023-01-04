@@ -19,7 +19,7 @@ namespace UStacker.GlobalSettings.Startup
             if (loadSceneMode == LoadSceneMode.Additive) return;
 
             GarbageCollector.GCMode = scene.name.StartsWith(GAME_STRING)
-                ? GarbageCollector.Mode.Disabled
+                ? GarbageCollector.Mode.Manual
                 : GarbageCollector.Mode.Enabled;
         }
     }

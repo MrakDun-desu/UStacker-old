@@ -4,13 +4,13 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using UStacker.Common;
 using UStacker.Common.Alerts;
 using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Stats;
 using UStacker.GameSettings;
 using UStacker.GlobalSettings;
-using Newtonsoft.Json;
 
 namespace UStacker.Gameplay
 {
@@ -23,11 +23,12 @@ namespace UStacker.Gameplay
         public StatContainer Stats { get; set; }
         public GameSettingsSO.SettingsContainer GameSettings { get; set; }
         public List<InputActionMessage> ActionList { get; set; } = new();
+        public List<PiecePlacementInfo> PiecePlacementList { get; set; } = new();
 
-        public void Save(string gameType)
+        public void Save()
         {
             var filename = AppSettings.Gameplay.ReplayNamingFormat
-                .Replace("{GameType}", gameType)
+                .Replace("{GameType}", GameType)
                 .Replace("{Timestamp}", TimeStamp.ToLocalTime().ToString(CultureInfo.InvariantCulture));
 
             var invalidChars = new List<char>();
@@ -44,14 +45,14 @@ namespace UStacker.Gameplay
                 (current, invalidChar) => current.Replace(invalidChar, invalidCharReplacement));
             filename += ".bsrep";
 
-            var savePath = Path.Combine(PersistentPaths.Replays, gameType, filename);
+            var savePath = Path.Combine(PersistentPaths.Replays, GameType, filename);
             if (!File.Exists(savePath))
             {
                 _ = WriteIntoFileAsync(savePath);
                 return;
             }
 
-            for (var i = 0;; i++)
+            for (var i = 0; ; i++)
             {
                 var actualSavePath = savePath + $"_{i}";
                 if (File.Exists(actualSavePath)) continue;

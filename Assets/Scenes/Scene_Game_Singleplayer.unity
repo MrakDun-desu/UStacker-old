@@ -123,11 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!20 &1617022711 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 6203196271649829682, guid: 22e2929c6f4097c4dad92ffc1bd1d6e1, type: 3}
-  m_PrefabInstance: {fileID: 6203196272078392141}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6203196272078392141
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -193,6 +188,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22e2929c6f4097c4dad92ffc1bd1d6e1, type: 3}
+--- !u!20 &6203196272078392142 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 6203196271649829682, guid: 22e2929c6f4097c4dad92ffc1bd1d6e1, type: 3}
+  m_PrefabInstance: {fileID: 6203196272078392141}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8141839149409263862
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -201,14 +201,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 284726700716874693, guid: aee2cdc296440a64e844b8824081b52f, type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 1617022711}
-    - target: {fileID: 8141839149516784097, guid: aee2cdc296440a64e844b8824081b52f, type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 1617022711}
+    - target: {fileID: 2841090775877958960, guid: aee2cdc296440a64e844b8824081b52f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5062144160541539394, guid: aee2cdc296440a64e844b8824081b52f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8141839149744800042, guid: aee2cdc296440a64e844b8824081b52f, type: 3}
       propertyPath: m_Name
       value: SingleplayerGame
@@ -260,7 +260,7 @@ PrefabInstance:
     - target: {fileID: 8885649544994837748, guid: aee2cdc296440a64e844b8824081b52f, type: 3}
       propertyPath: m_Camera
       value: 
-      objectReference: {fileID: 1617022711}
+      objectReference: {fileID: 6203196272078392142}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

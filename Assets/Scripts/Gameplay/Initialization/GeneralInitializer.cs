@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using UStacker.Gameplay.Communication;
+using UnityEngine;
 using UStacker.Gameplay.Randomizers;
 using UStacker.GameSettings;
 using UStacker.GameSettings.Enums;
-using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -13,11 +12,10 @@ namespace UStacker.Gameplay.Initialization
 {
     public class GeneralInitializer : InitializerBase
     {
-        private readonly List<InputActionMessage> _actionList;
+        private readonly GameReplay _replay;
         private readonly PieceDictionary _availablePieces;
         private readonly Board _board;
         private readonly InputProcessor _inputProcessor;
-        private readonly bool _isReplay;
         private readonly bool _isRestarting;
         private readonly PieceContainer _pieceContainerPrefab;
         private readonly PieceSpawner _spawner;
@@ -32,9 +30,8 @@ namespace UStacker.Gameplay.Initialization
             PieceContainer pieceContainerPrefab,
             InputProcessor inputProcessor,
             GameStateManager stateManager,
-            List<InputActionMessage> actionList,
-            bool isRestarting,
-            bool isReplay) : base(problemBuilder, gameSettings)
+            GameReplay replay,
+            bool isRestarting) : base(problemBuilder, gameSettings)
         {
             _availablePieces = availablePieces;
             _spawner = spawner;
@@ -42,16 +39,19 @@ namespace UStacker.Gameplay.Initialization
             _pieceContainerPrefab = pieceContainerPrefab;
             _inputProcessor = inputProcessor;
             _stateManager = stateManager;
-            _actionList = actionList;
+            _replay = replay;
             _isRestarting = isRestarting;
-            _isReplay = isReplay;
         }
 
         public override void Execute()
         {
-            _stateManager.IsReplaying = _isReplay;
-            if (_isReplay)
-                _inputProcessor.ActionList = _actionList;
+            var isReplay = _replay is not null;
+            _stateManager.IsReplaying = isReplay;
+            if (isReplay)
+            {
+                _inputProcessor.PlacementsList = _replay.PiecePlacementList;
+                _inputProcessor.ActionList = _replay.ActionList;
+            }
             else
             {
                 _inputProcessor.ActionList = null;
@@ -121,8 +121,8 @@ namespace UStacker.Gameplay.Initialization
             {
                 var pieceContainer = Object.Instantiate(_pieceContainerPrefab, _board.transform);
                 pieceContainer.transform.localPosition = new Vector3(
-                    (int) _board.Width,
-                    (int) _board.Height - PieceContainer.Height * (i + 1)
+                    (int)_board.Width,
+                    (int)_board.Height - PieceContainer.Height * (i + 1)
                 );
                 previewContainers.Add(pieceContainer);
             }
@@ -135,7 +135,7 @@ namespace UStacker.Gameplay.Initialization
             var pieceHolder = Object.Instantiate(_pieceContainerPrefab, _board.transform);
             pieceHolder.transform.localPosition = new Vector3(
                 -PieceContainer.Width,
-                (int) _board.Height - PieceContainer.Height
+                (int)_board.Height - PieceContainer.Height
             );
 
             _inputProcessor.PieceHolder = pieceHolder;
