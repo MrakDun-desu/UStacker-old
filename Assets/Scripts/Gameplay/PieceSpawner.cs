@@ -9,6 +9,7 @@ using UStacker.GlobalSettings;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.Serialization;
+using UStacker.Common.Extensions;
 
 namespace UStacker.Gameplay
 {
@@ -28,16 +29,11 @@ namespace UStacker.Gameplay
         private PiecePreviews _previews;
         private GameSettingsSO.SettingsContainer _settings;
 
-        public IRandomizer Randomizer;
+        public IRandomizer Randomizer { get; set; }
 
         public GameSettingsSO.SettingsContainer GameSettings
         {
             set => _settings = value;
-        }
-
-        public void ResetRandomizer(GameStartedMessage message)
-        {
-            Randomizer.Reset(message.Seed);
         }
 
         public void SetPreviewContainers(List<PieceContainer> previewContainers)
@@ -65,7 +61,7 @@ namespace UStacker.Gameplay
 
         public bool SpawnPiece(double spawnTime)
         {
-            if (!_stateManager.GameRunningActively || _containersEmpty) return false;
+            if (_containersEmpty) return false;
 
             var newPieceType = Randomizer.GetNextPiece();
             var newPiece = _piecePools[newPieceType].Get();
@@ -91,7 +87,7 @@ namespace UStacker.Gameplay
             pieceTransform.localPosition = piecePos + new Vector3(piece.SpawnOffset.x, piece.SpawnOffset.y);
 
             _inputProcessor.ActivePiece = piece;
-
+            
             var rotationSystem = _settings.Controls.ActiveRotationSystem;
             var rotation = rotationSystem.GetKickTable(piece.Type).StartState;
             piece.Rotate((int) rotation);

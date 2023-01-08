@@ -6,15 +6,26 @@ namespace UStacker.Gameplay
     [Serializable]
     public record PiecePlacementInfo
     {
-        public double PlacementTime;
-        public int RotatedAngle;
-        public Vector2Int Movement;
+        [SerializeField]
+        private double _placementTime;
+        [SerializeField]
+        private int _rotatedAngle;
+        [SerializeField]
+        private Vector2Int _movement;
+        [SerializeField]
+        private string _pieceType;
 
-        public PiecePlacementInfo(double placementTime, int rotatedAngle, Vector2Int movement)
+        public double PlacementTime => _placementTime;
+        public int RotatedAngle => _rotatedAngle;
+        public Vector2Int Movement => _movement;
+        public string PieceType => _pieceType;
+
+        public PiecePlacementInfo(double placementTime, int rotatedAngle, Vector2Int movement, string pieceType)
         {
-            PlacementTime = placementTime;
-            RotatedAngle = rotatedAngle;
-            Movement = movement;
+            _placementTime = placementTime;
+            _rotatedAngle = rotatedAngle;
+            _movement = movement;
+            _pieceType = pieceType;
         }
     }
 }

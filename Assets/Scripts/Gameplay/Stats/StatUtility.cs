@@ -3,6 +3,7 @@ using System.Globalization;
 using UStacker.Common.Extensions;
 using JetBrains.Annotations;
 using UnityEngine;
+using UStacker.Gameplay.Timing;
 
 namespace UStacker.Gameplay.Stats
 {

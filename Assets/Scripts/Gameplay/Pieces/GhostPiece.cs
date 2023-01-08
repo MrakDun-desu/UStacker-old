@@ -73,6 +73,11 @@ namespace UStacker.Gameplay.Pieces
             ColorGhostPieceApplier.ColorGhostPieceChanged += ChangeColoring;
         }
 
+        private void OnDestroy()
+        {
+            ColorGhostPieceApplier.ColorGhostPieceChanged -= ChangeColoring;
+        }
+
         public IEnumerable<Vector3> BlockPositions =>
             _blocks.Select(block => block.transform.position);
 

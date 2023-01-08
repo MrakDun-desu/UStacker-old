@@ -51,7 +51,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 127
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -160,9 +160,6 @@ MonoBehaviour:
         - Skydiving
         - Classic 1
       _duplicateEntries: []
-    CustomGameMusic:
-      OptionType: 1
-      Name: Chill Music
   _switchInterval: 1
   _quietenTime: 0.5
   _quietenInterval: 0.01

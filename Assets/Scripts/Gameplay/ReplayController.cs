@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UStacker.Common.Extensions;
+using UStacker.Gameplay.Timing;
 
 namespace UStacker.Gameplay
 {
@@ -26,7 +28,6 @@ namespace UStacker.Gameplay
         [SerializeField] private Sprite _pauseSprite;
         [SerializeField] private Sprite _playSprite;
 
-
         private void Awake()
         {
             _timeSlider.onValueChanged.AddListener(OnTimeSet);
@@ -40,7 +41,7 @@ namespace UStacker.Gameplay
 
         private void OnEnable()
         {
-            _timeScaleField.text = _timer.TimeScale.ToString();
+            _timeScaleField.text = _timer.TimeScale.ToString(CultureInfo.InvariantCulture);
         }
 
         private void Update()
@@ -56,16 +57,16 @@ namespace UStacker.Gameplay
 
         private void OnSpeedChanged(string timeScaleStr)
         {
-            timeScaleStr.Replace('.', ',');
-            if (!double.TryParse(timeScaleStr, out var newTimeScale))
+            var timeScaleRepl = timeScaleStr.Replace('.', ',');
+            if (!double.TryParse(timeScaleRepl, out var newTimeScale))
             {
-                _timeScaleField.text = _timer.TimeScale.ToString();
+                _timeScaleField.text = _timer.TimeScale.ToString(CultureInfo.InvariantCulture);
                 return;
             }
 
-            newTimeScale = Math.Max(newTimeScale, double.Epsilon);
+            newTimeScale = Math.Max(newTimeScale, 0.01);
             _timer.TimeScale = newTimeScale;
-            _timeScaleField.text = _timer.TimeScale.ToString();
+            _timeScaleField.text = _timer.TimeScale.ToString(CultureInfo.InvariantCulture);
         }
 
         private void OnTimeSet(float newTime)
@@ -75,7 +76,7 @@ namespace UStacker.Gameplay
 
         public void SetReplay(GameReplay replay)
         {
-            _timeSlider.maxValue = (float)replay.GameLength;
+            _timeSlider.maxValue = (float) replay.GameLength - float.Epsilon;
         }
     }
 }

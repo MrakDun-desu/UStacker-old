@@ -6,6 +6,7 @@ using UStacker.Gameplay.Enums;
 using UStacker.GlobalSettings;
 using UStacker.GlobalSettings.StatCounting;
 using UnityEngine;
+using UStacker.Gameplay.Timing;
 
 namespace UStacker.Gameplay.Stats
 {

@@ -20,7 +20,7 @@ namespace UStacker.Gameplay
 
         private void AddPiecePlacementToList(PiecePlacedMessage message)
         {
-            var placementInfo = new PiecePlacementInfo(message.Time, message.TotalRotation, message.TotalMovement);
+            var placementInfo = new PiecePlacementInfo(message.Time, message.TotalRotation, message.TotalMovement, message.PieceType);
             PiecePlacementList.Add(placementInfo);
         }
 

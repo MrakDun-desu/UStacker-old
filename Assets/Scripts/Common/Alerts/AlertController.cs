@@ -23,6 +23,7 @@ namespace UStacker.Common.Alerts
         [SerializeField] private float _movement = 200f;
         [SerializeField] private float _appearTime = .5f;
 
+        private bool _destroyedFlag;
         private Image[] _controlledImages = Array.Empty<Image>();
         private TMP_Text[] _controlledTexts = Array.Empty<TMP_Text>();
 
@@ -50,19 +51,26 @@ namespace UStacker.Common.Alerts
         private IEnumerator WaitForRemoveAlertCor()
         {
             yield return new WaitForSeconds(_visibleInterval);
-            if (_controlledTransform != null)
+            if (!_destroyedFlag)
                 RemoveAlert();
         }
 
         private void RemoveAlert()
         {
             _controlledTransform.DOMoveY(_movement, _appearTime).SetRelative(true)
-                .OnComplete(() => Destroy(gameObject));
+                .OnComplete(() =>
+                {
+                    _destroyedFlag = true;
+                    Destroy(gameObject);
+                });
             DOTween.To(GetAlpha, SetAlpha, 0, _appearTime).SetEase(Ease.Linear);
         }
 
         private void SetAlpha(float value)
         {
+            if (_destroyedFlag)
+                return;
+            
             foreach (var image in _controlledImages)
                 image.color = image.color.WithAlpha(value);
             foreach (var text in _controlledTexts)
@@ -71,6 +79,9 @@ namespace UStacker.Common.Alerts
 
         private float GetAlpha()
         {
+            if (_destroyedFlag)
+                return 0;
+            
             return _controlledImages[0].color.a;
         }
     }

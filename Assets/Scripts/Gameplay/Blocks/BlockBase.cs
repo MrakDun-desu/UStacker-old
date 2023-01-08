@@ -18,6 +18,7 @@ namespace UStacker.Gameplay.Blocks
         private BlockSkin[] _defaultSkins;
         private ObjectPool<BlockSkin> _skinsPool;
         private float _visibility = 1;
+        private bool _usingDefault = true;
 
         [field: SerializeField]
         public uint BlockNumber { get; set; }
@@ -73,9 +74,12 @@ namespace UStacker.Gameplay.Blocks
         {
             if (!TryGetSkins(out var newSkins))
             {
-                foreach (var skin in _currentSkins)
-                    _skinsPool.Release(skin);
-                _currentSkins.Clear();
+                if (!_usingDefault)
+                {
+                    foreach (var skin in _currentSkins)
+                        _skinsPool.Release(skin);
+                    _currentSkins.Clear();
+                }
 
                 foreach (var skin in _defaultSkins)
                 {
@@ -84,9 +88,12 @@ namespace UStacker.Gameplay.Blocks
                     skin.RefreshSkin();
                     _currentSkins.Add(skin);
                 }
+
+                _usingDefault = true;
                 return;
             }
 
+            _usingDefault = false;
             ReplaceOldSkins(newSkins, _skinsParent);
         }
 
@@ -109,16 +116,13 @@ namespace UStacker.Gameplay.Blocks
 
         protected void ReplaceOldSkins(IEnumerable<SkinRecord> newSkins, GameObject parent, bool forceDestroyOld = false)
         {
-            if (_currentSkins.Count <= 0 || forceDestroyOld)
-            {
+            var skinsExisted = _currentSkins.Count <= 0;
+            foreach (var skin in _currentSkins)
+                _skinsPool.Release(skin);
+            _currentSkins.Clear();
+            
+            if (skinsExisted || forceDestroyOld)
                 foreach (Transform tf in parent.transform) Destroy(tf.gameObject);
-            }
-            else
-            {
-                foreach (var skin in _currentSkins)
-                    _skinsPool.Release(skin);
-                _currentSkins.Clear();
-            }
 
             AddNewSkins(newSkins, parent);
         }

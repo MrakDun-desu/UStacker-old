@@ -4,8 +4,8 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Initialization;
-using UStacker.Gameplay.SoundEffects;
 using UStacker.Gameplay.Stats;
+using UStacker.Gameplay.Timing;
 using UStacker.GameSettings;
 using UStacker.GameSettings.Enums;
 
@@ -102,12 +102,12 @@ namespace UStacker.Gameplay
             else
                 GameUnpaused.Invoke();
 
-            return;
         }
 
         public void Restart()
         {
-            if (!_gamePaused)
+            _gameEnded = false;
+            if (_gamePaused)
             {
                 _gamePauseable = true;
                 _gamePaused = false;
@@ -176,7 +176,6 @@ namespace UStacker.Gameplay
         public void Restart(InputAction.CallbackContext ctx)
         {
             if (!ctx.performed) return;
-            _gameEnded = false;
             Restart();
         }
 

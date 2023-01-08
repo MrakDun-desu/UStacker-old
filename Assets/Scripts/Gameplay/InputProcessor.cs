@@ -8,6 +8,7 @@ using UStacker.Gameplay.Enums;
 using UStacker.Gameplay.Initialization;
 using UStacker.Gameplay.Pieces;
 using UStacker.Gameplay.Spins;
+using UStacker.Gameplay.Timing;
 using UStacker.GameSettings;
 using UStacker.GameSettings.Enums;
 using UStacker.GlobalSettings.Enums;
@@ -17,10 +18,9 @@ namespace UStacker.Gameplay
 {
     public class InputProcessor : MonoBehaviour, IGameSettingsDependency
     {
-
         private const double ZERO_GRAVITY_REPLACEMENT = .02d;
-        [Header("Dependencies")]
-        [SerializeField]
+
+        [Header("Dependencies")] [SerializeField]
         private Board _board;
 
         [SerializeField] private PieceSpawner _spawner;
@@ -30,6 +30,7 @@ namespace UStacker.Gameplay
 
         [Header("Dependencies filled by initializer")]
         public PieceContainer PieceHolder;
+
         private List<InputActionMessage> _actionList;
 
         private Piece _activePiece;
@@ -41,6 +42,7 @@ namespace UStacker.Gameplay
         private bool _controlsActive;
 
         private int _currentActionIndex;
+        private int _currentPieceIndex;
 
         private double _currentGravity;
         private double _dasDelay;
@@ -56,7 +58,6 @@ namespace UStacker.Gameplay
         private double _dropTime;
         private double _dropTimer;
 
-        private HandlingSettings _handling;
         private double _hardLockAmount = double.PositiveInfinity;
 
         private bool _holdingLeft;
@@ -82,11 +83,12 @@ namespace UStacker.Gameplay
 
         private double _pieceSpawnTime = double.PositiveInfinity;
 
-        private GameSettingsSO.SettingsContainer _settings;
         private bool _usedHold;
         private bool _isHardLocking => _hardLockAmount < double.PositiveInfinity;
         private bool _isLocking => _lockTime < double.PositiveInfinity;
 
+        private HandlingSettings _handling;
+        private GameSettingsSO.SettingsContainer _settings;
         public SpinHandler SpinHandler { get; set; }
 
         public List<InputActionMessage> ActionList
@@ -96,15 +98,15 @@ namespace UStacker.Gameplay
             {
                 _actionList = value;
                 _currentActionIndex = 0;
+                _currentPieceIndex = 0;
                 _isReplaying = value is not null;
                 if (_isReplaying)
                     _controlsActive = false;
             }
         }
 
-        [field: SerializeField]
-        public List<PiecePlacementInfo> PlacementsList { get; set; }
-
+        [field: SerializeField] public List<PiecePlacementInfo> PlacementsList { get; set; }
+        
         public Piece ActivePiece
         {
             get => _activePiece;
@@ -185,31 +187,33 @@ namespace UStacker.Gameplay
 
         public void MoveToNextPiece()
         {
-            var currentTime = _timer.CurrentTime;
-            for (var i = 0; i < PlacementsList.Count; i++)
+            if (_currentPieceIndex >= PlacementsList.Count - 1)
+                return;
+
+            if (_currentPieceIndex < PlacementsList.Count - 1)
             {
-                var placementTime = PlacementsList[i].PlacementTime;
-                if (placementTime > currentTime)
-                {
-                    _timer.SetTime(placementTime + 0.01);
-                    break;
-                }
+                if (Math.Abs(_timer.CurrentTime - PlacementsList[_currentPieceIndex + 1].PlacementTime) <
+                    double.Epsilon)
+                    _currentPieceIndex++;
             }
+
+            _currentPieceIndex++;
+            _timer.SetTime(PlacementsList[_currentPieceIndex].PlacementTime);
         }
 
         public void MoveToPrevPiece()
         {
-            var currentTime = _timer.CurrentTime;
-            if (PlacementsList[0].PlacementTime > currentTime)
-                _timer.SetTime(0);
-            for (var i = 1; i < PlacementsList.Count; i++)
+            if (_currentPieceIndex <= 0)
             {
-                if (PlacementsList[i].PlacementTime > currentTime)
-                {
-                    _timer.SetTime(PlacementsList[i - 1].PlacementTime + 0.01);
-                    break;
-                }
+                _timer.SetTime(0);
+                return;
             }
+
+            if (Math.Abs(_timer.CurrentTime - PlacementsList[_currentPieceIndex].PlacementTime) < double.Epsilon)
+                _currentPieceIndex--;
+            _timer.SetTime(PlacementsList[_currentPieceIndex].PlacementTime);
+            if (_currentPieceIndex > 0)
+                _currentPieceIndex--;
         }
 
         private void OnGameStart()
@@ -222,22 +226,37 @@ namespace UStacker.Gameplay
 
         private void CatchUpWithTime(double time)
         {
+            CatchUpWithPieces(time);
+            CatchUpWithInputs(time);
+        }
+
+        private void CatchUpWithInputs(double time)
+        {
             while (_currentActionIndex < ActionList.Count)
             {
                 var currentAction = ActionList[_currentActionIndex];
-                if (!(currentAction.Time <= time)) break;
+                if (currentAction.Time > time) break;
                 _currentActionIndex++;
                 HandleInputAction(currentAction);
+            }
+        }
+
+        private void CatchUpWithPieces(double time)
+        {
+            if (_currentPieceIndex >= PlacementsList.Count - 1) return;
+            while (time > PlacementsList[_currentPieceIndex + 1].PlacementTime)
+            {
+                _currentPieceIndex++;
+                if (_currentPieceIndex >= PlacementsList.Count - 1) return;
             }
         }
 
         private void OnGravityChanged(GravityChangedMessage message)
         {
             _normalGravity = message.Gravity;
-            if (_normalGravity <= 0)
-                _currentGravity = _holdingSoftDrop ? ZERO_GRAVITY_REPLACEMENT * _handling.SoftDropFactor : _normalGravity;
-            else
-                _currentGravity = _holdingSoftDrop ? _normalGravity * _handling.SoftDropFactor : _normalGravity;
+
+            var usedGravity = _normalGravity <= 0 ? ZERO_GRAVITY_REPLACEMENT : _normalGravity;
+            _currentGravity = _holdingSoftDrop ? usedGravity * _handling.SoftDropFactor : _normalGravity;
 
             _dropTime = ComputeDroptimeFromGravity();
             _dropTimer = message.Time + _dropTime;
@@ -246,6 +265,8 @@ namespace UStacker.Gameplay
         private void OnLockDelayChanged(LockDelayChangedMessage message)
         {
             _lockDelay = message.LockDelay;
+            if (_isLocking)
+                _lockTime = message.Time + _lockDelay;
         }
 
         public void DeleteActivePiece()
@@ -266,6 +287,16 @@ namespace UStacker.Gameplay
             _holdingSoftDrop = false;
             _holdingLeft = false;
             _holdingRight = false;
+            _holdingLeftStart = double.PositiveInfinity;
+            _holdingRightStart = double.PositiveInfinity;
+            _holdingLeftTimer = 0;
+            _holdingRightTimer = 0;
+            _dasLeftTimer = 0;
+            _dasRightTimer = 0;
+            _dasLeftStart = 0;
+            _dasRightStart = 0;
+            _dasLeftActive = false;
+            _dasRightActive = false;
             _lowestPosition = int.MaxValue;
             _handling = _settings.Controls.Handling;
             _normalGravity = _settings.Gravity.DefaultGravity;
@@ -277,6 +308,10 @@ namespace UStacker.Gameplay
             _dasDelay = 0;
             _lockTime = double.PositiveInfinity;
             _arrTimer = double.PositiveInfinity;
+            _currentActionIndex = 0;
+            _currentPieceIndex = 0;
+            _bufferedHold = false;
+            _bufferedRotation = null;
         }
 
         private void MovePiece(
@@ -288,18 +323,6 @@ namespace UStacker.Gameplay
             bool isRotation = false)
         {
             if (_pieceIsNull) return;
-            if (!ActivePiece.BlockPositions.Any()) return;
-            if (sendMessage)
-            {
-                var wasSoftDrop = !wasHardDrop && _holdingSoftDrop;
-
-                var hitWall = moveVector.x != 0 && (!_board.CanPlace(ActivePiece, Vector2Int.left) ||
-                                                    !_board.CanPlace(ActivePiece, Vector2Int.right));
-
-                _mediator.Send(new PieceMovedMessage(moveVector.x, moveVector.y,
-                    wasHardDrop, wasSoftDrop, hitWall, time));
-            }
-
             if (isRotation)
                 _lastWasRotation = true;
             else if (moveVector != Vector2Int.zero)
@@ -319,13 +342,12 @@ namespace UStacker.Gameplay
                     if (!isRotation)
                     {
                         if (moveVector.x > 0)
-                            moveVector.x += (int)_hardLockAmount;
+                            moveVector.x += (int) _hardLockAmount;
                         else
-                            moveVector.x -= (int)_hardLockAmount;
+                            moveVector.x -= (int) _hardLockAmount;
                     }
                 }
             }
-
 
             var pieceTransform = ActivePiece.transform;
             var piecePosition = pieceTransform.localPosition;
@@ -335,6 +357,17 @@ namespace UStacker.Gameplay
                 piecePosition.z);
             pieceTransform.localPosition = piecePosition;
             _currentPieceMovement += moveVector;
+
+            if (sendMessage)
+            {
+                var wasSoftDrop = !wasHardDrop && _holdingSoftDrop;
+
+                var hitWall = moveVector.x != 0 && (!_board.CanPlace(ActivePiece, Vector2Int.left) ||
+                                                    !_board.CanPlace(ActivePiece, Vector2Int.right));
+
+                _mediator.Send(new PieceMovedMessage(moveVector.x, moveVector.y,
+                    wasHardDrop, wasSoftDrop, hitWall, time));
+            }
 
             if (_isLocking && _board.CanPlace(ActivePiece, Vector2Int.down))
                 _dropTimer = time + _dropTime;
@@ -366,7 +399,8 @@ namespace UStacker.Gameplay
 
             var lastSpinResult = _lastWasRotation ? _lastSpinResult : null;
 
-            var linesCleared = _board.Place(ActivePiece, placementTime, _currentPieceRotation, _currentPieceMovement, lastSpinResult);
+            var linesCleared = _board.Place(ActivePiece, placementTime, _currentPieceRotation, _currentPieceMovement,
+                lastSpinResult);
 
             var spawnTime = _settings.Gravity.PiecePlacementDelay;
             if (linesCleared)
@@ -401,12 +435,12 @@ namespace UStacker.Gameplay
         private void ChangeActivePieceRotationState(int value)
         {
             _currentPieceRotation += value;
-            var newState = (int)ActivePiece.RotationState + value;
+            var newState = (int) ActivePiece.RotationState + value;
             while (newState < 0) newState += 360;
 
             newState -= newState % 90;
 
-            ActivePiece.RotationState = (RotationState)(newState % 360);
+            ActivePiece.RotationState = (RotationState) (newState % 360);
         }
 
         private double ComputeDroptimeFromGravity()
@@ -557,10 +591,8 @@ namespace UStacker.Gameplay
                 (_holdingLeftStart < actionTime ||
                  _holdingRightStart < actionTime)) return;
 
-            if (_currentGravity <= 0d)
-                _currentGravity = ZERO_GRAVITY_REPLACEMENT * _handling.SoftDropFactor;
-            else
-                _currentGravity = _normalGravity * _handling.SoftDropFactor;
+            var usedGravity = _normalGravity <= 0 ? ZERO_GRAVITY_REPLACEMENT : _normalGravity;
+            _currentGravity = _holdingSoftDrop ? usedGravity * _handling.SoftDropFactor : _normalGravity;
 
             _dropTime = ComputeDroptimeFromGravity();
             _dropTimer = actionTime;
@@ -585,6 +617,7 @@ namespace UStacker.Gameplay
                 _bufferedRotation = direction;
                 return;
             }
+
             ActivePiece.Rotate(rotationAngle);
             if (!SpinHandler.TryKick(
                     ActivePiece,
@@ -628,6 +661,7 @@ namespace UStacker.Gameplay
                 _bufferedHold = true;
                 return;
             }
+
             if (_usedHold && !_settings.Controls.UnlimitedHold)
             {
                 _mediator.Send(new HoldUsedMessage(false, actionTime));
@@ -650,20 +684,22 @@ namespace UStacker.Gameplay
             StopLockdown(true);
         }
 
-        private void SendActionMessage(InputAction.CallbackContext ctx, ActionType actionType)
+        private void HandleKeyEvent(InputAction.CallbackContext ctx, ActionType actionType)
         {
             KeyActionType? keyActionType = ctx switch
             {
-                { performed: true } => KeyActionType.KeyDown,
-                { canceled: true } => KeyActionType.KeyUp,
+                {performed: true} => KeyActionType.KeyDown,
+                {canceled: true} => KeyActionType.KeyUp,
                 _ => null
             };
             if (!_controlsActive && keyActionType == KeyActionType.KeyDown) return;
             if (keyActionType is null) return;
+
+            var actionTime = ctx.time - (Time.realtimeSinceStartupAsDouble - _timer.CurrentTime);
             var actionMessage = new InputActionMessage(
                 actionType,
-                (KeyActionType)keyActionType,
-                ctx.time - _timer.EffectiveStartTime);
+                (KeyActionType) keyActionType,
+                actionTime);
             HandleInputAction(actionMessage);
         }
 
@@ -671,63 +707,65 @@ namespace UStacker.Gameplay
         {
             switch (ctx)
             {
-                case { performed: true }:
+                case {performed: true}:
                     _holdingLeft = true;
                     _holdingRight = false;
                     break;
-                case { canceled: true }:
+                case {canceled: true}:
                     _holdingLeft = false;
                     break;
             }
-            SendActionMessage(ctx, ActionType.MoveLeft);
+
+            HandleKeyEvent(ctx, ActionType.MoveLeft);
         }
 
         public void OnMovePieceRight(InputAction.CallbackContext ctx)
         {
             switch (ctx)
             {
-                case { performed: true }:
+                case {performed: true}:
                     _holdingRight = true;
                     _holdingLeft = false;
                     break;
-                case { canceled: true }:
+                case {canceled: true}:
                     _holdingRight = false;
                     break;
             }
-            SendActionMessage(ctx, ActionType.MoveRight);
+
+            HandleKeyEvent(ctx, ActionType.MoveRight);
         }
 
         public void OnSoftDrop(InputAction.CallbackContext ctx)
         {
-            SendActionMessage(ctx, ActionType.Softdrop);
+            HandleKeyEvent(ctx, ActionType.Softdrop);
         }
 
         public void OnHardDrop(InputAction.CallbackContext ctx)
         {
             if (_settings.Controls.AllowHardDrop)
-                SendActionMessage(ctx, ActionType.Harddrop);
+                HandleKeyEvent(ctx, ActionType.Harddrop);
         }
 
         public void OnRotateCounterclockwise(InputAction.CallbackContext ctx)
         {
-            SendActionMessage(ctx, ActionType.RotateCCW);
+            HandleKeyEvent(ctx, ActionType.RotateCCW);
         }
 
         public void OnRotateClockwise(InputAction.CallbackContext ctx)
         {
-            SendActionMessage(ctx, ActionType.RotateCW);
+            HandleKeyEvent(ctx, ActionType.RotateCW);
         }
 
         public void OnRotate180(InputAction.CallbackContext ctx)
         {
             if (_settings.Controls.Allow180Spins)
-                SendActionMessage(ctx, ActionType.Rotate180);
+                HandleKeyEvent(ctx, ActionType.Rotate180);
         }
 
         public void OnSwapHoldPiece(InputAction.CallbackContext ctx)
         {
             if (_settings.Controls.AllowHold)
-                SendActionMessage(ctx, ActionType.Hold);
+                HandleKeyEvent(ctx, ActionType.Hold);
         }
 
         #endregion
@@ -751,25 +789,25 @@ namespace UStacker.Gameplay
                 HandlePieceLockdownAnimation(time);
             }
 
-            HandlePieceSpawning();
+            HandlePieceSpawning(time);
         }
 
-        private void HandleDas(double functionStartTime)
+        private void HandleDas(double time)
         {
-            if (_dasDelay > functionStartTime) return;
+            if (_dasDelay > time) return;
 
-            if (_holdingLeftStart < functionStartTime)
+            if (_holdingLeftStart < time)
             {
-                _dasLeftTimer = functionStartTime - _dasLeftStart;
-                _holdingLeftTimer = functionStartTime - _holdingLeftStart;
+                _dasLeftTimer = time - _dasLeftStart;
+                _holdingLeftTimer = time - _holdingLeftStart;
             }
             else
                 _dasLeftTimer = 0;
 
-            if (_holdingRightStart < functionStartTime)
+            if (_holdingRightStart < time)
             {
-                _dasRightTimer = functionStartTime - _dasRightStart;
-                _holdingRightTimer = functionStartTime - _holdingRightStart;
+                _dasRightTimer = time - _dasRightStart;
+                _holdingRightTimer = time - _holdingRightStart;
             }
             else
                 _dasRightTimer = 0;
@@ -804,19 +842,20 @@ namespace UStacker.Gameplay
                 _arrTimer = _dasLeftStart + _handling.DelayedAutoShift;
             }
 
-            if (_arrTimer > functionStartTime) return;
+            if (_arrTimer > time) return;
 
             if (_dasRightActive)
             {
                 var movementVector = Vector2Int.zero;
-                while (_arrTimer < functionStartTime)
+                while (_arrTimer < time)
+                {
                     if (_board.CanPlace(ActivePiece, movementVector + Vector2Int.right))
                     {
                         _arrTimer += _handling.AutomaticRepeatRate;
                         movementVector += Vector2Int.right;
                     }
-                    else
-                        break;
+                    else break;
+                }
 
                 if (movementVector != Vector2Int.zero)
                     MovePiece(movementVector, true, _arrTimer - _handling.AutomaticRepeatRate);
@@ -825,21 +864,22 @@ namespace UStacker.Gameplay
             if (_dasLeftActive)
             {
                 var movementVector = Vector2Int.zero;
-                while (_arrTimer < functionStartTime)
+                while (_arrTimer < time)
+                {
                     if (_board.CanPlace(ActivePiece, movementVector + Vector2Int.left))
                     {
                         _arrTimer += _handling.AutomaticRepeatRate;
                         movementVector += Vector2Int.left;
                     }
-                    else
-                        break;
+                    else break;
+                }
 
                 if (movementVector != Vector2Int.zero)
                     MovePiece(movementVector, true, _arrTimer - _handling.AutomaticRepeatRate);
             }
         }
 
-        private void HandleGravity(double functionStartTime)
+        private void HandleGravity(double time)
         {
             if (_board.CanPlace(ActivePiece, Vector2Int.down) && _isLocking) // there is an empty space below piece
                 StopLockdown(false); // stop lockdown even if piece doesn't want to move down
@@ -847,9 +887,9 @@ namespace UStacker.Gameplay
             var movementVector = Vector2Int.zero;
             var lockdownStartedNow = false;
 
-            while (_dropTimer <= functionStartTime) // piece wants to drop
+            while (_dropTimer <= time) // piece wants to drop
             {
-                if (_isLocking) break; // if piece is already locking, don't bother
+                if (_isLocking) break;
 
                 if (_board.CanPlace(ActivePiece, movementVector + Vector2Int.down))
                 {
@@ -857,9 +897,12 @@ namespace UStacker.Gameplay
                     movementVector += Vector2Int.down; // piece drops one block down
                     if (_settings.Gravity.LockDelayType != LockDelayType.OnTouchGround ||
                         _board.CanPlace(ActivePiece, movementVector + Vector2Int.down))
-                        continue; // piece touches ground on this movement
+                        continue;
+                    // if we got past the if, lock delay starts on touch ground
+                    // and piece has just touched ground
 
-                    StartLockdown(_dropTimer - _dropTime); // start lockdown after this movement
+                    var lastMovementTime = _dropTimer - _dropTime;
+                    StartLockdown(lastMovementTime);
                     lockdownStartedNow = true;
                     break;
                 }
@@ -876,14 +919,15 @@ namespace UStacker.Gameplay
 
             if (!_isLocking && !_isHardLocking) return;
 
+            // if we moved down from the lock start position, we stop, but only if we didn't start this update
             if (_lowestPosition < lowestPosBeforeMovement && !lockdownStartedNow)
                 StopLockdown(true);
 
-            if (_lockTime <= functionStartTime &&
+            if (_lockTime <= time &&
                 _settings.Gravity.HardLockType != HardLockType.InfiniteMovement)
                 HandlePiecePlacement(_lockTime);
             else if (_settings.Gravity.HardLockType == HardLockType.LimitedTime
-                     && _hardLockAmount <= functionStartTime)
+                     && _hardLockAmount <= time)
                 HandlePiecePlacement(_hardLockAmount);
         }
 
@@ -893,7 +937,7 @@ namespace UStacker.Gameplay
 
             var lockProgress = (_lockTime - functionStartTime) / _lockDelay;
 
-            ActivePiece.Visibility = Mathf.Lerp(1f, .5f, (float)lockProgress);
+            ActivePiece.Visibility = Mathf.Lerp(1f, .5f, (float) lockProgress);
         }
 
         private void StartLockdown(double lockStart)
@@ -934,11 +978,11 @@ namespace UStacker.Gameplay
                 _hardLockAmount = double.PositiveInfinity;
         }
 
-        private void HandlePieceSpawning()
+        private void HandlePieceSpawning(double time)
         {
             if (!_pieceIsNull) return;
-            var functionStartTime = _timer.CurrentTime;
-            if (_pieceSpawnTime > functionStartTime) return;
+            if (_pieceSpawnTime > time)
+                return;
 
             _lockTime = double.PositiveInfinity;
             _hardLockAmount = double.PositiveInfinity;
@@ -946,7 +990,7 @@ namespace UStacker.Gameplay
 
             if (!_spawner.SpawnPiece(_pieceSpawnTime))
                 return;
-
+            
             _dropTimer = _pieceSpawnTime + _dropTime;
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Placement))
             {
@@ -957,8 +1001,9 @@ namespace UStacker.Gameplay
             else
                 _arrTimer = _pieceSpawnTime;
 
+            _pieceSpawnTime = double.PositiveInfinity;
             // after piece spawn, game needs to update one more time to catch up with gravity
-            Update();
+            Update(time, false);
         }
 
         #endregion

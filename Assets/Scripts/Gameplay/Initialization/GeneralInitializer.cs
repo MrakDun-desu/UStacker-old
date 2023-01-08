@@ -75,11 +75,6 @@ namespace UStacker.Gameplay.Initialization
         {
             if (_isRestarting)
             {
-                // if (_spawner is null)
-                // {
-                //     Debug.LogError("Spawner is null");
-                //     return;
-                // }
                 _spawner.Randomizer.Reset(_gameSettings.General.ActiveSeed);
                 return;
             }
