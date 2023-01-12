@@ -24,6 +24,7 @@ namespace UStacker.Common.Alerts
         [SerializeField] private float _appearTime = .5f;
 
         private bool _destroyedFlag;
+        private bool _removeStarted;
         private Image[] _controlledImages = Array.Empty<Image>();
         private TMP_Text[] _controlledTexts = Array.Empty<TMP_Text>();
 
@@ -51,12 +52,13 @@ namespace UStacker.Common.Alerts
         private IEnumerator WaitForRemoveAlertCor()
         {
             yield return new WaitForSeconds(_visibleInterval);
-            if (!_destroyedFlag)
+            if (!_removeStarted)
                 RemoveAlert();
         }
 
         private void RemoveAlert()
         {
+            _removeStarted = true;
             _controlledTransform.DOMoveY(_movement, _appearTime).SetRelative(true)
                 .OnComplete(() =>
                 {

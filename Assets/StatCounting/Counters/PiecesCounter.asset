@@ -16,12 +16,11 @@ MonoBehaviour:
     Name: Pieces
     Type: 0
     Filename: 
-    Script: "function Reset()\n\tPiecesPlaced = 0\n\treturn \"Pieces: 0\\nPPS: 0\"\nend\nfunction
-      OnPiecePlaced()\n\tPiecesPlaced = PiecesPlaced + 1\nend\nfunction OnUpdated()\n\tlocal
-      pps = Stats.PiecesPerSecond\n\treturn \"Pieces: \" .. PiecesPlaced .. \"\\nPPS:
-      \" .. StatUtility:FormatNumber(pps)\nend\nSetText(Reset())\nreturn {\n\t[\"CounterUpdated\"]
-      = OnUpdated,\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStarted\"] = Reset,\n\t[\"GameRestarted\"]
-      = Reset\n}"
+    Script: "function FormatOutput()\r\n\tlocal pps = Stats.PiecesPerSecond\r\n\tlocal
+      piecesPlaced = Stats.PiecesPlaced\r\n\treturn \"Pieces: \" .. piecesPlaced
+      .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
+      {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] = FormatOutput,\r\n\t[\"GameStarted\"]
+      = FormatOutput,\r\n\t[\"GameRestarted\"] = FormatOutput\n}"
     Position: {x: -9, y: 6}
     Size: {x: 8, y: 3}
     UpdateInterval: 0.1

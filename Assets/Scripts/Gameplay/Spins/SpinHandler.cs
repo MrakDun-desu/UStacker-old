@@ -57,6 +57,13 @@ namespace UStacker.Gameplay.Spins
                 if (!board.CanPlace(piece, actualKick)) continue;
 
                 result.Kick = actualKick;
+                
+                if (_allowedSpins.HasFlag(AllowedSpins.StupidSpinsFlag))
+                {
+                    result.WasSpin = true;
+                    result.WasSpinMini = false;
+                }
+                
                 if (piece.SpinDetectors.Count(spinDetector => !board.IsEmpty(spinDetector.position, actualKick)) <
                     piece.MinimumSpinDetectors)
                     return true;
@@ -77,6 +84,9 @@ namespace UStacker.Gameplay.Spins
 
         private void CheckSpinResult(SpinResult formerResult, string pieceType)
         {
+            if (_allowedSpins.HasFlag(AllowedSpins.StupidSpinsFlag))
+                return;
+            
             switch (_allowedSpins)
             {
                 case AllowedSpins.All:
@@ -98,6 +108,7 @@ namespace UStacker.Gameplay.Spins
                 case AllowedSpins.OSpins:
                 case AllowedSpins.SSpins:
                 case AllowedSpins.ZSpins:
+                case AllowedSpins.StupidSpinsFlag:
                 default:
                     break;
             }

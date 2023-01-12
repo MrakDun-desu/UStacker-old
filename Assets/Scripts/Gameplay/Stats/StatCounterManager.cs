@@ -17,7 +17,6 @@ namespace UStacker.Gameplay.Stats
         [SerializeField] private StatCounterDisplayer _displayerPrefab;
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private GameTimer _timer;
-        [SerializeField] private GameStateManager _gameStateManager;
         [SerializeField] private StatContainer _stats = new();
 
         public ReadonlyStatContainer Stats;
@@ -39,11 +38,14 @@ namespace UStacker.Gameplay.Stats
 
         private void Update()
         {
-            if (!_gameStateManager.GameRunningActively) return;
-
-            _stats.LinesPerMinute = _stats.LinesCleared / _timer.CurrentTime;
-            _stats.PiecesPerSecond = _stats.PiecesPlaced / _timer.CurrentTime;
-            _stats.KeysPerPiece = (double) _stats.KeysPressed / _stats.PiecesPlaced;
+            if (_timer.CurrentTime > 0)
+            {
+                _stats.LinesPerMinute = _stats.LinesCleared / _timer.CurrentTime;
+                _stats.PiecesPerSecond = _stats.PiecesPlaced / _timer.CurrentTime;
+            }
+            
+            if (_stats.PiecesPlaced > 0)
+                _stats.KeysPerPiece = (double) _stats.KeysPressed / _stats.PiecesPlaced;
         }
 
         private void OnDestroy()
@@ -57,7 +59,7 @@ namespace UStacker.Gameplay.Stats
             _mediator.Unregister<LevelChangedMessage>(OnLevelChanged);
         }
 
-        private void ResetStats(object obj)
+        private void ResetStats(object _)
         {
             _stats.Reset();
         }
