@@ -21,7 +21,7 @@ MonoBehaviour:
       = \"J\"\n}\n\nClearCounts = {\n\t\"Single\",\n\t\"Double\",\n\t\"Triple\",\n\t\"Quad\",\n\t\"Quint\",\n\t\"Hexad\",\n\t\"Heptad\",\n\t\"Octad\",\n\t\"Nonad\",\n\t\"Decad\"\n}\n\nfunction
       OnPiecePlaced(message)\n\tif message.LinesCleared == 0 then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
       2)\n\tlocal output = \"\"\n\t\n\tif message.WasSpin or message.WasSpinMini
-      then\n\t\toutput = PieceTypes[message.PieceType]\n\tend\n\n\tif message.WasSpin
+      then\n\t\toutput = PieceTypes[message.PieceType]\n\tend\n\tif output == nil then output = \"\" end\n\tif message.WasSpin
       then\n\t\toutput = output .. \" Spin \"\n\telseif message.WasSpinMini then\n\t\toutput
       = output .. \" Spin Mini \"\n\tend\n\n\tif message.LinesCleared <= #ClearCounts
       then\n\t\treturn output .. ClearCounts[message.LinesCleared]\n\telse\n\t\tlocal

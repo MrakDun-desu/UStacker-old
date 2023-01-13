@@ -30,7 +30,6 @@ namespace UStacker.Gameplay
 
         [SerializeField] private MediatorSO _mediator;
         [SerializeField] private SpriteRenderer _backgroundRenderer;
-        [SerializeField] private Camera _camera;
         [SerializeField] private WarningPiece _warningPiece;
         [SerializeField] private ClearableBlock _garbageBlockPrefab;
         [SerializeField] private GarbageLayer _garbageLayerPrefab;
@@ -49,6 +48,7 @@ namespace UStacker.Gameplay
 
         private uint _currentCombo;
 
+        private Camera _camera;
         private Vector3 _dragStartPosition;
         private Vector3 _dragStartTransformPosition;
         private ObjectPool<ClearableBlock> _garbageBlockPool;
@@ -108,6 +108,7 @@ namespace UStacker.Gameplay
         private void Awake()
         {
             _offset = AppSettings.Gameplay.BoardOffset;
+            _camera = Camera.main;
             transform.position += _offset;
 
             ChangeBoardZoom(AppSettings.Gameplay.BoardZoom);
@@ -261,12 +262,12 @@ namespace UStacker.Gameplay
 
             slots = Slots;
             for (var y = lineNumber; y < Blocks.Count; y++)
-                for (var x = 0; x < Blocks[y].Length; x++)
-                {
-                    if (!slots[y][x]) continue;
+            for (var x = 0; x < Blocks[y].Length; x++)
+            {
+                if (!slots[y][x]) continue;
 
-                    Blocks[y][x].transform.position -= Up;
-                }
+                Blocks[y][x].transform.position -= Up;
+            }
         }
 
         private void CheckAndClearLines(out uint linesCleared, out uint cheeseLinesCleared)
@@ -500,12 +501,12 @@ namespace UStacker.Gameplay
 
             var activeSlots = Slots;
             for (var y = 0; y < Blocks.Count; y++)
-                for (var x = 0; x < Blocks[y].Length; x++)
-                {
-                    if (!activeSlots[y][x]) continue;
+            for (var x = 0; x < Blocks[y].Length; x++)
+            {
+                if (!activeSlots[y][x]) continue;
 
-                    Blocks[y][x].transform.position += Up * height;
-                }
+                Blocks[y][x].transform.position += Up * height;
+            }
 
             for (var i = 0; i < height; i++)
                 Blocks.Insert(0, new ClearableBlock[Width]);
