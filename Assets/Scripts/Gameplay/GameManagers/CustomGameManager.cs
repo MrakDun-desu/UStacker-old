@@ -5,18 +5,20 @@ using UStacker.Gameplay.Communication;
 using NLua;
 using NLua.Exceptions;
 using UnityEngine;
+using UStacker.Gameplay.Timing;
 
 namespace UStacker.Gameplay.GameManagers
 {
     public class CustomGameManager : MonoBehaviour, IGameManager
     {
-
         private const string STARTING_LEVEL_NAME = "StartingLevel";
         private const string BOARD_INTERFACE_NAME = "Board";
         private Lua _luaState;
         private MediatorSO _mediator;
         private uint _startingLevel;
         private GameStateManager _stateManager;
+        private double? _currentMessageTime;
+        private GameTimer _timer;
 
         public void Initialize(string startingLevel, MediatorSO mediator)
         {
@@ -24,9 +26,10 @@ namespace UStacker.Gameplay.GameManagers
             _mediator = mediator;
         }
 
-        public void CustomInitialize(GameStateManager stateManager, Board board, string script)
+        public void CustomInitialize(GameStateManager stateManager, Board board, GameTimer timer, string script)
         {
             _stateManager = stateManager;
+            _timer = timer;
 
             _luaState = CreateLua.WithAllPrerequisites();
             _luaState[STARTING_LEVEL_NAME] = _startingLevel;
@@ -68,6 +71,11 @@ namespace UStacker.Gameplay.GameManagers
                 void Action(Message message)
                 {
                     if (!enabled) return;
+                    if (message is MidgameMessage m)
+                        _currentMessageTime = m.Time;
+                    else
+                        _currentMessageTime = null;
+
                     try
                     {
                         function.Call(message);
@@ -94,52 +102,54 @@ namespace UStacker.Gameplay.GameManagers
 
         #region Methods supplied to LuaState
 
-        public void EndGame(double time)
+        public void EndGame()
         {
-            _stateManager.EndGame(time);
+            _stateManager.EndGame(_currentMessageTime ?? _timer.CurrentTime);
         }
 
-        public void LoseGame(double time)
+        public void LoseGame()
         {
-            _stateManager.LoseGame(time);
+            _stateManager.LoseGame(_currentMessageTime ?? _timer.CurrentTime);
         }
 
-        public void SetScore(object score, double time)
+        public void SetScore(object score)
         {
-            _mediator.Send(new ScoreChangedMessage(Convert.ToInt64(score), time));
+            _mediator.Send(new ScoreChangedMessage(Convert.ToInt64(score), _currentMessageTime ?? _timer.CurrentTime));
         }
 
-        public void SetLevel(object level, double time)
+        public void SetLevel(object level)
         {
-            _mediator.Send(new LevelChangedMessage(level.ToString(), time));
+            _mediator.Send(new LevelChangedMessage(level.ToString(), _currentMessageTime ?? _timer.CurrentTime));
         }
 
-        public void SetLevelUpCondition(object current, object total, double time, string condName)
+        public void SetLevelUpCondition(object current, object total, string condName)
         {
             _mediator.Send(new LevelUpConditionChangedMessage(
-                time,
+                _currentMessageTime ?? _timer.CurrentTime,
                 Convert.ToDouble(total),
                 Convert.ToDouble(current),
                 condName));
         }
 
-        public void SetGameEndCondition(object current, object total, double time, string condName)
+        public void SetGameEndCondition(object current, object total, string condName)
         {
             _mediator.Send(new GameEndConditionChangedMessage(
-                time,
+                _currentMessageTime ?? _timer.CurrentTime,
                 Convert.ToDouble(total),
                 Convert.ToDouble(current),
                 condName));
         }
 
-        public void SetGravity(object newGravity, double time)
+        public void SetGravity(object newGravity)
         {
-            _mediator.Send(new GravityChangedMessage(Convert.ToDouble(newGravity), time));
+            _mediator.Send(new GravityChangedMessage(Convert.ToDouble(newGravity),
+                _currentMessageTime ?? _timer.CurrentTime));
         }
 
-        public void SetLockDelay(object newDelay, double time)
+        public void SetLockDelay(object newDelay)
         {
-            _mediator.Send(new LockDelayChangedMessage(Convert.ToDouble(newDelay), time));
+            _mediator.Send(new LockDelayChangedMessage(Convert.ToDouble(newDelay),
+                _currentMessageTime ?? _timer.CurrentTime));
         }
 
         #endregion

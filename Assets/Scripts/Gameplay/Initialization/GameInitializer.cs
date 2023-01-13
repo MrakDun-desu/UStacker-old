@@ -9,6 +9,7 @@ using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Pieces;
 using UStacker.Gameplay.Presentation;
 using UStacker.Gameplay.Stats;
+using UStacker.Gameplay.Timing;
 using UStacker.GameSettings;
 using UStacker.GlobalSettings.Music;
 
@@ -43,6 +44,7 @@ namespace UStacker.Gameplay.Initialization
         [SerializeField] private MusicPlayerFinder _playerFinder;
         [SerializeField] private StatCounterManager _statCounterManager;
         [SerializeField] private ReplayController _replayController;
+        [SerializeField] private GameTimer _timer;
         [SerializeField] private GameObject[] _gameSettingsDependencies = Array.Empty<GameObject>();
 
         [Header("Events")] public UnityEvent GameInitialized;
@@ -151,7 +153,8 @@ namespace UStacker.Gameplay.Initialization
                     errorBuilder, GameSettings,
                     _mediator,
                     _stateManager,
-                    _board)
+                    _board,
+                    _timer)
             };
 
             foreach (var initializer in initializers) initializer.Execute();

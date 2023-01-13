@@ -911,7 +911,6 @@ MonoBehaviour:
   _displayerPrefab: {fileID: 3809904194938788015, guid: a58f1a9ed28c0c44388dfad416521619, type: 3}
   _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   _timer: {fileID: 8141839149270808964}
-  _gameStateManager: {fileID: 8141839150514888149}
   _stats:
     Score: 0
     Level: 0
@@ -1662,6 +1661,7 @@ MonoBehaviour:
   _playerFinder: {fileID: 8141839149685358632}
   _statCounterManager: {fileID: 8141839148887950749}
   _replayController: {fileID: 8141839149409263864}
+  _timer: {fileID: 8141839149270808964}
   _gameSettingsDependencies:
   - {fileID: 1124102361336711500}
   - {fileID: 7944381903877544127}
@@ -9386,7 +9386,8 @@ PrefabInstance:
       propertyPath: _openedX
       value: 500
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2842199616942510323, guid: 4b676e312ac35154cb76442e01f5b397, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2842199617028823201, guid: 4b676e312ac35154cb76442e01f5b397, type: 3}

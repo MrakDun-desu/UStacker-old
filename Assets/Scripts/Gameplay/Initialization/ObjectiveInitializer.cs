@@ -6,6 +6,7 @@ using UStacker.Gameplay.GarbageGeneration;
 using UStacker.GameSettings;
 using UStacker.GameSettings.Enums;
 using UnityEngine;
+using UStacker.Gameplay.Timing;
 using Object = UnityEngine.Object;
 
 namespace UStacker.Gameplay.Initialization
@@ -15,17 +16,20 @@ namespace UStacker.Gameplay.Initialization
         private readonly Board _board;
         private readonly MediatorSO _mediator;
         private readonly GameStateManager _stateManager;
+        private readonly GameTimer _timer;
 
         public ObjectiveInitializer(
             StringBuilder errorBuilder, GameSettingsSO.SettingsContainer gameSettings,
             MediatorSO mediator,
             GameStateManager stateManager,
-            Board board) :
+            Board board,
+            GameTimer timer) :
             base(errorBuilder, gameSettings)
         {
             _mediator = mediator;
             _stateManager = stateManager;
             _board = board;
+            _timer = timer;
         }
 
         public override void Execute()
@@ -57,7 +61,7 @@ namespace UStacker.Gameplay.Initialization
             manager.Initialize(_gameSettings.Objective.StartingLevel, _mediator);
 
             if (manager is CustomGameManager custom)
-                custom.CustomInitialize(_stateManager, _board, _gameSettings.Objective.CustomGameManagerScript);
+                custom.CustomInitialize(_stateManager, _board, _timer, _gameSettings.Objective.CustomGameManagerScript);
         }
 
         private void InitializeGarbageGenerator()

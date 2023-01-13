@@ -180,7 +180,6 @@ GameObject:
   - component: {fileID: 2842199616942510326}
   - component: {fileID: 2842199616942510321}
   - component: {fileID: 2842199616942510320}
-  - component: {fileID: 2842199616942510323}
   - component: {fileID: 2842199616942510322}
   - component: {fileID: 2842199616942510317}
   - component: {fileID: 2842199616942510316}
@@ -380,18 +379,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0180bc8d90e151a48855451df97e1a20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2842199616942510323
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2842199616942510308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2bc74219f16a4201b572fe31dd21c1c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &2842199616942510322
@@ -8989,7 +8976,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2987071467723112421, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 2143.9749
+      value: -0.00024414062
       objectReference: {fileID: 0}
     - target: {fileID: 4067438773607615757, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Pivot.x
@@ -9101,11 +9088,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6616534284926214280, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Size
-      value: 0.16537468
+      value: 0.06287683
       objectReference: {fileID: 0}
     - target: {fileID: 6616534284926214280, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Value
-      value: 0.55748713
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7167318321076373142, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Name
