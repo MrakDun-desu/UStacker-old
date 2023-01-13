@@ -103,7 +103,7 @@ namespace UStacker.GlobalSettings.Music
         {
             await LoadClipsFromDirectoryAsync(path, Music);
 
-            MusicPlayer.Configuration.GameMusic.AddRange(Music.Keys);
+            MusicPlayer.Instance.Configuration.GameMusic.AddRange(Music.Keys);
 
             var confPath = Path.Combine(path, CustomizationFilenames.MusicConfig);
             if (!File.Exists(confPath))
@@ -112,7 +112,7 @@ namespace UStacker.GlobalSettings.Music
             var musicConfStr = await File.ReadAllTextAsync(confPath);
             var musicConf = JsonConvert.DeserializeObject<MusicConfiguration>(musicConfStr, StaticSettings.DefaultSerializerSettings);
 
-            MusicPlayer.Configuration.Rewrite(musicConf);
+            MusicPlayer.Instance.Configuration.Rewrite(musicConf);
         }
 
         private static async Task LoadClipsFromDirectoryAsync(string path, IDictionary<string, AudioClip> target)

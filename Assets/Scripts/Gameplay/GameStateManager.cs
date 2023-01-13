@@ -8,6 +8,7 @@ using UStacker.Gameplay.Stats;
 using UStacker.Gameplay.Timing;
 using UStacker.GameSettings;
 using UStacker.GameSettings.Enums;
+using UStacker.GlobalSettings;
 
 namespace UStacker.Gameplay
 {
@@ -187,6 +188,22 @@ namespace UStacker.Gameplay
         {
             _mediator.Register<PiecePlacedMessage>(OnPiecePlaced);
             _mediator.Register<ScoreChangedMessage>(OnScoreChanged);
+            AppSettings.Gameplay.PauseSingleplayerGamesOutOfFocusChanged += OnPauseSettingChange;
+            OnPauseSettingChange(AppSettings.Gameplay.PauseSingleplayerGamesOutOfFocus);
+        }
+
+        private void OnPauseSettingChange(bool pauseGameOnFocusLoss)
+        {
+            if (pauseGameOnFocusLoss)
+                Application.focusChanged += OnFocusChanged;
+            else
+                Application.focusChanged -= OnFocusChanged;
+        }
+
+        private void OnFocusChanged(bool hasFocus)
+        {
+            if (!hasFocus && _gamePauseable)
+                TogglePause();
         }
 
         private void Update()

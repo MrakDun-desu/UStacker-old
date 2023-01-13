@@ -32,7 +32,7 @@ namespace UStacker.GlobalSettings.Changers
 
         private void Awake()
         {
-            foreach (var option in MusicPlayer.ListAvailableOptions())
+            foreach (var option in MusicPlayer.Instance.ListAvailableOptions())
             {
                 switch (option.OptionType)
                 {

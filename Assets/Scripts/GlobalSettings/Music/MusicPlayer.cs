@@ -7,34 +7,34 @@ using UStacker.Common.Extensions;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace UStacker.GlobalSettings.Music
 {
     [RequireComponent(typeof(AudioSource))]
     public class MusicPlayer : MonoSingleton<MusicPlayer>
     {
-        private const string MENU_STRING = "Scene_Menu";
-        private const string GAME_STRING = "Scene_Game";
-        [ContextMenuItem("Copy JSON to clipboard", nameof(CopyToClipboard))]
-        [SerializeField] private MusicConfiguration _musicConfiguration;
+        [FormerlySerializedAs("_musicConfiguration")] [ContextMenuItem("Copy JSON to clipboard", nameof(CopyToClipboard))]
+        public MusicConfiguration Configuration;
         [Range(0, 10)] [SerializeField] private float _switchInterval;
         [Range(0, 10)] [SerializeField] private float _quietenTime = 1f;
         [Range(0, 0.1f)] [SerializeField] private float _quietenInterval = .01f;
         [SerializeField] private AudioClipCollection _defaultMusic = new();
 
+        private const string MENU_STRING = "Scene_Menu";
+        private const string GAME_STRING = "Scene_Game";
+        
         private AudioSource _audioSource;
         private string _currentSceneType = MENU_STRING;
         private float _nextSongStartTime;
         private float _timeUntilQuiet;
 
-        public static MusicConfiguration Configuration { get; private set; }
         public static MusicPlayer Instance => _instance;
 
         protected override void Awake()
         {
             base.Awake();
             _audioSource = GetComponent<AudioSource>();
-            Configuration = _musicConfiguration;
             Configuration.SetDefaultMusic(_defaultMusic.Select(entry => entry.Key).ToList());
         }
 
@@ -49,11 +49,11 @@ namespace UStacker.GlobalSettings.Music
 
         private void CopyToClipboard()
         {
-            var output = JsonConvert.SerializeObject(_musicConfiguration, StaticSettings.DefaultSerializerSettings);
+            var output = JsonConvert.SerializeObject(Configuration, StaticSettings.DefaultSerializerSettings);
             GUIUtility.systemCopyBuffer = output;
         }
 
-        public static List<MusicOption> ListAvailableOptions()
+        public List<MusicOption> ListAvailableOptions()
         {
             var outList =
                 Configuration.GameMusicGroups.Keys.Select(groupName => new MusicOption(OptionType.Group, groupName)).ToList();

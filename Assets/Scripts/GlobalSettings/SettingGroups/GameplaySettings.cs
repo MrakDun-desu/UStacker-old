@@ -12,6 +12,8 @@ namespace UStacker.GlobalSettings.Groups
         private float _ghostPieceVisibility = .5f;
         private float _gridVisibility = .6f;
         private float _warningPieceTreshhold = 2f;
+        private bool _pauseSingleplayerGamesOutOfFocus = true;
+        public event Action<bool> PauseSingleplayerGamesOutOfFocusChanged;
 
 
         public float BoardVisibility
@@ -43,14 +45,22 @@ namespace UStacker.GlobalSettings.Groups
             set => _warningPieceTreshhold = Mathf.Clamp(value, -4f, 10f);
         }
 
-        public bool CtrlScrollToChangeBoardZoom { get; set; }
+        public bool PauseSingleplayerGamesOutOfFocus
+        {
+            get => _pauseSingleplayerGamesOutOfFocus;
+            set
+            {
+                if (_pauseSingleplayerGamesOutOfFocus == value) return;
+                _pauseSingleplayerGamesOutOfFocus = value;
+                PauseSingleplayerGamesOutOfFocusChanged?.Invoke(value);
+            }
+        }
 
-        // Not yet implemented
-        public bool ScrollToChangeVolume { get; set; } = true;
+        public bool CtrlScrollToChangeBoardZoom { get; set; }
 
         public bool DragMiddleButtonToRepositionBoard { get; set; }
 
-        public bool ColorGhostPiece { get; set; }
+        public bool ColorGhostPiece { get; set; } = true;
 
         public bool ShowNotFocusedWarning { get; set; } = true;
 
