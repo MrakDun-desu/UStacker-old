@@ -4,6 +4,7 @@ using UStacker.Common.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UStacker.Common.Extensions;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -61,8 +62,7 @@ namespace UStacker.GlobalSettings.Changers
         {
             if (string.IsNullOrEmpty(value)) value = "0";
 
-            value = value.Replace('.', ',');
-            var isValid = double.TryParse(value, out var newValue);
+            var isValid = value.TryParseDouble(out var newValue);
 
             if (!isValid)
             {

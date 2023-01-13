@@ -24,6 +24,23 @@ namespace UStacker.Common.Extensions
             return output.ToString();
         }
 
+        public static bool TryParseDouble(this string input, out double output)
+        {
+            switch (input.ToLower())
+            {
+                case "inf":
+                case "+inf":
+                    output = double.PositiveInfinity;
+                    return true;
+                case "-inf":
+                    output = double.NegativeInfinity;
+                    return true;
+                default:
+                    var parsedStr = input.Replace(',', '.');
+                    return double.TryParse(parsedStr, NumberStyles.Float, CultureInfo.InvariantCulture, out output);
+            }
+        }
+
         public static string RemoveDiacritics(this string input)
         {
             var normalized = input.Normalize(NormalizationForm.FormKD);

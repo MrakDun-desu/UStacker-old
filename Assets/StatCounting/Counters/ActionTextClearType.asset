@@ -16,18 +16,20 @@ MonoBehaviour:
     Name: Clear type action text
     Type: 0
     Filename: 
-    Script: "PieceTypes = {\n\t[\"t\"] = \"T\",\n\t[\"i\"] = \"I\",\n\t[\"o\"]
-      = \"O\",\n\t[\"s\"] = \"S\",\n\t[\"z\"] = \"Z\",\n\t[\"l\"] = \"L\",\n\t[\"j\"]
+    Script: "PieceTypes = {\n\t[\"t\"] = \"T\",\n\t[\"i\"] = \"I\",\n\t[\"o\"] =
+      \"O\",\n\t[\"s\"] = \"S\",\n\t[\"z\"] = \"Z\",\n\t[\"l\"] = \"L\",\n\t[\"j\"]
       = \"J\"\n}\n\nClearCounts = {\n\t\"Single\",\n\t\"Double\",\n\t\"Triple\",\n\t\"Quad\",\n\t\"Quint\",\n\t\"Hexad\",\n\t\"Heptad\",\n\t\"Octad\",\n\t\"Nonad\",\n\t\"Decad\"\n}\n\nfunction
-      OnPiecePlaced(message)\n\tif message.LinesCleared == 0 then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
-      2)\n\tlocal output = \"\"\n\t\n\tif message.WasSpin or message.WasSpinMini
-      then\n\t\toutput = PieceTypes[message.PieceType]\n\tend\n\tif output == nil then output = \"\" end\n\tif message.WasSpin
-      then\n\t\toutput = output .. \" Spin \"\n\telseif message.WasSpinMini then\n\t\toutput
-      = output .. \" Spin Mini \"\n\tend\n\n\tif message.LinesCleared <= #ClearCounts
-      then\n\t\treturn output .. ClearCounts[message.LinesCleared]\n\telse\n\t\tlocal
+      OnPiecePlaced(message)\n\tlocal output = \"\"\n\t\n\tif message.WasSpin or
+      message.WasSpinMini then\n\t\toutput = PieceTypes[message.PieceType]\n\tend\n\tif
+      output == nil then output = \"\" end\n\tif message.WasSpin then\n\t\toutput
+      = output .. \" Spin \"\n\telseif message.WasSpinMini then\n\t\toutput = output
+      .. \" Spin Mini \"\n\tend\n\n\tif message.LinesCleared <= 0 then\n\t\tif output
+      == \"\" then\n\t\t\treturn\n\t\tend\n\t\tSetVisibility(1)\n\t\tAnimateVisibility(0,
+      2)\n\t\treturn output\n\tend\n\n\tSetVisibility(1)\n\tAnimateVisibility(0,
+      2)\n\tif message.LinesCleared <= #ClearCounts then\n\t\treturn output .. ClearCounts[message.LinesCleared]\n\telse\n\t\tlocal
       overflow = message.LinesCleared - #ClearCounts\n\t\treturn output .. ClearCounts[#ClearCounts]
-      .. overflow\n\tend\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
-      {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
+      .. overflow\n\tend\nend\nSetVisibility(0)\nSetText(\"\")\nreturn {\n\t[\"PiecePlaced\"]
+      = OnPiecePlaced\n}"
     Position: {x: -10, y: 14}
     Size: {x: 9, y: 2}
     UpdateInterval: 0

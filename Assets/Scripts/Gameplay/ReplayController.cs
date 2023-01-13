@@ -57,8 +57,7 @@ namespace UStacker.Gameplay
 
         private void OnSpeedChanged(string timeScaleStr)
         {
-            var timeScaleRepl = timeScaleStr.Replace('.', ',');
-            if (!double.TryParse(timeScaleRepl, out var newTimeScale))
+            if (!timeScaleStr.TryParseDouble(out var newTimeScale))
             {
                 _timeScaleField.text = _timer.TimeScale.ToString(CultureInfo.InvariantCulture);
                 return;
