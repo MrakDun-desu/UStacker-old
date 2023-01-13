@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UStacker.Common;
 using UStacker.GlobalSettings.Backgrounds;
@@ -21,6 +22,13 @@ namespace UStacker.GlobalSettings.Changers
             _dropdown.onValueChanged.AddListener(OnOptionPicked);
             _folderButton.onClick.AddListener(OpenBackgroundFolder);
             _docsButton.onClick.AddListener(OpenDocumentation);
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (!hasFocus) return;
+            
+            RefreshNames();
         }
 
         private void OnOptionPicked(int value)
@@ -56,11 +64,11 @@ namespace UStacker.GlobalSettings.Changers
 
         private void OpenDocumentation()
         {
-            const string backgroundDocsUrl = StaticSettings.WikiUrl + "blob/main/Background-customization.md";
+            const string backgroundDocsUrl = StaticSettings.WikiUrl + "blob/main/Style customization/Background-customization.md";
             Application.OpenURL(backgroundDocsUrl);
         }
 
-        public void RefreshNames()
+        private void RefreshNames()
         {
             _dropdown.ClearOptions();
             _dropdown.SetValueWithoutNotify(0);

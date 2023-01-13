@@ -22,6 +22,13 @@ namespace UStacker.GlobalSettings.Changers
             _folderButton.onClick.AddListener(OpenSoundFolder);
             _docsButton.onClick.AddListener(OpenDocumentation);
         }
+        
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (!hasFocus) return;
+            
+            RefreshNames();
+        }
 
         private void RefreshValue()
         {
@@ -60,11 +67,11 @@ namespace UStacker.GlobalSettings.Changers
 
         private void OpenDocumentation()
         {
-            const string backgroundDocsUrl = StaticSettings.WikiUrl + "blob/main/Sound-customization.md";
+            const string backgroundDocsUrl = StaticSettings.WikiUrl + "blob/main/Style customization/Sound-customization.md";
             Application.OpenURL(backgroundDocsUrl);
         }
 
-        public void RefreshNames()
+        private void RefreshNames()
         {
             _dropdown.ClearOptions();
             _dropdown.SetValueWithoutNotify(0);

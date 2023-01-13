@@ -22,6 +22,13 @@ namespace UStacker.GlobalSettings.Changers
             _folderButton.onClick.AddListener(OpenSkinFolder);
             _docsButton.onClick.AddListener(OpenDocumentation);
         }
+        
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (!hasFocus) return;
+            
+            RefreshNames();
+        }
 
         private void OptionPicked(int value)
         {
@@ -56,11 +63,11 @@ namespace UStacker.GlobalSettings.Changers
 
         private void OpenDocumentation()
         {
-            const string skinDocsUrl = StaticSettings.WikiUrl + "blob/main/Skin-customization.md";
+            const string skinDocsUrl = StaticSettings.WikiUrl + "blob/main/Style customization/Skin-customization.md";
             Application.OpenURL(skinDocsUrl);
         }
 
-        public void RefreshNames()
+        private void RefreshNames()
         {
             _dropdown.ClearOptions();
             _dropdown.SetValueWithoutNotify(0);
