@@ -128,7 +128,7 @@ namespace UStacker.Gameplay.GameManagers
 
         public void AddScore(object score)
         {
-            _mediator.Send(new ScoreChangedMessage(Convert.ToInt64(score), _currentMessageTime ?? _timer.CurrentTime));
+            _mediator.Send(new ScoreAddedMessage(Convert.ToInt64(score), _currentMessageTime ?? _timer.CurrentTime));
         }
 
         public void ResetScore()

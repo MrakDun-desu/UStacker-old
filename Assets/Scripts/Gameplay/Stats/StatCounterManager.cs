@@ -31,6 +31,7 @@ namespace UStacker.Gameplay.Stats
             _mediator.Register<PiecePlacedMessage>(OnPiecePlaced, true);
             _mediator.Register<GameStartedMessage>(ResetStats, true);
             _mediator.Register<GameRestartedMessage>(ResetStats, true);
+            _mediator.Register<ScoreAddedMessage>(OnScoreAdded);
             _mediator.Register<ScoreChangedMessage>(OnScoreChanged, true);
             _mediator.Register<LevelChangedMessage>(OnLevelChanged, true);
             CreateStatCounters();
@@ -56,6 +57,7 @@ namespace UStacker.Gameplay.Stats
             _mediator.Unregister<GameStartedMessage>(ResetStats);
             _mediator.Unregister<GameRestartedMessage>(ResetStats);
             _mediator.Unregister<ScoreChangedMessage>(OnScoreChanged);
+            _mediator.Unregister<ScoreAddedMessage>(OnScoreAdded);
             _mediator.Unregister<LevelChangedMessage>(OnLevelChanged);
         }
 
@@ -176,6 +178,11 @@ namespace UStacker.Gameplay.Stats
         private void OnScoreChanged(ScoreChangedMessage message)
         {
             _stats.Score = message.Score;
+        }
+
+        private void OnScoreAdded(ScoreAddedMessage message)
+        {
+            _stats.Score += message.ScoreAddition;
         }
 
         private void OnLevelChanged(LevelChangedMessage message)
