@@ -78,6 +78,24 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "MoveToLeftWall",
+                    "type": "Button",
+                    "id": "2a6d3789-537d-4404-b2ce-b83d1b01ce43",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MoveToRightWall",
+                    "type": "Button",
+                    "id": "922924dd-5899-47b4-b670-42751bb58539",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "PauseGame",
                     "type": "Button",
                     "id": "d8c109b9-0f17-4707-a816-61a7c7434e1c",
@@ -424,6 +442,72 @@
                     "processors": "",
                     "groups": "",
                     "action": "RetryGame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d597d064-b6b1-4a13-a18c-b95b1b27c983",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveToLeftWall",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c792b43f-50a4-4bdf-bf19-236c08579c44",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveToLeftWall",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ff6ff8ca-ed75-443f-afb4-b2981ef81850",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveToLeftWall",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "87a6ae38-d3a0-421b-b4d5-4f1c26c9c08c",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveToRightWall",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ea751ac2-750e-4254-9977-bca92f14b664",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveToRightWall",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b72bb7c7-acf5-45de-b71b-d63d6507a7ba",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveToRightWall",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

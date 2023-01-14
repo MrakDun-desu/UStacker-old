@@ -33,8 +33,10 @@ namespace UStacker.Common.UI
             var current = _activeEventSystem.currentSelectedGameObject;
 
             if (current == null) return;
+            var currentTransform = (RectTransform) current.transform;
+            if (!currentTransform.IsChildOf(_scrollRect.content)) return;
 
-            _scrollRect.ScrollTo((RectTransform) current.transform, _minimalMovement, false);
+            _scrollRect.ScrollTo(currentTransform, _minimalMovement, false);
         }
 
         public void ScrollLeft(float amount)

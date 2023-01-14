@@ -9,6 +9,8 @@
         Softdrop,
         RotateCW,
         RotateCCW,
-        Rotate180
+        Rotate180,
+        MoveToLeftWall,
+        MoveToRightWall
     }
 }

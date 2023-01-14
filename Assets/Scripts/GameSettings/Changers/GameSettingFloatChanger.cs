@@ -5,16 +5,6 @@ namespace UStacker.GameSettings.Changers
 {
     public class GameSettingFloatChanger : GameSettingChangerWithField<float>
     {
-        [Space]
-        [SerializeField] private float _maxValue;
-        [SerializeField] private float _minValue;
-
-        protected override void OnValidate()
-        {
-            base.OnValidate();
-            if (_minValue > _maxValue) _minValue = _maxValue;
-        }
-
         protected override void RefreshValue()
         {
             _valueField.SetTextWithoutNotify(_gameSettingsSO.GetValue<float>(_controlPath).ToString(CultureInfo.InvariantCulture));

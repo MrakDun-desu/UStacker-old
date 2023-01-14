@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace UStacker.GameSettings.Changers
 {
     public class GameSettingIntChanger : GameSettingChangerWithField<int>

@@ -255,7 +255,7 @@ namespace UStacker.Gameplay
         {
             _normalGravity = message.Gravity;
 
-            var usedGravity = _normalGravity <= 0 ? _handling.SoftDropZeroGravityReplacement : _normalGravity;
+            var usedGravity = _normalGravity <= 0 ? _handling.ZeroGravitySoftDropBase : _normalGravity;
             _currentGravity = _softDropActive ? usedGravity * _handling.SoftDropFactor : _normalGravity;
 
             _dropTime = ComputeDroptimeFromGravity();
@@ -520,6 +520,14 @@ namespace UStacker.Gameplay
                     if (message.KeyActionType == KeyActionType.KeyDown)
                         RotateKeyDown(message.Time, 180, RotateDirection.OneEighty);
                     break;
+                case ActionType.MoveToLeftWall:
+                    if (message.KeyActionType == KeyActionType.KeyDown)
+                        MoveToLeftWallKeyDown(message.Time);
+                    break;
+                case ActionType.MoveToRightWall:
+                    if (message.KeyActionType == KeyActionType.KeyDown)
+                        MoveToRightWallKeyDown(message.Time);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -650,7 +658,7 @@ namespace UStacker.Gameplay
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Rotation))
             {
                 _arrTimer = actionTime + _handling.DasCutDelay;
-                if (!_handling.CancelDelayWithMovement)
+                if (!_handling.CancelDasDelayWithInput)
                     _dasDelay = _arrTimer;
             }
 
@@ -685,6 +693,28 @@ namespace UStacker.Gameplay
             _dropTimer = actionTime + _dropTime;
             _usedHold = true;
             StopLockdown(true);
+        }
+
+        private void MoveToRightWallKeyDown(double actionTime)
+        {
+            var movementVector = Vector2Int.right;
+            while (_board.CanPlace(ActivePiece, movementVector))
+                movementVector += Vector2Int.right;
+            
+            movementVector -= Vector2Int.right;
+            if (movementVector != Vector2Int.zero)
+                MovePiece(movementVector, true, actionTime);
+        }
+
+        private void MoveToLeftWallKeyDown(double actionTime)
+        {
+            var movementVector = Vector2Int.left;
+            while (_board.CanPlace(ActivePiece, movementVector))
+                movementVector += Vector2Int.left;
+            
+            movementVector -= Vector2Int.left;
+            if (movementVector != Vector2Int.zero)
+                MovePiece(movementVector, true, actionTime);
         }
 
         private void HandleKeyEvent(InputAction.CallbackContext ctx, ActionType actionType)
@@ -771,6 +801,18 @@ namespace UStacker.Gameplay
                 HandleKeyEvent(ctx, ActionType.Hold);
         }
 
+        public void OnMoveToLeftWall(InputAction.CallbackContext ctx)
+        {
+            if (_settings.Controls.AllowMoveToWall)
+                HandleKeyEvent(ctx, ActionType.MoveToLeftWall);
+        }
+
+        public void OnMoveToRightWall(InputAction.CallbackContext ctx)
+        {
+            if (_settings.Controls.AllowMoveToWall)
+                HandleKeyEvent(ctx, ActionType.MoveToRightWall);
+        }
+
         #endregion
 
         #region Update
@@ -847,6 +889,38 @@ namespace UStacker.Gameplay
 
             if (_arrTimer > time) return;
 
+            if (_handling.CheckForGravityAfterEachMovement)
+            {
+                if (_dasRightActive)
+                {
+                    while (_arrTimer < time)
+                    {
+                        if (_board.CanPlace(ActivePiece, Vector2Int.right))
+                        {
+                            MovePiece(Vector2Int.right, true, _arrTimer);
+                            HandleGravity(_arrTimer);
+                            _arrTimer += _handling.AutomaticRepeatRate;
+                        }
+                        else break;
+                    }
+                }
+
+                if (_dasLeftActive)
+                {
+                    while (_arrTimer < time)
+                    {
+                        if (_board.CanPlace(ActivePiece, Vector2Int.left))
+                        {
+                            MovePiece(Vector2Int.left, true, _arrTimer);
+                            HandleGravity(_arrTimer);
+                            _arrTimer += _handling.AutomaticRepeatRate;
+                        }
+                        else break;
+                    }
+                }
+                return;
+            }
+            
             if (_dasRightActive)
             {
                 var movementVector = Vector2Int.zero;
@@ -944,7 +1018,7 @@ namespace UStacker.Gameplay
         {
             if (_softDropActive) return;
             _softDropActive = true;
-            var usedGravity = _normalGravity <= 0 ? _handling.SoftDropZeroGravityReplacement : _normalGravity;
+            var usedGravity = _normalGravity <= 0 ? _handling.ZeroGravitySoftDropBase : _normalGravity;
             _currentGravity = usedGravity * _handling.SoftDropFactor;
             _dropTime = ComputeDroptimeFromGravity();
             _dropTimer = _softDropActivationTime + _dropTime;
@@ -1014,7 +1088,7 @@ namespace UStacker.Gameplay
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Placement))
             {
                 _arrTimer = _pieceSpawnTime + _handling.DasCutDelay;
-                if (!_handling.CancelDelayWithMovement)
+                if (!_handling.CancelDasDelayWithInput)
                     _dasDelay = _arrTimer;
             }
             else

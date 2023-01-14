@@ -24,6 +24,8 @@ namespace UStacker.GameSettings.SettingGroups
         public bool AllowHardDrop { get; set; } = true;
         [field: SerializeField]
         public bool AllowHold { get; set; } = true;
+        [field: SerializeField] 
+        public bool AllowMoveToWall { get; set; } = true;
         [field: SerializeField]
         public bool UnlimitedHold { get; set; }
         [field: SerializeField]
