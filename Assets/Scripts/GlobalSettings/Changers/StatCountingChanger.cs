@@ -29,7 +29,7 @@ namespace UStacker.GlobalSettings.Changers
 
         private void Start()
         {
-            _addGroupButton.onClick.AddListener(OnGroupAdded);
+            _addGroupButton.onClick.AddListener(AddGroup);
             RefreshGroups();
             AppSettings.SettingsReloaded += RefreshGroups;
         }
@@ -37,9 +37,7 @@ namespace UStacker.GlobalSettings.Changers
         private void RefreshGroups()
         {
             foreach (var changer in _groupChangers.Values)
-                Destroy(changer.gameObject);
-
-            _groupChangers.Clear();
+                RemoveGroup(changer.Id);
 
             _statCounterGroups = AppSettings.StatCounting.StatCounterGroups;
 
@@ -82,7 +80,7 @@ namespace UStacker.GlobalSettings.Changers
 
             _groupChangers.Add(newId, newGroupChanger);
 
-            newGroupChanger.GroupRemoved += OnGroupRemoved;
+            newGroupChanger.GroupRemoved += RemoveGroup;
             newGroupChanger.SizeChanged += OnSizeChanged;
 
             var sizeDelta = ((RectTransform) newGroupChanger.transform).sizeDelta.y;
@@ -95,21 +93,18 @@ namespace UStacker.GlobalSettings.Changers
                 _statCounterGroups.Add(newId, newGroup);
         }
 
-        private void OnGroupRemoved(Guid groupId)
+        private void RemoveGroup(Guid groupId)
         {
             if (!_groupChangers.ContainsKey(groupId)) return;
 
-            var keysToRemove = AppSettings.StatCounting.GameStatCounterDictionary.Where(pair => pair.Value == groupId).Select(pair => pair.Key).ToArray();
-            // ReSharper disable once ForCanBeConvertedToForeach
-            for (var i = 0; i < keysToRemove.Length; i++)
-            {
-                var key = keysToRemove[i];
+            var keysToRemove = AppSettings.StatCounting.GameStatCounterDictionary.Where(pair => pair.Value == groupId)
+                .Select(pair => pair.Key).ToArray();
+            foreach (var key in keysToRemove)
                 AppSettings.StatCounting.GameStatCounterDictionary.Remove(key);
-            }
 
             var removedChanger = _groupChangers[groupId];
 
-            removedChanger.GroupRemoved -= OnGroupRemoved;
+            removedChanger.GroupRemoved -= RemoveGroup;
             removedChanger.SizeChanged -= OnSizeChanged;
 
             var sizeDelta = ((RectTransform) removedChanger.transform).sizeDelta.y;
@@ -125,13 +120,14 @@ namespace UStacker.GlobalSettings.Changers
             _statCounterGroups.Remove(groupId);
         }
 
-        private void OnGroupAdded()
+        private void AddGroup()
         {
             Guid newGuid;
             do
             {
                 newGuid = Guid.NewGuid();
             } while (_statCounterGroups.ContainsKey(newGuid));
+
             AddGroup(newGuid, new StatCounterGroup(), true);
         }
     }

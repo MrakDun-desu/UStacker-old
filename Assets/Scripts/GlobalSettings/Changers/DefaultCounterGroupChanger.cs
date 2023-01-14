@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UStacker.GlobalSettings.StatCounting;
 using TMPro;
 using UnityEngine;
@@ -7,54 +6,39 @@ using UnityEngine.UI;
 
 namespace UStacker.GlobalSettings.Changers
 {
-    public class StatCounterGroupChanger : MonoBehaviour
+    public class DefaultCounterGroupChanger : MonoBehaviour
     {
-        [SerializeField] private TMP_InputField _nameField;
+        [SerializeField] private TMP_Text _nameLabel;
         [SerializeField] private Button _minimizeButton;
         [SerializeField] private TMP_Text _minimizeButtonText;
         [SerializeField] private Button _counterAddButton;
-        [SerializeField] private Button _groupRemoveButton;
         [SerializeField] private RectTransform _counterChangersContainer;
         [SerializeField] private ContentSizeFitter _containerSizeFitter;
         [SerializeField] private StatCounterChanger _counterChangerPrefab;
+        [SerializeField] private RectTransform _layoutRoot;
         [SerializeField] private float _statCounterSpacing = 10;
-        private readonly List<StatCounterChanger> _statCounterChangers = new();
 
+        private static StatCounterGroup Value => AppSettings.StatCounting.DefaultGroup;
+        private readonly List<StatCounterChanger> _statCounterChangers = new();
         private float _formerHeight;
         private bool _isMinimized;
         private RectTransform _selfTransform;
-
-        private StatCounterGroup _value;
-
-        public StatCounterGroup Value
-        {
-            get => _value;
-            set
-            {
-                _value = value;
-                _nameField.SetTextWithoutNotify(value.Name);
-                RefreshStatCounters();
-            }
-        }
-
-        public Guid Id { get; set; }
+        private RectTransform _parentTransform;
         
-        public event Action<Guid> GroupRemoved;
-        public event Action<float> SizeChanged;
-
         private void Awake()
         {
-            _selfTransform = transform as RectTransform;
-            SizeChanged += ChangeHeight;
-            _nameField.SetTextWithoutNotify("Group name");
+            var myTransform = transform;
+            _selfTransform = myTransform as RectTransform;
+            _parentTransform = myTransform.parent as RectTransform;
+            _nameLabel.text = AppSettings.StatCounting.DefaultGroup.Name;
+            AppSettings.SettingsReloaded += RefreshStatCounters;
         }
 
         private void Start()
         {
-            _nameField.onValueChanged.AddListener(OnNameChanged);
             _minimizeButton.onClick.AddListener(OnMinimize);
-            _groupRemoveButton.onClick.AddListener(() => GroupRemoved?.Invoke(Id));
             _counterAddButton.onClick.AddListener(OnStatCounterAdded);
+            RefreshStatCounters();
         }
 
         private void ChangeHeight(float sizeDelta)
@@ -65,6 +49,13 @@ namespace UStacker.GlobalSettings.Changers
                 selfSizeDelta.y + sizeDelta
             );
             _selfTransform.sizeDelta = selfSizeDelta;
+            
+            var parentSizeDelta = _parentTransform.sizeDelta;
+            parentSizeDelta = new Vector2(
+                parentSizeDelta.x,
+                parentSizeDelta.y + sizeDelta
+            );
+            _parentTransform.sizeDelta = parentSizeDelta;
 
             var counterChangersPos = _counterChangersContainer.anchoredPosition;
             counterChangersPos = new Vector2(
@@ -72,6 +63,8 @@ namespace UStacker.GlobalSettings.Changers
                 counterChangersPos.y - sizeDelta / 2f
             );
             _counterChangersContainer.anchoredPosition = counterChangersPos;
+            
+            LayoutRebuilder.MarkLayoutForRebuild(_layoutRoot);
         }
 
         private void RefreshStatCounters()
@@ -81,8 +74,6 @@ namespace UStacker.GlobalSettings.Changers
                 counterChanger.Removed -= DeleteStatCounter;
                 DeleteStatCounter(counterChanger);
             }
-
-            _statCounterChangers.Clear();
 
             foreach (var counter in Value.StatCounters)
                 AddStatCounter(counter);
@@ -111,12 +102,7 @@ namespace UStacker.GlobalSettings.Changers
             _counterChangersContainer.gameObject.SetActive(_isMinimized);
             _isMinimized = !_isMinimized;
             _minimizeButtonText.text = _isMinimized ? "+" : "-";
-            SizeChanged?.Invoke(_formerHeight * (_isMinimized ? -1 : 1));
-        }
-
-        private void OnNameChanged(string newValue)
-        {
-            Value.Name = newValue;
+            ChangeHeight(_formerHeight * (_isMinimized ? -1 : 1));
         }
 
         private void AddStatCounter(StatCounterRecord newCounter, bool addToValue = false)
@@ -128,12 +114,12 @@ namespace UStacker.GlobalSettings.Changers
             _statCounterChangers.Add(newCounterChanger);
 
             var addedSize = ((RectTransform) newCounterChanger.transform).sizeDelta.y;
-            newCounterChanger.SizeChanged += SizeChanged;
+            newCounterChanger.SizeChanged += ChangeHeight;
 
             if (_statCounterChangers.Count >= 2)
                 addedSize += _statCounterSpacing;
 
-            SizeChanged?.Invoke(addedSize);
+            ChangeHeight(addedSize);
 
             if (addToValue)
                 Value.StatCounters.Add(newCounter);
@@ -147,7 +133,7 @@ namespace UStacker.GlobalSettings.Changers
             if (_statCounterChangers.Count > 0)
                 reducedSize += _statCounterSpacing;
 
-            SizeChanged?.Invoke(-reducedSize);
+            ChangeHeight(-reducedSize);
 
             Destroy(changer.gameObject);
             changer.Removed -= DeleteStatCounter;

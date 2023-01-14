@@ -61,15 +61,22 @@ namespace UStacker.GlobalSettings.Changers
                 if (key == ChangedGroupId)
                     _dropdown.SetValueWithoutNotify(i);
             }
+            
+            _dropdown.options.Add(new TMP_Dropdown.OptionData("Default"));
+            if (ChangedGroupId == Guid.Empty)
+                _dropdown.SetValueWithoutNotify(_dropdown.options.Count - 1);
 
             _dropdown.RefreshShownValue();
         }
 
         private void OnDropdownPicked(int pickedIndex)
         {
-            ChangedGroupId = _availableGroups[pickedIndex].Key;
+            if (pickedIndex >= _availableGroups.Count)
+                AppSettings.StatCounting.GameStatCounterDictionary.Remove(_gameType);
+            else
+                ChangedGroupId = _availableGroups[pickedIndex].Key;
+            
             InvokeSettingChanged();
-            AppSettings.TrySave();
         }
     }
 }

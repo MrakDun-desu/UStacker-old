@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.Serialization;
 using UStacker.Common.Extensions;
+using UStacker.GameSettings.Enums;
 
 namespace UStacker.Gameplay
 {
@@ -90,6 +91,7 @@ namespace UStacker.Gameplay
             
             var rotationSystem = _settings.Controls.ActiveRotationSystem;
             var rotation = rotationSystem.GetKickTable(piece.Type).StartState;
+            piece.RotationState = rotation;
             piece.Rotate((int) rotation);
 
             _inputProcessor.ExecuteBufferedActions(spawnTime, out var cancelSpawn);
