@@ -23,11 +23,11 @@ namespace UStacker.GameSettings.SettingGroups
         [field: SerializeField]
         public bool UseCustomSeed { get; set; }
         [field: SerializeField]
-        public int CustomSeed { get; set; }
+        public ulong CustomSeed { get; set; }
         [field: SerializeField]
         public string CustomRandomizerScript { get; set; } = "";
         [field: SerializeField]
-        public int ActiveSeed { get; set; }
+        public ulong ActiveSeed { get; set; }
 
         public RandomizerType RandomizerType
         {

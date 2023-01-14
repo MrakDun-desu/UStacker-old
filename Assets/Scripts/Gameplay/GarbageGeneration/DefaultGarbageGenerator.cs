@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UStacker.Common;
 using UStacker.Gameplay.Communication;
 
 namespace UStacker.Gameplay.GarbageGeneration
@@ -10,10 +10,11 @@ namespace UStacker.Gameplay.GarbageGeneration
         private readonly List<int> _holeSizes = new();
         private int _lastHole = -1;
         private int _linesLeft;
-        private Random _random;
+        private readonly Random _random;
 
         public DefaultGarbageGenerator(GarbageBoardInterface boardInterface, GameSettings.Enums.GarbageGeneration garbageGeneration)
         {
+            _random = new Random();
             if (garbageGeneration.HasFlag(GameSettings.Enums.GarbageGeneration.Singles))
                 _holeSizes.Add(1);
             if (garbageGeneration.HasFlag(GameSettings.Enums.GarbageGeneration.Doubles))
@@ -26,9 +27,9 @@ namespace UStacker.Gameplay.GarbageGeneration
             _boardInterface = boardInterface;
         }
 
-        public void ResetState(int seed)
+        public void ResetState(ulong seed)
         {
-            _random = new Random(seed);
+            _random.State = seed;
             _lastHole = -1;
             _linesLeft = 0;
         }
@@ -52,13 +53,13 @@ namespace UStacker.Gameplay.GarbageGeneration
                         newGarbageLayer = new List<List<bool>>();
                     }
 
-                    _linesLeft = _holeSizes[_random.Next(_holeSizes.Count)];
+                    _linesLeft = _holeSizes[_random.NextInt(_holeSizes.Count)];
 
                     int newHole;
                     if (_lastHole == -1)
-                        newHole = _random.Next((int) _boardInterface.Width);
+                        newHole = _random.NextInt((int) _boardInterface.Width);
                     else
-                        newHole = (_lastHole + _random.Next((int) _boardInterface.Width - 1) + 1) % (int) _boardInterface.Width;
+                        newHole = (_lastHole + _random.NextInt((int) _boardInterface.Width - 1) + 1) % (int) _boardInterface.Width;
 
                     _lastHole = newHole;
                     addToLast = false;

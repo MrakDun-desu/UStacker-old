@@ -4,7 +4,7 @@ namespace UStacker.Gameplay.GarbageGeneration
 {
     public interface IGarbageGenerator
     {
-        void ResetState(int seed);
+        void ResetState(ulong seed);
 
         void GenerateGarbage(uint amount, PiecePlacedMessage message = null);
     }

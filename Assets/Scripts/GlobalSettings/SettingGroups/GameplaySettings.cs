@@ -64,7 +64,7 @@ namespace UStacker.GlobalSettings.Groups
 
         public bool ShowNotFocusedWarning { get; set; } = true;
 
-        public string ReplayNamingFormat { get; set; } = "BSReplay_{GameType}_{Timestamp}";
+        public string ReplayNamingFormat { get; set; } = "BSReplay_{GameType}_{MainStat}_{Timestamp}";
 
         // not shown in the game menu
         public Vector2 BoardOffset { get; set; }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace UStacker.Common.Extensions
 {
@@ -11,7 +10,7 @@ namespace UStacker.Common.Extensions
             element = default;
             var list = enumerable as T[] ?? enumerable.ToArray();
             if (list.Length == 0) return false;
-            var index = Random.Range(0, list.Length);
+            var index = UnityEngine.Random.Range(0, list.Length);
             element = list[index];
             return true;
         }

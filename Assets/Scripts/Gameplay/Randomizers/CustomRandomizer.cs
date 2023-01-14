@@ -20,18 +20,19 @@ namespace UStacker.Gameplay.Randomizers
             "z"
         };
 
-        private readonly Lua _luaState = CreateLua.WithAllPrerequisites();
+        private readonly Lua _luaState;
         private LuaFunction _nextPieceFunction;
         private LuaFunction _resetFunction;
+        private readonly Random _random;
 
-        public CustomRandomizer(IEnumerable<string> availablePieces, string script, int seed,
-            out string validationErrors)
+        public CustomRandomizer(IEnumerable<string> availablePieces, string script, out string validationErrors)
         {
+            _luaState = CreateLua.WithAllPrerequisites(out _random);
             _availableValues = _availableValues.Filter(availablePieces);
             validationErrors = ValidateScript(script);
             if (validationErrors is not null) return;
 
-            _luaState = CreateLua.WithAllPrerequisites();
+            _luaState = CreateLua.WithAllPrerequisites(out _random);
             InsertAvailableValuesIntoLua();
             var scriptOutput = _luaState.DoString(script);
             _nextPieceFunction = scriptOutput[0] as LuaFunction;
@@ -44,9 +45,7 @@ namespace UStacker.Gameplay.Randomizers
             if (_resetFunction is null)
             {
                 validationErrors = "Reset function was not returned correctly.";
-                return;
             }
-            Reset(seed);
         }
 
         public string GetNextPiece()
@@ -70,9 +69,10 @@ namespace UStacker.Gameplay.Randomizers
             }
         }
 
-        public void Reset(int newSeed)
+        public void Reset(ulong newSeed)
         {
-            _resetFunction.Call(newSeed);
+            _resetFunction.Call();
+            _random.State = newSeed;
         }
 
         private void InsertAvailableValuesIntoLua()
@@ -97,7 +97,7 @@ namespace UStacker.Gameplay.Randomizers
                     return "Error: Randomizer script doesn't return next piece function correctly";
                 if (_resetFunction is null)
                     return "Error: Randomizer script doesn't return reset function correctly";
-                _resetFunction.Call(42);
+                _resetFunction.Call();
             }
             catch (LuaException ex)
             {
@@ -113,7 +113,7 @@ namespace UStacker.Gameplay.Randomizers
 
             return _availableValues.Contains(nextPiece)
                 ? null
-                : $"Error: next piece function returns a non-existent piece type. Returned value: {result[0]}";
+                : $"Error: next piece function returns a nonexistent piece type. Returned value: {result[0]}";
         }
     }
 }

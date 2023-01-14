@@ -66,9 +66,14 @@ namespace UStacker.Gameplay.Initialization
 
         private void InitializeSeed()
         {
-            _gameSettings.General.ActiveSeed = _gameSettings.General.UseCustomSeed
-                ? _gameSettings.General.CustomSeed
-                : Random.Range(int.MinValue, int.MaxValue);
+            if (_gameSettings.General.UseCustomSeed)
+                _gameSettings.General.ActiveSeed = _gameSettings.General.CustomSeed;
+            else
+            {
+                var seed1 = (ulong) ((long) Random.Range(int.MinValue, int.MaxValue) + int.MaxValue);
+                var seed2 = (ulong) ((long) Random.Range(int.MinValue, int.MaxValue) + int.MaxValue);
+                _gameSettings.General.ActiveSeed = seed1 + (seed2 << 32);
+            }
         }
 
         private void InitializeRandomizer()
@@ -81,20 +86,17 @@ namespace UStacker.Gameplay.Initialization
 
             string validationErrors = null;
 
-            var seed = _gameSettings.General.ActiveSeed;
-
             IRandomizer randomizer = _gameSettings.General.RandomizerType switch
             {
-                RandomizerType.SevenBag => new CountPerBagRandomizer(_availablePieces.Keys, seed),
-                RandomizerType.FourteenBag => new CountPerBagRandomizer(_availablePieces.Keys, seed, 2),
-                RandomizerType.Stride => new StrideRandomizer(_availablePieces.Keys, seed),
-                RandomizerType.Random => new RandomRandomizer(_availablePieces.Keys, seed),
-                RandomizerType.Classic => new ClassicRandomizer(_availablePieces.Keys, seed),
-                RandomizerType.Pairs => new PairsRandomizer(_availablePieces.Keys, seed),
+                RandomizerType.SevenBag => new CountPerBagRandomizer(_availablePieces.Keys),
+                RandomizerType.FourteenBag => new CountPerBagRandomizer(_availablePieces.Keys, 2),
+                RandomizerType.Stride => new StrideRandomizer(_availablePieces.Keys),
+                RandomizerType.Random => new RandomRandomizer(_availablePieces.Keys),
+                RandomizerType.Classic => new ClassicRandomizer(_availablePieces.Keys),
+                RandomizerType.Pairs => new PairsRandomizer(_availablePieces.Keys),
                 RandomizerType.Custom => new CustomRandomizer(
                     _availablePieces.Keys,
                     _gameSettings.General.CustomRandomizerScript,
-                    seed,
                     out validationErrors),
                 _ => throw new IndexOutOfRangeException()
             };
@@ -107,6 +109,7 @@ namespace UStacker.Gameplay.Initialization
 
             _spawner.Randomizer = randomizer;
             _spawner.SetAvailablePieces(_availablePieces);
+            _spawner.Randomizer.Reset(_gameSettings.General.ActiveSeed);
         }
 
         private void InitializePieceContainers()

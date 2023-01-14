@@ -9,17 +9,19 @@ namespace UStacker.Gameplay.GarbageGeneration
     {
 
         private const string BOARD_VARIABLE_NAME = "Board";
-        private readonly Lua _luaState = CreateLua.WithAllPrerequisites();
+        private readonly Lua _luaState;
         private LuaFunction _generationFunction;
+        private readonly Random _random;
         private LuaFunction _resetFunction;
 
         public CustomGarbageGenerator(GarbageBoardInterface boardInterface, string script, out string validationErrors)
         {
+            _luaState = CreateLua.WithAllPrerequisites(out _random);
             validationErrors = ValidateScript(script);
             if (validationErrors != null)
                 return;
 
-            _luaState = CreateLua.WithAllPrerequisites();
+            _luaState = CreateLua.WithAllPrerequisites(out _random);
             _luaState[BOARD_VARIABLE_NAME] = boardInterface;
             var scriptOutput = _luaState.DoString(script);
             _generationFunction = scriptOutput[0] as LuaFunction;
@@ -34,14 +36,21 @@ namespace UStacker.Gameplay.GarbageGeneration
             validationErrors = "Reset function was not returned correctly.";
         }
 
-        public void ResetState(int seed)
+        public void ResetState(ulong seed)
         {
-            _resetFunction.Call(seed);
+            _resetFunction.Call();
+            _random.State = seed;
         }
 
         public void GenerateGarbage(uint amount, PiecePlacedMessage message)
         {
-            _generationFunction.Call(amount, message);
+            try
+            {
+                _generationFunction.Call(amount, message);
+            }
+            catch (LuaException)
+            {
+            }
         }
 
         private string ValidateScript(string script)
@@ -61,7 +70,7 @@ namespace UStacker.Gameplay.GarbageGeneration
                 if (_resetFunction is null)
                     return "Error: Garbage generator script doesn't return reset function correctly";
 
-                _resetFunction.Call(42);
+                _resetFunction.Call();
 
                 GenerateGarbage(5, new PiecePlacedMessage());
                 GenerateGarbage(5, null);

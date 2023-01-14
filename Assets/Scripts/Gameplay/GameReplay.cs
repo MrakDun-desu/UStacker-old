@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using UStacker.Common;
 using UStacker.Common.Alerts;
+using UStacker.Common.Extensions;
 using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Stats;
 using UStacker.GameSettings;
+using UStacker.GameSettings.Enums;
 using UStacker.GlobalSettings;
 
 namespace UStacker.Gameplay
@@ -27,9 +29,19 @@ namespace UStacker.Gameplay
 
         public void Save()
         {
+            var mainStat = GameSettings.Objective.MainStat switch
+            {
+                MainStat.Score => Stats.Score.ToString(),
+                MainStat.Time => GameLength.FormatAsTime(),
+                MainStat.LinesCleared => Stats.LinesCleared.ToString(),
+                MainStat.GarbageLinesCleared => Stats.GarbageLinesCleared.ToString(),
+                MainStat.PiecesUsed => Stats.PiecesPlaced.ToString(),
+                _ => throw new ArgumentOutOfRangeException()
+            };
             var filename = AppSettings.Gameplay.ReplayNamingFormat
                 .Replace("{GameType}", GameType)
-                .Replace("{Timestamp}", TimeStamp.ToLocalTime().ToString(CultureInfo.InvariantCulture));
+                .Replace("{Timestamp}", TimeStamp.ToLocalTime().ToString(CultureInfo.InvariantCulture))
+                .Replace("{MainStat}", mainStat);
 
             var invalidChars = new List<char>();
             invalidChars.AddRange(Path.GetInvalidPathChars());

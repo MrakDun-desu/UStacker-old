@@ -1,7 +1,7 @@
-﻿// ReSharper disable once RedundantUsingDirective
+﻿#if !UNITY_EDITOR
 using System;
-// ReSharper disable once RedundantUsingDirective
 using System.IO;
+#endif
 using NLua;
 using UnityEngine;
 
@@ -9,9 +9,13 @@ namespace UStacker.Common
 {
     public static class CreateLua
     {
-        public static Lua WithAllPrerequisites()
+        public static Lua WithAllPrerequisites(out Random random)
         {
             var output = new Lua();
+            random = new Random();
+            output.RegisterFunction("math.random", random,
+                typeof(Random).GetMethod(nameof(random.NextLua)));
+            
             output["os"] = null;
             output["io"] = null;
             output["require"] = null;

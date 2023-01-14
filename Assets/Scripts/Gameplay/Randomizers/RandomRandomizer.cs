@@ -1,4 +1,4 @@
-using System;
+using UStacker.Common;
 using System.Collections.Generic;
 using UStacker.Common.Extensions;
 
@@ -16,22 +16,22 @@ namespace UStacker.Gameplay.Randomizers
             "s",
             "z"
         };
-        private Random _random;
 
-        public RandomRandomizer(IEnumerable<string> availablePieces, int seed)
+        private readonly Random _random = new();
+
+        public RandomRandomizer(IEnumerable<string> availablePieces)
         {
             _availableValues = _availableValues.Filter(availablePieces);
-            _random = new Random(seed);
         }
 
         public string GetNextPiece()
         {
-            return _availableValues[_random.Next(0, _availableValues.Count)];
+            return _availableValues[_random.NextInt(_availableValues.Count)];
         }
 
-        public void Reset(int newSeed)
+        public void Reset(ulong newSeed)
         {
-            _random = new Random(newSeed);
+            _random.State = newSeed;
         }
     }
 }

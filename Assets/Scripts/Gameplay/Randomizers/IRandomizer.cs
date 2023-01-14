@@ -4,6 +4,6 @@ namespace UStacker.Gameplay.Randomizers
     {
         string GetNextPiece();
 
-        void Reset(int newSeed);
+        void Reset(ulong newSeed);
     }
 }

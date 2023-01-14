@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using UStacker.Common.Extensions;
+using UStacker.Common;
 
 namespace UStacker.Gameplay.Randomizers
 {
@@ -18,28 +18,26 @@ namespace UStacker.Gameplay.Randomizers
             "z"
         };
         private int _lastIndex;
-        private Random _random;
+        private readonly Random _random = new();
         private bool _shouldChange = true;
 
-        public PairsRandomizer(IEnumerable<string> availablePieces, int seed)
+        public PairsRandomizer(IEnumerable<string> availablePieces)
         {
             _availableValues = _availableValues.Filter(availablePieces);
-
-            _random = new Random(seed);
         }
 
         public string GetNextPiece()
         {
             if (_shouldChange)
-                _lastIndex = _random.Next(0, _availableValues.Count);
+                _lastIndex = _random.NextInt(_availableValues.Count);
 
             _shouldChange = !_shouldChange;
             return _availableValues[_lastIndex];
         }
 
-        public void Reset(int newSeed)
+        public void Reset(ulong newSeed)
         {
-            _random = new Random(newSeed);
+            _random.State = newSeed;
             _shouldChange = true;
         }
     }

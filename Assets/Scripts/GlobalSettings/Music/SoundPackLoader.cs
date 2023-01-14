@@ -84,7 +84,7 @@ namespace UStacker.GlobalSettings.Music
                 return;
 
             SoundEffectsScript = await File.ReadAllTextAsync(scriptPath);
-            var lua = CreateLua.WithAllPrerequisites();
+            var lua = CreateLua.WithAllPrerequisites(out _);
             try
             {
                 lua.DoString(SoundEffectsScript);

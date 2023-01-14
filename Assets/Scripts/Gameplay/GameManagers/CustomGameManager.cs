@@ -6,6 +6,7 @@ using NLua;
 using NLua.Exceptions;
 using UnityEngine;
 using UStacker.Gameplay.Timing;
+using Random = UStacker.Common.Random;
 
 namespace UStacker.Gameplay.GameManagers
 {
@@ -19,11 +20,23 @@ namespace UStacker.Gameplay.GameManagers
         private GameStateManager _stateManager;
         private double? _currentMessageTime;
         private GameTimer _timer;
+        private Random _random;
 
         public void Initialize(string startingLevel, MediatorSO mediator)
         {
             uint.TryParse(startingLevel, out _startingLevel);
             _mediator = mediator;
+            _mediator.Register<GameStartedMessage>(OnGameStarted);
+        }
+
+        private void OnDestroy()
+        {
+            _mediator.Unregister<GameStartedMessage>(OnGameStarted);
+        }
+
+        private void OnGameStarted(GameStartedMessage message)
+        {
+            _random.State = message.Seed;
         }
 
         public void CustomInitialize(GameStateManager stateManager, Board board, GameTimer timer, string script)
@@ -31,13 +44,14 @@ namespace UStacker.Gameplay.GameManagers
             _stateManager = stateManager;
             _timer = timer;
 
-            _luaState = CreateLua.WithAllPrerequisites();
+            _luaState = CreateLua.WithAllPrerequisites(out _random);
             _luaState[STARTING_LEVEL_NAME] = _startingLevel;
             _luaState[BOARD_INTERFACE_NAME] = new GameManagerBoardInterface(board);
 
             RegisterMethod(nameof(LoseGame));
             RegisterMethod(nameof(EndGame));
-            RegisterMethod(nameof(SetScore));
+            RegisterMethod(nameof(AddScore));
+            RegisterMethod(nameof(ResetScore));
             RegisterMethod(nameof(SetLevel));
             RegisterMethod(nameof(SetGravity));
             RegisterMethod(nameof(SetLockDelay));
@@ -112,9 +126,14 @@ namespace UStacker.Gameplay.GameManagers
             _stateManager.LoseGame(_currentMessageTime ?? _timer.CurrentTime);
         }
 
-        public void SetScore(object score)
+        public void AddScore(object score)
         {
             _mediator.Send(new ScoreChangedMessage(Convert.ToInt64(score), _currentMessageTime ?? _timer.CurrentTime));
+        }
+
+        public void ResetScore()
+        {
+            _mediator.Send(new ScoreChangedMessage(0, _currentMessageTime ?? _timer.CurrentTime));
         }
 
         public void SetLevel(object level)

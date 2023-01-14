@@ -43,7 +43,7 @@ namespace UStacker.Gameplay.SoundEffects
             if (string.IsNullOrEmpty(SoundPackLoader.SoundEffectsScript))
                 return false;
 
-            _luaState = CreateLua.WithAllPrerequisites();
+            _luaState = CreateLua.WithAllPrerequisites(out _);
             _luaState.RegisterFunction(nameof(Play), this, GetType().GetMethod(nameof(Play)));
             _luaState.RegisterFunction(nameof(PlayAsAnnouncer), this, GetType().GetMethod(nameof(PlayAsAnnouncer)));
             LuaTable events = null;

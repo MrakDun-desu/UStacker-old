@@ -13,6 +13,7 @@ using NLua.Exceptions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Random = UStacker.Common.Random;
 
 namespace UStacker.Gameplay.Stats
 {
@@ -44,12 +45,20 @@ namespace UStacker.Gameplay.Stats
         private StatCounterRecord _statCounter;
         private StatUtility _statUtility;
         private LuaFunction _updateFunction;
+        private Random _random;
 
         private TweenerCore<Color, Color, ColorOptions> _visibilityTween;
 
         private void Awake()
         {
             _camera = FindObjectOfType<Camera>();
+        }
+
+        private void OnDestroy()
+        {
+            _mediator.Unregister<GameStartedMessage>(OnGameStarted);
+            if (_currentlyUnderMouse == this)
+                _currentlyUnderMouse = null;
         }
 
         private void Update()
@@ -79,12 +88,10 @@ namespace UStacker.Gameplay.Stats
             _sizeHandle.gameObject.SetActive(false);
         }
 
-        private void OnDestroy()
+        private void OnGameStarted(GameStartedMessage message)
         {
-            if (_currentlyUnderMouse == this)
-                _currentlyUnderMouse = null;
+            _random.State = message.Seed;
         }
-
 
         private void RefreshStatCounter()
         {
@@ -92,7 +99,7 @@ namespace UStacker.Gameplay.Stats
                 new Vector3(_statCounter.Position.x, _statCounter.Position.y, _textContainer.localPosition.z);
             _textContainer.sizeDelta = _statCounter.Size;
 
-            _luaState = CreateLua.WithAllPrerequisites();
+            _luaState = CreateLua.WithAllPrerequisites(out _random);
             _luaState[UTILITY_NAME] = _statUtility;
             _luaState[STAT_CONTAINER_NAME] = _statContainer;
             _luaState[BOARD_INTERFACE_NAME] = _boardInterface;
@@ -236,6 +243,7 @@ namespace UStacker.Gameplay.Stats
             _statContainer = statContainer;
             _statCounter = statCounter;
             _statUtility = statUtility;
+            _mediator.Register<GameStartedMessage>(OnGameStarted);
             RefreshStatCounter();
         }
 

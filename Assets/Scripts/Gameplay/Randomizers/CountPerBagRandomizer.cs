@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using UStacker.Common;
 using UStacker.Common.Extensions;
 
 namespace UStacker.Gameplay.Randomizers
@@ -19,13 +19,11 @@ namespace UStacker.Gameplay.Randomizers
 
         private readonly int _count;
         private readonly List<string> _currentValues = new();
-        private Random _random;
+        private readonly Random _random = new();
 
-        public CountPerBagRandomizer(IEnumerable<string> availablePieces, int seed, int count = 1)
+        public CountPerBagRandomizer(IEnumerable<string> availablePieces, int count = 1)
         {
             _availableValues = _availableValues.Filter(availablePieces);
-
-            _random = new Random(seed);
             _count = count;
             InitializeCurrentPieces();
         }
@@ -33,15 +31,15 @@ namespace UStacker.Gameplay.Randomizers
         public string GetNextPiece()
         {
             if (_currentValues.Count == 0) InitializeCurrentPieces();
-            var nextIndex = _random.Next(0, _currentValues.Count);
+            var nextIndex = _random.NextInt(_currentValues.Count);
             var nextValue = _currentValues[nextIndex];
             _currentValues.RemoveAt(nextIndex);
             return nextValue;
         }
 
-        public void Reset(int newSeed)
+        public void Reset(ulong newSeed)
         {
-            _random = new Random(newSeed);
+            _random.State = newSeed;
             _currentValues.Clear();
             InitializeCurrentPieces();
         }
