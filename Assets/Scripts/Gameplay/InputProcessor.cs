@@ -18,8 +18,6 @@ namespace UStacker.Gameplay
 {
     public class InputProcessor : MonoBehaviour, IGameSettingsDependency
     {
-        private const double ZERO_GRAVITY_REPLACEMENT = .02d;
-
         [Header("Dependencies")] [SerializeField]
         private Board _board;
 
@@ -67,6 +65,8 @@ namespace UStacker.Gameplay
         private double _holdingRightStart = double.PositiveInfinity;
         private double _holdingRightTimer;
         private bool _holdingSoftDrop;
+        private bool _softDropActive;
+        private double _softDropActivationTime = double.PositiveInfinity;
         private bool _isReplaying;
         private SpinResult _lastSpinResult;
 
@@ -255,8 +255,8 @@ namespace UStacker.Gameplay
         {
             _normalGravity = message.Gravity;
 
-            var usedGravity = _normalGravity <= 0 ? ZERO_GRAVITY_REPLACEMENT : _normalGravity;
-            _currentGravity = _holdingSoftDrop ? usedGravity * _handling.SoftDropFactor : _normalGravity;
+            var usedGravity = _normalGravity <= 0 ? _handling.SoftDropZeroGravityReplacement : _normalGravity;
+            _currentGravity = _softDropActive ? usedGravity * _handling.SoftDropFactor : _normalGravity;
 
             _dropTime = ComputeDroptimeFromGravity();
             _dropTimer = message.Time + _dropTime;
@@ -289,6 +289,8 @@ namespace UStacker.Gameplay
             _holdingRight = false;
             _holdingLeftStart = double.PositiveInfinity;
             _holdingRightStart = double.PositiveInfinity;
+            _softDropActivationTime = double.PositiveInfinity;
+            _softDropActive = false;
             _holdingLeftTimer = 0;
             _holdingRightTimer = 0;
             _dasLeftTimer = 0;
@@ -360,7 +362,7 @@ namespace UStacker.Gameplay
 
             if (sendMessage)
             {
-                var wasSoftDrop = !wasHardDrop && _holdingSoftDrop;
+                var wasSoftDrop = !wasHardDrop && _softDropActive;
 
                 var hitWall = moveVector.x != 0 && (!_board.CanPlace(ActivePiece, Vector2Int.left) ||
                                                     !_board.CanPlace(ActivePiece, Vector2Int.right));
@@ -560,6 +562,9 @@ namespace UStacker.Gameplay
 
         private void MoveRightKeyDown(double actionTime)
         {
+            if (_handling.DiagonalLockBehavior == DiagonalLockBehavior.PrioritizeVertical && _holdingSoftDrop)
+                return;
+
             _holdingRightStart = actionTime;
             _dasRightStart = actionTime;
             if (_handling.SimultaneousDasBehavior != SimultaneousDasBehavior.DontCancel)
@@ -577,6 +582,8 @@ namespace UStacker.Gameplay
         private void SoftDropKeyUp(double actionTime)
         {
             _holdingSoftDrop = false;
+            _softDropActivationTime = double.PositiveInfinity;
+            _softDropActive = false;
             _currentGravity = _normalGravity;
 
             _dropTime = ComputeDroptimeFromGravity();
@@ -591,12 +598,8 @@ namespace UStacker.Gameplay
                 (_holdingLeftStart < actionTime ||
                  _holdingRightStart < actionTime)) return;
 
-            var usedGravity = _normalGravity <= 0 ? ZERO_GRAVITY_REPLACEMENT : _normalGravity;
-            _currentGravity = _holdingSoftDrop ? usedGravity * _handling.SoftDropFactor : _normalGravity;
-
-            _dropTime = ComputeDroptimeFromGravity();
+            _softDropActivationTime = actionTime + _handling.SoftDropDelay;
             _dropTimer = actionTime;
-            Update(actionTime, false);
         }
 
         private void HardDropKeyDown(double actionTime)
@@ -887,6 +890,9 @@ namespace UStacker.Gameplay
             var movementVector = Vector2Int.zero;
             var lockdownStartedNow = false;
 
+            if (_softDropActivationTime < _dropTimer)
+                ActivateSoftdrop();
+                    
             while (_dropTimer <= time) // piece wants to drop
             {
                 if (_isLocking) break;
@@ -895,6 +901,9 @@ namespace UStacker.Gameplay
                 {
                     _dropTimer += _dropTime;
                     movementVector += Vector2Int.down; // piece drops one block down
+                    if (_softDropActivationTime < _dropTimer)
+                        ActivateSoftdrop();
+                    
                     if (_settings.Gravity.LockDelayType != LockDelayType.OnTouchGround ||
                         _board.CanPlace(ActivePiece, movementVector + Vector2Int.down))
                         continue;
@@ -929,6 +938,16 @@ namespace UStacker.Gameplay
             else if (_settings.Gravity.HardLockType == HardLockType.LimitedTime
                      && _hardLockAmount <= time)
                 HandlePiecePlacement(_hardLockAmount);
+        }
+
+        private void ActivateSoftdrop()
+        {
+            if (_softDropActive) return;
+            _softDropActive = true;
+            var usedGravity = _normalGravity <= 0 ? _handling.SoftDropZeroGravityReplacement : _normalGravity;
+            _currentGravity = usedGravity * _handling.SoftDropFactor;
+            _dropTime = ComputeDroptimeFromGravity();
+            _dropTimer = _softDropActivationTime + _dropTime;
         }
 
         private void HandlePieceLockdownAnimation(double functionStartTime)

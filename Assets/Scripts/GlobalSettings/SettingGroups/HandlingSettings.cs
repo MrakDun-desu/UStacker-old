@@ -18,6 +18,10 @@ namespace UStacker.GlobalSettings.Groups
         private double _dasCutDelay;
         [SerializeField]
         private double _doubleDropPreventionInterval;
+        [SerializeField]
+        private double _softDropDelay;
+        [SerializeField] 
+        private double _softDropZeroGravityReplacement = 0.02;
 
         [field: SerializeField]
         public DelayDasOn DelayDasOn { get; set; } = DelayDasOn.Nothing;
@@ -27,6 +31,8 @@ namespace UStacker.GlobalSettings.Groups
         public DiagonalLockBehavior DiagonalLockBehavior { get; set; } = DiagonalLockBehavior.DontLock;
         [field: SerializeField]
         public bool CancelDelayWithMovement { get; set; } = true;
+        [field: SerializeField]
+        public bool CheckForGravityAfterDasMovement { get; set; }
 
         public double DelayedAutoShift
         {
@@ -44,6 +50,18 @@ namespace UStacker.GlobalSettings.Groups
         {
             get => _softDropFactor;
             set => _softDropFactor = Math.Max(value, 1);
+        }
+
+        public double SoftDropDelay
+        {
+            get => _softDropDelay;
+            set => _softDropDelay = Math.Max(value, 0);
+        }
+
+        public double SoftDropZeroGravityReplacement
+        {
+            get => _softDropZeroGravityReplacement;
+            set => _softDropZeroGravityReplacement = Math.Max(value, 0.01);
         }
 
         public double DasCutDelay
