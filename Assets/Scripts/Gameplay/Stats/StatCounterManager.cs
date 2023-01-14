@@ -75,22 +75,14 @@ namespace UStacker.Gameplay.Stats
             AppSettings.StatCounting.GameStatCounterDictionary ??= new Dictionary<string, Guid>();
 
             var gameName = GameType;
-            StatCounterGroup counterGroup = null;
+            StatCounterGroup counterGroup;
             if (AppSettings.StatCounting.GameStatCounterDictionary.TryGetValue(gameName, out var groupId))
             {
                 if (!AppSettings.StatCounting.StatCounterGroups.TryGetValue(groupId, out counterGroup)) return;
             }
             else
             {
-                foreach (var (groupKey, group) in counterGroups)
-                {
-                    if (group.Name != gameName) continue;
-                    AppSettings.StatCounting.GameStatCounterDictionary[gameName] = groupKey;
-                    counterGroup = group;
-                    break;
-                }
-
-                counterGroup ??= AppSettings.StatCounting.DefaultGroup;
+                counterGroup = AppSettings.StatCounting.DefaultGroup;
             }
 
             var usedCounters = counterGroup.StatCounters.Where(counter => !string.IsNullOrEmpty(counter.Script))

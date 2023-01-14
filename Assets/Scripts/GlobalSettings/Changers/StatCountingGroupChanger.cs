@@ -43,16 +43,6 @@ namespace UStacker.GlobalSettings.Changers
                 .Select(entry => new KeyValuePair<Guid, string>(entry.Key, entry.Value.Name))
                 .ToList();
 
-            if (ChangedGroupId == Guid.Empty)
-            {
-                foreach (var (groupKey, group) in AppSettings.StatCounting.StatCounterGroups)
-                {
-                    if (group.Name != _gameType) continue;
-                    ChangedGroupId = groupKey;
-                    break;
-                }
-            }
-
             _dropdown.ClearOptions();
             for (var i = 0; i < _availableGroups.Count; i++)
             {

@@ -543,6 +543,14 @@ MonoBehaviour:
   _loaderMessagePrefab: {fileID: 5039783636459060750, guid: a84320154fb288747973e2db6fa3f5a9, type: 3}
   _loaderMessageParent: {fileID: 1132150172}
   _premadeStatCounters: {fileID: 11400000, guid: ebc412188cb305c4cada0faf2bd6c6eb, type: 2}
+  _gameTypes:
+  - {fileID: 11400000, guid: 2eac9bfd32fcf27439d78c2ced67144e, type: 2}
+  - {fileID: 11400000, guid: 9e871d44a98d84541bd957a59c36de9e, type: 2}
+  - {fileID: 11400000, guid: d5b147ab88e76c1479291959c777b01d, type: 2}
+  - {fileID: 11400000, guid: d3eb4377728da054cb82ad5ca5528be8, type: 2}
+  - {fileID: 11400000, guid: 5e0ba44ea3be3f2409d23796ae5cefd1, type: 2}
+  - {fileID: 11400000, guid: d1ef566a279ff264c88ee9c93b7c99f7, type: 2}
+  - {fileID: 11400000, guid: b7f7ff470392d2d4ba48edcd7444df3d, type: 2}
 --- !u!4 &1505477389
 Transform:
   m_ObjectHideFlags: 0

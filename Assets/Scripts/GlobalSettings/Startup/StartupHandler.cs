@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UStacker.GlobalSettings.Appliers;
 using UStacker.GlobalSettings.Changers;
 using UStacker.GlobalSettings.StatCounting;
@@ -7,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UStacker.Common;
 
 namespace UStacker.GlobalSettings.Startup
 {
@@ -16,6 +18,7 @@ namespace UStacker.GlobalSettings.Startup
         [SerializeField] private TMP_Text _loaderMessagePrefab;
         [SerializeField] private Transform _loaderMessageParent;
         [SerializeField] private PremadeStatCountersSo _premadeStatCounters;
+        [SerializeField] private StringReferenceSO[] _gameTypes = Array.Empty<StringReferenceSO>();
 
         private uint _loadersActive;
 
@@ -47,18 +50,7 @@ namespace UStacker.GlobalSettings.Startup
 #endif
             AppSettings.TryLoad();
             SettingChanged?.Invoke();
-            if (AppSettings.StatCounting.StatCounterGroups.Count <= 0 && _premadeStatCounters != null)
-            {
-                AppSettings.StatCounting.DefaultGroup = _premadeStatCounters.DefaultGroup;
-
-                foreach (var group in _premadeStatCounters.PremadeGroups)
-                {
-                    while (!AppSettings.StatCounting.StatCounterGroups.TryAdd(Guid.NewGuid(), group))
-                    {
-                    }
-                }
-            }
-
+            AddDefaultStatCounters();
             FinishStartup();
         }
 
@@ -80,6 +72,25 @@ namespace UStacker.GlobalSettings.Startup
         {
             _loadersActive--;
             FinishStartup();
+        }
+
+        private void AddDefaultStatCounters()
+        {
+            if (AppSettings.StatCounting.StatCounterGroups.Count > 0 || _premadeStatCounters == null) return;
+            AppSettings.StatCounting.DefaultGroup = _premadeStatCounters.DefaultGroup;
+
+            foreach (var group in _premadeStatCounters.PremadeGroups)
+            {
+                var groupId = Guid.NewGuid();
+                while (AppSettings.StatCounting.StatCounterGroups.ContainsKey(groupId))
+                    groupId = Guid.NewGuid();
+
+                AppSettings.StatCounting.StatCounterGroups[groupId] = group;
+
+                if (_gameTypes.Select(gameType => gameType.Value).Contains(group.Name))
+                    AppSettings.StatCounting.GameStatCounterDictionary[group.Name] = groupId;
+            }
+
         }
     }
 }
