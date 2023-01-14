@@ -33,7 +33,6 @@ namespace UStacker.Gameplay.Initialization
         [Header("Rotation systems")]
         [SerializeField]
         private RotationSystemSO _srsRotationSystemSo;
-
         [SerializeField] private RotationSystemSO _srsPlusRotationSystemSo;
 
         [Header("Others")][SerializeField] private GameCountdown _countdown;

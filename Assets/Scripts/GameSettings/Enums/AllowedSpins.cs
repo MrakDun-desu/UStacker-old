@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 namespace UStacker.GameSettings.Enums
 {
@@ -16,7 +15,6 @@ namespace UStacker.GameSettings.Enums
         ZSpins = 1 << 6,
         StupidSpinsFlag = 1 << 7,
         All = 0b0111111,
-        [Tooltip("Allows even spins that would normally not be considered")]
         Stupid = 0b1111111
     }
 }

@@ -14,7 +14,7 @@ namespace UStacker.GameSettings.SettingGroups
     {
         // backing fields
         [SerializeField]
-        private RotationSystemType _rotationSystemType = RotationSystemType.SRS;
+        private RotationSystemType _rotationSystemType = RotationSystemType.SRSPlus;
         [SerializeField]
         private string _customRotationSystem = string.Empty;
 
@@ -56,6 +56,7 @@ namespace UStacker.GameSettings.SettingGroups
         }
 
         // not shown in the settings UI
+        [field: SerializeField]
         public RotationSystem ActiveRotationSystem { get; set; }
 
         private bool TryReloadRotationSystem()

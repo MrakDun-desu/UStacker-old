@@ -22,13 +22,14 @@ MonoBehaviour:
       <UseCustomSeed>k__BackingField: 0
       <CustomSeed>k__BackingField: 0
       <CustomRandomizerScript>k__BackingField: 
-      <ActiveSeed>k__BackingField: -522902892
+      <ActiveSeed>k__BackingField: 18446744073186648724
     <Controls>k__BackingField:
-      _rotationSystemType: 1
+      _rotationSystemType: 2
       _customRotationSystem: 
       <Allow180Spins>k__BackingField: 1
       <AllowHardDrop>k__BackingField: 1
       <AllowHold>k__BackingField: 1
+      <AllowMoveToWall>k__BackingField: 1
       <UnlimitedHold>k__BackingField: 0
       <ShowGhostPiece>k__BackingField: 1
       <OverrideHandling>k__BackingField: 0
@@ -38,10 +39,41 @@ MonoBehaviour:
         _softDropFactor: Infinity
         _dasCutDelay: 0.01666666753590107
         _doubleDropPreventionInterval: 0.01666666753590107
+        _softDropDelay: 0
+        _zeroGravitySoftDropBase: 0.02
         <DelayDasOn>k__BackingField: 1
         <SimultaneousDasBehavior>k__BackingField: 2
         <DiagonalLockBehavior>k__BackingField: 0
-        <CancelDelayWithMovement>k__BackingField: 1
+        <CancelDasDelayWithInput>k__BackingField: 1
+        <CheckForGravityAfterEachMovement>k__BackingField: 0
+      <ActiveRotationSystem>k__BackingField:
+        DefaultTable:
+          StartState: 0
+          FullSpinKicks: []
+          ZeroToThree:
+          - {x: 0, y: 0}
+          ZeroToOne:
+          - {x: 0, y: 0}
+          OneToZero:
+          - {x: 0, y: 0}
+          OneToTwo:
+          - {x: 0, y: 0}
+          TwoToOne:
+          - {x: 0, y: 0}
+          TwoToThree:
+          - {x: 0, y: 0}
+          ThreeToTwo:
+          - {x: 0, y: 0}
+          ThreeToZero:
+          - {x: 0, y: 0}
+          ZeroToTwo:
+          - {x: 0, y: 0}
+          TwoToZero:
+          - {x: 0, y: 0}
+          OneToThree:
+          - {x: 0, y: 0}
+          ThreeToOne:
+          - {x: 0, y: 0}
     <BoardDimensions>k__BackingField:
       _boardWidth: 10
       _boardHeight: 20
