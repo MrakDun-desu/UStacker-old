@@ -6282,6 +6282,8 @@ MonoBehaviour:
   _autoformatName: 1
   _dropdown: {fileID: 1244404255}
   _values:
+  - Name: UStacker Rotation System
+    Value: 4
   - Name: Super Rotation System
     Value: 1
   - Name: Super Rotation System+
