@@ -78,3 +78,9 @@ crashlytics-build.properties
 
 # Causes issues with commits
 StyleSheets.meta
+
+# PlayFab EditorPrefs - stores sensitive data
+PlayFabEditorPrefsSO.asset
+PlayFabEditorPrefsSO.asset.meta
+PlayFabSharedSettings.asset
+PlayFabSharedSettings.asset.meta
