@@ -32,32 +32,26 @@ namespace UStacker.Gameplay
         private List<InputActionMessage> _actionList;
 
         private Piece _activePiece;
+        
+        private bool _controlsActive;
+        
         private double _arrTimer = double.PositiveInfinity;
-
         private bool _bufferedHold;
         private RotateDirection? _bufferedRotation;
-
-        private bool _controlsActive;
-
         private int _currentActionIndex;
         private int _currentPieceIndex;
-
         private double _currentGravity;
         private double _dasDelay;
         private bool _dasLeftActive;
         private double _dasLeftStart;
         private double _dasLeftTimer;
         private bool _dasRightActive;
-
         private double _dasRightStart;
         private double _dasRightTimer;
-
         private double _dropDisabledUntil;
         private double _dropTime;
         private double _dropTimer;
-
         private double _hardLockAmount = double.PositiveInfinity;
-
         private bool _holdingLeft;
         private double _holdingLeftStart = double.PositiveInfinity;
         private double _holdingLeftTimer;
@@ -69,20 +63,15 @@ namespace UStacker.Gameplay
         private double _softDropActivationTime = double.PositiveInfinity;
         private bool _isReplaying;
         private SpinResult _lastSpinResult;
-
         private int _currentPieceRotation;
         private Vector2Int _currentPieceMovement;
-
         private bool _lastWasRotation;
         private double _lockDelay;
-
         private double _lockTime = double.PositiveInfinity;
         private int _lowestPosition;
         private double _normalGravity;
         private bool _pieceIsNull = true;
-
         private double _pieceSpawnTime = double.PositiveInfinity;
-
         private bool _usedHold;
         private bool _isHardLocking => _hardLockAmount < double.PositiveInfinity;
         private bool _isLocking => _lockTime < double.PositiveInfinity;
@@ -187,6 +176,7 @@ namespace UStacker.Gameplay
 
         public void MoveToNextPiece()
         {
+            CatchUpWithPieces(_timer.CurrentTime);
             if (_currentPieceIndex >= PlacementsList.Count - 1)
                 return;
 
@@ -285,6 +275,7 @@ namespace UStacker.Gameplay
         public void ResetProcessor()
         {
             _holdingSoftDrop = false;
+            _softDropActive = false;
             _holdingLeft = false;
             _holdingRight = false;
             _holdingLeftStart = double.PositiveInfinity;
@@ -300,6 +291,7 @@ namespace UStacker.Gameplay
             _dasLeftActive = false;
             _dasRightActive = false;
             _lowestPosition = int.MaxValue;
+            _hardLockAmount = double.PositiveInfinity;
             _handling = _settings.Controls.Handling;
             _normalGravity = _settings.Gravity.DefaultGravity;
             _lockDelay = _settings.Gravity.DefaultLockDelay;
@@ -314,6 +306,9 @@ namespace UStacker.Gameplay
             _currentPieceIndex = 0;
             _bufferedHold = false;
             _bufferedRotation = null;
+            _lastWasRotation = false;
+            _pieceSpawnTime = double.PositiveInfinity;
+            _usedHold = false;
         }
 
         private void MovePiece(
@@ -608,6 +603,7 @@ namespace UStacker.Gameplay
 
             _softDropActivationTime = actionTime + _handling.SoftDropDelay;
             _dropTimer = actionTime;
+            HandleGravity(actionTime);
         }
 
         private void HardDropKeyDown(double actionTime)
@@ -819,7 +815,8 @@ namespace UStacker.Gameplay
 
         public void Update()
         {
-            Update(_timer.CurrentTime, true);
+            if (_timer.IsRunning)
+                Update(_timer.CurrentTime, true);
         }
 
         public void Update(double time, bool catchUpWithTime)
@@ -964,7 +961,7 @@ namespace UStacker.Gameplay
             var movementVector = Vector2Int.zero;
             var lockdownStartedNow = false;
 
-            if (_softDropActivationTime < _dropTimer)
+            if (_softDropActivationTime <= _dropTimer)
                 ActivateSoftdrop();
                     
             while (_dropTimer <= time) // piece wants to drop
@@ -975,19 +972,25 @@ namespace UStacker.Gameplay
                 {
                     _dropTimer += _dropTime;
                     movementVector += Vector2Int.down; // piece drops one block down
-                    if (_softDropActivationTime < _dropTimer)
+                    if (_softDropActivationTime <= _dropTimer)
                         ActivateSoftdrop();
-                    
-                    if (_settings.Gravity.LockDelayType != LockDelayType.OnTouchGround ||
-                        _board.CanPlace(ActivePiece, movementVector + Vector2Int.down))
-                        continue;
-                    // if we got past the if, lock delay starts on touch ground
-                    // and piece has just touched ground
 
+                    if (_board.CanPlace(ActivePiece, movementVector + Vector2Int.down))
+                        continue;
+                    
+                    // if we got past the if, piece has just touched the ground
                     var lastMovementTime = _dropTimer - _dropTime;
-                    StartLockdown(lastMovementTime);
-                    lockdownStartedNow = true;
-                    break;
+                    
+                    // we need to start hard lock when piece touches the ground,
+                    // otherwise it would be possible to climb indefinitely
+                    StartHardLock(lastMovementTime);
+
+                    if (_settings.Gravity.LockDelayType == LockDelayType.OnTouchGround)
+                    {
+                        StartLockdown(lastMovementTime);
+                        lockdownStartedNow = true;
+                        break;
+                    }
                 }
 
                 // piece can't drop
@@ -1039,7 +1042,10 @@ namespace UStacker.Gameplay
 
             _lockTime = lockStart + _lockDelay;
             _ghostPiece.Disable();
+        }
 
+        private void StartHardLock(double lockStart)
+        {
             if (_isHardLocking) return;
 
             switch (_settings.Gravity.HardLockType)

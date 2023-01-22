@@ -48,6 +48,9 @@ namespace UStacker.Gameplay.Spins
 
             result = new SpinResult(Vector2Int.zero);
 
+            if (kickList.Length <= 0)
+                kickList = new[] {Vector2Int.zero};
+
             foreach (var kick in kickList)
             {
                 var actualKick = kick;
@@ -141,7 +144,7 @@ namespace UStacker.Gameplay.Spins
             };
         }
 
-        private IEnumerable<Vector2Int> GetKickList(Piece piece, RotateDirection direction)
+        private Vector2Int[] GetKickList(Piece piece, RotateDirection direction)
         {
             var kickTable = _rotationSystem.GetKickTable(piece.Type);
             return direction switch

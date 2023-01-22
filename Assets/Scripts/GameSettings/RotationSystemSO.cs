@@ -4,6 +4,7 @@ using System.Linq;
 using UStacker.Common;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace UStacker.GameSettings
 {
@@ -12,20 +13,20 @@ namespace UStacker.GameSettings
     {
         [SerializeField] private List<KeyValuePair> _kickTables = new();
         [SerializeField] private List<KeyValuePair> _duplicateTables = new();
-        [SerializeField] private KickTable DefaultKickTable = new();
+        [FormerlySerializedAs("DefaultKickTable")] [SerializeField] private KickTable KickTable = new();
 
         public readonly RotationSystem RotationSystem = new();
-
+        
         public void OnBeforeSerialize()
         {
-            DefaultKickTable = RotationSystem.DefaultTable;
+            KickTable = RotationSystem.DefaultTable;
             _kickTables.Clear();
             foreach (var keyValuePair in RotationSystem.KickTables) _kickTables.Add(new KeyValuePair(keyValuePair.Key, keyValuePair.Value));
         }
 
         public void OnAfterDeserialize()
         {
-            RotationSystem.DefaultTable = DefaultKickTable;
+            RotationSystem.DefaultTable = KickTable;
             RotationSystem.KickTables.Clear();
 
             foreach (var keyValuePair in _kickTables)

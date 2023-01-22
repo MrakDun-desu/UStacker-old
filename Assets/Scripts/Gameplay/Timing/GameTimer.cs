@@ -16,6 +16,8 @@ namespace UStacker.Gameplay.Timing
         private double _timeScale = 1d;
         private double _offset;
 
+        public bool IsRunning => _stopwatch.IsRunning;
+
         public double TimeScale
         {
             get => _timeScale;
@@ -33,8 +35,6 @@ namespace UStacker.Gameplay.Timing
         }
 
         public double CurrentTime => (_offset + _stopwatch.Elapsed.TotalSeconds) * TimeScale;
-
-        public TimeSpan CurrentTimeAsSpan => TimeSpan.FromSeconds((_offset + _stopwatch.Elapsed.TotalSeconds) * TimeScale);
 
         public event Action BeforeStarted;
 
@@ -65,28 +65,29 @@ namespace UStacker.Gameplay.Timing
         {
             var oldTimeScale = TimeScale;
             var wasRunning = _stopwatch.IsRunning;
-            var newOffset = value / oldTimeScale;
             var restarted = false;
-            if (newOffset < CurrentTime)
+            if (value < CurrentTime)
             {
                 restarted = true;
                 _stateManager.Restart();
             }
+            else
+                TimeScale = 1;
 
             _sfxPlayer.RepressSfx = true;
+            _offset = value;
             TimeScale = oldTimeScale;
-            _offset = newOffset;
 
             if (wasRunning)
                 _stopwatch.Restart();
             else
             {
-                _stopwatch.Reset();
                 if (restarted)
                     _stateManager.TogglePause();
+                else
+                    _stopwatch.Stop();
             }
             
-
             _inputProcessor.Update(CurrentTime, true);
             _sfxPlayer.RepressSfx = false;
         }
