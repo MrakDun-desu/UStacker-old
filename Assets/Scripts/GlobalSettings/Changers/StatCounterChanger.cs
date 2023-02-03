@@ -2,11 +2,11 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using UStacker.Common;
 using UStacker.GlobalSettings.StatCounting;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UStacker.Common;
 
 namespace UStacker.GlobalSettings.Changers
 {

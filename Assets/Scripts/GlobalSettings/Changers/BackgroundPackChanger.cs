@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using UStacker.Common;
 using UStacker.GlobalSettings.Backgrounds;

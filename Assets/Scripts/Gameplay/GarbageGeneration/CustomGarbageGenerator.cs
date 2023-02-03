@@ -2,6 +2,7 @@
 using UStacker.Gameplay.Communication;
 using NLua;
 using NLua.Exceptions;
+using UStacker.Common.LuaApi;
 
 namespace UStacker.Gameplay.GarbageGeneration
 {

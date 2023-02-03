@@ -13,6 +13,7 @@ using NLua.Exceptions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UStacker.Common.LuaApi;
 using Random = UStacker.Common.Random;
 
 namespace UStacker.Gameplay.Stats
@@ -119,7 +120,7 @@ namespace UStacker.Gameplay.Stats
             }
             catch (LuaException ex)
             {
-                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                AlertDisplayer.Instance.ShowAlert(new Alert(
                     "Error reading stat counter script!",
                     $"Stat {_statCounter.Name} won't be displayed.\nLua error: {ex.Message}",
                     AlertType.Error
@@ -142,7 +143,7 @@ namespace UStacker.Gameplay.Stats
                     }
                     catch (LuaException ex)
                     {
-                        _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                        AlertDisplayer.Instance.ShowAlert(new Alert(
                             "Error executing stat counter script!",
                             $"Error executing stat counter script with name {_statCounter.Name}.\nLua error: {ex.Message}",
                             AlertType.Error
@@ -175,7 +176,7 @@ namespace UStacker.Gameplay.Stats
                 }
                 catch (LuaException ex)
                 {
-                    _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                    AlertDisplayer.Instance.ShowAlert(new Alert(
                         "Error executing stat counter script!",
                         $"Error executing stat counter script with name {_statCounter.Name}.\nLua error: {ex.Message}",
                         AlertType.Error

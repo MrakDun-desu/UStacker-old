@@ -11,6 +11,11 @@ namespace UStacker.Common
             SceneManager.LoadScene("Scene_Menu_Main");
         }
 
+        public void LoadLogin()
+        {
+            SceneManager.LoadScene("Scene_Login");
+        }
+
         public void LoadCustomGameSettings()
         {
             SceneManager.LoadScene("Scene_Menu_GameSettings_Custom");

@@ -4,9 +4,9 @@ namespace UStacker.GlobalSettings.Startup
 {
     public class OnQuitSettingsSaver : MonoSingleton<OnQuitSettingsSaver>
     {
-        private void OnApplicationQuit()
+        private async void OnApplicationQuit()
         {
-            AppSettings.TrySave();
+            await AppSettings.TrySaveAsync();
         }
     }
 }

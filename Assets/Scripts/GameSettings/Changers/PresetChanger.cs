@@ -1,9 +1,11 @@
 ﻿using System.Linq;
-using UStacker.Common;
+using System.Threading.Tasks;
 using UStacker.Common.Alerts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UStacker.Common;
+using UStacker.GlobalSettings;
 
 namespace UStacker.GameSettings.Changers
 {
@@ -61,32 +63,37 @@ namespace UStacker.GameSettings.Changers
 
         private void OnOptionPicked(int optIndex)
         {
+            _ = TryLoadSettingsAsync(optIndex);
+        }
+
+        private async Task TryLoadSettingsAsync(int optIndex)
+        {
             var presetName = _dropdown.options[optIndex].text;
 
             if (presetName == _defaultPrompt || presetName == _emptyPrompt)
                 return;
 
-            if (_targetSo.TryLoad(presetName))
-            {
-                _ = AlertDisplayer.Instance.ShowAlert(
-                    new Alert("Game settings reloaded!",
-                        $"Game settings overriden with a preset {presetName}.",
-                        AlertType.Success));
-            }
-            else
-            {
-                _ = AlertDisplayer.Instance.ShowAlert(
-                    new Alert("Game settings load failed!",
-                        $"Game preset {presetName} couldn't be found.",
-                        AlertType.Error));
-            }
+            var shownAlert = await _targetSo.TryLoad(presetName)
+                ? new Alert("Game settings reloaded!",
+                    $"Game settings overriden with a preset {presetName}.",
+                    AlertType.Success)
+                : new Alert("Game settings load failed!",
+                    $"Game preset {presetName} couldn't be found.",
+                    AlertType.Error);
+            
+            AlertDisplayer.Instance.ShowAlert(shownAlert);
         }
 
         private void OnSaveButtonClicked()
         {
-            var presetName = _targetSo.Presentation.Title;
-            presetName = _targetSo.Save(presetName);
-            _ = AlertDisplayer.Instance.ShowAlert(
+            _ = SaveSettingsAsync();
+        }
+
+        private async Task SaveSettingsAsync()
+        {
+            var presetName = _targetSo.Settings.Presentation.Title;
+            presetName = await _targetSo.Save(presetName);
+            AlertDisplayer.Instance.ShowAlert(
                 new Alert("Game settings saved!",
                     $"Game settings have been saved to a file {presetName}.",
                     AlertType.Success));

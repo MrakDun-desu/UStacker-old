@@ -45,7 +45,7 @@ namespace UStacker.GlobalSettings.Backgrounds
                 {
                     BackgroundPackChanged?.Invoke();
                     if (showAlert)
-                        _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                        AlertDisplayer.Instance.ShowAlert(defaultAlert);
                     return;
                 }
             }
@@ -54,7 +54,7 @@ namespace UStacker.GlobalSettings.Backgrounds
             {
                 BackgroundPackChanged?.Invoke();
                 if (showAlert)
-                    _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                    AlertDisplayer.Instance.ShowAlert(defaultAlert);
                 return;
             }
 
@@ -74,7 +74,7 @@ namespace UStacker.GlobalSettings.Backgrounds
                     "Background pack has been successfully loaded and changed",
                     AlertType.Success
                 );
-            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.Instance.ShowAlert(shownAlert);
         }
 
         private static async Task HandleBackgroundLoadAsync(string path)
@@ -109,10 +109,10 @@ namespace UStacker.GlobalSettings.Backgrounds
 
         private static async Task<BackgroundRecord> LoadBackgroundRecordAsync(string path)
         {
-            switch (FileLoading.GetFileType(path))
+            switch (FileHandling.GetFileType(path))
             {
                 case FileType.Texture:
-                    var newBackground = await FileLoading.LoadTextureFromUrl(path);
+                    var newBackground = await FileHandling.LoadTextureFromUrl(path);
                     return new BackgroundRecord(newBackground);
                 case FileType.Video:
                     return new BackgroundRecord(path);

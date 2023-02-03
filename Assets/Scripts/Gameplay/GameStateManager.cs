@@ -148,9 +148,7 @@ namespace UStacker.Gameplay
             if (!IsReplaying)
             {
                 Replay.GameType = GameType;
-                Replay.GameSettings = _settings with
-                {
-                };
+                Replay.GameSettings = _settings with {};
                 Replay.ActionList.Clear();
                 Replay.ActionList.AddRange(_gameRecorder.ActionList);
                 Replay.PiecePlacementList.Clear();
@@ -158,7 +156,9 @@ namespace UStacker.Gameplay
                 Replay.Stats = _statCounterManager.Stats;
                 Replay.GameLength = endTime;
                 Replay.TimeStamp = DateTime.UtcNow;
-                Replay.Save();
+                if (AppSettings.Gameplay.AutosaveReplaysOnDisk)
+                    Replay.Save();
+                
                 _resultDisplayer.DisplayedReplay = Replay;
             }
             else

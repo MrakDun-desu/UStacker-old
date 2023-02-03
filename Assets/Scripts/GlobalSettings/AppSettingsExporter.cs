@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using UStacker.GlobalSettings.Changers;
 using TMPro;
 using UnityEngine;
@@ -17,10 +18,20 @@ namespace UStacker.GlobalSettings
 
         public void Export()
         {
+            _ = ExportAsync();
+        }
+
+        public void Import()
+        {
+            _ = ImportAsync();
+        }
+
+        private async Task ExportAsync()
+        {
             var path = _pathField.text;
             _errorSignal.SetActive(false);
             _successSignal.SetActive(false);
-            if (AppSettings.TrySave(path))
+            if (await AppSettings.TrySaveAsync(path))
             {
                 _successSignal.SetActive(true);
                 _successText.text = "Successfully saved!";
@@ -31,12 +42,12 @@ namespace UStacker.GlobalSettings
             _errorText.text = "Couldn't find save path!";
         }
 
-        public void Import()
+        private async Task ImportAsync()
         {
             var path = _pathField.text;
             _errorSignal.SetActive(false);
             _successSignal.SetActive(false);
-            if (AppSettings.TryLoad(path))
+            if (await AppSettings.TryLoadAsync(path))
             {
                 _successSignal.SetActive(true);
                 _successText.text = "Successfully loaded settings!";

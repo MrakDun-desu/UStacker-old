@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using UStacker.GlobalSettings.Appliers;
 using UStacker.GlobalSettings.Changers;
 using UStacker.GlobalSettings.StatCounting;
@@ -21,9 +23,13 @@ namespace UStacker.GlobalSettings.Startup
         [SerializeField] private StringReferenceSO[] _gameTypes = Array.Empty<StringReferenceSO>();
 
         private uint _loadersActive;
+        public event Action SettingChanged;
 
         private void Start()
         {
+            if (!Directory.Exists(PersistentPaths.DataPath))
+                FileHandling.CreateDirectoriesRecursively(PersistentPaths.DataPath);
+            
             foreach (var loader in GetComponents<IAsyncApplier>())
             {
                 TMP_Text messageText = null;
@@ -37,7 +43,7 @@ namespace UStacker.GlobalSettings.Startup
                 {
                     if (messageText != null)
                         messageText.gameObject.SetActive(false);
-                    RemoveLoader();
+                    DecrementLoaderCount();
                 });
             }
 
@@ -48,13 +54,16 @@ namespace UStacker.GlobalSettings.Startup
             var collectorManager = new GameObject("GarbageCollectorManager");
             collectorManager.AddComponent<GarbageCollectorManager>();
 #endif
-            AppSettings.TryLoad();
+            _ = LoadAppSettings();
+        }
+
+        private async Task LoadAppSettings()
+        {
+            await AppSettings.TryLoadAsync();
             SettingChanged?.Invoke();
             AddDefaultStatCounters();
             FinishStartup();
         }
-
-        public event Action SettingChanged;
 
         private void FinishStartup()
         {
@@ -68,7 +77,7 @@ namespace UStacker.GlobalSettings.Startup
             SceneManager.sceneLoaded += (_, _) => DOTween.KillAll();
         }
 
-        private void RemoveLoader()
+        private void DecrementLoaderCount()
         {
             _loadersActive--;
             FinishStartup();

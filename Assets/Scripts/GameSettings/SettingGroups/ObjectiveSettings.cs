@@ -1,9 +1,9 @@
 using System;
 using System.IO;
-using UStacker.Common;
 using UStacker.Common.Alerts;
 using UStacker.GameSettings.Enums;
 using UnityEngine;
+using UStacker.Common;
 
 namespace UStacker.GameSettings.SettingGroups
 {
@@ -40,7 +40,7 @@ namespace UStacker.GameSettings.SettingGroups
         public double EndConditionCount
         {
             get => _endConditionCount;
-            set => _endConditionCount = Math.Max(value, 0);
+            set => _endConditionCount = Math.Max(value, 1);
         }
 
         public GameManagerType GameManagerType
@@ -76,7 +76,7 @@ namespace UStacker.GameSettings.SettingGroups
         public uint GarbageHeight
         {
             get => _garbageHeight;
-            set => _garbageHeight = Math.Max(value, 400);
+            set => _garbageHeight = Math.Min(value, 400);
         }
 
         public string CustomGarbageScriptName
@@ -116,7 +116,7 @@ namespace UStacker.GameSettings.SettingGroups
                     $"Garbage script {CustomGarbageScriptName} couldn't be found.",
                     AlertType.Error);
 
-            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.Instance.ShowAlert(shownAlert);
         }
 
         private bool TryReloadGameManagerScript()
@@ -146,7 +146,7 @@ namespace UStacker.GameSettings.SettingGroups
                     $"Game manager {CustomGameManager} couldn't be found.",
                     AlertType.Error);
 
-            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.Instance.ShowAlert(shownAlert);
         }
     }
 }

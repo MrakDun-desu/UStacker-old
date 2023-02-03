@@ -130,7 +130,6 @@ namespace UStacker.GlobalSettings.Changers
 
             ChangedOption = new MusicOption(newType, _nameDropdown.options[0].text);
             InvokeSettingChanged();
-            AppSettings.TrySave();
         }
 
         private void OnNameSelected(int index)
@@ -141,7 +140,6 @@ namespace UStacker.GlobalSettings.Changers
             ChangedOption = new MusicOption(optionType, newName);
 
             InvokeSettingChanged();
-            AppSettings.TrySave();
         }
     }
 }

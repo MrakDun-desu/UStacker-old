@@ -1,9 +1,9 @@
 using System;
 using System.IO;
-using UStacker.Common;
 using UStacker.Common.Alerts;
 using UStacker.GameSettings.Enums;
 using UnityEngine;
+using UStacker.Common;
 
 namespace UStacker.GameSettings.SettingGroups
 {

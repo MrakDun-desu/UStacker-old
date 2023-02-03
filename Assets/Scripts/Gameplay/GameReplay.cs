@@ -80,31 +80,31 @@ namespace UStacker.Gameplay
                 Directory.CreateDirectory(directory);
 
             var serializedReplay = JsonConvert.SerializeObject(this, StaticSettings.ReplaySerializerSettings);
-            await File.WriteAllBytesAsync(savePath, FileLoading.Zip(serializedReplay));
+            await File.WriteAllBytesAsync(savePath, await FileHandling.Zip(serializedReplay));
 
-            _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+            AlertDisplayer.Instance.ShowAlert(new Alert(
                 "Replay saved!",
                 $"Game replay has been saved into a file {savePath}",
                 AlertType.Success));
         }
 
-        public static bool TryLoad(string path, out GameReplay output)
+        public static async Task<(bool, GameReplay)> TryLoad(string path)
         {
-            output = default;
-            if (!File.Exists(path)) return false;
+            (bool, GameReplay) output = (false, null);
+            if (!File.Exists(path)) return output;
 
-            var replayJson = FileLoading.Unzip(File.ReadAllBytes(path));
+            var replayJson = await FileHandling.Unzip(await File.ReadAllBytesAsync(path));
 
             try
             {
-                output = JsonConvert.DeserializeObject<GameReplay>(replayJson, StaticSettings.ReplaySerializerSettings);
+                output.Item2 = JsonConvert.DeserializeObject<GameReplay>(replayJson, StaticSettings.ReplaySerializerSettings);
             }
             catch
             {
-                return false;
+                // if we get an exception, output item 1 is false so we know that we got an error
             }
 
-            return true;
+            return output;
         }
     }
 }

@@ -1,12 +1,11 @@
-﻿using System;
-using NLua.Exceptions;
+﻿using NLua.Exceptions;
 using UnityEngine;
 
 namespace UStacker.Common
 {
     public class Random
     {
-        public ulong State { get; set; } = (ulong)DateTimeOffset.Now.ToUnixTimeSeconds();
+        public ulong State { get; set; }
 
         private void MoveState()
         {
@@ -19,9 +18,15 @@ namespace UStacker.Common
             {
                 State = value;
             }
+            else
+            {
+                var seed1 = (ulong) ((long) UnityEngine.Random.Range(int.MinValue, int.MaxValue) + int.MaxValue);
+                var seed2 = (ulong) ((long) UnityEngine.Random.Range(int.MinValue, int.MaxValue) + int.MaxValue << 32);
+                State = seed1 + seed2;
+            }
         }
 
-        public Random(int startState)
+        public Random(long startState)
         {
             State = (ulong)startState;
         }

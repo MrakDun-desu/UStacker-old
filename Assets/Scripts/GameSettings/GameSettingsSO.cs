@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using UStacker.Common;
 using UStacker.GameSettings.SettingGroups;
 using Newtonsoft.Json;
@@ -16,12 +17,6 @@ namespace UStacker.GameSettings
         private const char INVALID_CHAR_REPLACEMENT = '_';
         public StringReferenceSO GameType;
         public SettingsContainer Settings = new();
-        public GeneralSettings General => Settings.General;
-        public ControlsSettings Controls => Settings.Controls;
-        public BoardDimensionsSettings BoardDimensions => Settings.BoardDimensions;
-        public GravitySettings Gravity => Settings.Gravity;
-        public ObjectiveSettings Objective => Settings.Objective;
-        public PresentationSettings Presentation => Settings.Presentation;
 
         public event Action SettingsReloaded;
 
@@ -33,7 +28,7 @@ namespace UStacker.GameSettings
             foreach (var filename in Directory.EnumerateFiles(PersistentPaths.GameSettingsPresets)) yield return Path.GetFileNameWithoutExtension(filename);
         }
 
-        public string Save(string presetName)
+        public async Task<string> Save(string presetName)
         {
             foreach (var invalidChar in Path.GetInvalidFileNameChars())
                 presetName = presetName.Replace(invalidChar, INVALID_CHAR_REPLACEMENT);
@@ -52,18 +47,18 @@ namespace UStacker.GameSettings
 
             actualSavePath += FILENAME_EXTENSION;
 
-            File.WriteAllText(actualSavePath,
+            await File.WriteAllTextAsync(actualSavePath,
                 JsonConvert.SerializeObject(Settings, StaticSettings.DefaultSerializerSettings));
             return actualSavePath;
         }
 
-        public bool TryLoad(string presetName)
+        public async Task<bool> TryLoad(string presetName)
         {
             var path = Path.Combine(PersistentPaths.GameSettingsPresets, presetName);
             path += FILENAME_EXTENSION;
             if (!File.Exists(path)) return false;
 
-            Settings = JsonConvert.DeserializeObject<SettingsContainer>(File.ReadAllText(path),
+            Settings = JsonConvert.DeserializeObject<SettingsContainer>(await File.ReadAllTextAsync(path),
                 StaticSettings.DefaultSerializerSettings);
 
             SettingsReloaded?.Invoke();

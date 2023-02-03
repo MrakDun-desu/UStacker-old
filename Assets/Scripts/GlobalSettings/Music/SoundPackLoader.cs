@@ -8,6 +8,7 @@ using UStacker.Common.Alerts;
 using Newtonsoft.Json;
 using NLua.Exceptions;
 using UnityEngine;
+using UStacker.Common.LuaApi;
 
 namespace UStacker.GlobalSettings.Music
 {
@@ -43,7 +44,7 @@ namespace UStacker.GlobalSettings.Music
                 {
                     SoundPackChanged?.Invoke();
                     if (showAlert)
-                        _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                        AlertDisplayer.Instance.ShowAlert(defaultAlert);
                     return;
                 }
             }
@@ -52,7 +53,7 @@ namespace UStacker.GlobalSettings.Music
             {
                 SoundPackChanged?.Invoke();
                 if (showAlert)
-                    _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                    AlertDisplayer.Instance.ShowAlert(defaultAlert);
                 return;
             }
             var taskList = new List<Task>
@@ -72,7 +73,7 @@ namespace UStacker.GlobalSettings.Music
                     "Sound pack has been successfully loaded and changed",
                     AlertType.Success
                 );
-            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.Instance.ShowAlert(shownAlert);
         }
 
         private static async Task LoadSoundEffectsAsync(string path)
@@ -91,7 +92,7 @@ namespace UStacker.GlobalSettings.Music
             }
             catch (LuaException ex)
             {
-                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                AlertDisplayer.Instance.ShowAlert(new Alert(
                     "Error loading script!",
                     $"Error loading sound effects script.\nLua error: {ex.Message}",
                     AlertType.Error));
@@ -128,7 +129,7 @@ namespace UStacker.GlobalSettings.Music
         private static async Task GetAudioClipAsync(string path, IDictionary<string, AudioClip> target)
         {
             var clipName = Path.GetFileNameWithoutExtension(path);
-            var clip = await FileLoading.LoadAudioClipFromUrl(path);
+            var clip = await FileHandling.LoadAudioClipFromUrl(path);
             if (clip is null) return;
 
             target[clipName] = clip;

@@ -56,15 +56,17 @@ namespace UStacker.GlobalSettings.Groups
             }
         }
 
-        public bool CtrlScrollToChangeBoardZoom { get; set; }
+        public bool CtrlScrollToChangeBoardZoom { get; set; } = true;
 
-        public bool DragMiddleButtonToRepositionBoard { get; set; }
+        public bool DragMiddleButtonToRepositionBoard { get; set; } = true;
 
         public bool ColorGhostPiece { get; set; } = true;
 
         public bool ShowNotFocusedWarning { get; set; } = true;
 
         public string ReplayNamingFormat { get; set; } = "BSReplay_{GameType}_{MainStat}_{Timestamp}";
+
+        public bool AutosaveReplaysOnDisk { get; set; } = true;
 
         // not shown in the game menu
         public Vector2 BoardOffset { get; set; }

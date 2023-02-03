@@ -3,6 +3,7 @@ using UStacker.Common;
 using UStacker.Common.Extensions;
 using NLua;
 using NLua.Exceptions;
+using UStacker.Common.LuaApi;
 
 namespace UStacker.Gameplay.Randomizers
 {

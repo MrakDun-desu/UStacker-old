@@ -1,4 +1,5 @@
-﻿using UStacker.Common;
+﻿using System.Threading.Tasks;
+using UStacker.Common;
 using UStacker.Common.Alerts;
 using UStacker.Gameplay.Initialization;
 using UStacker.GlobalSettings.Changers;
@@ -26,9 +27,15 @@ namespace UStacker.Gameplay
 
         private void OpenReplay()
         {
-            if (!GameReplay.TryLoad(_replayFilename.text, out var replay))
+            _ = OpenReplayAsync();
+        }
+
+        private async Task OpenReplayAsync()
+        {
+            var (replayValid, replay) = await GameReplay.TryLoad(_replayFilename.text);
+            if (!replayValid)
             {
-                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                AlertDisplayer.Instance.ShowAlert(new Alert(
                     "Couldn't load replay!",
                     "Replay either couldn't be found or was in invalid format",
                     AlertType.Error));

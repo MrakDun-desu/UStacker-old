@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using UStacker.Common;
 using UStacker.GlobalSettings.Groups;
 using Newtonsoft.Json;
@@ -29,7 +30,7 @@ namespace UStacker.GlobalSettings
 
         public static event Action SettingsReloaded;
 
-        public static bool TrySave(string path = null)
+        public static async Task<bool> TrySaveAsync(string path = null)
         {
             if (path is not null)
             {
@@ -40,17 +41,17 @@ namespace UStacker.GlobalSettings
             path ??= PersistentPaths.GlobalSettings;
 
             if (!Directory.Exists(Path.GetDirectoryName(path))) return false;
-            File.WriteAllText(path, JsonConvert.SerializeObject(Settings, StaticSettings.DefaultSerializerSettings));
+            await File.WriteAllTextAsync(path, JsonConvert.SerializeObject(Settings, StaticSettings.DefaultSerializerSettings));
             return true;
         }
 
-        public static bool TryLoad(string path = null)
+        public static async Task<bool> TryLoadAsync(string path = null)
         {
             path ??= PersistentPaths.GlobalSettings;
             if (!File.Exists(path))
                 return false;
 
-            Settings = JsonConvert.DeserializeObject<SettingsContainer>(File.ReadAllText(path),
+            Settings = JsonConvert.DeserializeObject<SettingsContainer>(await File.ReadAllTextAsync(path),
                 StaticSettings.DefaultSerializerSettings);
             Settings ??= new SettingsContainer();
             SettingsReloaded?.Invoke();
@@ -125,6 +126,7 @@ namespace UStacker.GlobalSettings
             return type == typeof(T);
         }
 
+        // for later usage for tooltips
         public static bool TryGetSettingAttribute<T>(string[] path, out T output) where T : Attribute
         {
             output = default;

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using UStacker.Common;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UStacker.Common;
+using UStacker.GlobalSettings;
 
 namespace UStacker.GameSettings.Changers
 {

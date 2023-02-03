@@ -38,7 +38,7 @@ namespace UStacker.GlobalSettings.BlockSkins
                 {
                     SkinChanged?.Invoke();
                     if (showAlert)
-                        _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                        AlertDisplayer.Instance.ShowAlert(defaultAlert);
                     return;
                 }
             }
@@ -47,7 +47,7 @@ namespace UStacker.GlobalSettings.BlockSkins
             {
                 SkinChanged?.Invoke();
                 if (showAlert)
-                    _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                    AlertDisplayer.Instance.ShowAlert(defaultAlert);
                 return;
             }
 
@@ -63,12 +63,12 @@ namespace UStacker.GlobalSettings.BlockSkins
                     "Skin has been successfully loaded and changed",
                     AlertType.Success
                 );
-            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.Instance.ShowAlert(shownAlert);
         }
 
         private static async Task GetSkinAsync(string path)
         {
-            var configFilePath = Path.Combine(path, PersistentPaths.SkinConfiguration);
+            var configFilePath = Path.Combine(path, CustomizationFilenames.SkinConfiguration);
             if (!File.Exists(configFilePath)) return;
 
             var skinJson = await File.ReadAllTextAsync(configFilePath);
@@ -160,7 +160,7 @@ namespace UStacker.GlobalSettings.BlockSkins
         {
             var actualFilename = isFile ? Path.Combine(path, filename) : filename;
 
-            var texture = await FileLoading.LoadTextureFromUrl(actualFilename, isFile);
+            var texture = await FileHandling.LoadTextureFromUrl(actualFilename, isFile);
 
             if (texture is not null)
                 textures[filename] = texture;

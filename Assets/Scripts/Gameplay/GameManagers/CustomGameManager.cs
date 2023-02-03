@@ -5,6 +5,7 @@ using UStacker.Gameplay.Communication;
 using NLua;
 using NLua.Exceptions;
 using UnityEngine;
+using UStacker.Common.LuaApi;
 using UStacker.Gameplay.Timing;
 using Random = UStacker.Common.Random;
 
@@ -67,7 +68,7 @@ namespace UStacker.Gameplay.GameManagers
             }
             catch (LuaException ex)
             {
-                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                AlertDisplayer.Instance.ShowAlert(new Alert(
                     "Error reading custom game manager script!",
                     $"Game manager won't be functional. Lua exception: {ex.Message}",
                     AlertType.Error
@@ -96,7 +97,7 @@ namespace UStacker.Gameplay.GameManagers
                     }
                     catch (LuaException ex)
                     {
-                        _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                        AlertDisplayer.Instance.ShowAlert(new Alert(
                             "Error executing custom game manager script!",
                             $"Game manager will be turned off. Lua exception: {ex.Message}",
                             AlertType.Error

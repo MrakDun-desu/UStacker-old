@@ -4,6 +4,7 @@ using NLua.Exceptions;
 using UnityEngine;
 using UStacker.Common;
 using UStacker.Common.Alerts;
+using UStacker.Common.LuaApi;
 using UStacker.Gameplay.Communication;
 using UStacker.GlobalSettings.Music;
 
@@ -55,7 +56,7 @@ namespace UStacker.Gameplay.SoundEffects
             }
             catch (LuaException ex)
             {
-                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                AlertDisplayer.Instance.ShowAlert(new Alert(
                     "Error reading sound effects script!",
                     $"Switching to default sound effects.\nLua error: {ex.Message}",
                     AlertType.Error
@@ -78,7 +79,7 @@ namespace UStacker.Gameplay.SoundEffects
                     }
                     catch (LuaException ex)
                     {
-                        _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                        AlertDisplayer.Instance.ShowAlert(new Alert(
                             "Error executing user code!",
                             $"Error executing sound effects script.\nLua error: {ex.Message}",
                             AlertType.Error
@@ -227,7 +228,7 @@ namespace UStacker.Gameplay.SoundEffects
 
             if (!clipExists)
             {
-                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                AlertDisplayer.Instance.ShowAlert(new Alert(
                     "Clip not found!",
                     $"Sound effect with a name {clipName} was not found.",
                     AlertType.Warning
@@ -255,7 +256,7 @@ namespace UStacker.Gameplay.SoundEffects
                 _audioSource.PlayOneShot(clip);
             else
             {
-                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                AlertDisplayer.Instance.ShowAlert(new Alert(
                     "Clip not found!",
                     $"Sound effect with a name {clipName} was not found.",
                     AlertType.Warning

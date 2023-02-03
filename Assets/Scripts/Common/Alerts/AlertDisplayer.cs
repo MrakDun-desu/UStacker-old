@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace UStacker.Common.Alerts
 {
@@ -10,18 +9,18 @@ namespace UStacker.Common.Alerts
 
         public static AlertDisplayer Instance => _instance;
 
-        public Task ShowAlert(Alert alert)
+        public void ShowAlert(Alert alert, bool log = true)
         {
             var newAlert = Instantiate(_alertPrefab, _alertsParent);
             newAlert.Initialize(alert);
-            return Task.CompletedTask;
+            if (log)
+                Logger.LogAlert(alert);
         }
 
         [ContextMenu("Show example alert")]
         public void ShowExample()
         {
-            var newAlert = Instantiate(_alertPrefab, _alertsParent);
-            newAlert.Initialize(new Alert("Example", "This is an example alert", AlertType.Info));
+            ShowAlert(new Alert("Example", "This is an example alert", AlertType.Info), false);
         }
     }
 }
