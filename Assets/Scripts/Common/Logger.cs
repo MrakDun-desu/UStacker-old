@@ -14,7 +14,7 @@ namespace UStacker.Common
 #if UNITY_EDITOR
             Debug.Log(obj);
 #else
-            File.AppendAllText(PersistentPaths.DebugPath, $"[{DateTime.Now}] {obj}\n");
+            File.AppendAllText(PersistentPaths.DebugLogs, $"[{DateTime.Now}] {obj}\n");
 #endif
         }
 

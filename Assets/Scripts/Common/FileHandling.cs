@@ -138,14 +138,23 @@ namespace UStacker.Common
             };
         }
 
-        private static async Task CopyMemory(Stream source, Stream destination)
+        private static async Task<bool> CopyMemory(Stream source, Stream destination)
         {
             const int bufferSize = 0x1000;
             var buffer = new byte[bufferSize];
-            int readLength;
 
-            while ((readLength = await source.ReadAsync(buffer)) != 0) 
-                await destination.WriteAsync(buffer.AsMemory(0, readLength));
+            try
+            {
+                int readLength;
+                while ((readLength = await source.ReadAsync(buffer)) != 0)
+                    await destination.WriteAsync(buffer.AsMemory(0, readLength));
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public static async Task<byte[]> Zip(string str)
@@ -174,42 +183,41 @@ namespace UStacker.Common
             return Encoding.UTF8.GetString(outputStream.ToArray());
         }
 
-        public static async Task<bool> CopyDirectoryRecursivelyAsync(IEnumerable<DirectoryInfo> dirs, IEnumerable<FileInfo> files, string destinationPath)
+        public static async Task<bool> CopyDirectoryRecursivelyAsync(string sourcePath, string destinationPath)
         {
-            if (!Directory.Exists(destinationPath))
+            var dir = new DirectoryInfo(sourcePath);
+            if (!Directory.Exists(destinationPath) || !dir.Exists)
                 return false;
 
-            var taskList = new List<Task>();
+            var taskList = new List<Task<bool>>();
             // not converting to LINQ for better readability
             // ReSharper disable once LoopCanBeConvertedToQuery
-            foreach (var file in files)
+            foreach (var file in dir.EnumerateFiles())
             {
                 var targetFilePath = Path.Combine(destinationPath, file.Name);
                 taskList.Add(CopyFileAsync(file.FullName, targetFilePath));
             }
 
-            foreach (var subDir in dirs)
+            foreach (var subDir in dir.EnumerateDirectories())
             {
                 var newDestinationPath = Path.Combine(destinationPath, subDir.Name);
                 Directory.CreateDirectory(newDestinationPath);
 
-                var dirInfo = new DirectoryInfo(subDir.FullName);
-                var newDirs = dirInfo.GetDirectories();
-                var newFiles = dirInfo.GetFiles();
-                taskList.Add(CopyDirectoryRecursivelyAsync(newDirs, newFiles, newDestinationPath));
+                taskList.Add(CopyDirectoryRecursivelyAsync(subDir.FullName, newDestinationPath));
             }
 
             await Task.WhenAll(taskList);
-
-            return true;
+            return taskList.All(task => task.Result);
         }
 
-        public static async Task CopyFileAsync(string source, string destination)
+        public static async Task<bool> CopyFileAsync(string source, string destination)
         {
+            if (!File.Exists(source)) return false;
+            
             await using var sourceReader = File.OpenRead(source);
             await using var destinationWriter = File.Create(destination);
 
-            await CopyMemory(sourceReader, destinationWriter);
+            return await CopyMemory(sourceReader, destinationWriter);
         }
 
         public static bool CreateDirectoriesRecursively(string path)
