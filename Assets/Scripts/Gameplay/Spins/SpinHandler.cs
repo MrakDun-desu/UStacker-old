@@ -24,7 +24,6 @@ namespace UStacker.Gameplay.Spins
         {
             var rotationAngle = direction switch
             {
-
                 RotateDirection.Clockwise => -90,
                 RotateDirection.Counterclockwise => 90,
                 RotateDirection.OneEighty => 180,
@@ -32,7 +31,8 @@ namespace UStacker.Gameplay.Spins
             };
             piece.Rotate(rotationAngle);
 
-            var kick = GetKickList(piece, direction).First();
+            var kickList = GetKickList(piece, direction);
+            var kick = kickList.First();
             var pieceTransform = piece.transform;
             var piecePosition = pieceTransform.localPosition;
             pieceTransform.localPosition = new Vector3(
@@ -47,9 +47,6 @@ namespace UStacker.Gameplay.Spins
             var kickList = GetKickList(piece, direction);
 
             result = new SpinResult(Vector2Int.zero);
-
-            if (kickList.Length <= 0)
-                kickList = new[] {Vector2Int.zero};
 
             foreach (var kick in kickList)
             {
@@ -144,10 +141,10 @@ namespace UStacker.Gameplay.Spins
             };
         }
 
-        private Vector2Int[] GetKickList(Piece piece, RotateDirection direction)
+        private IEnumerable<Vector2Int> GetKickList(Piece piece, RotateDirection direction)
         {
             var kickTable = _rotationSystem.GetKickTable(piece.Type);
-            return direction switch
+            var output = direction switch
             {
                 RotateDirection.Clockwise => piece.RotationState switch
                 {
@@ -175,6 +172,7 @@ namespace UStacker.Gameplay.Spins
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
             };
+            return output.Length <= 0 ? new[] {Vector2Int.zero} : output;
         }
     }
 }

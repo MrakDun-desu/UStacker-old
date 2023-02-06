@@ -74,19 +74,19 @@ namespace UStacker.Gameplay.Timing
             else
                 TimeScale = 1;
 
-            _sfxPlayer.RepressSfx = true;
-            _offset = value;
-            TimeScale = oldTimeScale;
-
             if (wasRunning)
                 _stopwatch.Restart();
             else
             {
                 if (restarted)
                     _stateManager.TogglePause();
-                else
-                    _stopwatch.Stop();
+                
+                _stopwatch.Reset();
             }
+            
+            _sfxPlayer.RepressSfx = true;
+            _offset = value;
+            TimeScale = oldTimeScale;
             
             _inputProcessor.Update(CurrentTime, true);
             _sfxPlayer.RepressSfx = false;

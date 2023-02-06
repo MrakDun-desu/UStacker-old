@@ -32,8 +32,6 @@ namespace UStacker.GlobalSettings.Groups
         public DiagonalLockBehavior DiagonalLockBehavior { get; set; } = DiagonalLockBehavior.DontLock;
         [field: SerializeField]
         public bool CancelDasDelayWithInput { get; set; } = true;
-        [field: SerializeField]
-        public bool CheckForGravityAfterEachMovement { get; set; }
 
         public double DelayedAutoShift
         {

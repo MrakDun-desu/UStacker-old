@@ -64,7 +64,7 @@ namespace UStacker.GlobalSettings.Groups
 
         public bool ShowNotFocusedWarning { get; set; } = true;
 
-        public string ReplayNamingFormat { get; set; } = "BSReplay_{GameType}_{MainStat}_{Timestamp}";
+        public string ReplayNamingFormat { get; set; } = "BSReplay_{GameType}_{MainStat}";
 
         public bool AutosaveReplaysOnDisk { get; set; } = true;
 

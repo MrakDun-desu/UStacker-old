@@ -32,20 +32,19 @@ namespace UStacker.Gameplay
         private List<InputActionMessage> _actionList;
 
         private Piece _activePiece;
-        
+
         private bool _controlsActive;
-        
+
         private double _arrTimer = double.PositiveInfinity;
         private bool _bufferedHold;
         private RotateDirection? _bufferedRotation;
         private int _currentActionIndex;
-        private int _currentPieceIndex;
+        [SerializeField] private int _currentPieceIndex;
         private double _currentGravity;
         private double _dasDelay;
-        private bool _dasLeftActive;
         private double _dasLeftStart;
         private double _dasLeftTimer;
-        private bool _dasRightActive;
+        private Vector2Int _dasStatus = Vector2Int.zero;
         private double _dasRightStart;
         private double _dasRightTimer;
         private double _dropDisabledUntil;
@@ -73,6 +72,9 @@ namespace UStacker.Gameplay
         private bool _pieceIsNull = true;
         private double _pieceSpawnTime = double.PositiveInfinity;
         private bool _usedHold;
+        
+        private bool DasLeftActive => _dasStatus == Vector2Int.left;
+        private bool DasRightActive => _dasStatus == Vector2Int.right;
         private bool _isHardLocking => _hardLockAmount < double.PositiveInfinity;
         private bool _isLocking => _lockTime < double.PositiveInfinity;
 
@@ -95,7 +97,7 @@ namespace UStacker.Gameplay
         }
 
         [field: SerializeField] public List<PiecePlacementInfo> PlacementsList { get; set; }
-        
+
         public Piece ActivePiece
         {
             get => _activePiece;
@@ -176,18 +178,16 @@ namespace UStacker.Gameplay
 
         public void MoveToNextPiece()
         {
-            CatchUpWithPieces(_timer.CurrentTime);
             if (_currentPieceIndex >= PlacementsList.Count - 1)
                 return;
 
             if (_currentPieceIndex < PlacementsList.Count - 1)
             {
-                if (Math.Abs(_timer.CurrentTime - PlacementsList[_currentPieceIndex + 1].PlacementTime) <
+                if (Math.Abs(_timer.CurrentTime - PlacementsList[_currentPieceIndex].PlacementTime) <
                     double.Epsilon)
                     _currentPieceIndex++;
             }
-
-            _currentPieceIndex++;
+            
             _timer.SetTime(PlacementsList[_currentPieceIndex].PlacementTime);
         }
 
@@ -199,11 +199,7 @@ namespace UStacker.Gameplay
                 return;
             }
 
-            if (Math.Abs(_timer.CurrentTime - PlacementsList[_currentPieceIndex].PlacementTime) < double.Epsilon)
-                _currentPieceIndex--;
-            _timer.SetTime(PlacementsList[_currentPieceIndex].PlacementTime);
-            if (_currentPieceIndex > 0)
-                _currentPieceIndex--;
+            _timer.SetTime(PlacementsList[--_currentPieceIndex].PlacementTime);
         }
 
         private void OnGameStart()
@@ -234,7 +230,7 @@ namespace UStacker.Gameplay
         private void CatchUpWithPieces(double time)
         {
             if (_currentPieceIndex >= PlacementsList.Count - 1) return;
-            while (time > PlacementsList[_currentPieceIndex + 1].PlacementTime)
+            while (time > PlacementsList[_currentPieceIndex].PlacementTime)
             {
                 _currentPieceIndex++;
                 if (_currentPieceIndex >= PlacementsList.Count - 1) return;
@@ -288,8 +284,7 @@ namespace UStacker.Gameplay
             _dasRightTimer = 0;
             _dasLeftStart = 0;
             _dasRightStart = 0;
-            _dasLeftActive = false;
-            _dasRightActive = false;
+            _dasStatus = Vector2Int.zero;
             _lowestPosition = int.MaxValue;
             _hardLockAmount = double.PositiveInfinity;
             _handling = _settings.Controls.Handling;
@@ -403,7 +398,7 @@ namespace UStacker.Gameplay
             if (linesCleared)
                 spawnTime += _settings.Gravity.LineClearDelay;
 
-            if (_dasLeftActive || _dasRightActive)
+            if (DasLeftActive || DasRightActive)
                 _arrTimer += spawnTime;
 
             if (_settings.Controls.AllowHold)
@@ -532,7 +527,7 @@ namespace UStacker.Gameplay
         {
             _holdingLeftStart = double.PositiveInfinity;
             _dasLeftStart = double.PositiveInfinity;
-            _dasLeftActive = false;
+            _dasStatus = Vector2Int.zero;
             _dasRightStart = actionTime;
         }
 
@@ -545,7 +540,7 @@ namespace UStacker.Gameplay
             _dasLeftStart = actionTime;
             if (_handling.SimultaneousDasBehavior != SimultaneousDasBehavior.DontCancel)
             {
-                _dasRightActive = false;
+                _dasStatus = Vector2Int.zero;
                 _dasRightStart = actionTime;
             }
 
@@ -559,7 +554,7 @@ namespace UStacker.Gameplay
         {
             _holdingRightStart = double.PositiveInfinity;
             _dasRightStart = double.PositiveInfinity;
-            _dasRightActive = false;
+            _dasStatus = Vector2Int.zero;
             _dasLeftStart = actionTime;
         }
 
@@ -572,7 +567,7 @@ namespace UStacker.Gameplay
             _dasRightStart = actionTime;
             if (_handling.SimultaneousDasBehavior != SimultaneousDasBehavior.DontCancel)
             {
-                _dasLeftActive = false;
+                _dasStatus = Vector2Int.zero;
                 _dasLeftStart = actionTime;
             }
 
@@ -602,7 +597,6 @@ namespace UStacker.Gameplay
                  _holdingRightStart < actionTime)) return;
 
             _softDropActivationTime = actionTime + _handling.SoftDropDelay;
-            _dropTimer = actionTime;
             HandleGravity(actionTime);
         }
 
@@ -696,7 +690,7 @@ namespace UStacker.Gameplay
             var movementVector = Vector2Int.right;
             while (_board.CanPlace(ActivePiece, movementVector))
                 movementVector += Vector2Int.right;
-            
+
             movementVector -= Vector2Int.right;
             if (movementVector != Vector2Int.zero)
                 MovePiece(movementVector, true, actionTime);
@@ -707,7 +701,7 @@ namespace UStacker.Gameplay
             var movementVector = Vector2Int.left;
             while (_board.CanPlace(ActivePiece, movementVector))
                 movementVector += Vector2Int.left;
-            
+
             movementVector -= Vector2Int.left;
             if (movementVector != Vector2Int.zero)
                 MovePiece(movementVector, true, actionTime);
@@ -824,9 +818,10 @@ namespace UStacker.Gameplay
             if (_isReplaying && catchUpWithTime)
                 CatchUpWithTime(time);
 
+            HandleDas(time);
+            
             if (!_pieceIsNull)
             {
-                HandleDas(time);
                 HandleGravity(time);
                 HandlePieceLockdownAnimation(time);
             }
@@ -868,88 +863,37 @@ namespace UStacker.Gameplay
                 _ => _holdingRightTimer > _holdingLeftTimer
             };
 
-            if (!_dasRightActive && _dasRightTimer > _handling.DelayedAutoShift &&
+            if (!DasRightActive && _dasRightTimer > _handling.DelayedAutoShift &&
                 (_dasLeftTimer < _handling.DelayedAutoShift || dasRightCondition))
             {
-                _dasRightActive = true;
-                _dasLeftActive = false;
+                _dasStatus = Vector2Int.right;
                 _arrTimer = _dasRightStart + _handling.DelayedAutoShift;
             }
 
-            if (!_dasLeftActive && _dasLeftTimer > _handling.DelayedAutoShift &&
+            if (!DasLeftActive && _dasLeftTimer > _handling.DelayedAutoShift &&
                 (_dasRightTimer < _handling.DelayedAutoShift || dasLeftCondition))
             {
-                _dasLeftActive = true;
-                _dasRightActive = false;
+                _dasStatus = Vector2Int.left;
                 _arrTimer = _dasLeftStart + _handling.DelayedAutoShift;
             }
 
-            if (_arrTimer > time) return;
+            if (_arrTimer > time || _dasStatus == Vector2Int.zero) return;
 
-            if (_handling.CheckForGravityAfterEachMovement)
+            while (_arrTimer < time)
             {
-                if (_dasRightActive)
+                if (_board.CanPlace(ActivePiece, _dasStatus))
                 {
-                    while (_arrTimer < time)
-                    {
-                        if (_board.CanPlace(ActivePiece, Vector2Int.right))
-                        {
-                            MovePiece(Vector2Int.right, true, _arrTimer);
-                            HandleGravity(_arrTimer);
-                            _arrTimer += _handling.AutomaticRepeatRate;
-                        }
-                        else break;
-                    }
+                    if (_dropTimer < _arrTimer)
+                        HandleGravity(_arrTimer);
+                    
+                    MovePiece(_dasStatus, true, _arrTimer);
+                    _arrTimer += _handling.AutomaticRepeatRate;
                 }
-
-                if (_dasLeftActive)
+                else
                 {
-                    while (_arrTimer < time)
-                    {
-                        if (_board.CanPlace(ActivePiece, Vector2Int.left))
-                        {
-                            MovePiece(Vector2Int.left, true, _arrTimer);
-                            HandleGravity(_arrTimer);
-                            _arrTimer += _handling.AutomaticRepeatRate;
-                        }
-                        else break;
-                    }
+                    _arrTimer = time;
+                    break;
                 }
-                return;
-            }
-            
-            if (_dasRightActive)
-            {
-                var movementVector = Vector2Int.zero;
-                while (_arrTimer < time)
-                {
-                    if (_board.CanPlace(ActivePiece, movementVector + Vector2Int.right))
-                    {
-                        _arrTimer += _handling.AutomaticRepeatRate;
-                        movementVector += Vector2Int.right;
-                    }
-                    else break;
-                }
-
-                if (movementVector != Vector2Int.zero)
-                    MovePiece(movementVector, true, _arrTimer - _handling.AutomaticRepeatRate);
-            }
-
-            if (_dasLeftActive)
-            {
-                var movementVector = Vector2Int.zero;
-                while (_arrTimer < time)
-                {
-                    if (_board.CanPlace(ActivePiece, movementVector + Vector2Int.left))
-                    {
-                        _arrTimer += _handling.AutomaticRepeatRate;
-                        movementVector += Vector2Int.left;
-                    }
-                    else break;
-                }
-
-                if (movementVector != Vector2Int.zero)
-                    MovePiece(movementVector, true, _arrTimer - _handling.AutomaticRepeatRate);
             }
         }
 
@@ -963,7 +907,7 @@ namespace UStacker.Gameplay
 
             if (_softDropActivationTime <= _dropTimer)
                 ActivateSoftdrop();
-                    
+
             while (_dropTimer <= time) // piece wants to drop
             {
                 if (_isLocking) break;
@@ -977,10 +921,10 @@ namespace UStacker.Gameplay
 
                     if (_board.CanPlace(ActivePiece, movementVector + Vector2Int.down))
                         continue;
-                    
+
                     // if we got past the if, piece has just touched the ground
                     var lastMovementTime = _dropTimer - _dropTime;
-                    
+
                     // we need to start hard lock when piece touches the ground,
                     // otherwise it would be possible to climb indefinitely
                     StartHardLock(lastMovementTime);
@@ -1024,7 +968,7 @@ namespace UStacker.Gameplay
             var usedGravity = _normalGravity <= 0 ? _handling.ZeroGravitySoftDropBase : _normalGravity;
             _currentGravity = usedGravity * _handling.SoftDropFactor;
             _dropTime = ComputeDroptimeFromGravity();
-            _dropTimer = _softDropActivationTime + _dropTime;
+            _dropTimer = _softDropActivationTime;
         }
 
         private void HandlePieceLockdownAnimation(double functionStartTime)
@@ -1089,7 +1033,7 @@ namespace UStacker.Gameplay
 
             if (!_spawner.SpawnPiece(_pieceSpawnTime))
                 return;
-            
+
             _dropTimer = _pieceSpawnTime + _dropTime;
             if (_handling.DelayDasOn.HasFlag(DelayDasOn.Placement))
             {

@@ -22,7 +22,7 @@ MonoBehaviour:
       <UseCustomSeed>k__BackingField: 0
       <CustomSeed>k__BackingField: 0
       <CustomRandomizerScript>k__BackingField: 
-      <ActiveSeed>k__BackingField: 613045176
+      <ActiveSeed>k__BackingField: 10074705297572487699
     <Controls>k__BackingField:
       _rotationSystemType: 0
       _customRotationSystem: 
@@ -31,7 +31,7 @@ MonoBehaviour:
       <AllowHold>k__BackingField: 0
       <AllowMoveToWall>k__BackingField: 0
       <UnlimitedHold>k__BackingField: 0
-      <ShowGhostPiece>k__BackingField: 1
+      <ShowGhostPiece>k__BackingField: 0
       <OverrideHandling>k__BackingField: 1
       <Handling>k__BackingField:
         _delayedAutoShift: 0.25
@@ -45,7 +45,22 @@ MonoBehaviour:
         <SimultaneousDasBehavior>k__BackingField: 0
         <DiagonalLockBehavior>k__BackingField: 0
         <CancelDasDelayWithInput>k__BackingField: 1
-        <CheckForGravityAfterEachMovement>k__BackingField: 0
+      <ActiveRotationSystem>k__BackingField:
+        DefaultTable:
+          StartState: 0
+          FullSpinKicks: []
+          ZeroToThree: []
+          ZeroToOne: []
+          OneToZero: []
+          OneToTwo: []
+          TwoToOne: []
+          TwoToThree: []
+          ThreeToTwo: []
+          ThreeToZero: []
+          ZeroToTwo: []
+          TwoToZero: []
+          OneToThree: []
+          ThreeToOne: []
     <BoardDimensions>k__BackingField:
       _boardWidth: 10
       _boardHeight: 20
@@ -58,7 +73,7 @@ MonoBehaviour:
       _defaultLockDelay: 0
       _piecePlacementDelay: 0
       _lineClearDelay: 0.5
-      _hardLockAmount: 0
+      _hardLockAmount: 1
       <LockDelayType>k__BackingField: 1
       <HardLockType>k__BackingField: 0
       <TopoutCondition>k__BackingField: 0
@@ -75,7 +90,7 @@ MonoBehaviour:
       <CustomGarbageScript>k__BackingField: 
       <CustomGameManagerScript>k__BackingField: 
       <ToppingOutIsOkay>k__BackingField: 1
-      <StartingLevel>k__BackingField: 5
+      <StartingLevel>k__BackingField: 8
     <Presentation>k__BackingField:
       _countdownInterval: 0.8
       _countdownCount: 3

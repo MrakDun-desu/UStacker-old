@@ -40,8 +40,8 @@ namespace UStacker.Gameplay
             };
             var filename = AppSettings.Gameplay.ReplayNamingFormat
                 .Replace("{GameType}", GameType)
-                .Replace("{Timestamp}", TimeStamp.ToLocalTime().ToString(CultureInfo.InvariantCulture))
-                .Replace("{MainStat}", mainStat);
+                .Replace("{MainStat}", mainStat) +
+                TimeStamp.ToLocalTime().ToString(CultureInfo.InvariantCulture);
 
             var invalidChars = new List<char>();
             invalidChars.AddRange(Path.GetInvalidPathChars());
@@ -104,6 +104,7 @@ namespace UStacker.Gameplay
                 // if we get an exception, output item 1 is false so we know that we got an error
             }
 
+            output.Item1 = true;
             return output;
         }
     }
