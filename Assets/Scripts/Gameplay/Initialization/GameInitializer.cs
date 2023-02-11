@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UStacker.Gameplay.Blocks;
 using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.InputProcessing;
 using UStacker.Gameplay.Pieces;
 using UStacker.Gameplay.Presentation;
 using UStacker.Gameplay.Stats;

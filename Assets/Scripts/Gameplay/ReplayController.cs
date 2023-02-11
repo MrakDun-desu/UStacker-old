@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UStacker.Common.Extensions;
+using UStacker.Gameplay.InputProcessing;
 using UStacker.Gameplay.Timing;
 
 namespace UStacker.Gameplay
@@ -21,6 +22,8 @@ namespace UStacker.Gameplay
         [SerializeField] private Image _pauseImage;
         [SerializeField] private Button _nextPieceButton;
         [SerializeField] private Button _prevPieceButton;
+        [SerializeField] private Button _nextActionButton;
+        [SerializeField] private Button _prevActionButton;
         [SerializeField] private TMP_Text _currentTimeText;
         [SerializeField] private TMP_InputField _timeScaleField;
 
@@ -34,6 +37,8 @@ namespace UStacker.Gameplay
             _pauseButton.onClick.AddListener(TogglePause);
             _nextPieceButton.onClick.AddListener(_inputProcessor.MoveToNextPiece);
             _prevPieceButton.onClick.AddListener(_inputProcessor.MoveToPrevPiece);
+            _nextActionButton.onClick.AddListener(_inputProcessor.MoveToNextAction);
+            _prevActionButton.onClick.AddListener(_inputProcessor.MoveToPrevAction);
             _timeScaleField.onEndEdit.AddListener(OnSpeedChanged);
             _stateManager.ReplayPaused.AddListener(() => _pauseImage.sprite = _playSprite);
             _stateManager.ReplayUnpaused.AddListener(() => _pauseImage.sprite = _pauseSprite);
@@ -75,6 +80,7 @@ namespace UStacker.Gameplay
 
         public void SetReplay(GameReplay replay)
         {
+            _timeSlider.SetValueWithoutNotify(0);
             _timeSlider.maxValue = (float) replay.GameLength - float.Epsilon;
         }
     }

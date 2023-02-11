@@ -20,28 +20,6 @@ namespace UStacker.Gameplay.Spins
             _allowedSpins = allowedSpins;
         }
 
-        public void RotateWithFirstKick(Piece piece, RotateDirection direction)
-        {
-            var rotationAngle = direction switch
-            {
-                RotateDirection.Clockwise => -90,
-                RotateDirection.Counterclockwise => 90,
-                RotateDirection.OneEighty => 180,
-                _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
-            };
-            piece.Rotate(rotationAngle);
-
-            var kickList = GetKickList(piece, direction);
-            var kick = kickList.First();
-            var pieceTransform = piece.transform;
-            var piecePosition = pieceTransform.localPosition;
-            pieceTransform.localPosition = new Vector3(
-                piecePosition.x + kick.x,
-                piecePosition.y + kick.y,
-                piecePosition.z
-            );
-        }
-
         public bool TryKick(Piece piece, Board board, RotateDirection direction, out SpinResult result)
         {
             var kickList = GetKickList(piece, direction);

@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.Scripting;
 using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Initialization;
 using UStacker.Gameplay.Stats;
@@ -117,6 +118,7 @@ namespace UStacker.Gameplay
 
             _gameCurrentlyInProgress = false;
             _gamePauseable = true;
+            _timer.ResetTiming();
             GameRestarted.Invoke();
             _mediator.Send(new GameRestartedMessage());
             _mediator.Send(new GameEndConditionChangedMessage(
@@ -150,6 +152,7 @@ namespace UStacker.Gameplay
                 Replay.GameType = GameType;
                 Replay.GameSettings = _settings with {};
                 Replay.ActionList.Clear();
+                _gameRecorder.ActionList.Sort((a,b) => a.Time.CompareTo(b.Time));
                 Replay.ActionList.AddRange(_gameRecorder.ActionList);
                 Replay.PiecePlacementList.Clear();
                 Replay.PiecePlacementList.AddRange(_gameRecorder.PiecePlacementList);
@@ -165,6 +168,7 @@ namespace UStacker.Gameplay
                 ReplayFinished.Invoke();
 
             GameEnded.Invoke();
+            GarbageCollector.CollectIncremental(1_000_000_000);
             _mediator.Send(new GameEndedMessage(endTime));
         }
 

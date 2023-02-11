@@ -8,7 +8,7 @@ namespace UStacker.GameSettings.SettingGroups
     {
         // backing fields
         [SerializeField]
-        private float _countdownInterval = .8f;
+        private float _countdownInterval = .65f;
         [SerializeField]
         private uint _countdownCount = 3;
 

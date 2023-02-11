@@ -45,7 +45,6 @@ MonoBehaviour:
         <SimultaneousDasBehavior>k__BackingField: 1
         <DiagonalLockBehavior>k__BackingField: 0
         <CancelDasDelayWithInput>k__BackingField: 1
-        <CheckForGravityAfterEachMovement>k__BackingField: 0
       <ActiveRotationSystem>k__BackingField:
         DefaultTable:
           StartState: 0
@@ -105,7 +104,7 @@ MonoBehaviour:
       <ToppingOutIsOkay>k__BackingField: 0
       <StartingLevel>k__BackingField: 
     <Presentation>k__BackingField:
-      _countdownInterval: 0.8
+      _countdownInterval: 0.65
       _countdownCount: 3
       <Title>k__BackingField: Cheese Race 20L
       <UseCountdown>k__BackingField: 1

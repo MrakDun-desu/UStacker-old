@@ -9,8 +9,7 @@ using UStacker.GlobalSettings;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.Serialization;
-using UStacker.Common.Extensions;
-using UStacker.GameSettings.Enums;
+using UStacker.Gameplay.InputProcessing;
 
 namespace UStacker.Gameplay
 {

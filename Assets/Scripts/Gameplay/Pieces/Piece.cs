@@ -27,6 +27,7 @@ namespace UStacker.Gameplay.Pieces
         private string _currentType;
 
         private float _visibility;
+
         public float Visibility
         {
             get => _visibility;
@@ -64,8 +65,10 @@ namespace UStacker.Gameplay.Pieces
                     block.CollectionType = _currentType;
             }
         }
+
         public IEnumerable<Vector3> BlockPositions =>
             _activeTransforms.Select(tf => tf.position);
+
         public event Action Rotated;
 
         private void OnBlockCleared(ClearableBlock sender)
@@ -104,11 +107,12 @@ namespace UStacker.Gameplay.Pieces
 
                 block.gameObject.SetActive(true);
                 block.ResetPosition();
-                Rotated?.Invoke();
-                RotationState = RotationState.Zero;
             }
+            RotationState = RotationState.Zero;
+            Rotated?.Invoke();
         }
 
+        [ContextMenu("Return to the pool")]
         public void ReleaseFromPool()
         {
             if (!_activeInPool) return;
@@ -120,7 +124,8 @@ namespace UStacker.Gameplay.Pieces
         [ContextMenu("Log block positions")]
         private void LogBlockPositions()
         {
-            foreach (var block in Blocks.Where(block => _activeTransforms.Contains(block.transform))) Debug.Log(block.Board.WorldSpaceToBoardPosition(block.transform.position));
+            foreach (var block in Blocks.Where(block => _activeTransforms.Contains(block.transform)))
+                Debug.Log(block.Board.WorldSpaceToBoardPosition(block.transform.position));
         }
     }
 }

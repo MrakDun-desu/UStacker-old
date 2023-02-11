@@ -92,7 +92,7 @@ MonoBehaviour:
       <ToppingOutIsOkay>k__BackingField: 1
       <StartingLevel>k__BackingField: 8
     <Presentation>k__BackingField:
-      _countdownInterval: 0.8
+      _countdownInterval: 0.65
       _countdownCount: 3
       <Title>k__BackingField: Classic Marathon
       <UseCountdown>k__BackingField: 1
