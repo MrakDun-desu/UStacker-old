@@ -12,7 +12,7 @@ namespace UStacker.Gameplay.Pieces
     public class Piece : MonoBehaviour, IBlockCollection
     {
         [SerializeField] private string _type;
-        public List<Block> Blocks = new();
+        public List<PieceBlock> Blocks = new();
         public Color GhostPieceColor;
         public Vector2 SpawnOffset;
         public Vector2 ContainerOffset;

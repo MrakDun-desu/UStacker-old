@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using NLua;
 using NLua.Exceptions;
 using UnityEngine;
-using UStacker.Common;
 using UStacker.Common.Alerts;
 using UStacker.Common.LuaApi;
 using UStacker.Gameplay.Communication;
@@ -19,12 +19,18 @@ namespace UStacker.Gameplay.SoundEffects
         public bool RepressSfx;
         private AudioSource _audioSource;
         private Lua _luaState;
+        private readonly List<string> _playedInThisUpdate = new();
 
         private void Awake()
         {
             _audioSource = GetComponent<AudioSource>();
             if (!TryRegisterCustomFunctions())
                 RegisterDefaultFunctions();
+        }
+
+        private void LateUpdate()
+        {
+            _playedInThisUpdate.Clear();
         }
 
         private void RegisterDefaultFunctions()
@@ -222,22 +228,24 @@ namespace UStacker.Gameplay.SoundEffects
 
         private void PlayAsAnnouncer(string clipName)
         {
-            var clipExists = SoundPackLoader.SoundEffects.TryGetValue(clipName, out var clip);
-            if (!clipExists)
-                _defaultEffects.TryGetValue(clipName, out clip);
-
-            if (!clipExists)
-            {
-                AlertDisplayer.Instance.ShowAlert(new Alert(
-                    "Clip not found!",
-                    $"Sound effect with a name {clipName} was not found.",
-                    AlertType.Warning
-                ));
+            if (_playedInThisUpdate.Contains(clipName) || RepressSfx)
                 return;
-            }
+            
+            if (!SoundPackLoader.SoundEffects.TryGetValue(clipName, out var clip))
+                if (!_defaultEffects.TryGetValue(clipName, out clip))
+                {
+                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                        "Clip not found!",
+                        $"Sound effect with a name {clipName} was not found.",
+                        AlertType.Warning
+                    ));
+                    return;
+                }
 
             _audioSource.clip = clip;
             _audioSource.Play();
+
+            _playedInThisUpdate.Add(clipName);
         }
 
         private void Play(string clipName)
@@ -247,21 +255,22 @@ namespace UStacker.Gameplay.SoundEffects
 
         private void TryPlayClip(string clipName)
         {
-            if (RepressSfx)
+            if (RepressSfx || _playedInThisUpdate.Contains(clipName))
                 return;
 
-            if (SoundPackLoader.SoundEffects.TryGetValue(clipName, out var clip))
-                _audioSource.PlayOneShot(clip);
-            else if (_defaultEffects.TryGetValue(clipName, out clip))
-                _audioSource.PlayOneShot(clip);
-            else
-            {
-                AlertDisplayer.Instance.ShowAlert(new Alert(
-                    "Clip not found!",
-                    $"Sound effect with a name {clipName} was not found.",
-                    AlertType.Warning
-                ));
-            }
+            if (!SoundPackLoader.SoundEffects.TryGetValue(clipName, out var clip))
+                if (!_defaultEffects.TryGetValue(clipName, out clip))
+                {
+                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                        "Clip not found!",
+                        $"Sound effect with a name {clipName} was not found.",
+                        AlertType.Warning
+                    ));
+                    return;
+                }
+
+            _audioSource.PlayOneShot(clip);
+            _playedInThisUpdate.Add(clipName);
         }
     }
 }

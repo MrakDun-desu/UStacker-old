@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UStacker.Gameplay.Blocks
 {
-    public class Block : ClearableBlock
+    public class PieceBlock : ClearableBlock
     {
         [SerializeField] private Vector2 _initialPosition;
         [SerializeField] private GameObject _holdSkinsParent;

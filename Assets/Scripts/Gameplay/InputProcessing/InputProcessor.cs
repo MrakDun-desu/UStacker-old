@@ -48,7 +48,7 @@ namespace UStacker.Gameplay.InputProcessing
         private bool _bufferedHold;
         private RotateDirection? _bufferedRotation;
         private int _currentActionIndex;
-        [SerializeField] private int _currentPieceIndex;
+        private int _currentPieceIndex;
         private double _currentGravity;
         private double _dasDelay;
         private Vector2Int _dasStatus = Vector2Int.zero;
@@ -993,12 +993,13 @@ namespace UStacker.Gameplay.InputProcessing
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+
             }
         }
 
         private void HandleArrMovement()
         {
-            if (_pieceIsNull || !_board.CanPlace(ActivePiece, _dasStatus))
+            if (_pieceIsNull || _dasStatus == Vector2Int.zero || !_board.CanPlace(ActivePiece, _dasStatus))
             {
                 _arrEvent.Time = double.PositiveInfinity;
                 return;
@@ -1030,8 +1031,6 @@ namespace UStacker.Gameplay.InputProcessing
                 return;
             }
 
-            var lowestPosBeforeMovement = _lowestPosition;
-
             if (!_board.CanPlace(ActivePiece, Vector2Int.down))
             {
                 StartLockdown(_dropEvent.Time);
@@ -1039,6 +1038,7 @@ namespace UStacker.Gameplay.InputProcessing
                 return;
             }
 
+            var lowestPosBeforeMovement = _lowestPosition;
             var eventTime = _dropEvent.Time;
             MovePiece(Vector2Int.down, true, _dropEvent.Time, false);
             _dropEvent.Time += _dropTime;

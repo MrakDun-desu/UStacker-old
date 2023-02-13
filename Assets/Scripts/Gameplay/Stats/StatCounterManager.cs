@@ -41,7 +41,7 @@ namespace UStacker.Gameplay.Stats
         {
             if (_timer.CurrentTime > 0)
             {
-                _stats.LinesPerMinute = _stats.LinesCleared / _timer.CurrentTime;
+                _stats.LinesPerMinute = _stats.LinesCleared / _timer.CurrentTime * 60d;
                 _stats.PiecesPerSecond = _stats.PiecesPlaced / _timer.CurrentTime;
             }
             
@@ -61,7 +61,7 @@ namespace UStacker.Gameplay.Stats
             _mediator.Unregister<LevelChangedMessage>(OnLevelChanged);
         }
 
-        private void ResetStats(object _)
+        private void ResetStats(Message _)
         {
             _stats.Reset();
         }
