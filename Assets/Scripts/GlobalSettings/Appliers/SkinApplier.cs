@@ -25,6 +25,9 @@ namespace UStacker.GlobalSettings.Appliers
 
         private async Task ReloadAndInvoke()
         {
+            if (string.IsNullOrEmpty(AppSettings.Customization.SkinFolder))
+                AppSettings.Customization.SkinFolder = SkinLoader.DEFAULT_PATH;
+            
             var skinFolder = Path.Combine(PersistentPaths.Skins, AppSettings.Customization.SkinFolder);
             await SkinLoader.ReloadAsync(skinFolder, _showAlert);
             LoadingFinished.Invoke();

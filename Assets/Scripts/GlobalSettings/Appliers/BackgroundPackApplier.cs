@@ -25,6 +25,9 @@ namespace UStacker.GlobalSettings.Appliers
 
         private async Task ReloadAndInvoke()
         {
+            if (string.IsNullOrEmpty(AppSettings.Customization.BackgroundFolder))
+                AppSettings.Customization.BackgroundFolder = BackgroundPackLoader.DEFAULT_PATH;
+            
             var backgroundFolder = Path.Combine(PersistentPaths.BackgroundPacks,
                 AppSettings.Customization.BackgroundFolder);
             await BackgroundPackLoader.Reload(backgroundFolder, _showAlert);

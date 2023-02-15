@@ -37,8 +37,9 @@ namespace UStacker.GlobalSettings.Changers
         private void RefreshGroups()
         {
             foreach (var changer in _groupChangers.Values)
-                RemoveGroup(changer.Id);
+                DeleteGroup(changer.Id);
 
+            _groupChangers.Clear();
             _statCounterGroups = AppSettings.StatCounting.StatCounterGroups;
 
             foreach (var (id, group) in _statCounterGroups)
@@ -93,7 +94,7 @@ namespace UStacker.GlobalSettings.Changers
                 _statCounterGroups.Add(newId, newGroup);
         }
 
-        private void RemoveGroup(Guid groupId)
+        private void DeleteGroup(Guid groupId)
         {
             if (!_groupChangers.ContainsKey(groupId)) return;
 
@@ -116,8 +117,14 @@ namespace UStacker.GlobalSettings.Changers
 
             OnSizeChanged(-sizeDelta);
 
-            _groupChangers.Remove(groupId);
             _statCounterGroups.Remove(groupId);
+        }
+        
+        private void RemoveGroup(Guid groupId)
+        {
+            if (!_groupChangers.ContainsKey(groupId)) return;
+            DeleteGroup(groupId);
+            _groupChangers.Remove(groupId);
         }
 
         private void AddGroup()

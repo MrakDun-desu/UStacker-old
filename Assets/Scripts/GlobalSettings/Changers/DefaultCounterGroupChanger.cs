@@ -41,6 +41,11 @@ namespace UStacker.GlobalSettings.Changers
             RefreshStatCounters();
         }
 
+        private void OnDestroy()
+        {
+            AppSettings.SettingsReloaded -= RefreshStatCounters;
+        }
+
         private void ChangeHeight(float sizeDelta)
         {
             var selfSizeDelta = _selfTransform.sizeDelta;
@@ -70,11 +75,10 @@ namespace UStacker.GlobalSettings.Changers
         private void RefreshStatCounters()
         {
             foreach (var counterChanger in _statCounterChangers)
-            {
-                counterChanger.Removed -= DeleteStatCounter;
                 DeleteStatCounter(counterChanger);
-            }
 
+            _statCounterChangers.Clear();
+            
             foreach (var counter in Value.StatCounters)
                 AddStatCounter(counter);
         }
@@ -108,7 +112,7 @@ namespace UStacker.GlobalSettings.Changers
         private void AddStatCounter(StatCounterRecord newCounter, bool addToValue = false)
         {
             var newCounterChanger = Instantiate(_counterChangerPrefab, _counterChangersContainer);
-            newCounterChanger.Removed += DeleteStatCounter;
+            newCounterChanger.Removed += RemoveStatCounter;
             newCounterChanger.Value = newCounter;
 
             _statCounterChangers.Add(newCounterChanger);
@@ -125,21 +129,30 @@ namespace UStacker.GlobalSettings.Changers
                 Value.StatCounters.Add(newCounter);
         }
 
-        private void DeleteStatCounter(StatCounterChanger changer)
+        private void RemoveStatCounter(StatCounterChanger changer)
         {
             if (!_statCounterChangers.Remove(changer)) return;
 
+            DeleteStatCounter(changer);
+        }
+
+        private void DeleteStatCounter(StatCounterChanger changer)
+        {
+            if (changer == null)
+                return;
+            
             var reducedSize = ((RectTransform) changer.transform).sizeDelta.y;
             if (_statCounterChangers.Count > 0)
                 reducedSize += _statCounterSpacing;
 
             ChangeHeight(-reducedSize);
 
+            changer.Removed -= RemoveStatCounter;
+            changer.SizeChanged -= ChangeHeight;
             Destroy(changer.gameObject);
-            changer.Removed -= DeleteStatCounter;
             Value.StatCounters.Remove(changer.Value);
-            _statCounterChangers.Remove(changer);
         }
+        
 
         private void OnStatCounterAdded()
         {

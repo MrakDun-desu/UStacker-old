@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DG.DemiEditor;
 using UStacker.Common;
 using UStacker.Common.Alerts;
 using Newtonsoft.Json;
@@ -42,11 +43,12 @@ namespace UStacker.GlobalSettings.Music
             {
                 if (!Directory.Exists(path))
                 {
-                    SoundPackChanged?.Invoke();
-                    if (showAlert)
-                        AlertDisplayer.Instance.ShowAlert(defaultAlert);
-                    return;
+                    Directory.CreateDirectory(path);
                 }
+                SoundPackChanged?.Invoke();
+                if (showAlert)
+                    AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                return;
             }
 
             if (!Directory.Exists(path))

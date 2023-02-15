@@ -27,7 +27,6 @@ namespace UStacker.GlobalSettings.Changers
 
         private StatCounterRecord _value;
         private RectTransform _selfTransform => (RectTransform) transform;
-
         public StatCounterRecord Value
         {
             get => _value;
@@ -37,14 +36,14 @@ namespace UStacker.GlobalSettings.Changers
                 RefreshValue();
             }
         }
+        
+        public event Action<StatCounterChanger> Removed;
+        public event Action<float> SizeChanged;
 
         private void Start()
         {
             AddListenersToFields();
         }
-
-        public event Action<StatCounterChanger> Removed;
-        public event Action<float> SizeChanged;
 
         private void ChangeSize(float sizeDelta)
         {

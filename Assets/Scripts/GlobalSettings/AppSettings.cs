@@ -34,8 +34,11 @@ namespace UStacker.GlobalSettings
         {
             if (path is not null)
             {
+                var filename = Path.GetFileName(path);
                 foreach (var invalidChar in Path.GetInvalidFileNameChars())
-                    path = path.Replace(invalidChar, INVALID_CHAR_REPLACEMENT);
+                    filename = filename.Replace(invalidChar, INVALID_CHAR_REPLACEMENT);
+
+                path = Path.Combine(Path.GetDirectoryName(path) ?? string.Empty, filename);
             }
 
             path ??= PersistentPaths.GlobalSettings;

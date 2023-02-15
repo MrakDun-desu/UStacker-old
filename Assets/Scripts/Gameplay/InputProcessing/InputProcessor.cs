@@ -151,14 +151,14 @@ namespace UStacker.Gameplay.InputProcessing
 
         private void Awake()
         {
-            _spawnEvent = new UpdateEvent(_updateEvents, double.PositiveInfinity, EventType.Spawn);
-            _arrEvent = new UpdateEvent(_updateEvents, double.PositiveInfinity, EventType.ArrMovement);
-            _dasLeftEvent = new UpdateEvent(_updateEvents, double.PositiveInfinity, EventType.DasLeft);
-            _dasRightEvent = new UpdateEvent(_updateEvents, double.PositiveInfinity, EventType.DasRight);
-            _softdropEvent = new UpdateEvent(_updateEvents, double.PositiveInfinity, EventType.Softdrop);
-            _dropEvent = new UpdateEvent(_updateEvents, double.PositiveInfinity, EventType.Drop);
-            _lockdownEvent = new UpdateEvent(_updateEvents, double.PositiveInfinity, EventType.Lockdown);
-            _hardLockdownEvent = new UpdateEvent(_updateEvents, double.PositiveInfinity, EventType.HardLockdown);
+            _spawnEvent = new UpdateEvent(_updateEvents, EventType.Spawn);
+            _dasLeftEvent = new UpdateEvent(_updateEvents, EventType.DasLeft);
+            _dasRightEvent = new UpdateEvent(_updateEvents, EventType.DasRight);
+            _arrEvent = new UpdateEvent(_updateEvents, EventType.ArrMovement);
+            _dropEvent = new UpdateEvent(_updateEvents, EventType.Drop);
+            _softdropEvent = new UpdateEvent(_updateEvents, EventType.Softdrop);
+            _lockdownEvent = new UpdateEvent(_updateEvents, EventType.Lockdown);
+            _hardLockdownEvent = new UpdateEvent(_updateEvents, EventType.HardLockdown);
 
             _mediator.Register<GravityChangedMessage>(OnGravityChanged);
             _mediator.Register<LockDelayChangedMessage>(OnLockDelayChanged);
@@ -710,6 +710,7 @@ namespace UStacker.Gameplay.InputProcessing
                  _holdingRightStart < actionTime)) return;
 
             _softdropEvent.Time = actionTime + _handling.SoftDropDelay;
+            _dropEvent.Time = actionTime;
         }
 
         private void HardDropKeyDown(double actionTime)
@@ -1063,7 +1064,7 @@ namespace UStacker.Gameplay.InputProcessing
             var usedGravity = _normalGravity <= 0 ? _handling.ZeroGravitySoftDropBase : _normalGravity;
             _currentGravity = usedGravity * _handling.SoftDropFactor;
             _dropTime = ComputeDroptimeFromGravity();
-            _dropEvent.Time = _softdropEvent.Time;
+            _dropEvent.Time = _softdropEvent.Time + _dropTime;
             _softdropEvent.Time = double.PositiveInfinity;
         }
 

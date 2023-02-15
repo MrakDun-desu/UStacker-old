@@ -25,6 +25,9 @@ namespace UStacker.GlobalSettings.Appliers
 
         private async Task ReloadAndInvoke()
         {
+            if (string.IsNullOrEmpty(AppSettings.Customization.SoundPackFolder))
+                AppSettings.Customization.SoundPackFolder = SoundPackLoader.DEFAULT_PATH;
+            
             var soundPackFolder = Path.Combine(PersistentPaths.SoundPacks, AppSettings.Customization.SoundPackFolder);
             await SoundPackLoader.Reload(soundPackFolder, _showAlert);
             LoadingFinished.Invoke();

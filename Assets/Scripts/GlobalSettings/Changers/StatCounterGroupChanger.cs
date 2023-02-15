@@ -77,10 +77,7 @@ namespace UStacker.GlobalSettings.Changers
         private void RefreshStatCounters()
         {
             foreach (var counterChanger in _statCounterChangers)
-            {
-                counterChanger.Removed -= DeleteStatCounter;
                 DeleteStatCounter(counterChanger);
-            }
 
             _statCounterChangers.Clear();
 
@@ -122,7 +119,7 @@ namespace UStacker.GlobalSettings.Changers
         private void AddStatCounter(StatCounterRecord newCounter, bool addToValue = false)
         {
             var newCounterChanger = Instantiate(_counterChangerPrefab, _counterChangersContainer);
-            newCounterChanger.Removed += DeleteStatCounter;
+            newCounterChanger.Removed += RemoveStatCounter;
             newCounterChanger.Value = newCounter;
 
             _statCounterChangers.Add(newCounterChanger);
@@ -139,20 +136,28 @@ namespace UStacker.GlobalSettings.Changers
                 Value.StatCounters.Add(newCounter);
         }
 
-        private void DeleteStatCounter(StatCounterChanger changer)
+        private void RemoveStatCounter(StatCounterChanger changer)
         {
             if (!_statCounterChangers.Remove(changer)) return;
 
+            DeleteStatCounter(changer);
+        }
+
+        private void DeleteStatCounter(StatCounterChanger changer)
+        {
+            if (changer == null)
+                return;
+            
             var reducedSize = ((RectTransform) changer.transform).sizeDelta.y;
             if (_statCounterChangers.Count > 0)
                 reducedSize += _statCounterSpacing;
 
             SizeChanged?.Invoke(-reducedSize);
 
+            changer.Removed -= RemoveStatCounter;
+            changer.SizeChanged -= SizeChanged;
             Destroy(changer.gameObject);
-            changer.Removed -= DeleteStatCounter;
             Value.StatCounters.Remove(changer.Value);
-            _statCounterChangers.Remove(changer);
         }
 
         private void OnStatCounterAdded()

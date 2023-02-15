@@ -42,12 +42,12 @@ namespace UStacker.GlobalSettings.Backgrounds
             if (Path.GetFileName(path).Equals(DEFAULT_PATH))
             {
                 if (!Directory.Exists(path))
-                {
-                    BackgroundPackChanged?.Invoke();
-                    if (showAlert)
-                        AlertDisplayer.Instance.ShowAlert(defaultAlert);
-                    return;
-                }
+                    Directory.CreateDirectory(path);
+
+                BackgroundPackChanged?.Invoke();
+                if (showAlert)
+                    AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                return;
             }
 
             if (!Directory.Exists(path))

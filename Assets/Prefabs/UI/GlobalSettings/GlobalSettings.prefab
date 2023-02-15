@@ -235,6 +235,8 @@ MonoBehaviour:
   _errorText: {fileID: 6310777132058542016}
   _successSignal: {fileID: 2842199617384973237}
   _successText: {fileID: 6310777133467366660}
+  _exportButton: {fileID: 7808583774110427902}
+  _importButton: {fileID: 7808583774462112649}
 --- !u!114 &2842199616942510335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1278,6 +1280,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AutosaveReplaysOnDiskChanger
       objectReference: {fileID: 0}
+    - target: {fileID: 4766382872581782604, guid: e7aea60a5568552498289ef63b628d48, type: 3}
+      propertyPath: _tooltipText
+      value: If this is on, every finished game replay will be automatically saved
+        on disk
+      objectReference: {fileID: 0}
     - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1770,6 +1777,10 @@ PrefabInstance:
     - target: {fileID: 4293092243490791277, guid: 94b6e27a66804cf4d8a72fd9e31b5c97, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4732231236605652697, guid: 94b6e27a66804cf4d8a72fd9e31b5c97, type: 3}
+      propertyPath: _tooltipText
+      value: How to treat automatic movement when both movement keys are pressed
       objectReference: {fileID: 0}
     - target: {fileID: 5064329277376770311, guid: 94b6e27a66804cf4d8a72fd9e31b5c97, type: 3}
       propertyPath: m_Name
@@ -2600,6 +2611,10 @@ PrefabInstance:
     - target: {fileID: 2268679713801054009, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_Name
       value: ShowNotFocusedWarningChanger
+      objectReference: {fileID: 0}
+    - target: {fileID: 4766382872581782604, guid: e7aea60a5568552498289ef63b628d48, type: 3}
+      propertyPath: _tooltipText
+      value: When this is on and the game is not focused, warning will be shown
       objectReference: {fileID: 0}
     - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_Pivot.x
@@ -3810,6 +3825,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3836477352563087901, guid: 8762364ba73b67448b1581485d653e44, type: 3}
+      propertyPath: _tooltipText
+      value: Factor by which the base gravity is multiplied when holding soft drop
+      objectReference: {fileID: 0}
     - target: {fileID: 3838574407753458063, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: m_text
       value: x
@@ -3852,6 +3871,11 @@ PrefabInstance:
     - target: {fileID: 2268679713801054009, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_Name
       value: MiddleMouseRepositionChanger
+      objectReference: {fileID: 0}
+    - target: {fileID: 4766382872581782604, guid: e7aea60a5568552498289ef63b628d48, type: 3}
+      propertyPath: _tooltipText
+      value: If this is turned on, you'll be able to reposition board ingame when
+        dragging middle mouse button
       objectReference: {fileID: 0}
     - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_Pivot.x
@@ -4573,6 +4597,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ColorGhostPieceChanger
       objectReference: {fileID: 0}
+    - target: {fileID: 4766382872581782604, guid: e7aea60a5568552498289ef63b628d48, type: 3}
+      propertyPath: _tooltipText
+      value: If this is on, the ghost piece will be colored with the color of the
+        active piece
+      objectReference: {fileID: 0}
     - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -4971,6 +5000,10 @@ PrefabInstance:
     - target: {fileID: 3811803258793314942, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3836477352563087901, guid: 8762364ba73b67448b1581485d653e44, type: 3}
+      propertyPath: _tooltipText
+      value: The time between individual automatic movements left or right
       objectReference: {fileID: 0}
     - target: {fileID: 6182301644222368524, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: m_AnchorMax.y
@@ -5390,6 +5423,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3836477352563087901, guid: 8762364ba73b67448b1581485d653e44, type: 3}
+      propertyPath: _tooltipText
+      value: After piece has been placed, hard drop input will be ignored for this
+        amount of time
+      objectReference: {fileID: 0}
     - target: {fileID: 6182301644222368524, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -5657,6 +5695,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3609489528568122012, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2842199616795122517}
+    - targetCorrespondingSourceObject: {fileID: 3609489528568122012, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8954584071561014381}
   m_SourcePrefab: {fileID: 100100000, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
 --- !u!1 &1542200178048012746 stripped
 GameObject:
@@ -5675,6 +5716,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9f28be4b6c14fc99fe7b83dcd3a3d93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8954584071561014381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1542200178048012746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc1865ed61c49e9a8a6b7510c04638b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tooltipText: When the board height is this many blocks below the lethal height,
+    warning piece will start showing
 --- !u!224 &1542200178048012747 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3609489528568122013, guid: 576475e3dd51e31498c6e4db111dbde3, type: 3}
@@ -7115,6 +7170,13 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3836477352563087901, guid: 8762364ba73b67448b1581485d653e44, type: 3}
+      propertyPath: _tooltipText
+      value: 'The time before piece starts moving automatically after delay
+
+        has
+        been trigerred. Check also setting "Delay DAS On"'
+      objectReference: {fileID: 0}
     - target: {fileID: 6182301644222368524, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -8522,42 +8584,6 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
       objectReference: {fileID: 8981061243479116729}
-    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 2842199616942510332}
-    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Export
-      objectReference: {fileID: 0}
-    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Blockstacker.GlobalSettings.AppSettingsExporter, Blockstacker.GlobalSettings
-      objectReference: {fileID: 0}
-    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 7167318321076373142, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
       propertyPath: m_Name
       value: ExportButton
@@ -8602,6 +8628,11 @@ PrefabInstance:
     - target: {fileID: 2268679713801054009, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_Name
       value: HearNextPiecesChanger
+      objectReference: {fileID: 0}
+    - target: {fileID: 4766382872581782604, guid: e7aea60a5568552498289ef63b628d48, type: 3}
+      propertyPath: _tooltipText
+      value: If this is on and your sound pack supports it, you'll be able to hear
+        next piece sounds
       objectReference: {fileID: 0}
     - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_Pivot.x
@@ -8999,34 +9030,6 @@ PrefabInstance:
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
       objectReference: {fileID: 7808583774110427902}
-    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 2842199616942510332}
-    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Import
-      objectReference: {fileID: 0}
-    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Blockstacker.GlobalSettings.AppSettingsExporter, Blockstacker.GlobalSettings
-      objectReference: {fileID: 0}
-    - target: {fileID: 5416753845736383557, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 7167318321076373142, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
       propertyPath: m_Name
       value: ImportButton
@@ -9078,7 +9081,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2987071467723112421, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 5027.7505
+      value: -0.00012207031
       objectReference: {fileID: 0}
     - target: {fileID: 4067438773607615757, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Pivot.x
@@ -9190,11 +9193,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6616534284926214280, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Size
-      value: 0.14578588
+      value: 0.14735226
       objectReference: {fileID: 0}
     - target: {fileID: 6616534284926214280, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Value
-      value: 0.10617769
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7167318321076373142, guid: 6a9155a6979f32f438b38184918d05d8, type: 3}
       propertyPath: m_Name
@@ -10029,6 +10032,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4857886161598184209}
     m_Modifications:
+    - target: {fileID: 1015992499924046580, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4067438773607615757, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -10112,6 +10119,10 @@ PrefabInstance:
     - target: {fileID: 4644399572571098964, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
       propertyPath: m_fontSize
       value: 32.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4644399572571098964, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7167318321076373142, guid: f6d318d3019b2d94faf501c0c9ee0fc0, type: 3}
       propertyPath: m_Name
@@ -10319,6 +10330,11 @@ PrefabInstance:
     - target: {fileID: 2268679713801054009, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_Name
       value: CtrlScrollZoomChanger
+      objectReference: {fileID: 0}
+    - target: {fileID: 4766382872581782604, guid: e7aea60a5568552498289ef63b628d48, type: 3}
+      propertyPath: _tooltipText
+      value: If turned on, you'll be able to change board zoom ingame when holding
+        Ctrl and scrolling
       objectReference: {fileID: 0}
     - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_Pivot.x
@@ -12350,6 +12366,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4732231236605652697, guid: 94b6e27a66804cf4d8a72fd9e31b5c97, type: 3}
+      propertyPath: _tooltipText
+      value: 'After which actions should automatic movement be delayed.
+
+        Also
+        check "DAS Cut Delay"'
+      objectReference: {fileID: 0}
     - target: {fileID: 5064329277376770311, guid: 94b6e27a66804cf4d8a72fd9e31b5c97, type: 3}
       propertyPath: m_Name
       value: DelayDASOnChanger
@@ -13986,6 +14009,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4732231236605652697, guid: 94b6e27a66804cf4d8a72fd9e31b5c97, type: 3}
+      propertyPath: _tooltipText
+      value: 'If the active piece wants to move diagonally, set preferred behavior.
+
+        Note:
+        This doesn''t prevent diagonal movement, only ignores inputs'
+      objectReference: {fileID: 0}
     - target: {fileID: 5064329277376770311, guid: 94b6e27a66804cf4d8a72fd9e31b5c97, type: 3}
       propertyPath: m_Name
       value: DiagonalLockBehaviorChanger
@@ -14502,6 +14532,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PauseGamesOutOfFocusChanger
       objectReference: {fileID: 0}
+    - target: {fileID: 4766382872581782604, guid: e7aea60a5568552498289ef63b628d48, type: 3}
+      propertyPath: _tooltipText
+      value: When this is on and the game or replay gets out of focus, it will be
+        paused automatically
+      objectReference: {fileID: 0}
     - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -14611,128 +14646,6 @@ PrefabInstance:
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
   m_PrefabInstance: {fileID: 3162946829085908474}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &3217988558020638239
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 2864701119294005007}
-    m_Modifications:
-    - target: {fileID: 2268679713801054009, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_Name
-      value: CheckForGravityAfterDASChanger
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_RootOrder
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 70
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7734393948807267264, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: m_text
-      value: Check For Gravity After Each Movement
-      objectReference: {fileID: 0}
-    - target: {fileID: 8938684458795999658, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: _autoformatName
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8938684458795999658, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: _controlPath.Array.data[0]
-      value: Handling
-      objectReference: {fileID: 0}
-    - target: {fileID: 8938684458795999658, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-      propertyPath: _controlPath.Array.data[1]
-      value: CheckForGravityAfterEachMovement
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: e7aea60a5568552498289ef63b628d48, type: 3}
---- !u!224 &7554352622149835453 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
-  m_PrefabInstance: {fileID: 3217988558020638239}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3448660166130442535
 PrefabInstance:
@@ -14994,13 +14907,34 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7167318321076373142, guid: 0ac5efb20204592418237d3c892abf88, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 678279415898297257}
   m_SourcePrefab: {fileID: 100100000, guid: 0ac5efb20204592418237d3c892abf88, type: 3}
 --- !u!224 &1049867695318500108 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4067438773607615757, guid: 0ac5efb20204592418237d3c892abf88, type: 3}
   m_PrefabInstance: {fileID: 3955166633044364801}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6166832039669418135 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7167318321076373142, guid: 0ac5efb20204592418237d3c892abf88, type: 3}
+  m_PrefabInstance: {fileID: 3955166633044364801}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &678279415898297257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6166832039669418135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc1865ed61c49e9a8a6b7510c04638b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tooltipText: This is the path where your persistent settings are saved
 --- !u!1001 &4050922415882580499
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15133,6 +15067,13 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3836477352563087901, guid: 8762364ba73b67448b1581485d653e44, type: 3}
+      propertyPath: _tooltipText
+      value: 'When game gravity is set to 0, this will be the base gravity
+
+        that
+        Soft Drop Factor will increase'
+      objectReference: {fileID: 0}
     - target: {fileID: 3838574407753458063, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: m_text
       value: bpf
@@ -15165,8 +15106,29 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 8854703242563222814, guid: 8762364ba73b67448b1581485d653e44, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2798936850202294052, guid: 8762364ba73b67448b1581485d653e44, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4497140664107239567}
   m_SourcePrefab: {fileID: 100100000, guid: 8762364ba73b67448b1581485d653e44, type: 3}
+--- !u!1 &2224802701971539255 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2798936850202294052, guid: 8762364ba73b67448b1581485d653e44, type: 3}
+  m_PrefabInstance: {fileID: 4050922415882580499}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4497140664107239567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2224802701971539255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc1865ed61c49e9a8a6b7510c04638b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tooltipText: Blocks per Frame (reference frame is one 60th of a second)
 --- !u!224 &2423662138364494867 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1843475996571776512, guid: 8762364ba73b67448b1581485d653e44, type: 3}
@@ -15401,6 +15363,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3836477352563087901, guid: 8762364ba73b67448b1581485d653e44, type: 3}
+      propertyPath: _tooltipText
+      value: "The time between initial keypress and start of automatic \nmovement
+        left or right"
+      objectReference: {fileID: 0}
     - target: {fileID: 6182301644222368524, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -15481,7 +15448,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7213404066793903353, guid: 2fb33f570248a88409c0955021256c90, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 1240
+      value: 1170
       objectReference: {fileID: 0}
     - target: {fileID: 7213404066793903353, guid: 2fb33f570248a88409c0955021256c90, type: 3}
       propertyPath: m_LocalPosition.x
@@ -15575,9 +15542,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7213404066793903353, guid: 2fb33f570248a88409c0955021256c90, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2234901959144132429}
-    - targetCorrespondingSourceObject: {fileID: 7213404066793903353, guid: 2fb33f570248a88409c0955021256c90, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7554352622149835453}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2fb33f570248a88409c0955021256c90, type: 3}
 --- !u!224 &2864701119294005007 stripped
@@ -15906,6 +15870,13 @@ PrefabInstance:
     - target: {fileID: 2268679713801054009, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_Name
       value: CancelDASDelayChanger
+      objectReference: {fileID: 0}
+    - target: {fileID: 4766382872581782604, guid: e7aea60a5568552498289ef63b628d48, type: 3}
+      propertyPath: _tooltipText
+      value: 'If the DAS delay has been trigerred, having this on will cancel the
+        delay
+
+        on a movement key down'
       objectReference: {fileID: 0}
     - target: {fileID: 4935633086447578274, guid: e7aea60a5568552498289ef63b628d48, type: 3}
       propertyPath: m_Pivot.x
@@ -16364,6 +16335,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3836477352563087901, guid: 8762364ba73b67448b1581485d653e44, type: 3}
+      propertyPath: _tooltipText
+      value: "The time the soft drop activates after it has been pressed. \r\nPiece
+        will always move 1 block down when softdrop is pressed before activation"
+      objectReference: {fileID: 0}
     - target: {fileID: 6182301644222368524, guid: 8762364ba73b67448b1581485d653e44, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -16773,6 +16749,10 @@ PrefabInstance:
       propertyPath: m_text
       value: Enter text...
       objectReference: {fileID: 0}
+    - target: {fileID: 1428978831477228876, guid: 802f1823dc0f08a4bb0f3464ef100b1a, type: 3}
+      propertyPath: m_fontSize
+      value: 32.3
+      objectReference: {fileID: 0}
     - target: {fileID: 3978033133046934711, guid: 802f1823dc0f08a4bb0f3464ef100b1a, type: 3}
       propertyPath: _controlPath.Array.data[0]
       value: Gameplay
@@ -16868,6 +16848,11 @@ PrefabInstance:
     - target: {fileID: 5061478143323411093, guid: 802f1823dc0f08a4bb0f3464ef100b1a, type: 3}
       propertyPath: m_text
       value: Replay Naming Format
+      objectReference: {fileID: 0}
+    - target: {fileID: 7226736516377141903, guid: 802f1823dc0f08a4bb0f3464ef100b1a, type: 3}
+      propertyPath: _tooltipText
+      value: How the autosaved replays should be named. Accepts arguments {GameType},
+        {MainStat}
       objectReference: {fileID: 0}
     - target: {fileID: 7308942500434525715, guid: 802f1823dc0f08a4bb0f3464ef100b1a, type: 3}
       propertyPath: m_Name

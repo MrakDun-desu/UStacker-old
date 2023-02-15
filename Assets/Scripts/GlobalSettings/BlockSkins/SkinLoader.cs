@@ -35,12 +35,12 @@ namespace UStacker.GlobalSettings.BlockSkins
             if (Path.GetFileName(path).Equals(DEFAULT_PATH))
             {
                 if (!Directory.Exists(path))
-                {
-                    SkinChanged?.Invoke();
-                    if (showAlert)
-                        AlertDisplayer.Instance.ShowAlert(defaultAlert);
-                    return;
-                }
+                    Directory.CreateDirectory(path);
+                
+                SkinChanged?.Invoke();
+                if (showAlert)
+                    AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                return;
             }
 
             if (!Directory.Exists(path))

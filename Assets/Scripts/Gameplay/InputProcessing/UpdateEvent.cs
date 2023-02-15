@@ -13,7 +13,7 @@ namespace UStacker.Gameplay.InputProcessing
         [SerializeField] private EventType _type;
         public EventType Type => _type;
         
-        [SerializeField] private double _time;
+        [SerializeField] private double _time = double.PositiveInfinity;
         public double Time
         {
             get => _time;
@@ -28,12 +28,11 @@ namespace UStacker.Gameplay.InputProcessing
             }
         }
 
-        public UpdateEvent(List<UpdateEvent> parentList, double time, EventType type)
+        public UpdateEvent(List<UpdateEvent> parentList, EventType type)
         {
             _parentList = parentList;
             _parentList.Add(this);
             _priority = LastPriority++;
-            Time = time;
             _type = type;
         }
 

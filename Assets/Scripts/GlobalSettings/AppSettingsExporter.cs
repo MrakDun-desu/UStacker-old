@@ -1,8 +1,8 @@
 using System;
-using System.Threading.Tasks;
 using UStacker.GlobalSettings.Changers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UStacker.GlobalSettings
 {
@@ -14,19 +14,18 @@ namespace UStacker.GlobalSettings
         [SerializeField] private GameObject _successSignal;
         [SerializeField] private TMP_Text _successText;
 
+        [SerializeField] private Button _exportButton;
+        [SerializeField] private Button _importButton;
+
         public event Action SettingChanged;
 
-        public void Export()
+        private void Awake()
         {
-            _ = ExportAsync();
+            _exportButton.onClick.AddListener(ExportAsync);
+            _importButton.onClick.AddListener(ImportAsync);
         }
 
-        public void Import()
-        {
-            _ = ImportAsync();
-        }
-
-        private async Task ExportAsync()
+        private async void ExportAsync()
         {
             var path = _pathField.text;
             _errorSignal.SetActive(false);
@@ -42,7 +41,7 @@ namespace UStacker.GlobalSettings
             _errorText.text = "Couldn't find save path!";
         }
 
-        private async Task ImportAsync()
+        private async void ImportAsync()
         {
             var path = _pathField.text;
             _errorSignal.SetActive(false);

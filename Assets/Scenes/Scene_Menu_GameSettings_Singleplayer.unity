@@ -1319,7 +1319,10 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 7976417072925347123, guid: ec02a401ab5546943b3ba3550c8bc597, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4501789439661490835, guid: ec02a401ab5546943b3ba3550c8bc597, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6705578015730411977}
   m_SourcePrefab: {fileID: 100100000, guid: ec02a401ab5546943b3ba3550c8bc597, type: 3}
 --- !u!1 &6705578015730411972 stripped
 GameObject:
@@ -1359,6 +1362,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b340497df0cb48f0a5485fc07c4aaafb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &6705578015730411976 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4501789439661490835, guid: ec02a401ab5546943b3ba3550c8bc597, type: 3}
+  m_PrefabInstance: {fileID: 6705578015730411971}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6705578015730411977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6705578015730411976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc1865ed61c49e9a8a6b7510c04638b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tooltipText: 'Your preferred starting level. The game manager can choose to ignore
+
+    this
+    if set incorrectly'
 --- !u!1001 &8338311041139719455
 PrefabInstance:
   m_ObjectHideFlags: 0

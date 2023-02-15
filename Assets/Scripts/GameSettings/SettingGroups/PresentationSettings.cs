@@ -14,8 +14,6 @@ namespace UStacker.GameSettings.SettingGroups
 
         [field: SerializeField]
         public string Title { get; set; } = "Custom game";
-        [field: SerializeField]
-        public bool UseCountdown { get; set; } = true;
 
         public float CountdownInterval
         {
@@ -26,7 +24,7 @@ namespace UStacker.GameSettings.SettingGroups
         public uint CountdownCount
         {
             get => _countdownCount;
-            set => _countdownCount = Math.Min(value, 10);
+            set => _countdownCount = Math.Clamp(value, 1, 10);
         }
     }
 }

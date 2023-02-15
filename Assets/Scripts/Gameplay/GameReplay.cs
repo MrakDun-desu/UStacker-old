@@ -41,7 +41,7 @@ namespace UStacker.Gameplay
             var filename = AppSettings.Gameplay.ReplayNamingFormat
                 .Replace("{GameType}", GameType)
                 .Replace("{MainStat}", mainStat) +
-                TimeStamp.ToLocalTime().ToString(CultureInfo.InvariantCulture);
+                TimeStamp.ToLocalTime().ToString(CultureInfo.InvariantCulture) + ".bsrep";
 
             var invalidChars = new List<char>();
             invalidChars.AddRange(Path.GetInvalidPathChars());
@@ -55,7 +55,6 @@ namespace UStacker.Gameplay
 
             filename = invalidChars.Aggregate(filename,
                 (current, invalidChar) => current.Replace(invalidChar, invalidCharReplacement));
-            filename += ".bsrep";
 
             var savePath = Path.Combine(PersistentPaths.Replays, GameType, filename);
             if (!File.Exists(savePath))

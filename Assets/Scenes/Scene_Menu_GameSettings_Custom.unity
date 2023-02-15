@@ -249,6 +249,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2038722358}
     m_Modifications:
+    - target: {fileID: 1323503440380364713, guid: 1dbbd1c143a493b4c8bf5cace00ab861, type: 3}
+      propertyPath: _tooltipText
+      value: Displayed height of the board
+      objectReference: {fileID: 0}
     - target: {fileID: 1720015394050291233, guid: 1dbbd1c143a493b4c8bf5cace00ab861, type: 3}
       propertyPath: _maxValue
       value: 500
@@ -393,6 +397,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2038722358}
     m_Modifications:
+    - target: {fileID: 1323503440380364713, guid: 1dbbd1c143a493b4c8bf5cace00ab861, type: 3}
+      propertyPath: _tooltipText
+      value: Height that's relevant for topout (only for certain topout conditions)
+      objectReference: {fileID: 0}
     - target: {fileID: 1720015394050291233, guid: 1dbbd1c143a493b4c8bf5cace00ab861, type: 3}
       propertyPath: _maxValue
       value: 550
@@ -533,6 +541,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1249177159}
     m_Modifications:
+    - target: {fileID: 2511372121493422622, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
+      propertyPath: _tooltipText
+      value: 'If the DAS delay has been trigerred, having this on will cancel the
+        delay
+
+        on a movement key down'
+      objectReference: {fileID: 0}
     - target: {fileID: 3223690956433751598, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
       propertyPath: _autoformatName
       value: 1
@@ -559,7 +574,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6413955521503257764, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
       propertyPath: m_text
-      value: Cancel DAS Delay With Movement
+      value: Cancel Das Delay With Input
       objectReference: {fileID: 0}
     - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
       propertyPath: m_Pivot.x
@@ -892,6 +907,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4309478060658124228, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
+      propertyPath: _tooltipText
+      value: Handles how the garbage is generated
+      objectReference: {fileID: 0}
     - target: {fileID: 8306327685428267460, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_Name
       value: GarbageGenerationChanger
@@ -1176,6 +1195,10 @@ PrefabInstance:
     - target: {fileID: 1432292492975654285, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4309478060658124228, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
+      propertyPath: _tooltipText
+      value: On which condition should player top out
       objectReference: {fileID: 0}
     - target: {fileID: 8306327685428267460, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_Name
@@ -1497,6 +1520,11 @@ PrefabInstance:
       propertyPath: _controlPath.Array.data[2]
       value: SoftDropDelay
       objectReference: {fileID: 0}
+    - target: {fileID: 3285488764582992089, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
+      propertyPath: _tooltipText
+      value: "The time the soft drop activates after it has been pressed. \r\nPiece
+        will always move 1 block down when softdrop is pressed before activation"
+      objectReference: {fileID: 0}
     - target: {fileID: 4302814093935403129, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: m_Name
       value: SDDChanger
@@ -1609,6 +1637,11 @@ PrefabInstance:
     - target: {fileID: 7829860396779827358, guid: 6de1054b09e402b4a8aa489e56cbd185, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8156920806394529651, guid: 6de1054b09e402b4a8aa489e56cbd185, type: 3}
+      propertyPath: _tooltipText
+      value: If custom rotation system is picked above, pick used rotation system
+        here
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -1775,6 +1808,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8156920806394529651, guid: 6de1054b09e402b4a8aa489e56cbd185, type: 3}
+      propertyPath: _tooltipText
+      value: If above field is set to Custom, pick used garbage generator here
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 7165656042241579732, guid: 6de1054b09e402b4a8aa489e56cbd185, type: 3}
@@ -1848,6 +1885,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 482431228}
     m_Modifications:
+    - target: {fileID: 863608015059594841, guid: 3d4a12307168d4840841b3e0f6b46bd8, type: 3}
+      propertyPath: _tooltipText
+      value: Game title, countdown, music and stat counting
+      objectReference: {fileID: 0}
     - target: {fileID: 3907922439125200126, guid: 3d4a12307168d4840841b3e0f6b46bd8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2117,13 +2158,20 @@ PrefabInstance:
       propertyPath: _controlPath.Array.data[2]
       value: ZeroGravitySoftDropBase
       objectReference: {fileID: 0}
+    - target: {fileID: 3285488764582992089, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
+      propertyPath: _tooltipText
+      value: 'When game gravity is set to 0, this will be the base gravity
+
+        that
+        Soft Drop Factor will increase'
+      objectReference: {fileID: 0}
     - target: {fileID: 4302814093935403129, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: m_Name
       value: ZGSDBChanger
       objectReference: {fileID: 0}
     - target: {fileID: 7112973056648033966, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: m_text
-      value: Soft Drop Factor
+      value: Zero Gravity Soft Drop Base
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2226,6 +2274,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8156920806394529651, guid: 6de1054b09e402b4a8aa489e56cbd185, type: 3}
+      propertyPath: _tooltipText
+      value: If above field is set to Custom, choose your used game manager here
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 7165656042241579732, guid: 6de1054b09e402b4a8aa489e56cbd185, type: 3}
@@ -2304,6 +2356,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 482431228}
     m_Modifications:
+    - target: {fileID: 863608015059594841, guid: 3d4a12307168d4840841b3e0f6b46bd8, type: 3}
+      propertyPath: _tooltipText
+      value: Gravity and piece locking
+      objectReference: {fileID: 0}
     - target: {fileID: 3907922439125200126, guid: 3d4a12307168d4840841b3e0f6b46bd8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2688,7 +2744,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4612703854362489823, guid: 1dbbd1c143a493b4c8bf5cace00ab861, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -285
+      value: -205
       objectReference: {fileID: 0}
     - target: {fileID: 4612703854362489823, guid: 1dbbd1c143a493b4c8bf5cace00ab861, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2828,6 +2884,10 @@ PrefabInstance:
     - target: {fileID: 2916272061821203112, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: _controlPath.Array.data[1]
       value: LineClearDelay
+      objectReference: {fileID: 0}
+    - target: {fileID: 3285488764582992089, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
+      propertyPath: _tooltipText
+      value: How long to wait before spawn after piece placement has cleared lines
       objectReference: {fileID: 0}
     - target: {fileID: 4302814093935403129, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: m_Name
@@ -3288,6 +3348,12 @@ PrefabInstance:
       propertyPath: _controlPath.Array.data[2]
       value: AutomaticRepeatRate
       objectReference: {fileID: 0}
+    - target: {fileID: 3285488764582992089, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
+      propertyPath: _tooltipText
+      value: 'The time between individual automatic movements left or right
+
+'
+      objectReference: {fileID: 0}
     - target: {fileID: 4302814093935403129, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: m_Name
       value: ARRChanger
@@ -3534,13 +3600,35 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6337621787057528325, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 765438378}
   m_SourcePrefab: {fileID: 100100000, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
 --- !u!224 &765438376 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
   m_PrefabInstance: {fileID: 765438375}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &765438377 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6337621787057528325, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
+  m_PrefabInstance: {fileID: 765438375}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &765438378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 765438377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc1865ed61c49e9a8a6b7510c04638b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tooltipText: If this is set, user's preferred handling will be overriden for this
+    game
 --- !u!1001 &788670538
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3922,7 +4010,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3612910481505048551, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 475
+      value: 395
       objectReference: {fileID: 0}
     - target: {fileID: 6431416835081023578, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3962,9 +4050,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3612910481505048551, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1026596317}
-    - targetCorrespondingSourceObject: {fileID: 3612910481505048551, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1009652938}
     - targetCorrespondingSourceObject: {fileID: 3612910481505048551, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       insertIndex: -1
       addedObject: {fileID: 9136610716811330224}
@@ -4160,6 +4245,10 @@ PrefabInstance:
     - target: {fileID: 2010350717037250547, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_text
       value: Lock Delay Type
+      objectReference: {fileID: 0}
+    - target: {fileID: 4309478060658124228, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
+      propertyPath: _tooltipText
+      value: When to start the lock delay
       objectReference: {fileID: 0}
     - target: {fileID: 8306327685428267460, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_Name
@@ -4607,12 +4696,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2916272061821203112, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
+      propertyPath: _autoformatName
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2916272061821203112, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: _controlPath.Array.data[0]
       value: Gravity
       objectReference: {fileID: 0}
     - target: {fileID: 2916272061821203112, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: _controlPath.Array.data[1]
       value: HardLockAmount
+      objectReference: {fileID: 0}
+    - target: {fileID: 3285488764582992089, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
+      propertyPath: _tooltipText
+      value: After this amount since touching ground, the piece will hard lock
       objectReference: {fileID: 0}
     - target: {fileID: 4302814093935403129, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: m_Name
@@ -4640,6 +4737,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1716086212}
     m_Modifications:
+    - target: {fileID: 2511372121493422622, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
+      propertyPath: _tooltipText
+      value: 'If set, lethal height condition will be ignored on line clears.
+
+        Only
+        applies if topout condition is not set to Piece Spawn.'
+      objectReference: {fileID: 0}
     - target: {fileID: 3223690956433751598, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
       propertyPath: _controlPath.Array.data[0]
       value: Gravity
@@ -4651,6 +4755,10 @@ PrefabInstance:
     - target: {fileID: 3255852869205803101, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
       propertyPath: m_Name
       value: AllowClutchClearsChanger
+      objectReference: {fileID: 0}
+    - target: {fileID: 6413955521503257764, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
+      propertyPath: m_text
+      value: Allow Clutch Clears
       objectReference: {fileID: 0}
     - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
       propertyPath: m_Pivot.x
@@ -4754,6 +4862,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1325995150}
     m_Modifications:
+    - target: {fileID: 2511372121493422622, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
+      propertyPath: _tooltipText
+      value: If set, the game will count as finished even on topout
+      objectReference: {fileID: 0}
     - target: {fileID: 3223690956433751598, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
       propertyPath: _controlPath.Array.data[0]
       value: Objective
@@ -4765,6 +4877,10 @@ PrefabInstance:
     - target: {fileID: 3255852869205803101, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
       propertyPath: m_Name
       value: ToppingOutIsOkayChanger
+      objectReference: {fileID: 0}
+    - target: {fileID: 6413955521503257764, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
+      propertyPath: m_text
+      value: Topping Out Is Okay
       objectReference: {fileID: 0}
     - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
       propertyPath: m_Pivot.x
@@ -4956,6 +5072,13 @@ PrefabInstance:
       propertyPath: m_text
       value: Delay Das On
       objectReference: {fileID: 0}
+    - target: {fileID: 4309478060658124228, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
+      propertyPath: _tooltipText
+      value: 'After which actions should automatic movement be delayed.
+
+        Also
+        check "DAS Cut Delay"'
+      objectReference: {fileID: 0}
     - target: {fileID: 8306327685428267460, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_Name
       value: DelayDASOnChanger
@@ -5029,120 +5152,6 @@ MonoBehaviour:
     Value: 2
   - Name: Both
     Value: 255
---- !u!1001 &1009652937
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 841209434}
-    m_Modifications:
-    - target: {fileID: 3223690956433751598, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: _controlPath.Array.data[0]
-      value: Presentation
-      objectReference: {fileID: 0}
-    - target: {fileID: 3223690956433751598, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: _controlPath.Array.data[1]
-      value: UseCountdown
-      objectReference: {fileID: 0}
-    - target: {fileID: 3255852869205803101, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_Name
-      value: UseCountdownChanger
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_RootOrder
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 1250
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 640
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -125
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
---- !u!224 &1009652938 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-  m_PrefabInstance: {fileID: 1009652937}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1026596316
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5826,11 +5835,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7167318321076373142, guid: 583e654ac30207f49811b66c8f542e04, type: 3}
   m_PrefabInstance: {fileID: 1161057086}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &1164741101 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-  m_PrefabInstance: {fileID: 1932965428}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1182672968
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5922,6 +5926,13 @@ PrefabInstance:
     - target: {fileID: 1432292492975654285, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4309478060658124228, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
+      propertyPath: _tooltipText
+      value: 'Handles how the score is counted.
+
+        Has the greatest control
+        over the board.'
       objectReference: {fileID: 0}
     - target: {fileID: 8306327685428267460, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_Name
@@ -6282,8 +6293,6 @@ MonoBehaviour:
   _autoformatName: 1
   _dropdown: {fileID: 1244404255}
   _values:
-  - Name: UStacker Rotation System
-    Value: 4
   - Name: Super Rotation System
     Value: 1
   - Name: Super Rotation System+
@@ -6370,19 +6379,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3612910481505048551, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 1875
+      value: 1795
       objectReference: {fileID: 0}
     - target: {fileID: 3612910481505048551, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000061035156
+      value: 1169.5449
       objectReference: {fileID: 0}
     - target: {fileID: 4649176877981468810, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_Size
-      value: 0.29866666
+      value: 0.3119777
       objectReference: {fileID: 0}
     - target: {fileID: 4649176877981468810, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 0.053
       objectReference: {fileID: 0}
     - target: {fileID: 6431416835081023578, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_AnchorMax.x
@@ -6402,11 +6411,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6861748610765409644, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0.34844288
       objectReference: {fileID: 0}
     - target: {fileID: 6861748610765409644, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.70133334
+      value: 0.036465228
       objectReference: {fileID: 0}
     - target: {fileID: 8656192628630220436, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_Name
@@ -6473,9 +6482,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3612910481505048551, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       insertIndex: -1
       addedObject: {fileID: 157351107}
-    - targetCorrespondingSourceObject: {fileID: 3612910481505048551, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1164741101}
     - targetCorrespondingSourceObject: {fileID: 3612910481505048551, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1418158209}
@@ -6585,6 +6591,10 @@ PrefabInstance:
     - target: {fileID: 1432292492975654285, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4309478060658124228, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
+      propertyPath: _tooltipText
+      value: The stat that will be displayed as the most important in the end screen
       objectReference: {fileID: 0}
     - target: {fileID: 8306327685428267460, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_Name
@@ -6758,7 +6768,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7829860396779827358, guid: 6de1054b09e402b4a8aa489e56cbd185, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -445
+      value: -365
       objectReference: {fileID: 0}
     - target: {fileID: 7829860396779827358, guid: 6de1054b09e402b4a8aa489e56cbd185, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -6925,6 +6935,13 @@ PrefabInstance:
     - target: {fileID: 2916272061821203112, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: _controlPath.Array.data[1]
       value: DefaultLockDelay
+      objectReference: {fileID: 0}
+    - target: {fileID: 3285488764582992089, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
+      propertyPath: _tooltipText
+      value: 'If game manager doesn''t set the lock delay, this lock delay will be
+        used.
+
+        Measured in seconds.'
       objectReference: {fileID: 0}
     - target: {fileID: 4302814093935403129, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: m_Name
@@ -7493,6 +7510,13 @@ PrefabInstance:
       propertyPath: _controlPath.Array.data[1]
       value: EndConditionCount
       objectReference: {fileID: 0}
+    - target: {fileID: 3285488764582992089, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
+      propertyPath: _tooltipText
+      value: 'If end condition reaches this amount, the game will end.
+
+        For
+        Time, this is measured in seconds'
+      objectReference: {fileID: 0}
     - target: {fileID: 4302814093935403129, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: m_Name
       value: EndConditionCountChanger
@@ -7623,6 +7647,13 @@ PrefabInstance:
       propertyPath: _controlPath.Array.data[2]
       value: DasCutDelay
       objectReference: {fileID: 0}
+    - target: {fileID: 3285488764582992089, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
+      propertyPath: _tooltipText
+      value: 'The time before piece starts moving automatically after delay
+
+        has
+        been trigerred. Check also setting "Delay DAS On"'
+      objectReference: {fileID: 0}
     - target: {fileID: 4302814093935403129, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: m_Name
       value: DCDChanger
@@ -7719,7 +7750,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1432292492975654285, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -1565
+      value: -1485
       objectReference: {fileID: 0}
     - target: {fileID: 1432292492975654285, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -7736,6 +7767,10 @@ PrefabInstance:
     - target: {fileID: 2010350717037250547, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_text
       value: Simultaneous Das Behavior
+      objectReference: {fileID: 0}
+    - target: {fileID: 4309478060658124228, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
+      propertyPath: _tooltipText
+      value: How to treat automatic movement when both movement keys are pressed
       objectReference: {fileID: 0}
     - target: {fileID: 8306327685428267460, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_Name
@@ -7902,7 +7937,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7829860396779827358, guid: 6de1054b09e402b4a8aa489e56cbd185, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -365
+      value: -285
       objectReference: {fileID: 0}
     - target: {fileID: 7829860396779827358, guid: 6de1054b09e402b4a8aa489e56cbd185, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -7982,6 +8017,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 482431228}
     m_Modifications:
+    - target: {fileID: 863608015059594841, guid: 3d4a12307168d4840841b3e0f6b46bd8, type: 3}
+      propertyPath: _tooltipText
+      value: What controls to allow, rotation system and forced handling
+      objectReference: {fileID: 0}
     - target: {fileID: 3907922439125200126, guid: 3d4a12307168d4840841b3e0f6b46bd8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -8701,6 +8740,10 @@ PrefabInstance:
       propertyPath: _controlPath.Array.data[2]
       value: SoftDropFactor
       objectReference: {fileID: 0}
+    - target: {fileID: 3285488764582992089, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
+      propertyPath: _tooltipText
+      value: Factor by which the base gravity is multiplied when holding soft drop
+      objectReference: {fileID: 0}
     - target: {fileID: 4302814093935403129, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: m_Name
       value: SDFChanger
@@ -8853,6 +8896,11 @@ PrefabInstance:
       propertyPath: _controlPath.Array.data[2]
       value: DoubleDropPreventionInterval
       objectReference: {fileID: 0}
+    - target: {fileID: 3285488764582992089, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
+      propertyPath: _tooltipText
+      value: "\rAfter piece has been placed, hard drop input will be ignored for
+        this amount of time"
+      objectReference: {fileID: 0}
     - target: {fileID: 4302814093935403129, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: m_Name
       value: DDPIChanger
@@ -8986,6 +9034,11 @@ PrefabInstance:
     - target: {fileID: 2916272061821203112, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: _controlPath.Array.data[2]
       value: DelayedAutoShift
+      objectReference: {fileID: 0}
+    - target: {fileID: 3285488764582992089, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
+      propertyPath: _tooltipText
+      value: "The time between initial keypress and start of automatic \r\nmovement
+        left or right"
       objectReference: {fileID: 0}
     - target: {fileID: 4302814093935403129, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: m_Name
@@ -9205,6 +9258,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2038722358}
     m_Modifications:
+    - target: {fileID: 1323503440380364713, guid: 1dbbd1c143a493b4c8bf5cace00ab861, type: 3}
+      propertyPath: _tooltipText
+      value: Padding for viewport in blocks. Relevant for board at 100% size.
+      objectReference: {fileID: 0}
     - target: {fileID: 1720015394050291233, guid: 1dbbd1c143a493b4c8bf5cace00ab861, type: 3}
       propertyPath: _maxValue
       value: 100
@@ -9409,7 +9466,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1432292492975654285, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -1645
+      value: -1565
       objectReference: {fileID: 0}
     - target: {fileID: 1432292492975654285, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -9426,6 +9483,13 @@ PrefabInstance:
     - target: {fileID: 2010350717037250547, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_text
       value: Diagonal Lock Behavior
+      objectReference: {fileID: 0}
+    - target: {fileID: 4309478060658124228, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
+      propertyPath: _tooltipText
+      value: 'If the active piece wants to move diagonally, set preferred behavior.
+
+        Note:
+        This doesn''t prevent diagonal movement, only ignores inputs'
       objectReference: {fileID: 0}
     - target: {fileID: 8306327685428267460, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_Name
@@ -9516,6 +9580,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2038722358}
     m_Modifications:
+    - target: {fileID: 1323503440380364713, guid: 1dbbd1c143a493b4c8bf5cace00ab861, type: 3}
+      propertyPath: _tooltipText
+      value: 'If blocks are placed above this height, they will be cut off from the
+        board.
+
+        Note: This can make the game unloseable.'
+      objectReference: {fileID: 0}
     - target: {fileID: 1720015394050291233, guid: 1dbbd1c143a493b4c8bf5cace00ab861, type: 3}
       propertyPath: _maxValue
       value: 510
@@ -9720,15 +9791,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3612910481505048551, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000061035156
+      value: 187.79498
       objectReference: {fileID: 0}
     - target: {fileID: 4649176877981468810, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_Size
-      value: 0.70351756
+      value: 0.61202186
       objectReference: {fileID: 0}
     - target: {fileID: 4649176877981468810, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 0.471
       objectReference: {fileID: 0}
     - target: {fileID: 6431416835081023578, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_AnchorMax.x
@@ -9748,11 +9819,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6861748610765409644, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0.7947596
       objectReference: {fileID: 0}
     - target: {fileID: 6861748610765409644, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.3879782
+      value: 0.1827377
       objectReference: {fileID: 0}
     - target: {fileID: 8656192628630220436, guid: 54b90ceeabec59b408a092a1973e5678, type: 3}
       propertyPath: m_Name
@@ -9823,6 +9894,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1325995150}
     m_Modifications:
+    - target: {fileID: 1323503440380364713, guid: 1dbbd1c143a493b4c8bf5cace00ab861, type: 3}
+      propertyPath: _tooltipText
+      value: 'Preferred garbage height. This will affect how much garbage
+
+        will
+        be requested, but can''t guarantee maximum height for custom generators'
+      objectReference: {fileID: 0}
     - target: {fileID: 1720015394050291233, guid: 1dbbd1c143a493b4c8bf5cace00ab861, type: 3}
       propertyPath: _maxValue
       value: 500
@@ -9953,6 +10031,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2038722358}
     m_Modifications:
+    - target: {fileID: 1323503440380364713, guid: 1dbbd1c143a493b4c8bf5cace00ab861, type: 3}
+      propertyPath: _tooltipText
+      value: Height at which the pieces spawn
+      objectReference: {fileID: 0}
     - target: {fileID: 1720015394050291233, guid: 1dbbd1c143a493b4c8bf5cace00ab861, type: 3}
       propertyPath: _maxValue
       value: 550
@@ -10179,6 +10261,10 @@ PrefabInstance:
       propertyPath: _controlPath.Array.data[1]
       value: PiecePlacementDelay
       objectReference: {fileID: 0}
+    - target: {fileID: 3285488764582992089, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
+      propertyPath: _tooltipText
+      value: How long to wait before spawn after piece has been placed
+      objectReference: {fileID: 0}
     - target: {fileID: 4302814093935403129, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: m_Name
       value: PiecePlacementDelayChanger
@@ -10351,131 +10437,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &1932965428
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1249177159}
-    m_Modifications:
-    - target: {fileID: 3223690956433751598, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: _autoformatName
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3223690956433751598, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: _controlPath.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3223690956433751598, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: _controlPath.Array.data[0]
-      value: Controls
-      objectReference: {fileID: 0}
-    - target: {fileID: 3223690956433751598, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: _controlPath.Array.data[1]
-      value: Handling
-      objectReference: {fileID: 0}
-    - target: {fileID: 3223690956433751598, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: _controlPath.Array.data[2]
-      value: CheckForGravityAfterEachMovement
-      objectReference: {fileID: 0}
-    - target: {fileID: 3255852869205803101, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_Name
-      value: CheckForGravityAfterMovementChanger
-      objectReference: {fileID: 0}
-    - target: {fileID: 6413955521503257764, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_text
-      value: Check For Gravity After Each Movement
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_RootOrder
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 1250
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 640
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -1485
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514619031000615878, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c35d48ccab5f95c4c9bbaf99a711e255, type: 3}
 --- !u!1001 &1937842930
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10572,6 +10533,13 @@ PrefabInstance:
       propertyPath: m_text
       value: Lock Delay Type
       objectReference: {fileID: 0}
+    - target: {fileID: 4309478060658124228, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
+      propertyPath: _tooltipText
+      value: 'How should the hard lock be counted. Inputs count every keypress,
+
+        movements
+        count every movement left, right, or rotation, time counts seconds.'
+      objectReference: {fileID: 0}
     - target: {fileID: 8306327685428267460, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_Name
       value: HardLockTypeChanger
@@ -10652,6 +10620,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 482431228}
     m_Modifications:
+    - target: {fileID: 863608015059594841, guid: 3d4a12307168d4840841b3e0f6b46bd8, type: 3}
+      propertyPath: _tooltipText
+      value: Main stat, levelling, game ending, garbage generation
+      objectReference: {fileID: 0}
     - target: {fileID: 3907922439125200126, guid: 3d4a12307168d4840841b3e0f6b46bd8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -11212,6 +11184,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4309478060658124228, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
+      propertyPath: _tooltipText
+      value: The type of the game end condition
+      objectReference: {fileID: 0}
     - target: {fileID: 8306327685428267460, guid: e11705e0b4802d8459cc78a4463eb65e, type: 3}
       propertyPath: m_Name
       value: GameEndConditionChanger
@@ -11531,6 +11507,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 482431228}
     m_Modifications:
+    - target: {fileID: 863608015059594841, guid: 3d4a12307168d4840841b3e0f6b46bd8, type: 3}
+      propertyPath: _tooltipText
+      value: Randomizer, spins, seed and next piece count
+      objectReference: {fileID: 0}
     - target: {fileID: 3907922439125200126, guid: 3d4a12307168d4840841b3e0f6b46bd8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -11825,6 +11805,13 @@ PrefabInstance:
       propertyPath: _controlPath.Array.data[1]
       value: DefaultGravity
       objectReference: {fileID: 0}
+    - target: {fileID: 3285488764582992089, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
+      propertyPath: _tooltipText
+      value: 'If game manager doesn''t set the gravity, this gravity will be used.
+
+        Measured
+        in blocks per frame (reference frame is 1 60th of a second)'
+      objectReference: {fileID: 0}
     - target: {fileID: 4302814093935403129, guid: 4f11c6eefd544794dae6a6891865a32f, type: 3}
       propertyPath: m_Name
       value: GravityChanger
@@ -12059,6 +12046,10 @@ PrefabInstance:
     - target: {fileID: 7829860396779827358, guid: 6de1054b09e402b4a8aa489e56cbd185, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8156920806394529651, guid: 6de1054b09e402b4a8aa489e56cbd185, type: 3}
+      propertyPath: _tooltipText
+      value: If custom randomizer is picked above, pick your used randomizer here
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -12357,6 +12348,13 @@ PrefabInstance:
       propertyPath: _controlPath.Array.data[1]
       value: StartingLevel
       objectReference: {fileID: 0}
+    - target: {fileID: 8474180032529335123, guid: 630434cfd4038e64ea6d068ce8e54a13, type: 3}
+      propertyPath: _tooltipText
+      value: 'Name of the starting level.
+
+        Note: The game manager can ignore
+        this if not set correctly'
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8403153947958931665, guid: 630434cfd4038e64ea6d068ce8e54a13, type: 3}
     m_RemovedGameObjects: []
@@ -12455,7 +12453,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4188779921784379955, guid: 5546faa854adcf74aa111f553a013074, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -205
+      value: -125
       objectReference: {fileID: 0}
     - target: {fileID: 4188779921784379955, guid: 5546faa854adcf74aa111f553a013074, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

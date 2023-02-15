@@ -24,16 +24,8 @@ namespace UStacker.Gameplay.Initialization
         public override void Execute()
         {
             _title.text = _gameSettings.Presentation.Title;
-            if (_gameSettings.Presentation.UseCountdown)
-            {
-                _countdown.CountdownInterval = _gameSettings.Presentation.CountdownInterval;
-                _countdown.CountdownCount = _gameSettings.Presentation.CountdownCount;
-            }
-            else
-            {
-                _countdown.CountdownInterval = .5f;
-                _countdown.CountdownCount = 1;
-            }
+            _countdown.CountdownInterval = _gameSettings.Presentation.CountdownInterval;
+            _countdown.CountdownCount = _gameSettings.Presentation.CountdownCount;
         }
     }
 }
