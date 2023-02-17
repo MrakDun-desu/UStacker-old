@@ -20,7 +20,7 @@ using UStacker.GlobalSettings.Appliers;
 
 namespace UStacker.Gameplay
 {
-    public class Board : MonoBehaviour, IGameSettingsDependency
+    public class Board : MonoBehaviour, IGameSettingsDependency, IMediatorDependency
     {
         [SerializeField] private Transform _helperTransform;
 
@@ -28,7 +28,6 @@ namespace UStacker.Gameplay
         [SerializeField]
         private GameStateManager _stateManager;
 
-        [SerializeField] private MediatorSO _mediator;
         [SerializeField] private SpriteRenderer _backgroundRenderer;
         [SerializeField] private WarningPiece _warningPiece;
         [SerializeField] private ClearableBlock _garbageBlockPrefab;
@@ -60,6 +59,18 @@ namespace UStacker.Gameplay
         private Vector3 _offset;
 
         private GameSettingsSO.SettingsContainer _settings;
+        private Mediator _mediator;
+
+        public Mediator Mediator
+        {
+            private get => _mediator;
+            set
+            {
+                _mediator = value;
+                Mediator.Register<GameStartedMessage>(OnGameStarted);
+            }
+        }
+
         private float _warningPieceTreshhold;
         private uint _width;
 
@@ -118,8 +129,6 @@ namespace UStacker.Gameplay
             BoardVisibilityApplier.VisibilityChanged += ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged += ChangeBoardZoom;
             WarningPieceTreshholdApplier.TreshholdChanged += ChangeWarningPieceTreshhold;
-
-            _mediator.Register<GameStartedMessage>(OnGameStarted);
         }
 
         private void Update()
@@ -133,8 +142,6 @@ namespace UStacker.Gameplay
             BoardVisibilityApplier.VisibilityChanged -= ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged -= ChangeBoardZoom;
             WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
-
-            _mediator.Unregister<GameStartedMessage>(OnGameStarted);
         }
 
         public GameSettingsSO.SettingsContainer GameSettings
@@ -147,7 +154,7 @@ namespace UStacker.Gameplay
         private void OnGameStarted(GameStartedMessage message)
         {
             GarbageGenerator?.ResetState(message.Seed);
-            GarbageGenerator?.GenerateGarbage(_settings.Objective.GarbageHeight);
+            GarbageGenerator?.GenerateGarbage(_settings.Objective.GarbageHeight, new PiecePlacedMessage());
         }
 
         private GarbageLayer CreateGarbageLayer()
@@ -340,7 +347,7 @@ namespace UStacker.Gameplay
                 pieceType, wasAllClear, lastResult.WasSpin,
                 lastResult.WasSpinMini, lastResult.WasSpinRaw, lastResult.WasSpinMiniRaw,
                 brokenCombo, brokenBtb, totalRotation, totalMovement, placementTime);
-            _mediator.Send(newMessage);
+            Mediator.Send(newMessage);
             GarbageGenerator?.GenerateGarbage(_settings.Objective.GarbageHeight - GarbageHeight, newMessage);
         }
 

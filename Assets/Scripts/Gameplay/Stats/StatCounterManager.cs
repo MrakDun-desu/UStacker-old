@@ -6,34 +6,45 @@ using UStacker.Gameplay.Enums;
 using UStacker.GlobalSettings;
 using UStacker.GlobalSettings.StatCounting;
 using UnityEngine;
+using UStacker.Gameplay.Initialization;
 using UStacker.Gameplay.Timing;
 
 namespace UStacker.Gameplay.Stats
 {
-    public class StatCounterManager : MonoBehaviour
+    public class StatCounterManager : MonoBehaviour, IMediatorDependency
     {
         [SerializeField] private Board _board;
         [SerializeField] private Canvas _statCountersCanvas;
         [SerializeField] private StatCounterDisplayer _displayerPrefab;
-        [SerializeField] private MediatorSO _mediator;
         [SerializeField] private GameTimer _timer;
         [SerializeField] private StatContainer _stats = new();
 
         public ReadonlyStatContainer Stats;
+
+        private Mediator _mediator;
+
+        public Mediator Mediator
+        {
+            private get => _mediator;
+            set
+            {
+                _mediator = value;
+                _mediator.Register<InputActionMessage>(OnInputAction, true);
+                _mediator.Register<HoldUsedMessage>(OnHold, true);
+                _mediator.Register<PiecePlacedMessage>(OnPiecePlaced, true);
+                _mediator.Register<GameStartedMessage>(_ => ResetStats(), true);
+                _mediator.Register<GameRestartedMessage>(_ => ResetStats(), true);
+                _mediator.Register<ScoreAddedMessage>(OnScoreAdded);
+                _mediator.Register<ScoreChangedMessage>(OnScoreChanged, true);
+                _mediator.Register<LevelChangedMessage>(OnLevelChanged, true);
+            }
+        }
 
         public string GameType { get; set; }
 
         private void Start()
         {
             Stats = new ReadonlyStatContainer(_stats);
-            _mediator.Register<InputActionMessage>(OnInputAction, true);
-            _mediator.Register<HoldUsedMessage>(OnHold, true);
-            _mediator.Register<PiecePlacedMessage>(OnPiecePlaced, true);
-            _mediator.Register<GameStartedMessage>(ResetStats, true);
-            _mediator.Register<GameRestartedMessage>(ResetStats, true);
-            _mediator.Register<ScoreAddedMessage>(OnScoreAdded);
-            _mediator.Register<ScoreChangedMessage>(OnScoreChanged, true);
-            _mediator.Register<LevelChangedMessage>(OnLevelChanged, true);
             CreateStatCounters();
         }
 
@@ -49,19 +60,7 @@ namespace UStacker.Gameplay.Stats
                 _stats.KeysPerPiece = (double) _stats.KeysPressed / _stats.PiecesPlaced;
         }
 
-        private void OnDestroy()
-        {
-            _mediator.Unregister<InputActionMessage>(OnInputAction);
-            _mediator.Unregister<HoldUsedMessage>(OnHold);
-            _mediator.Unregister<PiecePlacedMessage>(OnPiecePlaced);
-            _mediator.Unregister<GameStartedMessage>(ResetStats);
-            _mediator.Unregister<GameRestartedMessage>(ResetStats);
-            _mediator.Unregister<ScoreChangedMessage>(OnScoreChanged);
-            _mediator.Unregister<ScoreAddedMessage>(OnScoreAdded);
-            _mediator.Unregister<LevelChangedMessage>(OnLevelChanged);
-        }
-
-        private void ResetStats(Message _)
+        private void ResetStats()
         {
             _stats.Reset();
         }
@@ -95,7 +94,7 @@ namespace UStacker.Gameplay.Stats
             {
                 var newCounter = Instantiate(_displayerPrefab, _statCountersCanvas.transform);
 
-                newCounter.Initialize(_mediator, new StatBoardInterface(_board), Stats, statUtility, statCounter);
+                newCounter.Initialize(Mediator, new StatBoardInterface(_board), Stats, statUtility, statCounter);
             }
         }
 

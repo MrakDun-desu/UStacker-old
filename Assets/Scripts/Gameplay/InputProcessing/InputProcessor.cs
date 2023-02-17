@@ -16,7 +16,7 @@ using UStacker.GlobalSettings.Groups;
 
 namespace UStacker.Gameplay.InputProcessing
 {
-    public class InputProcessor : MonoBehaviour, IGameSettingsDependency
+    public class InputProcessor : MonoBehaviour, IGameSettingsDependency, IMediatorDependency
     {
         [Header("Dependencies")] [SerializeField]
         private Board _board;
@@ -24,7 +24,6 @@ namespace UStacker.Gameplay.InputProcessing
         [SerializeField] private PieceSpawner _spawner;
         [SerializeField] private GhostPiece _ghostPiece;
         [SerializeField] private GameTimer _timer;
-        [SerializeField] private MediatorSO _mediator;
 
         [Header("Dependencies filled by initializer")]
         public PieceContainer PieceHolder;
@@ -78,7 +77,7 @@ namespace UStacker.Gameplay.InputProcessing
 
         private double _hardLockAmount
         {
-            get => _settings.Gravity.HardLockType switch
+            get => GameSettings.Gravity.HardLockType switch
             {
                 HardLockType.LimitedTime => _hardLockdownEvent.Time,
                 HardLockType.LimitedInputs or
@@ -88,7 +87,7 @@ namespace UStacker.Gameplay.InputProcessing
             };
             set
             {
-                switch (_settings.Gravity.HardLockType)
+                switch (GameSettings.Gravity.HardLockType)
                 {
                     case HardLockType.LimitedTime:
                         _hardLockdownEvent.Time = value;
@@ -108,7 +107,20 @@ namespace UStacker.Gameplay.InputProcessing
         private bool _isLocking => _lockdownEvent.Time < double.PositiveInfinity;
 
         private HandlingSettings _handling;
-        private GameSettingsSO.SettingsContainer _settings;
+        public GameSettingsSO.SettingsContainer GameSettings { private get; set; }
+        private Mediator _mediator;
+
+        public Mediator Mediator
+        {
+            private get => _mediator;
+            set
+            {
+                _mediator = value;
+                Mediator.Register<GravityChangedMessage>(OnGravityChanged);
+                Mediator.Register<LockDelayChangedMessage>(OnLockDelayChanged);
+            }
+        }
+
         public SpinHandler SpinHandler { get; set; }
 
         public List<InputActionMessage> ActionList
@@ -160,21 +172,12 @@ namespace UStacker.Gameplay.InputProcessing
             _lockdownEvent = new UpdateEvent(_updateEvents, EventType.Lockdown);
             _hardLockdownEvent = new UpdateEvent(_updateEvents, EventType.HardLockdown);
 
-            _mediator.Register<GravityChangedMessage>(OnGravityChanged);
-            _mediator.Register<LockDelayChangedMessage>(OnLockDelayChanged);
             _timer.BeforeStarted += OnGameStart;
         }
 
         private void OnDestroy()
         {
-            _mediator.Unregister<GravityChangedMessage>(OnGravityChanged);
-            _mediator.Unregister<LockDelayChangedMessage>(OnLockDelayChanged);
             _timer.BeforeStarted -= OnGameStart;
-        }
-
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            set => _settings = value;
         }
 
         public void DisablePieceControls()
@@ -314,7 +317,7 @@ namespace UStacker.Gameplay.InputProcessing
                 _activePiece.ReleaseFromPool();
             ActivePiece = null;
 
-            if (!_settings.Controls.AllowHold) return;
+            if (!GameSettings.Controls.AllowHold) return;
             var holdPiece = PieceHolder.SwapPiece(null);
             if (holdPiece == null) return;
             holdPiece.RevertType();
@@ -333,9 +336,9 @@ namespace UStacker.Gameplay.InputProcessing
             _dasStatus = Vector2Int.zero;
             _lowestPosition = int.MaxValue;
             _hardLockAmount = double.PositiveInfinity;
-            _handling = _settings.Controls.Handling;
-            _normalGravity = _settings.Gravity.DefaultGravity;
-            _lockDelay = _settings.Gravity.DefaultLockDelay;
+            _handling = GameSettings.Controls.Handling;
+            _normalGravity = GameSettings.Gravity.DefaultGravity;
+            _lockDelay = GameSettings.Gravity.DefaultLockDelay;
             _currentGravity = _normalGravity;
             _dropTime = ComputeDroptimeFromGravity();
             _dropDisabledUntil = 0;
@@ -372,7 +375,7 @@ namespace UStacker.Gameplay.InputProcessing
                 _lastWasRotation = false;
 
             var dropPieceAfterMovement = false;
-            if (_settings.Gravity.HardLockType == HardLockType.LimitedMoves)
+            if (GameSettings.Gravity.HardLockType == HardLockType.LimitedMoves)
             {
                 if (isRotation)
                     _hardLockAmount -= 1;
@@ -413,7 +416,7 @@ namespace UStacker.Gameplay.InputProcessing
                 var hitWall = moveVector.x != 0 && (!_board.CanPlace(ActivePiece, Vector2Int.left) ||
                                                     !_board.CanPlace(ActivePiece, Vector2Int.right));
 
-                _mediator.Send(new PieceMovedMessage(moveVector.x, moveVector.y,
+                Mediator.Send(new PieceMovedMessage(moveVector.x, moveVector.y,
                     wasHardDrop, wasSoftDrop, hitWall, time));
             }
 
@@ -459,11 +462,11 @@ namespace UStacker.Gameplay.InputProcessing
             var linesCleared = _board.Place(ActivePiece, placementTime, _currentPieceRotation, _currentPieceMovement,
                 lastSpinResult);
 
-            var spawnTime = _settings.Gravity.PiecePlacementDelay;
+            var spawnTime = GameSettings.Gravity.PiecePlacementDelay;
             if (linesCleared)
-                spawnTime += _settings.Gravity.LineClearDelay;
+                spawnTime += GameSettings.Gravity.LineClearDelay;
 
-            if (_settings.Controls.AllowHold)
+            if (GameSettings.Controls.AllowHold)
                 PieceHolder.UnmarkUsed();
 
             _spawnEvent.Time = placementTime + spawnTime;
@@ -474,7 +477,7 @@ namespace UStacker.Gameplay.InputProcessing
         {
             if (_isHardLocking)
             {
-                if (_settings.Gravity.HardLockType == HardLockType.LimitedInputs)
+                if (GameSettings.Gravity.HardLockType == HardLockType.LimitedInputs)
                 {
                     _hardLockAmount -= 1;
                     if (_hardLockAmount <= 0) HandlePiecePlacement(updateTime);
@@ -507,7 +510,7 @@ namespace UStacker.Gameplay.InputProcessing
 
         private void HandleInputAction(InputActionMessage message)
         {
-            _mediator.Send(message);
+            Mediator.Send(message);
             Update(message.Time, false);
             switch (message.ActionType)
             {
@@ -759,7 +762,7 @@ namespace UStacker.Gameplay.InputProcessing
             var startRotation = ActivePiece.RotationState;
             ChangeActivePieceRotationState(rotationAngle);
 
-            _mediator.Send(new PieceRotatedMessage(
+            Mediator.Send(new PieceRotatedMessage(
                 ActivePiece.Type,
                 startRotation,
                 ActivePiece.RotationState,
@@ -797,16 +800,16 @@ namespace UStacker.Gameplay.InputProcessing
                 return;
             }
 
-            if (_usedHold && !_settings.Controls.UnlimitedHold)
+            if (_usedHold && !GameSettings.Controls.UnlimitedHold)
             {
-                _mediator.Send(new HoldUsedMessage(false, actionTime));
+                Mediator.Send(new HoldUsedMessage(false, actionTime));
                 return;
             }
 
-            _mediator.Send(new HoldUsedMessage(true, actionTime));
+            Mediator.Send(new HoldUsedMessage(true, actionTime));
 
             var newPiece = PieceHolder.SwapPiece(ActivePiece);
-            if (!_settings.Controls.UnlimitedHold)
+            if (!GameSettings.Controls.UnlimitedHold)
                 PieceHolder.MarkUsed();
 
             if (newPiece == null)
@@ -903,7 +906,7 @@ namespace UStacker.Gameplay.InputProcessing
 
         public void OnHardDrop(InputAction.CallbackContext ctx)
         {
-            if (_settings.Controls.AllowHardDrop)
+            if (GameSettings.Controls.AllowHardDrop)
                 HandleKeyEvent(ctx, ActionType.Harddrop);
         }
 
@@ -919,25 +922,25 @@ namespace UStacker.Gameplay.InputProcessing
 
         public void OnRotate180(InputAction.CallbackContext ctx)
         {
-            if (_settings.Controls.Allow180Spins)
+            if (GameSettings.Controls.Allow180Spins)
                 HandleKeyEvent(ctx, ActionType.Rotate180);
         }
 
         public void OnSwapHoldPiece(InputAction.CallbackContext ctx)
         {
-            if (_settings.Controls.AllowHold)
+            if (GameSettings.Controls.AllowHold)
                 HandleKeyEvent(ctx, ActionType.Hold);
         }
 
         public void OnMoveToLeftWall(InputAction.CallbackContext ctx)
         {
-            if (_settings.Controls.AllowMoveToWall)
+            if (GameSettings.Controls.AllowMoveToWall)
                 HandleKeyEvent(ctx, ActionType.MoveToLeftWall);
         }
 
         public void OnMoveToRightWall(InputAction.CallbackContext ctx)
         {
-            if (_settings.Controls.AllowMoveToWall)
+            if (GameSettings.Controls.AllowMoveToWall)
                 HandleKeyEvent(ctx, ActionType.MoveToRightWall);
         }
 
@@ -1054,7 +1057,7 @@ namespace UStacker.Gameplay.InputProcessing
 
             // if we got past the if, we just touched ground
             StartHardLock(eventTime);
-            if (_settings.Gravity.LockDelayType == LockDelayType.OnTouchGround)
+            if (GameSettings.Gravity.LockDelayType == LockDelayType.OnTouchGround)
                 StartLockdown(eventTime);
         }
 
@@ -1129,7 +1132,7 @@ namespace UStacker.Gameplay.InputProcessing
 
         private void StartLockdown(double lockStart)
         {
-            if (_isLocking || _settings.Gravity.HardLockType == HardLockType.InfiniteMovement) return;
+            if (_isLocking || GameSettings.Gravity.HardLockType == HardLockType.InfiniteMovement) return;
 
             _lockdownEvent.Time = lockStart + _lockDelay;
             _ghostPiece.Disable();
@@ -1139,14 +1142,14 @@ namespace UStacker.Gameplay.InputProcessing
         {
             if (_isHardLocking) return;
 
-            switch (_settings.Gravity.HardLockType)
+            switch (GameSettings.Gravity.HardLockType)
             {
                 case HardLockType.LimitedTime:
-                    _hardLockAmount = lockStart + _settings.Gravity.HardLockAmount;
+                    _hardLockAmount = lockStart + GameSettings.Gravity.HardLockAmount;
                     break;
                 case HardLockType.LimitedMoves:
                 case HardLockType.LimitedInputs:
-                    _hardLockAmount = Math.Floor(_settings.Gravity.HardLockAmount);
+                    _hardLockAmount = Math.Floor(GameSettings.Gravity.HardLockAmount);
                     break;
                 case HardLockType.InfiniteMovement:
                     break;

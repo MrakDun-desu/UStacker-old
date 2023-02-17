@@ -2,23 +2,24 @@ using UStacker.Gameplay.Communication;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UStacker.Gameplay.Initialization;
 
 namespace UStacker.Gameplay.Presentation
 {
     [RequireComponent(typeof(TMP_Text))]
-    public class GameCountdown : MonoBehaviour
+    public class GameCountdown : MonoBehaviour, IMediatorDependency
     {
         public float CountdownInterval = .1f;
         public uint CountdownCount = 3;
         [SerializeField] private string _noCountdownMessage = "Ready";
         [SerializeField] private string _lastMessage = "Start!";
-        [SerializeField] private MediatorSO _mediator;
         [SerializeField] private UnityEvent CountdownFinished;
         private bool _active;
 
         private TMP_Text _countdownText;
         private uint _currentCount;
         private float _nextInterval;
+        public Mediator Mediator { private get; set; }
 
         private void Awake()
         {
@@ -50,7 +51,7 @@ namespace UStacker.Gameplay.Presentation
                 }
 
                 if (_active)
-                    _mediator.Send(new CountdownTickedMessage(_currentCount));
+                    Mediator.Send(new CountdownTickedMessage(_currentCount));
             }
         }
 
@@ -66,7 +67,7 @@ namespace UStacker.Gameplay.Presentation
             _active = true;
             _currentCount = CountdownCount + 1;
             _countdownText.text = _currentCount == 2 ? _noCountdownMessage : CountdownCount.ToString();
-            _mediator.Send(new CountdownTickedMessage(_currentCount));
+            Mediator.Send(new CountdownTickedMessage(_currentCount));
         }
     }
 }

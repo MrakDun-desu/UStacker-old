@@ -1,4 +1,7 @@
 ﻿namespace UStacker.Gameplay.Communication
 {
-    public record GameLostMessage : Message;
+    public readonly struct GameLostMessage : IMessage
+    {
+        
+    }
 }

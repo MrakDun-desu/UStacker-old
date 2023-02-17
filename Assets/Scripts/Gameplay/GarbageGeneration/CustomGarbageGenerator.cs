@@ -74,7 +74,6 @@ namespace UStacker.Gameplay.GarbageGeneration
                 _resetFunction.Call();
 
                 GenerateGarbage(5, new PiecePlacedMessage());
-                GenerateGarbage(5, null);
             }
             catch (LuaException ex)
             {

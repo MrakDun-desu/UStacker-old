@@ -19,13 +19,13 @@ namespace UStacker.Gameplay.GameManagers
         private long _currentScore;
         private int _linesToNextLevel;
 
-        private MediatorSO _mediator;
+        private Mediator _mediator;
         private uint _startingLevel;
         private int _totalLinesToNextLevel;
 
         private int _linesClearedThisLevel => _totalLinesToNextLevel - _linesToNextLevel;
 
-        public void Initialize(string startingLevel, MediatorSO mediator)
+        public void Initialize(string startingLevel, Mediator mediator)
         {
             uint.TryParse(startingLevel, out _startingLevel);
             _mediator = mediator;

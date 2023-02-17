@@ -6,6 +6,6 @@ namespace UStacker.Gameplay.GarbageGeneration
     {
         void ResetState(ulong seed);
 
-        void GenerateGarbage(uint amount, PiecePlacedMessage message = null);
+        void GenerateGarbage(uint amount, PiecePlacedMessage message);
     }
 }

@@ -1,11 +1,13 @@
 ﻿namespace UStacker.Gameplay.Communication
 {
-    public record ScoreChangedMessage : MidgameMessage
+    public readonly struct ScoreChangedMessage : IMidgameMessage
     {
         public readonly long Score;
+        public double Time { get; }
 
-        public ScoreChangedMessage(long score, double time) : base(time)
+        public ScoreChangedMessage(long score, double time)
         {
+            Time = time;
             Score = score;
         }
     }

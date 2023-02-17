@@ -13,9 +13,8 @@ using UStacker.GlobalSettings;
 
 namespace UStacker.Gameplay
 {
-    public class GameStateManager : MonoBehaviour, IGameSettingsDependency
+    public class GameStateManager : MonoBehaviour, IGameSettingsDependency, IMediatorDependency
     {
-        [SerializeField] private MediatorSO _mediator;
         [SerializeField] private GameTimer _timer;
         [SerializeField] private StatCounterManager _statCounterManager;
         [SerializeField] private GameRecorder _gameRecorder;
@@ -42,10 +41,21 @@ namespace UStacker.Gameplay
 
         private double _lastSentTimeCondition;
         private GameSettingsSO.SettingsContainer _settings;
+        private Mediator _mediator;
+
+        public Mediator Mediator
+        {
+            private get => _mediator;
+            set
+            {
+                _mediator = value;
+                Mediator.Register<PiecePlacedMessage>(OnPiecePlaced);
+                Mediator.Register<ScoreChangedMessage>(OnScoreChanged);
+            }
+        }
+
         public string GameType { get; set; }
         public bool IsReplaying { get; set; }
-
-        public bool GameRunningActively => !_gamePaused && !_gameEnded;
 
         public GameSettingsSO.SettingsContainer GameSettings
         {
@@ -59,7 +69,7 @@ namespace UStacker.Gameplay
             if (_gamePaused)
             {
                 GameResumed.Invoke();
-                _mediator.Send(new GameResumedMessage());
+                Mediator.Send(new GameResumedMessage());
                 _gamePaused = false;
             }
 
@@ -70,8 +80,8 @@ namespace UStacker.Gameplay
             _gameEnded = false;
 
             _lastSentTimeCondition = 0;
-            _mediator.Send(new GameStartedMessage(_settings.General.ActiveSeed));
-            _mediator.Send(new GameEndConditionChangedMessage(
+            Mediator.Send(new GameStartedMessage(_settings.General.ActiveSeed));
+            Mediator.Send(new GameEndConditionChangedMessage(
                 0,
                 _settings.Objective.EndConditionCount,
                 0,
@@ -90,7 +100,7 @@ namespace UStacker.Gameplay
                 GamePaused.Invoke();
                 if (IsReplaying)
                     ReplayPaused.Invoke();
-                _mediator.Send(new GamePausedMessage());
+                Mediator.Send(new GamePausedMessage());
                 _gamePaused = true;
                 _gamePauseable = false;
                 return;
@@ -120,8 +130,8 @@ namespace UStacker.Gameplay
             _gamePauseable = true;
             _timer.ResetTiming();
             GameRestarted.Invoke();
-            _mediator.Send(new GameRestartedMessage());
-            _mediator.Send(new GameEndConditionChangedMessage(
+            Mediator.Send(new GameRestartedMessage());
+            Mediator.Send(new GameEndConditionChangedMessage(
                 0,
                 _settings.Objective.EndConditionCount,
                 0,
@@ -138,7 +148,7 @@ namespace UStacker.Gameplay
             else
             {
                 _gameCurrentlyInProgress = false;
-                _mediator.Send(new GameLostMessage());
+                Mediator.Send(new GameLostMessage());
                 GameLost.Invoke();
             }
         }
@@ -169,7 +179,7 @@ namespace UStacker.Gameplay
 
             GameEnded.Invoke();
             GarbageCollector.CollectIncremental(1_000_000_000);
-            _mediator.Send(new GameEndedMessage(endTime));
+            Mediator.Send(new GameEndedMessage(endTime));
         }
 
         public void TogglePause(InputAction.CallbackContext ctx)
@@ -190,8 +200,6 @@ namespace UStacker.Gameplay
 
         private void Awake()
         {
-            _mediator.Register<PiecePlacedMessage>(OnPiecePlaced);
-            _mediator.Register<ScoreChangedMessage>(OnScoreChanged);
             AppSettings.Gameplay.PauseSingleplayerGamesOutOfFocusChanged += OnPauseSettingChange;
             OnPauseSettingChange(AppSettings.Gameplay.PauseSingleplayerGamesOutOfFocus);
         }
@@ -220,7 +228,7 @@ namespace UStacker.Gameplay
             if (_lastSentTimeCondition < currentTimeRounded)
             {
                 _lastSentTimeCondition = currentTimeRounded;
-                _mediator.Send(new GameEndConditionChangedMessage(
+                Mediator.Send(new GameEndConditionChangedMessage(
                     functionStartTime,
                     _settings.Objective.EndConditionCount,
                     currentTimeRounded,
@@ -231,11 +239,6 @@ namespace UStacker.Gameplay
             EndGame(_settings.Objective.EndConditionCount);
         }
 
-        private void OnDestroy()
-        {
-            _mediator.Clear();
-        }
-
         private void OnPiecePlaced(PiecePlacedMessage message)
         {
             var endCondition = _settings.Objective.GameEndCondition;
@@ -244,7 +247,7 @@ namespace UStacker.Gameplay
             {
                 case GameEndCondition.LinesCleared:
                     var linesCleared = _statCounterManager.Stats.LinesCleared;
-                    _mediator.Send(new GameEndConditionChangedMessage(
+                    Mediator.Send(new GameEndConditionChangedMessage(
                         message.Time,
                         endConditionCount,
                         linesCleared,
@@ -254,7 +257,7 @@ namespace UStacker.Gameplay
                     break;
                 case GameEndCondition.GarbageLinesCleared:
                     var garbageLinesCleared = _statCounterManager.Stats.GarbageLinesCleared;
-                    _mediator.Send(new GameEndConditionChangedMessage(
+                    Mediator.Send(new GameEndConditionChangedMessage(
                         message.Time,
                         endConditionCount,
                         garbageLinesCleared,
@@ -264,7 +267,7 @@ namespace UStacker.Gameplay
                     break;
                 case GameEndCondition.PiecesPlaced:
                     var piecesPlaced = _statCounterManager.Stats.PiecesPlaced;
-                    _mediator.Send(new GameEndConditionChangedMessage(
+                    Mediator.Send(new GameEndConditionChangedMessage(
                         message.Time,
                         endConditionCount,
                         piecesPlaced,
@@ -285,7 +288,7 @@ namespace UStacker.Gameplay
         {
             if (_settings.Objective.GameEndCondition != GameEndCondition.Score) return;
 
-            _mediator.Send(new GameEndConditionChangedMessage(
+            Mediator.Send(new GameEndConditionChangedMessage(
                 message.Time,
                 _settings.Objective.EndConditionCount,
                 message.Score,

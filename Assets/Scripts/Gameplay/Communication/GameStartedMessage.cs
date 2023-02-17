@@ -1,6 +1,6 @@
 ﻿namespace UStacker.Gameplay.Communication
 {
-    public record GameStartedMessage : Message
+    public readonly struct GameStartedMessage : IMessage
     {
         public readonly ulong Seed;
 

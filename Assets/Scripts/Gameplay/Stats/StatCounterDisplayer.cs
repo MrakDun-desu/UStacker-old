@@ -41,7 +41,7 @@ namespace UStacker.Gameplay.Stats
 
         private Lua _luaState;
 
-        private MediatorSO _mediator;
+        private Mediator _mediator;
         private ReadonlyStatContainer _statContainer;
         private StatCounterRecord _statCounter;
         private StatUtility _statUtility;
@@ -57,7 +57,6 @@ namespace UStacker.Gameplay.Stats
 
         private void OnDestroy()
         {
-            _mediator.Unregister<GameStartedMessage>(OnGameStarted);
             if (_currentlyUnderMouse == this)
                 _currentlyUnderMouse = null;
         }
@@ -135,7 +134,7 @@ namespace UStacker.Gameplay.Stats
             {
                 if (events[entry.Key] is not LuaFunction function) continue;
 
-                void Action(Message message)
+                void Action(IMessage message)
                 {
                     try
                     {
@@ -152,7 +151,7 @@ namespace UStacker.Gameplay.Stats
                     }
                 }
 
-                _mediator.Register((Action<Message>) Action, entry.Value);
+                _mediator.Register((Action<IMessage>) Action, entry.Value);
             }
 
             if (events[UPDATED_KEY] is not LuaFunction updateFunc) return;
@@ -235,7 +234,7 @@ namespace UStacker.Gameplay.Stats
             else if (Mouse.current.leftButton.wasReleasedThisFrame) _isDraggingSize = false;
         }
 
-        public void Initialize(MediatorSO mediator, StatBoardInterface board,
+        public void Initialize(Mediator mediator, StatBoardInterface board,
             ReadonlyStatContainer statContainer, StatUtility statUtility,
             StatCounterRecord statCounter)
         {

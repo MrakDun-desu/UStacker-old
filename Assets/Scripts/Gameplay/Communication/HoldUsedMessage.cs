@@ -1,11 +1,13 @@
 ﻿namespace UStacker.Gameplay.Communication
 {
-    public record HoldUsedMessage : MidgameMessage
+    public readonly struct HoldUsedMessage : IMidgameMessage
     {
         public readonly bool WasSuccessful;
+        public double Time { get; }
 
-        public HoldUsedMessage(bool wasSuccessful, double time) : base(time)
+        public HoldUsedMessage(bool wasSuccessful, double time)
         {
+            Time = time;
             WasSuccessful = wasSuccessful;
         }
     }

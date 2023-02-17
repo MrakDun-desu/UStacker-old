@@ -1,5 +1,4 @@
 ﻿using System;
-using UStacker.Common;
 using UStacker.Common.Alerts;
 using UStacker.Gameplay.Communication;
 using NLua;
@@ -16,23 +15,18 @@ namespace UStacker.Gameplay.GameManagers
         private const string STARTING_LEVEL_NAME = "StartingLevel";
         private const string BOARD_INTERFACE_NAME = "Board";
         private Lua _luaState;
-        private MediatorSO _mediator;
+        private Mediator _mediator;
         private uint _startingLevel;
         private GameStateManager _stateManager;
         private double? _currentMessageTime;
         private GameTimer _timer;
         private Random _random;
 
-        public void Initialize(string startingLevel, MediatorSO mediator)
+        public void Initialize(string startingLevel, Mediator mediator)
         {
             uint.TryParse(startingLevel, out _startingLevel);
             _mediator = mediator;
             _mediator.Register<GameStartedMessage>(OnGameStarted);
-        }
-
-        private void OnDestroy()
-        {
-            _mediator.Unregister<GameStartedMessage>(OnGameStarted);
         }
 
         private void OnGameStarted(GameStartedMessage message)
@@ -83,10 +77,10 @@ namespace UStacker.Gameplay.GameManagers
             {
                 if (events[entry.Key] is not LuaFunction function) continue;
 
-                void Action(Message message)
+                void Action(IMessage message)
                 {
                     if (!enabled) return;
-                    if (message is MidgameMessage m)
+                    if (message is IMidgameMessage m)
                         _currentMessageTime = m.Time;
                     else
                         _currentMessageTime = null;
@@ -106,7 +100,7 @@ namespace UStacker.Gameplay.GameManagers
                     }
                 }
 
-                _mediator.Register((Action<Message>) Action, entry.Value);
+                _mediator.Register((Action<IMessage>) Action, entry.Value);
             }
         }
 

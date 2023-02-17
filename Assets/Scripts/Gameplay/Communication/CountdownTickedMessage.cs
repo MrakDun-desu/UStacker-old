@@ -1,6 +1,6 @@
 ﻿namespace UStacker.Gameplay.Communication
 {
-    public record CountdownTickedMessage : Message
+    public readonly struct CountdownTickedMessage : IMessage
     {
         public readonly uint RemainingTicks;
 

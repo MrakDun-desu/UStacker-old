@@ -1,10 +1,11 @@
 using System;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace UStacker.Gameplay.Communication
 {
     [Serializable]
-    public record PiecePlacedMessage : MidgameMessage
+    public readonly struct PiecePlacedMessage : IMidgameMessage
     {
         public readonly bool BrokenBackToBack;
         public readonly bool BrokenCombo;
@@ -16,16 +17,20 @@ namespace UStacker.Gameplay.Communication
         public readonly bool WasAllClear;
         public readonly bool WasSpin;
         public readonly bool WasSpinMini;
+        [UsedImplicitly]
         public readonly bool WasSpinMiniRaw;
+        [UsedImplicitly]
         public readonly bool WasSpinRaw;
         public readonly int TotalRotation;
         public readonly Vector2Int TotalMovement;
         public bool WasBtbClear => WasSpin || WasSpinMini || LinesCleared > 3;
+        public double Time { get; }
 
         public PiecePlacedMessage(uint linesCleared, uint garbageLinesCleared, uint currentCombo,
             uint currentBackToBack, string pieceType, bool wasAllClear, bool wasSpin, bool wasSpinMini, bool wasSpinRaw,
-            bool wasSpinMiniRaw, bool brokenCombo, bool brokenBackToBack, int totalRotation, Vector2Int totalMovement, double time) : base(time)
+            bool wasSpinMiniRaw, bool brokenCombo, bool brokenBackToBack, int totalRotation, Vector2Int totalMovement, double time)
         {
+            Time = time;
             LinesCleared = linesCleared;
             GarbageLinesCleared = garbageLinesCleared;
             CurrentCombo = currentCombo;
@@ -40,10 +45,6 @@ namespace UStacker.Gameplay.Communication
             BrokenBackToBack = brokenBackToBack;
             TotalRotation = totalRotation;
             TotalMovement = totalMovement;
-        }
-
-        public PiecePlacedMessage() : base(0)
-        {
         }
 
     }

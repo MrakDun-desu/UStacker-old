@@ -7,9 +7,9 @@ namespace UStacker.Gameplay.GameManagers
     {
         private long _currentScore;
 
-        private MediatorSO _mediator;
+        private Mediator _mediator;
 
-        public void Initialize(string _, MediatorSO mediator)
+        public void Initialize(string _, Mediator mediator)
         {
             _mediator = mediator;
 

@@ -18,7 +18,6 @@ namespace UStacker.Gameplay.Initialization
 {
     public class GameInitializer : MonoBehaviour
     {
-
         private static GameReplay _replay;
         [Space][SerializeField] private PieceDictionary _availablePieces = new();
 
@@ -39,13 +38,14 @@ namespace UStacker.Gameplay.Initialization
         [Header("Others")][SerializeField] private GameCountdown _countdown;
         [SerializeField] private TMP_Text _gameTitle;
         [SerializeField] private GameObject _loadingOverlay;
-        [SerializeField] private MediatorSO _mediator;
+        [SerializeField] private Mediator _mediator;
         [SerializeField] private GameStateManager _stateManager;
         [SerializeField] private MusicPlayerFinder _playerFinder;
         [SerializeField] private StatCounterManager _statCounterManager;
         [SerializeField] private ReplayController _replayController;
         [SerializeField] private GameTimer _timer;
         [SerializeField] private GameObject[] _gameSettingsDependencies = Array.Empty<GameObject>();
+        [SerializeField] private GameObject[] _mediatorDependencies = Array.Empty<GameObject>();
 
         [Header("Events")] public UnityEvent GameInitialized;
         public UnityEvent ReplayStarted;
@@ -77,6 +77,14 @@ namespace UStacker.Gameplay.Initialization
                 foreach (var dependency in dependencies)
                     dependency.GameSettings = GameSettings;
             }
+
+            foreach (var dependantObject in _mediatorDependencies)
+            {
+                var dependencies = dependantObject.GetComponents<IMediatorDependency>();
+                foreach (var dependency in dependencies)
+                    dependency.Mediator = _mediator;
+            }
+            
             if (TryInitialize(errorBuilder))
             {
                 if (InitAsReplay)

@@ -485,6 +485,50 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!1 &7585998446760120359
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4958217554131447414}
+  - component: {fileID: 9082995738296214820}
+  m_Layer: 0
+  m_Name: Mediator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4958217554131447414
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7585998446760120359}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8141839149744800043}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9082995738296214820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7585998446760120359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a48a23414526c84686a61ebccce6cdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8082602705971132307
 GameObject:
   m_ObjectHideFlags: 0
@@ -940,7 +984,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62f94062effd46ac9d217fe7905e6689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   ActionList: []
   PiecePlacementList: []
 --- !u!1 &8141839148887950748
@@ -990,7 +1033,6 @@ MonoBehaviour:
   _board: {fileID: 1124102361336711501}
   _statCountersCanvas: {fileID: 284726700716874693}
   _displayerPrefab: {fileID: 3809904194938788015, guid: a58f1a9ed28c0c44388dfad416521619, type: 3}
-  _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   _timer: {fileID: 8141839149270808964}
   _stats:
     Score: 0
@@ -1370,9 +1412,7 @@ MonoBehaviour:
   _spawner: {fileID: 8141839149874159367}
   _ghostPiece: {fileID: 107336663143485187}
   _timer: {fileID: 8141839149270808964}
-  _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   PieceHolder: {fileID: 0}
-  _currentPieceIndex: 0
   <PlacementsList>k__BackingField: []
 --- !u!1 &8141839149646979760
 GameObject:
@@ -1647,7 +1687,6 @@ MonoBehaviour:
   CountdownCount: 3
   _noCountdownMessage: Ready
   _lastMessage: Start!
-  _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   CountdownFinished:
     m_PersistentCalls:
       m_Calls:
@@ -1712,6 +1751,7 @@ Transform:
   - {fileID: 8141839149685358633}
   - {fileID: 8141839149710540768}
   - {fileID: 6117041448239130827}
+  - {fileID: 4958217554131447414}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1785,6 +1825,15 @@ MonoBehaviour:
   - {fileID: 8141839149516784098}
   - {fileID: 8141839150514888148}
   - {fileID: 8141839148887950748}
+  _mediatorDependencies:
+  - {fileID: 8141839149743567149}
+  - {fileID: 8141839149710540773}
+  - {fileID: 8141839148887950748}
+  - {fileID: 1124102361336711500}
+  - {fileID: 8141839148878385408}
+  - {fileID: 8141839150514888148}
+  - {fileID: 8141839149874159366}
+  - {fileID: 8141839149516784098}
   GameInitialized:
     m_PersistentCalls:
       m_Calls:
@@ -2075,7 +2124,6 @@ MonoBehaviour:
   _board: {fileID: 1124102361336711501}
   _inputProcessor: {fileID: 8141839149516784099}
   _stateManager: {fileID: 8141839150514888149}
-  _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   _warningPiece: {fileID: 544371545322141846}
 --- !u!1 &8141839149997927011
 GameObject:
@@ -2759,7 +2807,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00f35ceeae0ee24b8c147804ecda66f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
   _timer: {fileID: 8141839149270808964}
   _statCounterManager: {fileID: 8141839148887950749}
   _gameRecorder: {fileID: 8141839148878385409}
@@ -4020,12 +4067,17 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8524916289635684596, guid: 91ec43de18723474a858a6c331cbf576, type: 3}
   m_PrefabInstance: {fileID: 482740181002120982}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 8141839149710540773}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0e780b1238a348afb67aab91b939d2a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &8141839149710540773 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8524916289635684595, guid: 91ec43de18723474a858a6c331cbf576, type: 3}
+  m_PrefabInstance: {fileID: 482740181002120982}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &602982982700042471
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8009,7 +8061,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 411362757113937991, guid: 4b676e312ac35154cb76442e01f5b397, type: 3}
       propertyPath: m_text
-      value: C [Keyboard]
+      value: Up Arrow [Keyboard]
       objectReference: {fileID: 0}
     - target: {fileID: 411362757113937991, guid: 4b676e312ac35154cb76442e01f5b397, type: 3}
       propertyPath: m_fontSize
@@ -8017,7 +8069,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 411362758689984880, guid: 4b676e312ac35154cb76442e01f5b397, type: 3}
       propertyPath: m_text
-      value: Up Arrow [Keyboard]
+      value: C [Keyboard]
       objectReference: {fileID: 0}
     - target: {fileID: 411362758689984880, guid: 4b676e312ac35154cb76442e01f5b397, type: 3}
       propertyPath: m_fontSize

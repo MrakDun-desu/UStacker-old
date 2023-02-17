@@ -14,13 +14,13 @@ namespace UStacker.Gameplay.Initialization
     public class ObjectiveInitializer : InitializerBase
     {
         private readonly Board _board;
-        private readonly MediatorSO _mediator;
+        private readonly Mediator _mediator;
         private readonly GameStateManager _stateManager;
         private readonly GameTimer _timer;
 
         public ObjectiveInitializer(
             StringBuilder errorBuilder, GameSettingsSO.SettingsContainer gameSettings,
-            MediatorSO mediator,
+            Mediator mediator,
             GameStateManager stateManager,
             Board board,
             GameTimer timer) :

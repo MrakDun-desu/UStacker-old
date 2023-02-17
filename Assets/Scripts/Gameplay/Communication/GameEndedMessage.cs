@@ -1,7 +1,10 @@
-﻿namespace UStacker.Gameplay.Communication
+﻿using JetBrains.Annotations;
+
+namespace UStacker.Gameplay.Communication
 {
-    public record GameEndedMessage : Message
+    public readonly struct GameEndedMessage : IMessage
     {
+        [UsedImplicitly]
         public readonly double EndTime;
 
         public GameEndedMessage(double endTime)
