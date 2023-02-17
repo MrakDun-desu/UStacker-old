@@ -40,7 +40,7 @@ namespace UStacker.Gameplay.Blocks
             else
             {
                 base.UpdateBlockSkin();
-                _holdSkinsParent.gameObject.SetActive(false);
+                _holdSkinsParent.SetActive(false);
                 _skinsParent.SetActive(true);
             }
         }
@@ -56,7 +56,7 @@ namespace UStacker.Gameplay.Blocks
             }
 
             _skinsParent.SetActive(!newIsHold);
-            _holdSkinsParent.gameObject.SetActive(newIsHold);
+            _holdSkinsParent.SetActive(newIsHold);
         }
 
         [ContextMenu("Set initial position")]

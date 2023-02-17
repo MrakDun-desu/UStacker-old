@@ -35,6 +35,15 @@ namespace UStacker.Gameplay.Communication
 
             RegisteredActions[type].Add(action as Delegate);
         }
+        
+        public void Unregister<TMessage>(Action<TMessage> action)
+            where TMessage : IMessage
+        {
+            var key = typeof(TMessage);
+            if (!RegisteredActions.ContainsKey(key)) return;
+
+            RegisteredActions[key].Remove(action);
+        }
 
         public void Send<TMessage>(TMessage message)
             where TMessage : IMessage

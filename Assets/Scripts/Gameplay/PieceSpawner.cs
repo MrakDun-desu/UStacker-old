@@ -125,8 +125,8 @@ namespace UStacker.Gameplay
             {
                 _piecePools.Add(piecePair.Key, new ObjectPool<Piece>(
                     () => CreatePiece(piecePair.Value, piecePair.Key),
-                    p => p.ResetState(),
-                    p => p.gameObject.SetActive(false),
+                    p => p.Activate(),
+                    p => p.Deactivate(),
                     p => Destroy(p.gameObject),
                     true,
                     _defaultPoolCapacity,

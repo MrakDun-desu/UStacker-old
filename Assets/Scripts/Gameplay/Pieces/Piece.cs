@@ -95,9 +95,13 @@ namespace UStacker.Gameplay.Pieces
             Type = _type;
         }
 
-        public void ResetState()
+        public void Deactivate()
         {
-            gameObject.SetActive(true);
+            Visibility = 0;
+        }
+
+        public void Activate()
+        {
             _activeInPool = true;
             Visibility = 1;
             foreach (var block in Blocks)
@@ -105,9 +109,9 @@ namespace UStacker.Gameplay.Pieces
                 if (!_activeTransforms.Contains(block.transform))
                     _activeTransforms.Add(block.transform);
 
-                block.gameObject.SetActive(true);
                 block.ResetPosition();
             }
+
             RotationState = RotationState.Zero;
             Rotated?.Invoke();
         }

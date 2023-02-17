@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UStacker.Common.Extensions;
 using UStacker.Gameplay.GarbageGeneration;
@@ -20,6 +21,7 @@ namespace UStacker.Gameplay.Blocks
 
         private float _switchFrameTime;
         private float _visibility;
+        private Coroutine _animationCoroutine;
 
         public float Visibility
         {
@@ -45,8 +47,14 @@ namespace UStacker.Gameplay.Blocks
             }
         }
 
-        private void Update()
+        private void HandleSpritesChanged()
         {
+            if (_animationCoroutine != null)
+            {
+                StopCoroutine(_animationCoroutine);
+                _animationCoroutine = null;
+            }
+            
             switch (_currentSprites.Count)
             {
                 case 0:
@@ -56,12 +64,22 @@ namespace UStacker.Gameplay.Blocks
                     return;
             }
 
-            if (SkinRecord.AnimationFps == 0) return;
+            if (SkinRecord.AnimationFps <= 0) return;
 
-            var newSpriteIndex = Mathf.FloorToInt(Time.realtimeSinceStartup / _switchFrameTime);
-            newSpriteIndex %= _currentSprites.Count;
-            newSpriteIndex = Mathf.Max(newSpriteIndex, 0);
-            _renderer.sprite = _currentSprites[newSpriteIndex].Sprite;
+            _animationCoroutine = StartCoroutine(AnimationCor());
+        }
+
+        private IEnumerator AnimationCor()
+        {
+            var currentSpriteIndex = 0;
+            while (true)
+            {
+                currentSpriteIndex %= _currentSprites.Count;
+                _renderer.sprite = _currentSprites[currentSpriteIndex].Sprite;
+                yield return new WaitForSeconds(_switchFrameTime);
+                currentSpriteIndex++;
+            }
+            // ReSharper disable once IteratorNeverReturns
         }
 
         private void OnDestroy()
@@ -92,7 +110,7 @@ namespace UStacker.Gameplay.Blocks
             if (!SkinRecord.IsConnected)
             {
                 _currentSprites = SkinRecord.Sprites;
-                Update();
+                HandleSpritesChanged();
             }
             else
             {
@@ -121,9 +139,6 @@ namespace UStacker.Gameplay.Blocks
             switch (BlockCollection)
             {
                 case GhostPiece ghostPiece:
-                    _renderer.color = _renderer.color.WithAlpha(
-                        AppSettings.Gameplay.GhostPieceVisibility);
-
                     GhostPieceVisibilityApplier.VisibilityChanged += ChangeAlpha;
 
                     if (!AppSettings.Gameplay.ColorGhostPiece) return;
@@ -216,7 +231,7 @@ namespace UStacker.Gameplay.Blocks
                 return;
 
             _currentSprites = connectedSprite.Sprites;
-            Update();
+            HandleSpritesChanged();
         }
 
         private void ResetRotation()

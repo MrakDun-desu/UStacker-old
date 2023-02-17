@@ -55,8 +55,8 @@ namespace UStacker.Gameplay.Pieces
         {
             _blockPool = new ObjectPool<BlockBase>(
                 CreateBlock,
-                block => block.gameObject.SetActive(true),
-                block => block.gameObject.SetActive(false),
+                block => block.Visibility = AppSettings.Gameplay.GhostPieceVisibility,
+                block => block.Visibility = 0,
                 block => Destroy(block.gameObject),
                 true,
                 4,
@@ -95,6 +95,7 @@ namespace UStacker.Gameplay.Pieces
             var newBlock = Instantiate(_blockPrefab, transform);
             newBlock.Board = _board;
             newBlock.BlockNumber = (uint) Mathf.Min(_blocks.Count, 3);
+            newBlock.Visibility = AppSettings.Gameplay.GhostPieceVisibility;
             return newBlock;
         }
 
@@ -143,12 +144,14 @@ namespace UStacker.Gameplay.Pieces
 
         public void Disable()
         {
-            gameObject.SetActive(false);
+            foreach (var block in _blocks)
+                block.Visibility = 0;
         }
 
         public void Enable()
         {
-            gameObject.SetActive(true);
+            foreach (var block in _blocks)
+                block.Visibility = AppSettings.Gameplay.GhostPieceVisibility;
         }
     }
 }

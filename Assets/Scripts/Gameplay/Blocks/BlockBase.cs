@@ -20,17 +20,19 @@ namespace UStacker.Gameplay.Blocks
         private float _visibility = 1;
         private bool _usingDefault = true;
 
-        [field: SerializeField]
-        public uint BlockNumber { get; set; }
+        [field: SerializeField] public uint BlockNumber { get; set; }
+
         public float Visibility
         {
             get => _visibility;
             set
             {
                 _visibility = value;
-                foreach (var skin in _currentSkins) skin.Visibility = _visibility;
+                foreach (var skin in _currentSkins)
+                    skin.Visibility = _visibility;
             }
         }
+
         public string CollectionType
         {
             get => _collectionType;
@@ -40,6 +42,7 @@ namespace UStacker.Gameplay.Blocks
                 UpdateBlockSkin();
             }
         }
+
         public Board Board { get; set; }
 
         private void Awake()
@@ -48,7 +51,7 @@ namespace UStacker.Gameplay.Blocks
             _defaultSkins = _skinsParent.GetComponentsInChildren<BlockSkin>();
             _skinsPool = new ObjectPool<BlockSkin>(
                 () => Instantiate(_blockSkinPrefab),
-                skin => skin.gameObject.SetActive(true),
+                OnSkinGet,
                 OnSkinRelease,
                 skin => Destroy(skin.gameObject));
         }
@@ -64,10 +67,15 @@ namespace UStacker.Gameplay.Blocks
             SkinLoader.SkinChanged -= UpdateBlockSkin;
         }
 
-        private void OnSkinRelease(BlockSkin skin)
+        private static void OnSkinRelease(BlockSkin skin)
         {
-            skin.gameObject.SetActive(false);
+            skin.Visibility = 0;
             skin.UnregisterEvents();
+        }
+
+        private static void OnSkinGet(BlockSkin skin)
+        {
+            skin.Visibility = 1;
         }
 
         protected virtual void UpdateBlockSkin()
@@ -107,22 +115,25 @@ namespace UStacker.Gameplay.Blocks
             {
                 var simplifiedCollectionType = CollectionType[^1].ToString().ToLowerInvariant();
                 newSkins = SkinLoader.SkinRecords
-                    .Where(record => record.SkinType == simplifiedCollectionType && record.BlockNumbers.Contains(BlockNumber))
+                    .Where(record =>
+                        record.SkinType == simplifiedCollectionType && record.BlockNumbers.Contains(BlockNumber))
                     .ToArray();
             }
 
             return newSkins.Length != 0;
         }
 
-        protected void ReplaceOldSkins(IEnumerable<SkinRecord> newSkins, GameObject parent, bool forceDestroyOld = false)
+        protected void ReplaceOldSkins(IEnumerable<SkinRecord> newSkins, GameObject parent,
+            bool forceDestroyOld = false)
         {
             var skinsExisted = _currentSkins.Count <= 0;
             foreach (var skin in _currentSkins)
                 _skinsPool.Release(skin);
             _currentSkins.Clear();
-            
+
             if (skinsExisted || forceDestroyOld)
-                foreach (Transform tf in parent.transform) Destroy(tf.gameObject);
+                foreach (Transform tf in parent.transform)
+                    Destroy(tf.gameObject);
 
             AddNewSkins(newSkins, parent);
         }

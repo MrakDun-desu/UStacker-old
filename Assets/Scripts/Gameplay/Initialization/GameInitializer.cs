@@ -67,10 +67,8 @@ namespace UStacker.Gameplay.Initialization
         public static string GameType { get; set; }
         public static bool InitAsReplay { get; set; }
 
-        private void Start()
+        private void Awake()
         {
-            _loadingOverlay.SetActive(true);
-            StringBuilder errorBuilder = new();
             foreach (var dependantObject in _gameSettingsDependencies)
             {
                 var dependencies = dependantObject.GetComponents<IGameSettingsDependency>();
@@ -84,6 +82,12 @@ namespace UStacker.Gameplay.Initialization
                 foreach (var dependency in dependencies)
                     dependency.Mediator = _mediator;
             }
+        }
+
+        private void Start()
+        {
+            _loadingOverlay.SetActive(true);
+            StringBuilder errorBuilder = new();
             
             if (TryInitialize(errorBuilder))
             {

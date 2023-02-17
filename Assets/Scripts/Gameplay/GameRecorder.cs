@@ -38,6 +38,8 @@ namespace UStacker.Gameplay
         public void StopRecording()
         {
             if (!_recording) return;
+            Mediator.Unregister<InputActionMessage>(AddInputActionToList);
+            Mediator.Unregister<PiecePlacedMessage>(AddPiecePlacementToList);
             _recording = false;
         }
     }
