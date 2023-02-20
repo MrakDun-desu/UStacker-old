@@ -13,21 +13,21 @@ using UStacker.Gameplay.InputProcessing;
 
 namespace UStacker.Gameplay
 {
-    public class PieceSpawner : MonoBehaviour, IGameSettingsDependency, IMediatorDependency
+    public class PieceSpawner : MonoBehaviour, IGameSettingsDependency
     {
         [SerializeField] private Board _board;
         [SerializeField] private InputProcessor _inputProcessor;
         [FormerlySerializedAs("_manager")] [SerializeField]
         private GameStateManager _stateManager;
         [SerializeField] private WarningPiece _warningPiece;
+        [SerializeField] private Mediator _mediator;
+        
         private readonly Dictionary<string, ObjectPool<Piece>> _piecePools = new();
-
         private bool _containersEmpty = true;
         private int _defaultPoolCapacity;
         private List<PieceContainer> _previewContainers;
         private PiecePreviews _previews;
         private GameSettingsSO.SettingsContainer _settings;
-        public Mediator Mediator { private get; set; }
 
         public IRandomizer Randomizer { get; set; }
 
@@ -101,7 +101,7 @@ namespace UStacker.Gameplay
 
             var nextPiece = AppSettings.Sound.HearNextPieces ? _previews.GetFirstPieceType() : string.Empty;
 
-            Mediator.Send(new PieceSpawnedMessage(piece.Type, nextPiece, spawnTime));
+            _mediator.Send(new PieceSpawnedMessage(piece.Type, nextPiece, spawnTime));
 
             if (!_board.CanPlace(piece))
                 _stateManager.LoseGame(spawnTime);

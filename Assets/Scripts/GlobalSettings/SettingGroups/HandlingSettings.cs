@@ -8,7 +8,6 @@ namespace UStacker.GlobalSettings.Groups
     [Serializable]
     public record HandlingSettings
     {
-        // backing fields 
         [SerializeField]
         private double _delayedAutoShift = .125d;
         [SerializeField]

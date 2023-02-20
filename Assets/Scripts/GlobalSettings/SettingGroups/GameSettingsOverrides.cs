@@ -7,9 +7,7 @@ namespace UStacker.GlobalSettings.Groups
     [Serializable]
     public record GameSettingsOverrides
     {
-        [SerializeField]
         private uint? _countdownCount;
-        [SerializeField]
         private float? _countdownInterval;
         [field: SerializeField] [CanBeNull] public string StartingLevel { get; set; }
 

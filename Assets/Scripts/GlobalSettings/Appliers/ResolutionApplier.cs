@@ -17,7 +17,10 @@ namespace UStacker.GlobalSettings.Appliers
                 newResolution.refreshRateRatio
             );
 
-            QualitySettings.vSyncCount = AppSettings.Video.UseVsync ? 1 : 0;
+            if (float.IsInfinity(AppSettings.Video.TargetFramerate))
+                QualitySettings.vSyncCount = 0;
+            else
+                Application.targetFrameRate = (int) AppSettings.Video.TargetFramerate;
         }
     }
 }

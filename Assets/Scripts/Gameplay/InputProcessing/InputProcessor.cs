@@ -16,11 +16,11 @@ using UStacker.GlobalSettings.Groups;
 
 namespace UStacker.Gameplay.InputProcessing
 {
-    public class InputProcessor : MonoBehaviour, IGameSettingsDependency, IMediatorDependency
+    public class InputProcessor : MonoBehaviour, IGameSettingsDependency
     {
         [Header("Dependencies")] [SerializeField]
         private Board _board;
-
+        [SerializeField] private Mediator _mediator;
         [SerializeField] private PieceSpawner _spawner;
         [SerializeField] private GhostPiece _ghostPiece;
         [SerializeField] private GameTimer _timer;
@@ -108,18 +108,6 @@ namespace UStacker.Gameplay.InputProcessing
 
         private HandlingSettings _handling;
         public GameSettingsSO.SettingsContainer GameSettings { private get; set; }
-        private Mediator _mediator;
-
-        public Mediator Mediator
-        {
-            private get => _mediator;
-            set
-            {
-                _mediator = value;
-                Mediator.Register<GravityChangedMessage>(OnGravityChanged);
-                Mediator.Register<LockDelayChangedMessage>(OnLockDelayChanged);
-            }
-        }
 
         public SpinHandler SpinHandler { get; set; }
 
@@ -163,6 +151,9 @@ namespace UStacker.Gameplay.InputProcessing
 
         private void Awake()
         {
+            _mediator.Register<GravityChangedMessage>(OnGravityChanged);
+            _mediator.Register<LockDelayChangedMessage>(OnLockDelayChanged);
+            
             _spawnEvent = new UpdateEvent(_updateEvents, EventType.Spawn);
             _dasLeftEvent = new UpdateEvent(_updateEvents, EventType.DasLeft);
             _dasRightEvent = new UpdateEvent(_updateEvents, EventType.DasRight);
@@ -416,7 +407,7 @@ namespace UStacker.Gameplay.InputProcessing
                 var hitWall = moveVector.x != 0 && (!_board.CanPlace(ActivePiece, Vector2Int.left) ||
                                                     !_board.CanPlace(ActivePiece, Vector2Int.right));
 
-                Mediator.Send(new PieceMovedMessage(moveVector.x, moveVector.y,
+                _mediator.Send(new PieceMovedMessage(moveVector.x, moveVector.y,
                     wasHardDrop, wasSoftDrop, hitWall, time));
             }
 
@@ -510,7 +501,7 @@ namespace UStacker.Gameplay.InputProcessing
 
         private void HandleInputAction(InputActionMessage message)
         {
-            Mediator.Send(message);
+            _mediator.Send(message);
             Update(message.Time, false);
             switch (message.ActionType)
             {
@@ -762,7 +753,7 @@ namespace UStacker.Gameplay.InputProcessing
             var startRotation = ActivePiece.RotationState;
             ChangeActivePieceRotationState(rotationAngle);
 
-            Mediator.Send(new PieceRotatedMessage(
+            _mediator.Send(new PieceRotatedMessage(
                 ActivePiece.Type,
                 startRotation,
                 ActivePiece.RotationState,
@@ -802,11 +793,11 @@ namespace UStacker.Gameplay.InputProcessing
 
             if (_usedHold && !GameSettings.Controls.UnlimitedHold)
             {
-                Mediator.Send(new HoldUsedMessage(false, actionTime));
+                _mediator.Send(new HoldUsedMessage(false, actionTime));
                 return;
             }
 
-            Mediator.Send(new HoldUsedMessage(true, actionTime));
+            _mediator.Send(new HoldUsedMessage(true, actionTime));
 
             var newPiece = PieceHolder.SwapPiece(ActivePiece);
             if (!GameSettings.Controls.UnlimitedHold)

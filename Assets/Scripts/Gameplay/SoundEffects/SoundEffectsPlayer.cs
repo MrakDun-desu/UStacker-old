@@ -6,29 +6,16 @@ using UnityEngine;
 using UStacker.Common.Alerts;
 using UStacker.Common.LuaApi;
 using UStacker.Gameplay.Communication;
-using UStacker.Gameplay.Initialization;
 using UStacker.GlobalSettings.Music;
 
 namespace UStacker.Gameplay.SoundEffects
 {
     [RequireComponent(typeof(AudioSource))]
-    public class SoundEffectsPlayer : MonoBehaviour, IMediatorDependency
+    public class SoundEffectsPlayer : MonoBehaviour
     {
         [SerializeField] private AudioClipCollection _defaultEffects = new();
-
-        private Mediator _mediator;
-
-        public Mediator Mediator
-        {
-            private get => _mediator;
-            set
-            {
-                _mediator = value;
-                if (!TryRegisterCustomFunctions())
-                    RegisterDefaultFunctions();
-            }
-        }
-
+        [SerializeField] private Mediator _mediator;
+        
         public bool RepressSfx;
         private AudioSource _audioSource;
         private Lua _luaState;
@@ -39,6 +26,12 @@ namespace UStacker.Gameplay.SoundEffects
             _audioSource = GetComponent<AudioSource>();
         }
 
+        private void Start()
+        {
+            if (!TryRegisterCustomFunctions())
+                RegisterDefaultFunctions();
+        }
+
         private void LateUpdate()
         {
             _playedInThisUpdate.Clear();
@@ -46,14 +39,14 @@ namespace UStacker.Gameplay.SoundEffects
 
         private void RegisterDefaultFunctions()
         {
-            Mediator.Register<PiecePlacedMessage>(HandlePiecePlaced);
-            Mediator.Register<PieceRotatedMessage>(HandlePieceRotated);
-            Mediator.Register<PieceMovedMessage>(HandlePieceMoved);
-            Mediator.Register<HoldUsedMessage>(HandleHoldUsed);
-            Mediator.Register<PieceSpawnedMessage>(HandlePieceSpawned);
-            Mediator.Register<CountdownTickedMessage>(HandleCountdownTicked);
-            Mediator.Register<GameLostMessage>(_ => TryPlayClip("death"));
-            Mediator.Register<GameEndedMessage>(_ => TryPlayClip("finish"));
+            _mediator.Register<PiecePlacedMessage>(HandlePiecePlaced);
+            _mediator.Register<PieceRotatedMessage>(HandlePieceRotated);
+            _mediator.Register<PieceMovedMessage>(HandlePieceMoved);
+            _mediator.Register<HoldUsedMessage>(HandleHoldUsed);
+            _mediator.Register<PieceSpawnedMessage>(HandlePieceSpawned);
+            _mediator.Register<CountdownTickedMessage>(HandleCountdownTicked);
+            _mediator.Register<GameLostMessage>(_ => TryPlayClip("death"));
+            _mediator.Register<GameEndedMessage>(_ => TryPlayClip("finish"));
         }
 
         private bool TryRegisterCustomFunctions()
@@ -113,7 +106,7 @@ namespace UStacker.Gameplay.SoundEffects
                     }
                 }
 
-                Mediator.Register((Action<IMessage>)Action, entry.Value);
+                _mediator.Register((Action<IMessage>)Action, entry.Value);
             }
 
             return true;

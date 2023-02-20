@@ -984,6 +984,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62f94062effd46ac9d217fe7905e6689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _mediator: {fileID: 9082995738296214820}
   ActionList: []
   PiecePlacementList: []
 --- !u!1 &8141839148887950748
@@ -1034,6 +1035,7 @@ MonoBehaviour:
   _statCountersCanvas: {fileID: 284726700716874693}
   _displayerPrefab: {fileID: 3809904194938788015, guid: a58f1a9ed28c0c44388dfad416521619, type: 3}
   _timer: {fileID: 8141839149270808964}
+  _mediator: {fileID: 9082995738296214820}
   _stats:
     Score: 0
     Level: 0
@@ -1409,6 +1411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _board: {fileID: 1124102361336711501}
+  _mediator: {fileID: 9082995738296214820}
   _spawner: {fileID: 8141839149874159367}
   _ghostPiece: {fileID: 107336663143485187}
   _timer: {fileID: 8141839149270808964}
@@ -1687,6 +1690,7 @@ MonoBehaviour:
   CountdownCount: 3
   _noCountdownMessage: Ready
   _lastMessage: Start!
+  _mediator: {fileID: 9082995738296214820}
   CountdownFinished:
     m_PersistentCalls:
       m_Calls:
@@ -1811,7 +1815,7 @@ MonoBehaviour:
   _countdown: {fileID: 8141839149743567147}
   _gameTitle: {fileID: 8141839150215016486}
   _loadingOverlay: {fileID: 1376718430007579723}
-  _mediator: {fileID: 11400000, guid: 88ce13be9b16a19429f7af649a10a6df, type: 2}
+  _mediator: {fileID: 9082995738296214820}
   _stateManager: {fileID: 8141839150514888149}
   _playerFinder: {fileID: 8141839149685358632}
   _statCounterManager: {fileID: 8141839148887950749}
@@ -1824,16 +1828,6 @@ MonoBehaviour:
   - {fileID: 8141839149874159366}
   - {fileID: 8141839149516784098}
   - {fileID: 8141839150514888148}
-  - {fileID: 8141839148887950748}
-  _mediatorDependencies:
-  - {fileID: 8141839149743567149}
-  - {fileID: 8141839149710540773}
-  - {fileID: 8141839148887950748}
-  - {fileID: 1124102361336711500}
-  - {fileID: 8141839148878385408}
-  - {fileID: 8141839150514888148}
-  - {fileID: 8141839149874159366}
-  - {fileID: 8141839149516784098}
   GameInitialized:
     m_PersistentCalls:
       m_Calls:
@@ -2125,6 +2119,7 @@ MonoBehaviour:
   _inputProcessor: {fileID: 8141839149516784099}
   _stateManager: {fileID: 8141839150514888149}
   _warningPiece: {fileID: 544371545322141846}
+  _mediator: {fileID: 9082995738296214820}
 --- !u!1 &8141839149997927011
 GameObject:
   m_ObjectHideFlags: 0
@@ -2811,6 +2806,7 @@ MonoBehaviour:
   _statCounterManager: {fileID: 8141839148887950749}
   _gameRecorder: {fileID: 8141839148878385409}
   _resultDisplayer: {fileID: 8141839150523076082}
+  _mediator: {fileID: 9082995738296214820}
   GameStarted:
     m_PersistentCalls:
       m_Calls:
@@ -4008,6 +4004,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SoundEffectsPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 8524916289635684596, guid: 91ec43de18723474a858a6c331cbf576, type: 3}
+      propertyPath: _mediator
+      value: 
+      objectReference: {fileID: 9082995738296214820}
     - target: {fileID: 8524916289635684598, guid: 91ec43de18723474a858a6c331cbf576, type: 3}
       propertyPath: m_RootOrder
       value: -1
@@ -4067,17 +4067,12 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8524916289635684596, guid: 91ec43de18723474a858a6c331cbf576, type: 3}
   m_PrefabInstance: {fileID: 482740181002120982}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8141839149710540773}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0e780b1238a348afb67aab91b939d2a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &8141839149710540773 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8524916289635684595, guid: 91ec43de18723474a858a6c331cbf576, type: 3}
-  m_PrefabInstance: {fileID: 482740181002120982}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &602982982700042471
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5219,6 +5214,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Board
       objectReference: {fileID: 0}
+    - target: {fileID: 6618509543202458313, guid: 2f074c1b499404a4d9b3d2cb324281e7, type: 3}
+      propertyPath: _mediator
+      value: 
+      objectReference: {fileID: 9082995738296214820}
     - target: {fileID: 6618509543202458313, guid: 2f074c1b499404a4d9b3d2cb324281e7, type: 3}
       propertyPath: _stateManager
       value: 

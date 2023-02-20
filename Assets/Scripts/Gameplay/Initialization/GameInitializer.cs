@@ -45,7 +45,6 @@ namespace UStacker.Gameplay.Initialization
         [SerializeField] private ReplayController _replayController;
         [SerializeField] private GameTimer _timer;
         [SerializeField] private GameObject[] _gameSettingsDependencies = Array.Empty<GameObject>();
-        [SerializeField] private GameObject[] _mediatorDependencies = Array.Empty<GameObject>();
 
         [Header("Events")] public UnityEvent GameInitialized;
         public UnityEvent ReplayStarted;
@@ -74,13 +73,6 @@ namespace UStacker.Gameplay.Initialization
                 var dependencies = dependantObject.GetComponents<IGameSettingsDependency>();
                 foreach (var dependency in dependencies)
                     dependency.GameSettings = GameSettings;
-            }
-
-            foreach (var dependantObject in _mediatorDependencies)
-            {
-                var dependencies = dependantObject.GetComponents<IMediatorDependency>();
-                foreach (var dependency in dependencies)
-                    dependency.Mediator = _mediator;
             }
         }
 

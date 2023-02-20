@@ -20,7 +20,7 @@ using UStacker.GlobalSettings.Appliers;
 
 namespace UStacker.Gameplay
 {
-    public class Board : MonoBehaviour, IGameSettingsDependency, IMediatorDependency
+    public class Board : MonoBehaviour, IGameSettingsDependency
     {
         [SerializeField] private Transform _helperTransform;
 
@@ -30,6 +30,7 @@ namespace UStacker.Gameplay
 
         [SerializeField] private SpriteRenderer _backgroundRenderer;
         [SerializeField] private WarningPiece _warningPiece;
+        [SerializeField] private Mediator _mediator;
         [SerializeField] private ClearableBlock _garbageBlockPrefab;
         [SerializeField] private GarbageLayer _garbageLayerPrefab;
 
@@ -59,17 +60,6 @@ namespace UStacker.Gameplay
         private Vector3 _offset;
 
         private GameSettingsSO.SettingsContainer _settings;
-        private Mediator _mediator;
-
-        public Mediator Mediator
-        {
-            private get => _mediator;
-            set
-            {
-                _mediator = value;
-                Mediator.Register<GameStartedMessage>(OnGameStarted);
-            }
-        }
 
         private float _warningPieceTreshhold;
         private uint _width;
@@ -122,6 +112,8 @@ namespace UStacker.Gameplay
             _camera = Camera.main;
             transform.position += _offset;
 
+            _mediator.Register<GameStartedMessage>(OnGameStarted);
+            
             ChangeBoardZoom(AppSettings.Gameplay.BoardZoom);
             ChangeVisibility(AppSettings.Gameplay.BoardVisibility);
             _warningPieceTreshhold = AppSettings.Gameplay.WarningPieceTreshhold;
@@ -347,7 +339,7 @@ namespace UStacker.Gameplay
                 pieceType, wasAllClear, lastResult.WasSpin,
                 lastResult.WasSpinMini, lastResult.WasSpinRaw, lastResult.WasSpinMiniRaw,
                 brokenCombo, brokenBtb, totalRotation, totalMovement, placementTime);
-            Mediator.Send(newMessage);
+            _mediator.Send(newMessage);
             GarbageGenerator?.GenerateGarbage(_settings.Objective.GarbageHeight - GarbageHeight, newMessage);
         }
 

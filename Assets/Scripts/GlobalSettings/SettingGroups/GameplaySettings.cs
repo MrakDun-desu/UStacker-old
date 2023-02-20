@@ -6,7 +6,6 @@ namespace UStacker.GlobalSettings.Groups
     [Serializable]
     public record GameplaySettings
     {
-        // backing fields
         private float _boardVisibility = .8f;
         private float _boardZoom = 1f;
         private float _ghostPieceVisibility = .5f;

@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UStacker.Gameplay.Communication;
-using UStacker.Gameplay.Initialization;
 
 namespace UStacker.Gameplay
 {
-    public class GameRecorder : MonoBehaviour, IMediatorDependency
+    public class GameRecorder : MonoBehaviour
     {
-        public Mediator Mediator { private get; set; }
+        [SerializeField] private Mediator _mediator;
 
         public List<InputActionMessage> ActionList = new();
         public List<PiecePlacementInfo> PiecePlacementList = new();
@@ -30,16 +29,16 @@ namespace UStacker.Gameplay
             ActionList.Clear();
             PiecePlacementList.Clear();
             if (_recording) return;
-            Mediator.Register<InputActionMessage>(AddInputActionToList);
-            Mediator.Register<PiecePlacedMessage>(AddPiecePlacementToList);
+            _mediator.Register<InputActionMessage>(AddInputActionToList);
+            _mediator.Register<PiecePlacedMessage>(AddPiecePlacementToList);
             _recording = true;
         }
 
         public void StopRecording()
         {
             if (!_recording) return;
-            Mediator.Unregister<InputActionMessage>(AddInputActionToList);
-            Mediator.Unregister<PiecePlacedMessage>(AddPiecePlacementToList);
+            _mediator.Unregister<InputActionMessage>(AddInputActionToList);
+            _mediator.Unregister<PiecePlacedMessage>(AddPiecePlacementToList);
             _recording = false;
         }
     }

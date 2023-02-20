@@ -50,10 +50,6 @@ namespace UStacker.GlobalSettings.Startup
             AddSceneChangeMethods();
             var settingsSaver = new GameObject("OnQuitSettingsSaver");
             settingsSaver.AddComponent<OnQuitSettingsSaver>();
-#if !UNITY_EDITOR
-            var collectorManager = new GameObject("GarbageCollectorManager");
-            collectorManager.AddComponent<GarbageCollectorManager>();
-#endif
             _ = LoadAppSettings();
         }
 
