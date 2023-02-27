@@ -10,6 +10,7 @@ namespace UStacker.Common.UI
         [SerializeField] private RectTransform _background;
 
         public static Tooltip Instance => _instance;
+        public static GameObject CurrentUser { get; set; }
 
         private void Start()
         {

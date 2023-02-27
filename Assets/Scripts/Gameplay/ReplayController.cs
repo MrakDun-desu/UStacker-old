@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UStacker.Common.Extensions;
+using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Enums;
 using UStacker.Gameplay.InputProcessing;
 using UStacker.Gameplay.Timing;
 
@@ -11,19 +13,20 @@ namespace UStacker.Gameplay
 {
     public class ReplayController : MonoBehaviour
     {
+        [SerializeField] private Mediator _mediator;
         [Header("Controlled objects")]
         [SerializeField] private GameTimer _timer;
         [SerializeField] private InputProcessor _inputProcessor;
-        [SerializeField] private GameStateManager _stateManager;
 
         [Header("Controls")]
         [SerializeField] private Slider _timeSlider;
-        [SerializeField] private Button _pauseButton;
         [SerializeField] private Image _pauseImage;
         [SerializeField] private Button _nextPieceButton;
         [SerializeField] private Button _prevPieceButton;
-        [SerializeField] private Button _nextActionButton;
-        [SerializeField] private Button _prevActionButton;
+        [SerializeField] private Button _tenthSecondForwardButton;
+        [SerializeField] private Button _tenthSecondBackwardButton;
+        [SerializeField] private Button _fiveSecondsForwardButton;
+        [SerializeField] private Button _fiveSecondsBackwardButton;
         [SerializeField] private TMP_Text _currentTimeText;
         [SerializeField] private TMP_InputField _timeScaleField;
 
@@ -34,14 +37,24 @@ namespace UStacker.Gameplay
         private void Awake()
         {
             _timeSlider.onValueChanged.AddListener(OnTimeSet);
-            _pauseButton.onClick.AddListener(TogglePause);
             _nextPieceButton.onClick.AddListener(_inputProcessor.MoveToNextPiece);
             _prevPieceButton.onClick.AddListener(_inputProcessor.MoveToPrevPiece);
-            _nextActionButton.onClick.AddListener(_inputProcessor.MoveToNextAction);
-            _prevActionButton.onClick.AddListener(_inputProcessor.MoveToPrevAction);
+            _tenthSecondForwardButton.onClick.AddListener(_inputProcessor.MoveTenthSecondForward);
+            _tenthSecondBackwardButton.onClick.AddListener(_inputProcessor.MoveTenthSecondBackward);
+            _fiveSecondsForwardButton.onClick.AddListener(_inputProcessor.MoveFiveSecondsForward);
+            _fiveSecondsBackwardButton.onClick.AddListener(_inputProcessor.MoveFiveSecondsBackward);
             _timeScaleField.onEndEdit.AddListener(OnSpeedChanged);
-            _stateManager.ReplayPaused.AddListener(() => _pauseImage.sprite = _playSprite);
-            _stateManager.ReplayUnpaused.AddListener(() => _pauseImage.sprite = _pauseSprite);
+            _mediator.Register<GameStateChangedMessage>(OnGameStateChange);
+        }
+
+        private void OnGameStateChange(GameStateChangedMessage message)
+        {
+            _pauseImage.sprite = message.NewState switch
+            {
+                GameState.Paused => _playSprite,
+                GameState.Running => _pauseSprite,
+                _ => _pauseImage.sprite
+            };
         }
 
         private void OnEnable()
@@ -53,11 +66,6 @@ namespace UStacker.Gameplay
         {
             _currentTimeText.text = _timer.CurrentTime.FormatAsTime();
             _timeSlider.SetValueWithoutNotify((float)_timer.CurrentTime);
-        }
-
-        private void TogglePause()
-        {
-            _stateManager.TogglePause();
         }
 
         private void OnSpeedChanged(string timeScaleStr)

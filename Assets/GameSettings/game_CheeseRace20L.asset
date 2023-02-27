@@ -96,7 +96,7 @@ MonoBehaviour:
       _garbageGeneration: 1
       _customGarbageGeneratorName: 
       _endConditionCount: 20
-      _garbageHeight: 10
+      _garbageHeight: 5
       <MainStat>k__BackingField: 1
       <GameEndCondition>k__BackingField: 2
       <CustomGarbageScript>k__BackingField: 
@@ -107,4 +107,3 @@ MonoBehaviour:
       _countdownInterval: 0.65
       _countdownCount: 3
       <Title>k__BackingField: Cheese Race 20L
-      <UseCountdown>k__BackingField: 1

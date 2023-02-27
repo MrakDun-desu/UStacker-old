@@ -7,6 +7,7 @@ using UStacker.GameSettings;
 using UStacker.GameSettings.Enums;
 using UnityEngine;
 using UnityEngine.Pool;
+using UStacker.Common.Extensions;
 
 namespace UStacker.Gameplay.Pieces
 {
@@ -22,17 +23,44 @@ namespace UStacker.Gameplay.Pieces
         private bool _isEnabled = true;
         private GameSettingsSO.SettingsContainer _settings;
 
+        private float _visibility;
+        private float Visibility
+        {
+            get => _visibility;
+            set
+            {
+                _visibility = value;
+                foreach (var block in _blocks)
+                    block.Visibility = _visibility;
+            }
+        }
+        public IEnumerable<Vector3> BlockPositions => _blocks.Select(block => block.transform.position);
+        public string Type => "warning";
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            set => _settings = value;
+        }
+
+        public event Action PieceChanged;
+
+
         private void Awake()
         {
             _blockPool = new ObjectPool<BlockBase>(
                 CreateBlock,
-                block => block.gameObject.SetActive(true),
-                block => block.gameObject.SetActive(false),
+                block => block.Visibility = Visibility,
+                block => block.Visibility = 0,
                 block => Destroy(block.gameObject),
                 true,
                 4,
                 20
             );
+        }
+
+        private void OnDestroy()
+        {
+            _blockPool.Dispose();
         }
 
         private void Start()
@@ -48,31 +76,21 @@ namespace UStacker.Gameplay.Pieces
                 _settings.BoardDimensions.BoardHeight);
         }
 
-        public IEnumerable<Vector3> BlockPositions => _blocks.Select(block => block.transform.position);
-        public string Type => "warning";
-
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            set => _settings = value;
-        }
-
-        public event Action PieceChanged;
-
         public void MakeVisible()
         {
             if (!_isEnabled) return;
-            gameObject.SetActive(true);
+
+            Visibility = 1;
 
             if (_settings.Gravity.TopoutCondition == TopoutCondition.PieceSpawn) return;
-            _warningLine.gameObject.SetActive(true);
+            _warningLine.color = _warningLine.color.WithAlpha(1);
         }
 
         public void MakeInvisible()
         {
-            if (!_isEnabled) return;
-
-            gameObject.SetActive(false);
-            _warningLine.gameObject.SetActive(false);
+            Visibility = 0;
+            
+            _warningLine.color = _warningLine.color.WithAlpha(0);
         }
 
         private BlockBase CreateBlock()
@@ -80,6 +98,7 @@ namespace UStacker.Gameplay.Pieces
             var newBlock = Instantiate(_blockPrefab, transform);
             newBlock.Board = _board;
             newBlock.BlockNumber = (uint) Mathf.Min(_blocks.Count, 3);
+            newBlock.Visibility = Visibility;
             return newBlock;
         }
 
@@ -112,6 +131,7 @@ namespace UStacker.Gameplay.Pieces
             transform.Rotate(Vector3.forward, (float) rotation);
 
             PieceChanged?.Invoke();
+            Visibility = Visibility;
         }
 
         private void UpdateBlockCount(int blocksCount)

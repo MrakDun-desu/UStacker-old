@@ -5,6 +5,7 @@ using UStacker.Gameplay.Initialization;
 using UStacker.GameSettings.Enums;
 using TMPro;
 using UnityEngine;
+using UStacker.Gameplay.GameStateManagement;
 
 namespace UStacker.Gameplay.Stats
 {
@@ -14,6 +15,7 @@ namespace UStacker.Gameplay.Stats
         [SerializeField] private TMP_Text _mainStatText;
         [SerializeField] private StringReferenceSO _replayGameType;
         [SerializeField] private GameStateManager _stateManager;
+        [SerializeField] private ReplayController _replayController;
 
         [Space]
         [SerializeField] private GameResultStatDisplayer _scoreText;
@@ -117,16 +119,18 @@ namespace UStacker.Gameplay.Stats
         {
             GameInitializer.Replay = _displayedReplay;
             GameInitializer.GameType = _replayGameType.Value;
-            GameInitializer.InitAsReplay = true;
-            _stateManager.Restart();
+            GameStateManager.IsReplay = true;
+
+            _replayController.SetReplay(DisplayedReplay);
+            _stateManager.InitializeGame();
         }
 
         public void PlayGameAgain()
         {
             GameInitializer.Replay = null;
             GameInitializer.GameType = _displayedReplay.GameType ?? _replayGameType.Value;
-            GameInitializer.InitAsReplay = false;
-            _stateManager.Restart();
+            GameStateManager.IsReplay = false;
+            _stateManager.InitializeGame();
         }
     }
 }

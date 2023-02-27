@@ -3,7 +3,7 @@ using System;
 namespace UStacker.GameSettings.Enums
 {
     [Flags]
-    public enum GarbageGeneration : short
+    public enum GarbageGenerationType : short
     {
         None = 0,
         Singles = 1,

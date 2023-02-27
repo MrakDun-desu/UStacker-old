@@ -1,6 +1,6 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.Events;
 using UStacker.Gameplay.InputProcessing;
 using UStacker.Gameplay.SoundEffects;
 
@@ -10,7 +10,8 @@ namespace UStacker.Gameplay.Timing
     {
         [SerializeField] private SoundEffectsPlayer _sfxPlayer;
         [SerializeField] private InputProcessor _inputProcessor;
-        [SerializeField] private GameStateManager _stateManager;
+        [SerializeField] private UnityEvent RestartEvent;
+        [SerializeField] private UnityEvent PauseEvent;
 
         private readonly Stopwatch _stopwatch = new();
 
@@ -37,15 +38,8 @@ namespace UStacker.Gameplay.Timing
 
         public double CurrentTime => (_offset + _stopwatch.Elapsed.TotalSeconds) * TimeScale;
 
-        public event Action BeforeStarted;
 
         public void StartTiming()
-        {
-            BeforeStarted?.Invoke();
-            _stopwatch.Restart();
-        }
-
-        public void ResumeTiming()
         {
             _stopwatch.Start();
         }
@@ -70,7 +64,7 @@ namespace UStacker.Gameplay.Timing
             if (value < CurrentTime)
             {
                 restarted = true;
-                _stateManager.Restart();
+                RestartEvent.Invoke();
             }
             else
                 TimeScale = 1;
@@ -80,7 +74,7 @@ namespace UStacker.Gameplay.Timing
             else
             {
                 if (restarted)
-                    _stateManager.TogglePause();
+                    PauseEvent.Invoke();
                 
                 _stopwatch.Reset();
             }

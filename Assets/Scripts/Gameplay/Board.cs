@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
-using UnityEngine.Serialization;
 using UStacker.Common.Extensions;
 using UStacker.Gameplay.Blocks;
 using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Enums;
 using UStacker.Gameplay.GarbageGeneration;
 using UStacker.Gameplay.Initialization;
 using UStacker.Gameplay.Pieces;
@@ -23,16 +24,12 @@ namespace UStacker.Gameplay
     public class Board : MonoBehaviour, IGameSettingsDependency
     {
         [SerializeField] private Transform _helperTransform;
-
-        [FormerlySerializedAs("_manager")]
-        [SerializeField]
-        private GameStateManager _stateManager;
-
         [SerializeField] private SpriteRenderer _backgroundRenderer;
         [SerializeField] private WarningPiece _warningPiece;
         [SerializeField] private Mediator _mediator;
         [SerializeField] private ClearableBlock _garbageBlockPrefab;
         [SerializeField] private GarbageLayer _garbageLayerPrefab;
+        [SerializeField] private RectTransform _statsCanvasTransform;
 
         [Tooltip("Zoom percentage change with one scroll unit")]
         [Range(0, 1)]
@@ -40,6 +37,8 @@ namespace UStacker.Gameplay
         private float _boardZoomFactor = .05f;
 
         [Range(0.00001f, 1)][SerializeField] private float _minimumBoardScale = 0.1f;
+
+        [SerializeField] private UnityEvent<double> ToppedOut;
 
         private readonly List<ClearableBlock[]> Blocks = new();
         private bool _backToBackActive;
@@ -55,16 +54,14 @@ namespace UStacker.Gameplay
 
         private ObjectPool<GarbageLayer> _garbageLayerPool;
         private uint _height;
+        private uint _width;
 
         private GarbageLayer _lastGarbageLayer;
         private Vector3 _offset;
 
-        private GameSettingsSO.SettingsContainer _settings;
-
         private float _warningPieceTreshhold;
-        private uint _width;
 
-        public IGarbageGenerator GarbageGenerator;
+        private IGarbageGenerator _garbageGenerator;
 
         public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots =>
             Blocks
@@ -74,7 +71,7 @@ namespace UStacker.Gameplay
         public uint Width
         {
             get => _width;
-            set
+            private set
             {
                 _width = value;
                 var mytransform = transform;
@@ -87,7 +84,7 @@ namespace UStacker.Gameplay
         public uint Height
         {
             get => _height;
-            set
+            private set
             {
                 _height = value;
                 var mytransform = transform;
@@ -98,7 +95,7 @@ namespace UStacker.Gameplay
         }
 
         public uint GarbageHeight { get; private set; }
-        public uint LethalHeight { get; set; }
+        public uint LethalHeight { get; private set; }
         private Vector3 Up => transform.up * transform.localScale.y;
 
         private Vector2 CurrentOffset => new(
@@ -112,7 +109,10 @@ namespace UStacker.Gameplay
             _camera = Camera.main;
             transform.position += _offset;
 
-            _mediator.Register<GameStartedMessage>(OnGameStarted);
+            _mediator.Register<GameStateChangedMessage>(OnGameStateChanged);
+            _mediator.Register<SeedSetMessage>(OnSeedSet);
+
+            FirstTimeInitialize();
             
             ChangeBoardZoom(AppSettings.Gameplay.BoardZoom);
             ChangeVisibility(AppSettings.Gameplay.BoardVisibility);
@@ -131,32 +131,110 @@ namespace UStacker.Gameplay
 
         private void OnDestroy()
         {
+            _garbageLayerPool?.Dispose();
+            _garbageBlockPool?.Dispose();
             BoardVisibilityApplier.VisibilityChanged -= ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged -= ChangeBoardZoom;
             WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
         }
 
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            set => _settings = value;
-        }
+        public GameSettingsSO.SettingsContainer GameSettings { private get; set; }
 
         public event Action LinesCleared;
 
-        private void OnGameStarted(GameStartedMessage message)
+        private void OnSeedSet(SeedSetMessage message)
         {
-            GarbageGenerator?.ResetState(message.Seed);
-            GarbageGenerator?.GenerateGarbage(_settings.Objective.GarbageHeight, new PiecePlacedMessage());
+            _garbageGenerator?.ResetState(message.Seed);
+        }
+        
+        private void OnGameStateChanged(GameStateChangedMessage message)
+        {
+            if (message.NewState != GameState.Initializing)
+                return;
+            
+            ClearAllBlocks();
+            ResetB2bAndCombo();
+            _garbageGenerator?.GenerateGarbage(GameSettings.Objective.GarbageHeight, new PiecePlacedMessage());
+        }
+
+        private void FirstTimeInitialize()
+        {
+            InitializeDimensions();
+            InitializeGarbageGenerator();
+        }
+
+        private void InitializeDimensions()
+        {
+            var boardDimensions = GameSettings.BoardDimensions;
+            Width = boardDimensions.BoardWidth;
+            Height = boardDimensions.BoardHeight;
+            LethalHeight = boardDimensions.LethalHeight;
+            _backgroundRenderer.transform.localScale = new Vector3(
+                boardDimensions.BoardWidth,
+                boardDimensions.BoardHeight,
+                1
+            );
+
+            _statsCanvasTransform.sizeDelta =
+                new Vector2(boardDimensions.BoardWidth + 200f, boardDimensions.BoardHeight + 200f);
+
+            _camera.orthographicSize =
+                boardDimensions.BoardHeight * .5f + boardDimensions.BoardPadding;
+        }
+
+        private void InitializeGarbageGenerator()
+        {
+            if (GameSettings.Objective.GarbageGenerationType == GarbageGenerationType.None)
+                return;
+
+            InitializeGarbagePools();
+
+            var readonlyBoard = new GarbageBoardInterface(this);
+
+            IGarbageGenerator garbageGenerator;
+            if (GameSettings.Objective.GarbageGenerationType.HasFlag(GarbageGenerationType.CustomFlag))
+            {
+                garbageGenerator = new CustomGarbageGenerator(readonlyBoard,
+                    GameSettings.Objective.CustomGarbageScript, _mediator);
+            }
+            else
+            {
+                garbageGenerator = new DefaultGarbageGenerator(
+                    readonlyBoard, GameSettings.Objective.GarbageGenerationType);
+            }
+
+            _garbageGenerator = garbageGenerator;
+        }
+
+        private void InitializeGarbagePools()
+        {
+            _garbageLayerPool = new ObjectPool<GarbageLayer>(
+                CreateGarbageLayer,
+                layer => layer.gameObject.SetActive(true),
+                layer => layer.gameObject.SetActive(false),
+                DestroyGarbageLayer,
+                true,
+                (int)(_height / 2u),
+                (int)_height);
+
+            _garbageBlockPool = new ObjectPool<ClearableBlock>(
+                CreateGarbageBlock,
+                block => block.Visibility = 1,
+                block => block.Visibility = 0,
+                b => Destroy(b.gameObject),
+                true,
+                (int)(_height * _width / 2u),
+                (int)(_height * _width));
         }
 
         private GarbageLayer CreateGarbageLayer()
         {
-            var newCheeseCollection = Instantiate(_garbageLayerPrefab, transform);
-            newCheeseCollection.transform.localPosition = Vector3.zero;
-            newCheeseCollection.SourcePool = _garbageLayerPool;
-            newCheeseCollection.BlockSourcePool = _garbageBlockPool;
+            var newGarbageLayer = Instantiate(_garbageLayerPrefab, transform);
+            newGarbageLayer.transform.localPosition = Vector3.zero;
+            newGarbageLayer.SourcePool = _garbageLayerPool;
+            newGarbageLayer.BlockSourcePool = _garbageBlockPool;
 
-            return newCheeseCollection;
+            return newGarbageLayer;
         }
 
         private void DestroyGarbageLayer(GarbageLayer layer)
@@ -274,7 +352,7 @@ namespace UStacker.Gameplay
             linesCleared = 0;
             var cheeseHeightStart = GarbageHeight;
             var slots = Slots;
-            for (var y = Blocks.Count - 1; y >= _settings.BoardDimensions.BlockCutHeight; y--)
+            for (var y = Blocks.Count - 1; y >= GameSettings.BoardDimensions.BlockCutHeight; y--)
             {
                 for (var x = 0; x < Blocks[y].Length; x++)
                 {
@@ -340,7 +418,7 @@ namespace UStacker.Gameplay
                 lastResult.WasSpinMini, lastResult.WasSpinRaw, lastResult.WasSpinMiniRaw,
                 brokenCombo, brokenBtb, totalRotation, totalMovement, placementTime);
             _mediator.Send(newMessage);
-            GarbageGenerator?.GenerateGarbage(_settings.Objective.GarbageHeight - GarbageHeight, newMessage);
+            _garbageGenerator?.GenerateGarbage(GameSettings.Objective.GarbageHeight - GarbageHeight, newMessage);
         }
 
         public Vector2Int WorldSpaceToBoardPosition(Vector3 worldSpacePos)
@@ -419,19 +497,19 @@ namespace UStacker.Gameplay
                 totalRotation,
                 totalMovement);
 
-            if (_settings.Gravity.AllowClutchClears && linesWereCleared) return true;
+            if (GameSettings.Gravity.AllowClutchClears && linesWereCleared) return true;
 
-            switch (_settings.Gravity.TopoutCondition)
+            switch (GameSettings.Gravity.TopoutCondition)
             {
                 case TopoutCondition.PieceSpawn:
                     break;
                 case TopoutCondition.OneBlockAboveLethal:
                     if (!isCompletelyBelowLethal)
-                        _stateManager.LoseGame(placementTime);
+                        ToppedOut.Invoke(placementTime);
                     break;
                 case TopoutCondition.AllBlocksAboveLethal:
                     if (!isPartlyBelowLethal)
-                        _stateManager.LoseGame(placementTime);
+                        ToppedOut.Invoke(placementTime);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -453,7 +531,7 @@ namespace UStacker.Gameplay
             _lastGarbageLayer = null;
         }
 
-        public void ResetB2bAndCombo()
+        private void ResetB2bAndCombo()
         {
             _backToBackActive = false;
             _currentBackToBack = 0;
@@ -513,27 +591,6 @@ namespace UStacker.Gameplay
             foreach (var block in newGarbageLayer.Blocks) Place(block);
 
             newGarbageLayer.TriggerBlocksAdded();
-        }
-
-        public void InitializeGarbagePools()
-        {
-            _garbageLayerPool = new ObjectPool<GarbageLayer>(
-                CreateGarbageLayer,
-                cc => cc.gameObject.SetActive(true),
-                cc => cc.gameObject.SetActive(false),
-                DestroyGarbageLayer,
-                true,
-                (int)(_height / 2u),
-                (int)_height);
-
-            _garbageBlockPool = new ObjectPool<ClearableBlock>(
-                CreateGarbageBlock,
-                b => b.gameObject.SetActive(true),
-                null,
-                b => Destroy(b.gameObject),
-                true,
-                (int)(_height * _width / 2u),
-                (int)(_height * _width));
         }
     }
 }

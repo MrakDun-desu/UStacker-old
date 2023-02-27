@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UStacker.Common;
 using UStacker.Gameplay.Communication;
+using UStacker.GameSettings.Enums;
 
 namespace UStacker.Gameplay.GarbageGeneration
 {
@@ -12,16 +13,16 @@ namespace UStacker.Gameplay.GarbageGeneration
         private int _linesLeft;
         private readonly Random _random;
 
-        public DefaultGarbageGenerator(GarbageBoardInterface boardInterface, GameSettings.Enums.GarbageGeneration garbageGeneration)
+        public DefaultGarbageGenerator(GarbageBoardInterface boardInterface, GarbageGenerationType garbageGenerationType)
         {
             _random = new Random();
-            if (garbageGeneration.HasFlag(GameSettings.Enums.GarbageGeneration.Singles))
+            if (garbageGenerationType.HasFlag(GarbageGenerationType.Singles))
                 _holeSizes.Add(1);
-            if (garbageGeneration.HasFlag(GameSettings.Enums.GarbageGeneration.Doubles))
+            if (garbageGenerationType.HasFlag(GarbageGenerationType.Doubles))
                 _holeSizes.Add(2);
-            if (garbageGeneration.HasFlag(GameSettings.Enums.GarbageGeneration.Triples))
+            if (garbageGenerationType.HasFlag(GarbageGenerationType.Triples))
                 _holeSizes.Add(3);
-            if (garbageGeneration.HasFlag(GameSettings.Enums.GarbageGeneration.Quads))
+            if (garbageGenerationType.HasFlag(GarbageGenerationType.Quads))
                 _holeSizes.Add(4);
 
             _boardInterface = boardInterface;

@@ -118,18 +118,6 @@ namespace UStacker.GlobalSettings.Music
             }
         }
 
-        public void PlayVictoryTrack()
-        {
-            if (Configuration.VictoryMusic.TryGetRandomElement(out var trackName))
-                PlayNextTrack(trackName);
-        }
-
-        public void PlayLossTrack()
-        {
-            if (Configuration.LossMusic.TryGetRandomElement(out var trackName))
-                PlayNextTrack(trackName);
-        }
-
         public void PlayFromGroupImmediate(string groupName)
         {
             if (Configuration.GameMusicGroups[groupName].TryGetRandomElement(out var trackName))

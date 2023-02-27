@@ -23,6 +23,19 @@ namespace UStacker.Gameplay.Pieces
         private bool _colorGhostPiece;
         private Color _currentColor = _defaultColor;
         private GameSettingsSO.SettingsContainer _settings;
+        
+        public IEnumerable<Vector3> BlockPositions =>
+            _blocks.Select(block => block.transform.position);
+
+        public string Type => "ghost";
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            set => _settings = value;
+        }
+        public event Action<Color> ColorChanged;
+        public event Action Rendered;
+
 
         public Piece ActivePiece
         {
@@ -60,7 +73,7 @@ namespace UStacker.Gameplay.Pieces
                 block => Destroy(block.gameObject),
                 true,
                 4,
-                20
+                50
             );
         }
 
@@ -75,20 +88,9 @@ namespace UStacker.Gameplay.Pieces
 
         private void OnDestroy()
         {
+            _blockPool?.Dispose();
             ColorGhostPieceApplier.ColorGhostPieceChanged -= ChangeColoring;
         }
-
-        public IEnumerable<Vector3> BlockPositions =>
-            _blocks.Select(block => block.transform.position);
-
-        public string Type => "ghost";
-
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            set => _settings = value;
-        }
-        public event Action<Color> ColorChanged;
-        public event Action Rendered;
 
         private BlockBase CreateBlock()
         {

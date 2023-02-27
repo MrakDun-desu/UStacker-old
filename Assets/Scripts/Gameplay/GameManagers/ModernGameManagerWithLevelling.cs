@@ -1,6 +1,7 @@
 using System;
 using UStacker.Gameplay.Communication;
 using UnityEngine;
+using UStacker.Gameplay.Enums;
 
 namespace UStacker.Gameplay.GameManagers
 {
@@ -32,11 +33,10 @@ namespace UStacker.Gameplay.GameManagers
 
             _mediator.Register<PiecePlacedMessage>(HandlePiecePlaced);
             _mediator.Register<PieceMovedMessage>(HandlePieceMoved);
-            _mediator.Register<GameStartedMessage>(_ => ResetGameManager());
-            _mediator.Register<GameRestartedMessage>(_ => ResetGameManager());
+            _mediator.Register<GameStateChangedMessage>(HandleGameStateChange);
         }
 
-        private void ResetGameManager()
+        private void ResetState()
         {
             _currentLevel = Math.Clamp(_startingLevel, MIN_LEVEL, MAX_LEVEL);
             _currentScore = 0;
@@ -48,6 +48,14 @@ namespace UStacker.Gameplay.GameManagers
             _mediator.Send(new LevelChangedMessage(_currentLevel.ToString(), 0));
             _mediator.Send(new LevelUpConditionChangedMessage(0, _totalLinesToNextLevel, _linesClearedThisLevel,
                 LEVEUP_CONDITION_NAME));
+        }
+
+        private void HandleGameStateChange(GameStateChangedMessage message)
+        {
+            if (message.NewState != GameState.Initializing)
+                return;
+            
+            ResetState();
         }
 
         private void HandlePiecePlaced(PiecePlacedMessage message)

@@ -20,7 +20,7 @@ namespace UStacker.Gameplay.Blocks
         private List<SpriteRecord> _currentSprites = new();
 
         private float _switchFrameTime;
-        private float _visibility;
+        private float _visibility = 1;
         private Coroutine _animationCoroutine;
 
         public float Visibility
@@ -146,9 +146,6 @@ namespace UStacker.Gameplay.Blocks
                     ChangeColor(ghostPiece.CurrentColor);
                     break;
                 case BoardGrid:
-                    _renderer.color = _renderer.color.WithAlpha(
-                        AppSettings.Gameplay.GridVisibility);
-
                     GridVisibilityApplier.VisibilityChanged += ChangeAlpha;
                     break;
             }

@@ -20,7 +20,7 @@ namespace UStacker.Common.Extensions
 
             ms = ms.PadLeft(msLength, paddingChar);
 
-            if (timeSpan.Minutes == 0 && timeSpan.TotalHours < 1)
+            if (timeSpan is {Minutes: 0, TotalHours: < 1})
                 return $"{s}.{ms}";
 
             s = s.PadLeft(sLength, paddingChar);

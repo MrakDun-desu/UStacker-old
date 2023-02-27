@@ -7,7 +7,8 @@ namespace UStacker.Gameplay.InputProcessing
     [Serializable]
     public class UpdateEvent : IComparable<UpdateEvent>
     {
-        private static int LastPriority = 0;
+        // static field so there is absolutely no chance events have the same priority
+        private static int LastPriority;
         private readonly List<UpdateEvent> _parentList;
         private readonly int _priority;
         [SerializeField] private EventType _type;

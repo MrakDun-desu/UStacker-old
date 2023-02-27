@@ -2,6 +2,7 @@
 using UStacker.GameSettings;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UStacker.Gameplay.GameStateManagement;
 
 namespace UStacker.Gameplay
 {
@@ -10,9 +11,9 @@ namespace UStacker.Gameplay
         public void OpenGame(GameSettingsSO gameSettingsAsset)
         {
             GameInitializer.Replay = null;
-            GameInitializer.GameSettings = gameSettingsAsset.Settings;
             GameInitializer.GameType = gameSettingsAsset.GameType.Value;
-            GameInitializer.InitAsReplay = false;
+            GameInitializer.GameSettings = gameSettingsAsset.Settings;
+            GameStateManager.IsReplay = false;
             SceneManager.LoadScene("Scene_Game_Singleplayer");
         }
     }

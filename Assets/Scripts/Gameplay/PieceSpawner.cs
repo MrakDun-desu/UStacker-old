@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Initialization;
@@ -7,9 +8,11 @@ using UStacker.Gameplay.Randomizers;
 using UStacker.GameSettings;
 using UStacker.GlobalSettings;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Pool;
-using UnityEngine.Serialization;
+using UStacker.Gameplay.Enums;
 using UStacker.Gameplay.InputProcessing;
+using UStacker.GameSettings.Enums;
 
 namespace UStacker.Gameplay
 {
@@ -17,35 +20,118 @@ namespace UStacker.Gameplay
     {
         [SerializeField] private Board _board;
         [SerializeField] private InputProcessor _inputProcessor;
-        [FormerlySerializedAs("_manager")] [SerializeField]
-        private GameStateManager _stateManager;
         [SerializeField] private WarningPiece _warningPiece;
         [SerializeField] private Mediator _mediator;
-        
+        [SerializeField] private PieceDictionary _availablePieces;
+        [SerializeField] private PieceContainer _pieceContainerPrefab;
+        [SerializeField] private UnityEvent<double> CantSpawn;
+
         private readonly Dictionary<string, ObjectPool<Piece>> _piecePools = new();
         private bool _containersEmpty = true;
         private int _defaultPoolCapacity;
-        private List<PieceContainer> _previewContainers;
+        private readonly List<PieceContainer> _previewContainers = new();
         private PiecePreviews _previews;
-        private GameSettingsSO.SettingsContainer _settings;
+        private IRandomizer _randomizer { get; set; }
 
-        public IRandomizer Randomizer { get; set; }
+        public GameSettingsSO.SettingsContainer GameSettings { private get; set; }
 
-        public GameSettingsSO.SettingsContainer GameSettings
+        private void Awake()
         {
-            set => _settings = value;
+            _mediator.Register<GameStateChangedMessage>(OnGameStateChange);
+            _mediator.Register<GameStateChangedMessage>(InitializeSeed, 10);
+            _mediator.Register<SeedSetMessage>(message => _randomizer?.Reset(message.Seed));
+            
+            FirstTimeInitialize();
         }
 
-        public void SetPreviewContainers(List<PieceContainer> previewContainers)
+        private void OnDestroy()
         {
-            _previewContainers = previewContainers;
+            foreach (var pool in _piecePools.Values)
+                pool.Dispose();
+        }
+
+        private void OnGameStateChange(GameStateChangedMessage message)
+        {
+            if (message.NewState == GameState.Initializing)
+            {
+                EmptyAllContainers();
+                PrespawnPieces();
+            }
+            
+            if (message is {PreviousState: GameState.Initializing or GameState.GameStartCountdown, NewState: GameState.Running})
+                SpawnPiece();
+        }
+
+        private void InitializeSeed(GameStateChangedMessage message)
+        {
+            if (message.NewState != GameState.Initializing)
+                return;
+
+            if (message.IsReplay)
+            {
+                _mediator.Send(new SeedSetMessage(GameSettings.General.ActiveSeed));
+                return;
+            }
+            
+            if (GameSettings.General.UseCustomSeed)
+                GameSettings.General.ActiveSeed = GameSettings.General.CustomSeed;
+            else
+            {
+                var seed1 = (ulong) ((long) UnityEngine.Random.Range(int.MinValue, int.MaxValue) + int.MaxValue);
+                var seed2 = (ulong) ((long) UnityEngine.Random.Range(int.MinValue, int.MaxValue) + int.MaxValue);
+                GameSettings.General.ActiveSeed = seed1 + (seed2 << 32);
+            }
+            _mediator.Send(new SeedSetMessage(GameSettings.General.ActiveSeed));
+            
+        }
+        
+        private void FirstTimeInitialize()
+        {
+            _randomizer = GameSettings.General.RandomizerType switch
+            {
+                RandomizerType.SevenBag => new CountPerBagRandomizer(_availablePieces.Keys),
+                RandomizerType.FourteenBag => new CountPerBagRandomizer(_availablePieces.Keys, 2),
+                RandomizerType.Stride => new StrideRandomizer(_availablePieces.Keys),
+                RandomizerType.Random => new RandomRandomizer(_availablePieces.Keys),
+                RandomizerType.Classic => new ClassicRandomizer(_availablePieces.Keys),
+                RandomizerType.Pairs => new PairsRandomizer(_availablePieces.Keys),
+                RandomizerType.Custom => new CustomRandomizer(
+                    _availablePieces.Keys,
+                    GameSettings.General.CustomRandomizerScript,
+                    _mediator),
+                _ => throw new IndexOutOfRangeException()
+            };
+            
+            _randomizer.Reset(GameSettings.General.ActiveSeed);
+
+            SetAvailablePieces(_availablePieces);
+
+            for (var i = 0; i < GameSettings.General.NextPieceCount; i++)
+            {
+                var pieceContainer = Instantiate(_pieceContainerPrefab, _board.transform);
+                pieceContainer.transform.localPosition = new Vector3(
+                    (int)_board.Width,
+                    (int)_board.Height - PieceContainer.Height * (i + 1)
+                );
+                _previewContainers.Add(pieceContainer);
+            }
+
             _previews = new PiecePreviews(_previewContainers);
         }
 
         public void PrespawnPieces()
         {
-            foreach (var nextPieceType in _previewContainers.Select(_ => Randomizer.GetNextPiece()))
+            foreach (var nextPieceType in _previewContainers.Select(_ => _randomizer.GetNextPiece()))
             {
+                if (nextPieceType is null)
+                    return;
+
+                if (!_piecePools.ContainsKey(nextPieceType))
+                {
+                    _mediator.Send(new GameCrashedMessage($"Randomizer returned an invalid piece type {nextPieceType}"));
+                    return;
+                }
+                
                 var nextPiece = _piecePools[nextPieceType].Get();
                 nextPiece.SetBoard(_board);
                 _previews.AddPiece(nextPiece);
@@ -63,7 +149,17 @@ namespace UStacker.Gameplay
         {
             if (_containersEmpty) return false;
 
-            var newPieceType = Randomizer.GetNextPiece();
+            var newPieceType = _randomizer.GetNextPiece();
+
+            if (newPieceType is null)
+                return false;
+
+            if (!_piecePools.ContainsKey(newPieceType))
+            {
+                _mediator.Send(new GameCrashedMessage($"Randomizer returned an invalid piece type {newPieceType}"));
+                return false;
+            }
+
             var newPiece = _piecePools[newPieceType].Get();
             newPiece.SetBoard(_board);
             var nextPiece = _previews.AddPiece(newPiece);
@@ -76,8 +172,8 @@ namespace UStacker.Gameplay
         {
             var boardTransform = _board.transform;
             var piecePos = new Vector3(
-                (int) (_settings.BoardDimensions.BoardWidth / 2u),
-                (int) _settings.BoardDimensions.PieceSpawnHeight,
+                (int) (GameSettings.BoardDimensions.BoardWidth / 2u),
+                (int) GameSettings.BoardDimensions.PieceSpawnHeight,
                 boardTransform.position.z
             );
 
@@ -88,12 +184,12 @@ namespace UStacker.Gameplay
 
             _inputProcessor.ActivePiece = piece;
             
-            var rotationSystem = _settings.Controls.ActiveRotationSystem;
+            var rotationSystem = GameSettings.Controls.ActiveRotationSystem;
             var rotation = rotationSystem.GetKickTable(piece.Type).StartState;
             piece.RotationState = rotation;
             piece.Rotate((int) rotation);
 
-            _inputProcessor.ExecuteBufferedActions(spawnTime, out var cancelSpawn);
+            _inputProcessor.HandlePreSpawnBufferedInputs(spawnTime, out var cancelSpawn);
 
             if (cancelSpawn) return;
 
@@ -104,7 +200,7 @@ namespace UStacker.Gameplay
             _mediator.Send(new PieceSpawnedMessage(piece.Type, nextPiece, spawnTime));
 
             if (!_board.CanPlace(piece))
-                _stateManager.LoseGame(spawnTime);
+                CantSpawn.Invoke(spawnTime);
         }
 
         public void EmptyAllContainers()
@@ -115,9 +211,9 @@ namespace UStacker.Gameplay
             _containersEmpty = true;
         }
 
-        public void SetAvailablePieces(PieceDictionary pieces)
+        private void SetAvailablePieces(PieceDictionary pieces)
         {
-            var blockCount = _settings.BoardDimensions.BoardHeight * _settings.BoardDimensions.BoardWidth;
+            var blockCount = GameSettings.BoardDimensions.BoardHeight * GameSettings.BoardDimensions.BoardWidth;
             _defaultPoolCapacity = (int) (blockCount / 25u);
             var maxSize = (int) (blockCount / 3u);
 

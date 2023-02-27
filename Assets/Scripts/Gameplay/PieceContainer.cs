@@ -60,7 +60,7 @@ namespace UStacker.Gameplay
 
             // rotating to reset state
             Piece.Rotate(0);
-            Piece.Visibility = 1;
+            Piece.SetVisibility(1);
 
             return temp;
         }

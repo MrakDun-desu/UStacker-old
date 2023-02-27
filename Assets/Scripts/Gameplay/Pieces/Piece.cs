@@ -26,32 +26,6 @@ namespace UStacker.Gameplay.Pieces
         private bool _activeInPool = true;
         private string _currentType;
 
-        private float _visibility;
-
-        public float Visibility
-        {
-            get => _visibility;
-            set
-            {
-                _visibility = value;
-                foreach (var block in Blocks) block.Visibility = _visibility;
-            }
-        }
-
-        public ObjectPool<Piece> SourcePool { get; set; }
-
-        private void Awake()
-        {
-            _currentType = _type;
-            _activeTransforms.AddRange(Blocks.Select(block => block.transform));
-            for (var i = 0; i < Blocks.Count; i++)
-            {
-                var block = Blocks[i];
-                block.Cleared += OnBlockCleared;
-                block.BlockNumber = (uint) Mathf.Min(i, 3);
-            }
-        }
-
         public string Type
         {
             get => _currentType;
@@ -71,6 +45,25 @@ namespace UStacker.Gameplay.Pieces
 
         public event Action Rotated;
 
+        public ObjectPool<Piece> SourcePool { get; set; }
+
+        private void Awake()
+        {
+            _currentType = _type;
+            _activeTransforms.AddRange(Blocks.Select(block => block.transform));
+            for (var i = 0; i < Blocks.Count; i++)
+            {
+                var block = Blocks[i];
+                block.Cleared += OnBlockCleared;
+                block.BlockNumber = (uint) Mathf.Min(i, 3);
+            }
+        }
+        
+        public void SetVisibility(float value)
+        {
+            foreach (var block in Blocks) block.Visibility = value;
+        }
+        
         private void OnBlockCleared(ClearableBlock sender)
         {
             _activeTransforms.Remove(sender.transform);
@@ -97,13 +90,13 @@ namespace UStacker.Gameplay.Pieces
 
         public void Deactivate()
         {
-            Visibility = 0;
+            SetVisibility(0);
         }
 
         public void Activate()
         {
             _activeInPool = true;
-            Visibility = 1;
+            SetVisibility(1);
             foreach (var block in Blocks)
             {
                 if (!_activeTransforms.Contains(block.transform))

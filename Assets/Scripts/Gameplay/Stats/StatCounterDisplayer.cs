@@ -33,6 +33,7 @@ namespace UStacker.Gameplay.Stats
         private StatBoardInterface _boardInterface;
         private Camera _camera;
         private TweenerCore<Color, Color, ColorOptions> _colorTween;
+        private TweenerCore<Color, Color, ColorOptions> _visibilityTween;
 
         private Vector3 _dragStartPosition;
         private Vector3 _dragStartTransformPosition;
@@ -48,7 +49,6 @@ namespace UStacker.Gameplay.Stats
         private LuaFunction _updateFunction;
         private Random _random;
 
-        private TweenerCore<Color, Color, ColorOptions> _visibilityTween;
 
         private void Awake()
         {
@@ -88,7 +88,7 @@ namespace UStacker.Gameplay.Stats
             _sizeHandle.gameObject.SetActive(false);
         }
 
-        private void OnGameStarted(GameStartedMessage message)
+        private void OnGameStarted(SeedSetMessage message)
         {
             _random.State = message.Seed;
         }
@@ -130,12 +130,42 @@ namespace UStacker.Gameplay.Stats
 
             if (events is null) return;
 
-            foreach (var entry in RegisterableMessages.Default)
+            foreach (var eventNameObj in events.Keys)
             {
-                if (events[entry.Key] is not LuaFunction function) continue;
+                if (eventNameObj is not string eventName)
+                {
+                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                        "Invalid event name!",
+                        $"Stat counter {_statCounter.Name} tried registering an invalid event {eventNameObj}",
+                        AlertType.Warning));
+                    continue;
+                }
 
+                if (events[eventNameObj] is not LuaFunction function)
+                {
+                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                        "Invalid event handler!",
+                        $"Stat counter {_statCounter.Name} tried registering an invalid handler for event {eventName}",
+                        AlertType.Warning));
+                    continue;
+                }
+                
+                if (eventName == UPDATED_KEY) continue;
+                
+                if (!RegisterableMessages.Default.ContainsKey(eventName))
+                {
+                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                        "Invalid event name!",
+                        $"Stat counter {_statCounter.Name} tried registering an invalid event {eventName}",
+                        AlertType.Warning));
+                    continue;
+                }
+                
                 void Action(IMessage message)
                 {
+                    if (!gameObject.activeSelf)
+                        return;
+                    
                     try
                     {
                         DisplayOutput(function.Call(message));
@@ -151,9 +181,9 @@ namespace UStacker.Gameplay.Stats
                     }
                 }
 
-                _mediator.Register((Action<IMessage>) Action, entry.Value);
+                _mediator.Register((Action<IMessage>) Action, RegisterableMessages.Default[eventName]); 
             }
-
+            
             if (events[UPDATED_KEY] is not LuaFunction updateFunc) return;
             _updateFunction = updateFunc;
 
@@ -169,6 +199,9 @@ namespace UStacker.Gameplay.Stats
         {
             while (true)
             {
+                if (!gameObject.activeSelf)
+                    yield break;
+                
                 try
                 {
                     DisplayOutput(_updateFunction.Call());
@@ -243,7 +276,7 @@ namespace UStacker.Gameplay.Stats
             _statContainer = statContainer;
             _statCounter = statCounter;
             _statUtility = statUtility;
-            _mediator.Register<GameStartedMessage>(OnGameStarted);
+            _mediator.Register<SeedSetMessage>(OnGameStarted);
             RefreshStatCounter();
         }
 

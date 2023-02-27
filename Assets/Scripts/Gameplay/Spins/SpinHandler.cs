@@ -65,32 +65,6 @@ namespace UStacker.Gameplay.Spins
             if (_allowedSpins.HasFlag(AllowedSpins.StupidSpinsFlag))
                 return;
             
-            switch (_allowedSpins)
-            {
-                case AllowedSpins.All:
-                    formerResult.WasSpin = formerResult.WasSpinRaw;
-                    formerResult.WasSpinMini = formerResult.WasSpinMiniRaw;
-                    return;
-                case AllowedSpins.Stupid:
-                    formerResult.WasSpin = true;
-                    formerResult.WasSpinMini = false;
-                    return;
-                case AllowedSpins.None:
-                    formerResult.WasSpin = false;
-                    formerResult.WasSpinMini = false;
-                    return;
-                case AllowedSpins.ISpins:
-                case AllowedSpins.TSpins:
-                case AllowedSpins.LSpins:
-                case AllowedSpins.JSpins:
-                case AllowedSpins.OSpins:
-                case AllowedSpins.SSpins:
-                case AllowedSpins.ZSpins:
-                case AllowedSpins.StupidSpinsFlag:
-                default:
-                    break;
-            }
-
             if (CheckSpinValidity(pieceType))
             {
                 formerResult.WasSpin = formerResult.WasSpinRaw;
@@ -103,8 +77,7 @@ namespace UStacker.Gameplay.Spins
 
         private bool CheckSpinValidity(string pieceType)
         {
-            if (pieceType.StartsWith("giant"))
-                pieceType = pieceType[^1].ToString().ToLowerInvariant();
+            pieceType = pieceType[^1].ToString().ToLowerInvariant();
 
             return pieceType switch
             {

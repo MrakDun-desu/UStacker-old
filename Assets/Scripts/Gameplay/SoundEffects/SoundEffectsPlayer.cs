@@ -6,6 +6,7 @@ using UnityEngine;
 using UStacker.Common.Alerts;
 using UStacker.Common.LuaApi;
 using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Enums;
 using UStacker.GlobalSettings.Music;
 
 namespace UStacker.Gameplay.SoundEffects
@@ -15,7 +16,7 @@ namespace UStacker.Gameplay.SoundEffects
     {
         [SerializeField] private AudioClipCollection _defaultEffects = new();
         [SerializeField] private Mediator _mediator;
-        
+
         public bool RepressSfx;
         private AudioSource _audioSource;
         private Lua _luaState;
@@ -24,10 +25,7 @@ namespace UStacker.Gameplay.SoundEffects
         private void Awake()
         {
             _audioSource = GetComponent<AudioSource>();
-        }
-
-        private void Start()
-        {
+            
             if (!TryRegisterCustomFunctions())
                 RegisterDefaultFunctions();
         }
@@ -45,8 +43,7 @@ namespace UStacker.Gameplay.SoundEffects
             _mediator.Register<HoldUsedMessage>(HandleHoldUsed);
             _mediator.Register<PieceSpawnedMessage>(HandlePieceSpawned);
             _mediator.Register<CountdownTickedMessage>(HandleCountdownTicked);
-            _mediator.Register<GameLostMessage>(_ => TryPlayClip("death"));
-            _mediator.Register<GameEndedMessage>(_ => TryPlayClip("finish"));
+            _mediator.Register<GameStateChangedMessage>(HandleGameStateChanged);
         }
 
         private bool TryRegisterCustomFunctions()
@@ -54,9 +51,10 @@ namespace UStacker.Gameplay.SoundEffects
             if (string.IsNullOrEmpty(SoundPackLoader.SoundEffectsScript))
                 return false;
 
+            var myType = GetType();
             _luaState = CreateLua.WithAllPrerequisites(out _);
-            _luaState.RegisterFunction(nameof(Play), this, GetType().GetMethod(nameof(Play)));
-            _luaState.RegisterFunction(nameof(PlayAsAnnouncer), this, GetType().GetMethod(nameof(PlayAsAnnouncer)));
+            _luaState.RegisterFunction(nameof(Play), this, myType.GetMethod(nameof(Play)));
+            _luaState.RegisterFunction(nameof(PlayAsAnnouncer), this, myType.GetMethod(nameof(PlayAsAnnouncer)));
             LuaTable events = null;
             try
             {
@@ -76,9 +74,34 @@ namespace UStacker.Gameplay.SoundEffects
 
             if (events is null) return false;
 
-            foreach (var entry in RegisterableMessages.Default)
+            foreach (var eventNameObj in events.Keys)
             {
-                if (events[entry.Key] is not LuaFunction function) continue;
+                if (eventNameObj is not string eventName)
+                {
+                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                        "Invalid event name!",
+                        $"Custom sound effects script tried registering an invalid event {eventNameObj}",
+                        AlertType.Warning));
+                    continue;
+                }
+
+                if (events[eventNameObj] is not LuaFunction function)
+                {
+                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                        "Invalid event handler!",
+                        $"Custom sound effects script tried registering an invalid handler for event {eventName}",
+                        AlertType.Warning));
+                    continue;
+                }
+
+                if (!RegisterableMessages.Default.ContainsKey(eventName))
+                {
+                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                        "Invalid event name!",
+                        $"Custom sound effects script tried registering an invalid event {eventName}",
+                        AlertType.Warning));
+                    continue;
+                }
 
                 void Action(IMessage message)
                 {
@@ -106,10 +129,33 @@ namespace UStacker.Gameplay.SoundEffects
                     }
                 }
 
-                _mediator.Register((Action<IMessage>)Action, entry.Value);
+                _mediator.Register((Action<IMessage>) Action, RegisterableMessages.Default[eventName]);
             }
 
             return true;
+        }
+
+        private void HandleGameStateChanged(GameStateChangedMessage message)
+        {
+            switch (message.NewState)
+            {
+                case GameState.Lost:
+                    TryPlayClip("death");
+                    break;
+                case GameState.Ended:
+                    TryPlayClip("finish");
+                    break;
+                case GameState.Unset or
+                    GameState.Any or
+                    GameState.Initializing or
+                    GameState.GameStartCountdown or
+                    GameState.Running or
+                    GameState.Paused or
+                    GameState.GameResumeCountdown:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private void HandleHoldUsed(HoldUsedMessage message)
@@ -122,7 +168,7 @@ namespace UStacker.Gameplay.SoundEffects
         {
             string countdownKey = null;
             var found = false;
-            for (var i = message.RemainingTicks; i > 0; i--)
+            for (var i = (int) message.RemainingTicks; i >= 0; i--)
             {
                 countdownKey = $"countdown{i}";
                 if (SoundPackLoader.SoundEffects.ContainsKey(countdownKey))
@@ -130,6 +176,7 @@ namespace UStacker.Gameplay.SoundEffects
                     found = true;
                     break;
                 }
+
                 if (_defaultEffects.ContainsKey(countdownKey))
                 {
                     found = true;
@@ -137,13 +184,14 @@ namespace UStacker.Gameplay.SoundEffects
                 }
             }
 
-            TryPlayClip(found ? countdownKey : $"countdown{message.RemainingTicks}");
+            if (found)
+                TryPlayClip(countdownKey);
         }
 
         private void HandlePieceSpawned(PieceSpawnedMessage message)
         {
             if (!string.IsNullOrEmpty(message.NextPiece))
-                TryPlayClip(message.NextPiece[0].ToString().ToLower());
+                TryPlayClip(message.NextPiece[^1].ToString().ToLowerInvariant());
         }
 
         private void HandlePiecePlaced(PiecePlacedMessage message)
@@ -226,7 +274,7 @@ namespace UStacker.Gameplay.SoundEffects
                 TryPlayClip("move");
             else if (message.Y != 0 && message.WasSoftDrop)
                 TryPlayClip("softdrop");
-            else if (message.Y != 0 && message.WasHardDrop)
+            else if (message.WasHardDrop)
                 TryPlayClip("harddrop");
         }
 
@@ -234,7 +282,7 @@ namespace UStacker.Gameplay.SoundEffects
         {
             if (_playedInThisUpdate.Contains(clipName) || RepressSfx)
                 return;
-            
+
             if (!SoundPackLoader.SoundEffects.TryGetValue(clipName, out var clip))
                 if (!_defaultEffects.TryGetValue(clipName, out clip))
                 {

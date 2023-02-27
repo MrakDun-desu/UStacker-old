@@ -2,7 +2,7 @@
 
 namespace UStacker.GameSettings.Changers.Enums
 {
-    public class GarbageGenerationChanger : GameSettingEnumChanger<GarbageGeneration>
+    public class GarbageGenerationChanger : GameSettingEnumChanger<GarbageGenerationType>
     {
     }
 }

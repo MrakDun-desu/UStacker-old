@@ -6,6 +6,7 @@ using UStacker.Gameplay.Enums;
 using UStacker.GlobalSettings;
 using UStacker.GlobalSettings.StatCounting;
 using UnityEngine;
+using UStacker.Gameplay.Initialization;
 using UStacker.Gameplay.Timing;
 
 namespace UStacker.Gameplay.Stats
@@ -21,20 +22,16 @@ namespace UStacker.Gameplay.Stats
 
         public ReadonlyStatContainer Stats;
         
-        public string GameType { get; set; }
-
-        private void Start()
+        private void Awake()
         {
             Stats = new ReadonlyStatContainer(_stats);
             
-            _mediator.Register<InputActionMessage>(OnInputAction, true);
-            _mediator.Register<HoldUsedMessage>(OnHold, true);
-            _mediator.Register<PiecePlacedMessage>(OnPiecePlaced, true);
-            _mediator.Register<GameStartedMessage>(_ => ResetStats(), true);
-            _mediator.Register<GameRestartedMessage>(_ => ResetStats(), true);
-            _mediator.Register<ScoreAddedMessage>(OnScoreAdded);
-            _mediator.Register<ScoreChangedMessage>(OnScoreChanged, true);
-            _mediator.Register<LevelChangedMessage>(OnLevelChanged, true);
+            _mediator.Register<InputActionMessage>(OnInputAction, 10);
+            _mediator.Register<HoldUsedMessage>(OnHold, 10);
+            _mediator.Register<PiecePlacedMessage>(OnPiecePlaced, 10);
+            _mediator.Register<ScoreChangedMessage>(OnScoreChanged, 10);
+            _mediator.Register<LevelChangedMessage>(OnLevelChanged, 10);
+            _mediator.Register<GameStateChangedMessage>(OnGameStateChange);
             
             CreateStatCounters();
         }
@@ -51,8 +48,11 @@ namespace UStacker.Gameplay.Stats
                 _stats.KeysPerPiece = (double) _stats.KeysPressed / _stats.PiecesPlaced;
         }
 
-        private void ResetStats()
+        private void OnGameStateChange(GameStateChangedMessage message)
         {
+            if (message.NewState != GameState.Initializing)
+                return;
+            
             _stats.Reset();
         }
 
@@ -63,10 +63,9 @@ namespace UStacker.Gameplay.Stats
             if (counterGroups.Count <= 0) return;
 
             AppSettings.StatCounting.GameStatCounterDictionary ??= new Dictionary<string, Guid>();
-
-            var gameName = GameType;
+            
             StatCounterGroup counterGroup;
-            if (AppSettings.StatCounting.GameStatCounterDictionary.TryGetValue(gameName, out var groupId))
+            if (AppSettings.StatCounting.GameStatCounterDictionary.TryGetValue(GameInitializer.GameType, out var groupId))
             {
                 if (!AppSettings.StatCounting.StatCounterGroups.TryGetValue(groupId, out counterGroup)) return;
             }
@@ -83,9 +82,9 @@ namespace UStacker.Gameplay.Stats
             var statUtility = new StatUtility(_timer);
             foreach (var statCounter in usedCounters)
             {
-                var newCounter = Instantiate(_displayerPrefab, _statCountersCanvas.transform);
+                var newDisplayer = Instantiate(_displayerPrefab, _statCountersCanvas.transform);
 
-                newCounter.Initialize(_mediator, new StatBoardInterface(_board), Stats, statUtility, statCounter);
+                newDisplayer.Initialize(_mediator, new StatBoardInterface(_board), Stats, statUtility, statCounter);
             }
         }
 
@@ -160,11 +159,6 @@ namespace UStacker.Gameplay.Stats
         private void OnScoreChanged(ScoreChangedMessage message)
         {
             _stats.Score = message.Score;
-        }
-
-        private void OnScoreAdded(ScoreAddedMessage message)
-        {
-            _stats.Score += message.ScoreAddition;
         }
 
         private void OnLevelChanged(LevelChangedMessage message)

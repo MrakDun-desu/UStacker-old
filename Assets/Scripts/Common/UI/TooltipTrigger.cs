@@ -24,15 +24,26 @@ namespace UStacker.Common.UI
                 return;
             
             _displayCoroutine = StartCoroutine(DisplayCoroutine());
+            Tooltip.CurrentUser = gameObject;
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (string.IsNullOrEmpty(_tooltipText))
+            HideTooltip();
+        }
+
+        private void HideTooltip()
+        {
+            if (string.IsNullOrEmpty(_tooltipText) || Tooltip.CurrentUser != gameObject)
                 return;
             
             Tooltip.Instance.Hide();
             StopCoroutine(_displayCoroutine);
+        }
+
+        private void OnDisable()
+        {
+            HideTooltip();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Enums;
 
 namespace UStacker.Gameplay
 {
@@ -13,6 +14,27 @@ namespace UStacker.Gameplay
 
         private bool _recording;
 
+        private void Awake()
+        {
+            _mediator.Register<GameStateChangedMessage>(OnGameStateChange);
+        }
+
+        private void OnGameStateChange(GameStateChangedMessage message)
+        {
+            if (message.IsReplay)
+                return;
+            
+            switch (message)
+            {
+                case {NewState: GameState.Initializing}:
+                    StartRecording();
+                    break;
+                case {IsReplay: true}:
+                    StopRecording();
+                    break;
+            }
+        }
+
         private void AddInputActionToList(InputActionMessage message)
         {
             ActionList.Add(message);
@@ -24,7 +46,7 @@ namespace UStacker.Gameplay
             PiecePlacementList.Add(placementInfo);
         }
 
-        public void StartRecording()
+        private void StartRecording()
         {
             ActionList.Clear();
             PiecePlacementList.Clear();
@@ -34,7 +56,7 @@ namespace UStacker.Gameplay
             _recording = true;
         }
 
-        public void StopRecording()
+        private void StopRecording()
         {
             if (!_recording) return;
             _mediator.Unregister<InputActionMessage>(AddInputActionToList);

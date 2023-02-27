@@ -25,6 +25,7 @@ namespace UStacker.Gameplay.GarbageGeneration
         {
             block.SetBlockCollection(this);
             _blocks.Add(block);
+            block.Visibility = 1;
             block.Cleared += OnBlockCleared;
         }
 

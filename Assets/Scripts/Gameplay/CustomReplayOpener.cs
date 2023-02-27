@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UStacker.Gameplay.GameStateManagement;
 
 namespace UStacker.Gameplay
 {
@@ -44,7 +45,7 @@ namespace UStacker.Gameplay
 
             GameInitializer.Replay = replay;
             GameInitializer.GameType = _replayGameType.Value;
-            GameInitializer.InitAsReplay = true;
+            GameStateManager.IsReplay = true;
             SceneManager.LoadScene("Scene_Game_Singleplayer");
         }
     }

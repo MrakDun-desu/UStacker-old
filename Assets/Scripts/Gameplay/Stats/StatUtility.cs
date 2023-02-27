@@ -16,7 +16,7 @@ namespace UStacker.Gameplay.Stats
             _timer = timer;
         }
 
-        private string FormatNumberInternal(double num, int decimals)
+        private static string FormatNumberInternal(double num, int decimals)
         {
             const string infinityString = "INF";
             if (double.IsInfinity(num)) return infinityString;

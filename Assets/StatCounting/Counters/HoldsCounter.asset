@@ -16,11 +16,10 @@ MonoBehaviour:
     Name: Holds
     Type: 0
     Filename: 
-    Script: "function Reset()\n\tHolds = 0\n\treturn \"Holds: 0\"\nend\nfunction
-      OnHold(message)\n\tif message.WasSuccessful then\n\t\tHolds = Holds + 1\n\tend\n\treturn
-      \"Holds: \" .. Holds\nend\nSetText(Reset())\nSetAlignment(\"left\")\nreturn
-      {\n\t[\"HoldUsed\"] = OnHold,\n\t[\"GameStarted\"] = Reset,\n\t[\"GameRestarted\"]
-      = Reset\n}"
+    Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+      then\n\t\treturn \"Holds: 0\"\n\tend\nend\nfunction OnHold(message)\n\treturn
+      \"Holds: \" .. Stats.Holds\nend\nSetText(\"Holds: 0\")\nSetAlignment(\"left\")\nreturn
+      {\n\t[\"HoldUsed\"] = OnHold,\n\t[\"GameStateChanged\"] = Reset\n}"
     Position: {x: 11, y: 2}
     Size: {x: 5, y: 1}
     UpdateInterval: 0

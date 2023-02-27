@@ -3,6 +3,7 @@ using System.IO;
 using UStacker.Common.Alerts;
 using UStacker.GameSettings.Enums;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UStacker.Common;
 
 namespace UStacker.GameSettings.SettingGroups
@@ -15,8 +16,8 @@ namespace UStacker.GameSettings.SettingGroups
         private GameManagerType _gameManagerType = GameManagerType.None;
         [SerializeField]
         private string _customGameManager = string.Empty;
-        [SerializeField]
-        private GarbageGeneration _garbageGeneration;
+        [FormerlySerializedAs("_garbageGeneration")] [SerializeField]
+        private GarbageGenerationType _garbageGenerationType;
         [SerializeField]
         private string _customGarbageGeneratorName = string.Empty;
         [SerializeField]
@@ -63,12 +64,12 @@ namespace UStacker.GameSettings.SettingGroups
             }
         }
 
-        public GarbageGeneration GarbageGeneration
+        public GarbageGenerationType GarbageGenerationType
         {
-            get => _garbageGeneration;
+            get => _garbageGenerationType;
             set
             {
-                _garbageGeneration = value;
+                _garbageGenerationType = value;
                 ReloadGarbageGeneratorIfNeeded();
             }
         }
@@ -104,7 +105,7 @@ namespace UStacker.GameSettings.SettingGroups
 
         private void ReloadGarbageGeneratorIfNeeded()
         {
-            if (!_garbageGeneration.HasFlag(GarbageGeneration.CustomFlag) ||
+            if (!_garbageGenerationType.HasFlag(GarbageGenerationType.CustomFlag) ||
                 string.IsNullOrEmpty(_customGarbageGeneratorName))
                 return;
 

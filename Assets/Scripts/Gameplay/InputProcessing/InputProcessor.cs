@@ -11,6 +11,7 @@ using UStacker.Gameplay.Spins;
 using UStacker.Gameplay.Timing;
 using UStacker.GameSettings;
 using UStacker.GameSettings.Enums;
+using UStacker.GlobalSettings;
 using UStacker.GlobalSettings.Enums;
 using UStacker.GlobalSettings.Groups;
 
@@ -18,20 +19,18 @@ namespace UStacker.Gameplay.InputProcessing
 {
     public class InputProcessor : MonoBehaviour, IGameSettingsDependency
     {
-        [Header("Dependencies")] [SerializeField]
-        private Board _board;
+        [SerializeField] private Board _board;
         [SerializeField] private Mediator _mediator;
         [SerializeField] private PieceSpawner _spawner;
         [SerializeField] private GhostPiece _ghostPiece;
         [SerializeField] private GameTimer _timer;
+        [SerializeField] private PieceContainer _pieceHolderPrefab;
+        [SerializeField] private RotationSystemSO _srsRotationSystemSo;
+        [SerializeField] private RotationSystemSO _srsPlusRotationSystemSo;
 
-        [Header("Dependencies filled by initializer")]
-        public PieceContainer PieceHolder;
-
+        private PieceContainer _pieceHolder;
         private List<InputActionMessage> _actionList;
-
         private Piece _activePiece;
-
         private bool _controlsActive;
 
         private readonly List<UpdateEvent> _updateEvents = new();
@@ -106,12 +105,12 @@ namespace UStacker.Gameplay.InputProcessing
         private bool _isHardLocking => _hardLockAmount < double.PositiveInfinity;
         private bool _isLocking => _lockdownEvent.Time < double.PositiveInfinity;
 
-        private HandlingSettings _handling;
+        private HandlingSettings _handling => GameSettings.Controls.Handling;
         public GameSettingsSO.SettingsContainer GameSettings { private get; set; }
 
-        public SpinHandler SpinHandler { get; set; }
+        private SpinHandler _spinHandler;
 
-        public List<InputActionMessage> ActionList
+        private List<InputActionMessage> ActionList
         {
             get => _actionList;
             set
@@ -153,6 +152,7 @@ namespace UStacker.Gameplay.InputProcessing
         {
             _mediator.Register<GravityChangedMessage>(OnGravityChanged);
             _mediator.Register<LockDelayChangedMessage>(OnLockDelayChanged);
+            _mediator.Register<GameStateChangedMessage>(OnGameStateChange, 5);
             
             _spawnEvent = new UpdateEvent(_updateEvents, EventType.Spawn);
             _dasLeftEvent = new UpdateEvent(_updateEvents, EventType.DasLeft);
@@ -162,27 +162,89 @@ namespace UStacker.Gameplay.InputProcessing
             _softdropEvent = new UpdateEvent(_updateEvents, EventType.Softdrop);
             _lockdownEvent = new UpdateEvent(_updateEvents, EventType.Lockdown);
             _hardLockdownEvent = new UpdateEvent(_updateEvents, EventType.HardLockdown);
-
-            _timer.BeforeStarted += OnGameStart;
         }
 
-        private void OnDestroy()
+        private void OnGameStateChange(GameStateChangedMessage message)
         {
-            _timer.BeforeStarted -= OnGameStart;
-        }
+            if (message is {PreviousState: GameState.Unset, NewState: GameState.Initializing})
+                FirstTimeInitialize(message.IsReplay);
+            
+            if (message.NewState == GameState.Initializing)
+            {
+                DeleteActivePiece();
+                ResetProcessor();
+                if (message.IsReplay)
+                {
+                    PlacementsList = GameInitializer.Replay.PiecePlacementList;
+                    ActionList = GameInitializer.Replay.ActionList;
+                }
+                else
+                {
+                    PlacementsList = null;
+                    ActionList = null;
+                }
+            }
 
-        public void DisablePieceControls()
-        {
-            _controlsActive = false;
-        }
-
-        public void EnablePieceControls()
-        {
-            if (!_isReplaying)
+            if (message is {NewState: GameState.Running, IsReplay: false})
+            {
                 _controlsActive = true;
+                HandlePauseBufferedInputs();
+            }
+
+            if (message is {PreviousState: GameState.Running})
+                _controlsActive = false;
+
+        }
+        
+        private void FirstTimeInitialize(bool isReplay)
+        {
+            InitializePieceHolder();
+            InitializeSpinHandler(isReplay);
+
+            if (!GameSettings.Controls.OverrideHandling && !isReplay)
+                GameSettings.Controls.Handling = AppSettings.Handling with { };
         }
 
-        public void ExecuteBufferedActions(double time, out bool cancelSpawn)
+        private void InitializeSpinHandler(bool isReplay)
+        {
+            if (isReplay)
+            {
+                _spinHandler = new SpinHandler(GameSettings.Controls.ActiveRotationSystem, GameSettings.General.AllowedSpins);
+                return;
+            }
+
+            GameSettings.Controls.ActiveRotationSystem =
+                GameSettings.Controls.RotationSystemType switch
+                {
+                    RotationSystemType.SRS => _srsRotationSystemSo.RotationSystem,
+                    RotationSystemType.SRSPlus => _srsPlusRotationSystemSo.RotationSystem,
+                    RotationSystemType.None => new RotationSystem(),
+                    RotationSystemType.Custom => GameSettings.Controls.ActiveRotationSystem,
+                    _ => new RotationSystem()
+                };
+
+            _spinHandler = new SpinHandler(GameSettings.Controls.ActiveRotationSystem, GameSettings.General.AllowedSpins);
+        }
+
+        private void InitializePieceHolder()
+        {
+            if (!GameSettings.Controls.AllowHold) return;
+            _pieceHolder = Instantiate(_pieceHolderPrefab, _board.transform);
+            _pieceHolder.transform.localPosition = new Vector3(
+                -PieceContainer.Width,
+                (int)_board.Height - PieceContainer.Height
+            );
+        }
+        
+        private void HandlePauseBufferedInputs()
+        {
+            if (_bufferedLeft && !_isReplaying)
+                HandleInputAction(new InputActionMessage(ActionType.MoveLeft, KeyActionType.KeyDown, _timer.CurrentTime));
+            if (_bufferedRight && !_isReplaying)
+                HandleInputAction(new InputActionMessage(ActionType.MoveRight, KeyActionType.KeyDown, _timer.CurrentTime));
+        }
+
+        public void HandlePreSpawnBufferedInputs(double time, out bool cancelSpawn)
         {
             cancelSpawn = false;
             if (_bufferedHold)
@@ -199,29 +261,24 @@ namespace UStacker.Gameplay.InputProcessing
             }
         }
 
-        public void MoveToNextAction()
+        public void MoveFiveSecondsForward()
         {
-            if (_currentActionIndex >= ActionList.Count - 1)
-                return;
-
-            if (_currentActionIndex < ActionList.Count - 1)
-            {
-                if (Math.Abs(_timer.CurrentTime - ActionList[_currentActionIndex].Time) < 0.01)
-                    _currentActionIndex++;
-            }
-
-            _timer.SetTime(ActionList[_currentActionIndex].Time);
+            _timer.SetTime(Math.Min(_timer.CurrentTime + 5, GameInitializer.Replay.GameLength));
         }
 
-        public void MoveToPrevAction()
+        public void MoveFiveSecondsBackward()
         {
-            if (_currentActionIndex == 0)
-            {
-                _timer.SetTime(0);
-                return;
-            }
+            _timer.SetTime(Math.Max(0, _timer.CurrentTime - 5));
+        }
 
-            _timer.SetTime(ActionList[--_currentActionIndex].Time);
+        public void MoveTenthSecondForward()
+        {
+            _timer.SetTime(Math.Min(_timer.CurrentTime + 0.1, GameInitializer.Replay.GameLength));
+        }
+
+        public void MoveTenthSecondBackward()
+        {
+            _timer.SetTime(Math.Max(0, _timer.CurrentTime - 0.1));
         }
 
         public void MoveToNextPiece()
@@ -247,14 +304,6 @@ namespace UStacker.Gameplay.InputProcessing
             }
 
             _timer.SetTime(PlacementsList[--_currentPieceIndex].PlacementTime);
-        }
-
-        private void OnGameStart()
-        {
-            if (_bufferedLeft && !_isReplaying)
-                HandleInputAction(new InputActionMessage(ActionType.MoveLeft, KeyActionType.KeyDown, 0d));
-            if (_bufferedRight && !_isReplaying)
-                HandleInputAction(new InputActionMessage(ActionType.MoveRight, KeyActionType.KeyDown, 0d));
         }
 
         private void CatchUpWithTime(double time)
@@ -302,20 +351,20 @@ namespace UStacker.Gameplay.InputProcessing
                 _lockdownEvent.Time = message.Time + _lockDelay;
         }
 
-        public void DeleteActivePiece()
+        private void DeleteActivePiece()
         {
             if (!_pieceIsNull)
                 _activePiece.ReleaseFromPool();
             ActivePiece = null;
 
             if (!GameSettings.Controls.AllowHold) return;
-            var holdPiece = PieceHolder.SwapPiece(null);
+            var holdPiece = _pieceHolder.SwapPiece(null);
             if (holdPiece == null) return;
             holdPiece.RevertType();
             holdPiece.ReleaseFromPool();
         }
 
-        public void ResetProcessor()
+        private void ResetProcessor()
         {
             _bufferedLeft = false;
             _bufferedRight = false;
@@ -327,7 +376,6 @@ namespace UStacker.Gameplay.InputProcessing
             _dasStatus = Vector2Int.zero;
             _lowestPosition = int.MaxValue;
             _hardLockAmount = double.PositiveInfinity;
-            _handling = GameSettings.Controls.Handling;
             _normalGravity = GameSettings.Gravity.DefaultGravity;
             _lockDelay = GameSettings.Gravity.DefaultLockDelay;
             _currentGravity = _normalGravity;
@@ -437,7 +485,7 @@ namespace UStacker.Gameplay.InputProcessing
         {
             if (_pieceIsNull) return;
 
-            ActivePiece.Visibility = 1;
+            ActivePiece.SetVisibility(1);
             _dropDisabledUntil = placementTime + _handling.DoubleDropPreventionInterval;
 
             var movementVector = Vector2Int.down;
@@ -458,7 +506,7 @@ namespace UStacker.Gameplay.InputProcessing
                 spawnTime += GameSettings.Gravity.LineClearDelay;
 
             if (GameSettings.Controls.AllowHold)
-                PieceHolder.UnmarkUsed();
+                _pieceHolder.UnmarkUsed();
 
             _spawnEvent.Time = placementTime + spawnTime;
             ActivePiece = null;
@@ -740,7 +788,7 @@ namespace UStacker.Gameplay.InputProcessing
             };
 
             ActivePiece.Rotate(rotationAngle);
-            if (!SpinHandler.TryKick(
+            if (!_spinHandler.TryKick(
                     ActivePiece,
                     _board,
                     direction,
@@ -799,9 +847,9 @@ namespace UStacker.Gameplay.InputProcessing
 
             _mediator.Send(new HoldUsedMessage(true, actionTime));
 
-            var newPiece = PieceHolder.SwapPiece(ActivePiece);
+            var newPiece = _pieceHolder.SwapPiece(ActivePiece);
             if (!GameSettings.Controls.UnlimitedHold)
-                PieceHolder.MarkUsed();
+                _pieceHolder.MarkUsed();
 
             if (newPiece == null)
                 _spawner.SpawnPiece(actionTime);
@@ -1118,7 +1166,7 @@ namespace UStacker.Gameplay.InputProcessing
 
             var lockProgress = (_lockdownEvent.Time - functionStartTime) / _lockDelay;
 
-            ActivePiece.Visibility = Mathf.Lerp(1f, .5f, (float) lockProgress);
+            ActivePiece.SetVisibility(Mathf.Lerp(1f, .5f, (float) lockProgress));
         }
 
         private void StartLockdown(double lockStart)
@@ -1154,7 +1202,7 @@ namespace UStacker.Gameplay.InputProcessing
             _lockdownEvent.Time = double.PositiveInfinity;
             if (!_pieceIsNull)
             {
-                ActivePiece.Visibility = 1;
+                ActivePiece.SetVisibility(1);
                 _ghostPiece.Enable();
             }
 

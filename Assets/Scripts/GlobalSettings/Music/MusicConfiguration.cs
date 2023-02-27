@@ -10,8 +10,6 @@ namespace UStacker.GlobalSettings.Music
     {
         public List<string> GameMusic = new();
         public List<string> MenuMusic = new();
-        public List<string> VictoryMusic = new();
-        public List<string> LossMusic = new();
         public MusicGroupDictionary GameMusicGroups = new();
         [JsonIgnore] private List<string> _defaultMusic = new();
 
@@ -24,8 +22,6 @@ namespace UStacker.GlobalSettings.Music
         {
             UpdateGroup(GameMusic, other.GameMusic, false);
             UpdateGroup(MenuMusic, other.MenuMusic);
-            UpdateGroup(VictoryMusic, other.VictoryMusic);
-            UpdateGroup(LossMusic, other.LossMusic);
 
             if (other.GameMusicGroups.Count == 0) return;
 

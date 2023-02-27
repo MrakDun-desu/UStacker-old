@@ -10,36 +10,54 @@ namespace UStacker.Gameplay.GarbageGeneration
     {
 
         private const string BOARD_VARIABLE_NAME = "Board";
-        private readonly Lua _luaState;
-        private LuaFunction _generationFunction;
+        private readonly LuaFunction _generationFunction;
+        private readonly LuaFunction _resetFunction;
         private readonly Random _random;
-        private LuaFunction _resetFunction;
+        private readonly Mediator _mediator;
 
-        public CustomGarbageGenerator(GarbageBoardInterface boardInterface, string script, out string validationErrors)
+        public CustomGarbageGenerator(GarbageBoardInterface boardInterface, string script, Mediator mediator)
         {
-            _luaState = CreateLua.WithAllPrerequisites(out _random);
-            validationErrors = ValidateScript(script);
-            if (validationErrors != null)
-                return;
-
-            _luaState = CreateLua.WithAllPrerequisites(out _random);
-            _luaState[BOARD_VARIABLE_NAME] = boardInterface;
-            var scriptOutput = _luaState.DoString(script);
-            _generationFunction = scriptOutput[0] as LuaFunction;
-            _resetFunction = scriptOutput[1] as LuaFunction;
-            if (_generationFunction is null)
+            _mediator = mediator;
+            var luaState = CreateLua.WithAllPrerequisites(out _random);
+            luaState[BOARD_VARIABLE_NAME] = boardInterface;
+            try
             {
-                validationErrors = "Generation function was not returned correctly.";
-                return;
-            }
+                var scriptOutput = luaState.DoString(script);
 
-            if (_resetFunction is not null) return;
-            validationErrors = "Reset function was not returned correctly.";
+                if (scriptOutput.Length < 2)
+                {
+                    _mediator.Send(new GameCrashedMessage("Custom garbage script doesn't return 2 values"));
+                    return;
+                }
+
+                _generationFunction = scriptOutput[0] as LuaFunction;
+                _resetFunction = scriptOutput[1] as LuaFunction;
+                if (_generationFunction is null)
+                {
+                    _mediator.Send(new GameCrashedMessage("Custom garbage generation function is not valid"));
+                    return;
+                }
+
+                if (_resetFunction is null)
+                    _mediator.Send(new GameCrashedMessage("Custom garbage generator reset function is not valid"));
+
+            }
+            catch (LuaException ex)
+            {
+                _mediator.Send(new GameCrashedMessage($"Custom garbage generator script crashed. Lua exception: {ex.Message}"));
+            }
         }
 
         public void ResetState(ulong seed)
         {
-            _resetFunction.Call();
+            try
+            {
+                _resetFunction.Call();
+            }
+            catch (LuaException ex)
+            {
+                _mediator.Send(new GameCrashedMessage($"Custom garbage generator reset function crashed. Lua exception: {ex.Message}"));
+            }
             _random.State = seed;
         }
 
@@ -49,38 +67,10 @@ namespace UStacker.Gameplay.GarbageGeneration
             {
                 _generationFunction.Call(amount, message);
             }
-            catch (LuaException)
-            {
-            }
-        }
-
-        private string ValidateScript(string script)
-        {
-            try
-            {
-                _luaState[BOARD_VARIABLE_NAME] = new GarbageBoardInterface(null);
-
-                var result = _luaState.DoString(script);
-                if (result.Length < 2)
-                    return "Error: Garbage generator script doesn't return 2 values";
-
-                _generationFunction = result[0] as LuaFunction;
-                _resetFunction = result[0] as LuaFunction;
-                if (_generationFunction is null)
-                    return "Error: Garbage generator script doesn't return generation function correctly";
-                if (_resetFunction is null)
-                    return "Error: Garbage generator script doesn't return reset function correctly";
-
-                _resetFunction.Call();
-
-                GenerateGarbage(5, new PiecePlacedMessage());
-            }
             catch (LuaException ex)
             {
-                return $"Error executing garbage generator script: {ex.Message}";
+                _mediator.Send(new GameCrashedMessage($"Custom garbage generation function crashed. Lua exception: {ex.Message}"));
             }
-
-            return null;
         }
     }
 }

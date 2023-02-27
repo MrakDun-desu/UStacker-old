@@ -50,22 +50,27 @@ namespace UStacker.Gameplay.Blocks
             _blockCollection = GetComponentInParent<IBlockCollection>();
             _defaultSkins = _skinsParent.GetComponentsInChildren<BlockSkin>();
             _skinsPool = new ObjectPool<BlockSkin>(
-                () => Instantiate(_blockSkinPrefab),
+                OnSkinCreate,
                 OnSkinGet,
                 OnSkinRelease,
                 skin => Destroy(skin.gameObject));
+            
+            SkinLoader.SkinChanged += UpdateBlockSkin;
         }
 
         protected virtual void Start()
         {
             CollectionType = _blockCollection.Type;
-            SkinLoader.SkinChanged += UpdateBlockSkin;
+            Visibility = Visibility;
         }
 
         private void OnDestroy()
         {
+            _skinsPool.Dispose();
             SkinLoader.SkinChanged -= UpdateBlockSkin;
         }
+
+        private BlockSkin OnSkinCreate() => Instantiate(_blockSkinPrefab);
 
         private static void OnSkinRelease(BlockSkin skin)
         {
@@ -73,13 +78,14 @@ namespace UStacker.Gameplay.Blocks
             skin.UnregisterEvents();
         }
 
-        private static void OnSkinGet(BlockSkin skin)
+        private void OnSkinGet(BlockSkin skin)
         {
-            skin.Visibility = 1;
+            skin.Visibility = Visibility;
         }
 
         protected virtual void UpdateBlockSkin()
         {
+            
             if (!TryGetSkins(out var newSkins))
             {
                 if (!_usingDefault)
