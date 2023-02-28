@@ -6,17 +6,17 @@ namespace UStacker.Gameplay.Communication
     public readonly struct PieceRotatedMessage : IMidgameMessage
     {
         [UsedImplicitly]
-        public readonly RotationState EndRotation;
-        [UsedImplicitly]
         public readonly string PieceType;
         [UsedImplicitly]
         public readonly RotationState StartRotation;
+        [UsedImplicitly]
+        public readonly RotationState EndRotation;
         public readonly bool WasSpin;
         public readonly bool WasSpinMini;
         [UsedImplicitly]
-        public readonly bool WasSpinMiniRaw;
-        [UsedImplicitly]
         public readonly bool WasSpinRaw;
+        [UsedImplicitly]
+        public readonly bool WasSpinMiniRaw;
         public double Time { get; }
 
         public PieceRotatedMessage(string pieceType, RotationState startRotation, RotationState endRotation,

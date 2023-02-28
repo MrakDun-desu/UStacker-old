@@ -148,10 +148,10 @@ namespace UStacker.Gameplay.SoundEffects
                 case GameState.Unset or
                     GameState.Any or
                     GameState.Initializing or
-                    GameState.GameStartCountdown or
+                    GameState.StartCountdown or
                     GameState.Running or
                     GameState.Paused or
-                    GameState.GameResumeCountdown:
+                    GameState.ResumeCountdown:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

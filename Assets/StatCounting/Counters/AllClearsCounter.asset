@@ -18,7 +18,7 @@ MonoBehaviour:
     Filename: 
     Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
       then\n\t\treturn \"All clears: 0\"\n\tend\nend\nfunction OnPiecePlaced(message)\n\treturn
-      \"All clears: \" .. Stats.AllClears\nend\nSetText(Reset())\nSetAlignment(\"left\")\nreturn
+      \"All clears: \" .. Stats.AllClears\nend\nSetText(\"All clears: 0\")\nSetAlignment(\"left\")\nreturn
       {\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStateChanged\"] = Reset\n}"
     Position: {x: 11, y: 1}
     Size: {x: 5, y: 1}

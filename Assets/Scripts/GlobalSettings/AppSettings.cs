@@ -57,6 +57,7 @@ namespace UStacker.GlobalSettings
             Settings = JsonConvert.DeserializeObject<SettingsContainer>(await File.ReadAllTextAsync(path),
                 StaticSettings.DefaultSerializerSettings);
             Settings ??= new SettingsContainer();
+            
             SettingsReloaded?.Invoke();
             return true;
         }

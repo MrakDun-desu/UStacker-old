@@ -58,7 +58,7 @@ namespace UStacker.Gameplay
                 PrespawnPieces();
             }
             
-            if (message is {PreviousState: GameState.Initializing or GameState.GameStartCountdown, NewState: GameState.Running})
+            if (message is {PreviousState: GameState.Initializing or GameState.StartCountdown, NewState: GameState.Running})
                 SpawnPiece();
         }
 

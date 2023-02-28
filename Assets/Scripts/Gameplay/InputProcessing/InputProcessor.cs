@@ -106,7 +106,6 @@ namespace UStacker.Gameplay.InputProcessing
         private bool _isLocking => _lockdownEvent.Time < double.PositiveInfinity;
 
         private HandlingSettings _handling => GameSettings.Controls.Handling;
-        public GameSettingsSO.SettingsContainer GameSettings { private get; set; }
 
         private SpinHandler _spinHandler;
 
@@ -125,6 +124,9 @@ namespace UStacker.Gameplay.InputProcessing
         }
 
         [field: SerializeField] public List<PiecePlacementInfo> PlacementsList { get; set; }
+        public GameSettingsSO.SettingsContainer GameSettings { private get; set; }
+        public bool ReplayControlsEnabled { get; set; } = true;
+
 
         public Piece ActivePiece
         {
@@ -153,7 +155,7 @@ namespace UStacker.Gameplay.InputProcessing
             _mediator.Register<GravityChangedMessage>(OnGravityChanged);
             _mediator.Register<LockDelayChangedMessage>(OnLockDelayChanged);
             _mediator.Register<GameStateChangedMessage>(OnGameStateChange, 5);
-            
+
             _spawnEvent = new UpdateEvent(_updateEvents, EventType.Spawn);
             _dasLeftEvent = new UpdateEvent(_updateEvents, EventType.DasLeft);
             _dasRightEvent = new UpdateEvent(_updateEvents, EventType.DasRight);
@@ -166,9 +168,9 @@ namespace UStacker.Gameplay.InputProcessing
 
         private void OnGameStateChange(GameStateChangedMessage message)
         {
-            if (message is {PreviousState: GameState.Unset, NewState: GameState.Initializing})
+            if (message is { PreviousState: GameState.Unset, NewState: GameState.Initializing })
                 FirstTimeInitialize(message.IsReplay);
-            
+
             if (message.NewState == GameState.Initializing)
             {
                 DeleteActivePiece();
@@ -185,17 +187,17 @@ namespace UStacker.Gameplay.InputProcessing
                 }
             }
 
-            if (message is {NewState: GameState.Running, IsReplay: false})
+            if (message is { NewState: GameState.Running, IsReplay: false })
             {
                 _controlsActive = true;
                 HandlePauseBufferedInputs();
             }
 
-            if (message is {PreviousState: GameState.Running})
+            if (message is { PreviousState: GameState.Running })
                 _controlsActive = false;
 
         }
-        
+
         private void FirstTimeInitialize(bool isReplay)
         {
             InitializePieceHolder();
@@ -235,7 +237,7 @@ namespace UStacker.Gameplay.InputProcessing
                 (int)_board.Height - PieceContainer.Height
             );
         }
-        
+
         private void HandlePauseBufferedInputs()
         {
             if (_bufferedLeft && !_isReplaying)
@@ -259,6 +261,42 @@ namespace UStacker.Gameplay.InputProcessing
                 _bufferedRotation = null;
                 RotateKeyDown(time, direction);
             }
+        }
+
+        public void MoveFiveSecondsForward(InputAction.CallbackContext ctx)
+        {
+            if (ctx.performed && ReplayControlsEnabled)
+                MoveFiveSecondsForward();
+        }
+
+        public void MoveFiveSecondsBackward(InputAction.CallbackContext ctx)
+        {
+            if (ctx.performed && ReplayControlsEnabled)
+                MoveFiveSecondsBackward();
+        }
+
+        public void MoveTenthSecondForward(InputAction.CallbackContext ctx)
+        {
+            if (ctx.performed && ReplayControlsEnabled)
+                MoveTenthSecondForward();
+        }
+
+        public void MoveTenthSecondBackward(InputAction.CallbackContext ctx)
+        {
+            if (ctx.performed && ReplayControlsEnabled)
+                MoveTenthSecondBackward();
+        }
+
+        public void MoveToNextPiece(InputAction.CallbackContext ctx)
+        {
+            if (ctx.performed && ReplayControlsEnabled)
+                MoveToNextPiece();
+        }
+
+        public void MoveToPrevPiece(InputAction.CallbackContext ctx)
+        {
+            if (ctx.performed && ReplayControlsEnabled)
+                MoveToPrevPiece();
         }
 
         public void MoveFiveSecondsForward()
@@ -427,9 +465,9 @@ namespace UStacker.Gameplay.InputProcessing
                     if (!isRotation)
                     {
                         if (moveVector.x > 0)
-                            moveVector.x += (int) _hardLockAmount;
+                            moveVector.x += (int)_hardLockAmount;
                         else
-                            moveVector.x -= (int) _hardLockAmount;
+                            moveVector.x -= (int)_hardLockAmount;
                     }
                 }
             }
@@ -532,12 +570,12 @@ namespace UStacker.Gameplay.InputProcessing
         private void ChangeActivePieceRotationState(int value)
         {
             _currentPieceRotation += value;
-            var newState = (int) ActivePiece.RotationState + value;
+            var newState = (int)ActivePiece.RotationState + value;
             while (newState < 0) newState += 360;
 
             newState -= newState % 90;
 
-            ActivePiece.RotationState = (RotationState) (newState % 360);
+            ActivePiece.RotationState = (RotationState)(newState % 360);
         }
 
         private double ComputeDroptimeFromGravity()
@@ -891,8 +929,8 @@ namespace UStacker.Gameplay.InputProcessing
         {
             KeyActionType? keyActionType = ctx switch
             {
-                {performed: true} => KeyActionType.KeyDown,
-                {canceled: true} => KeyActionType.KeyUp,
+                { performed: true } => KeyActionType.KeyDown,
+                { canceled: true } => KeyActionType.KeyUp,
                 _ => null
             };
             if (!_controlsActive && keyActionType == KeyActionType.KeyDown) return;
@@ -901,7 +939,7 @@ namespace UStacker.Gameplay.InputProcessing
             var actionTime = ctx.time - (Time.realtimeSinceStartupAsDouble - _timer.CurrentTime);
             var actionMessage = new InputActionMessage(
                 actionType,
-                (KeyActionType) keyActionType,
+                (KeyActionType)keyActionType,
                 actionTime);
             HandleInputAction(actionMessage);
         }
@@ -910,11 +948,11 @@ namespace UStacker.Gameplay.InputProcessing
         {
             switch (ctx)
             {
-                case {performed: true}:
+                case { performed: true }:
                     _bufferedLeft = true;
                     _bufferedRight = false;
                     break;
-                case {canceled: true}:
+                case { canceled: true }:
                     _bufferedLeft = false;
                     break;
             }
@@ -926,11 +964,11 @@ namespace UStacker.Gameplay.InputProcessing
         {
             switch (ctx)
             {
-                case {performed: true}:
+                case { performed: true }:
                     _bufferedRight = true;
                     _bufferedLeft = false;
                     break;
-                case {canceled: true}:
+                case { canceled: true }:
                     _bufferedRight = false;
                     break;
             }
@@ -1148,7 +1186,7 @@ namespace UStacker.Gameplay.InputProcessing
                     _arrEvent.Time = _arrEvent.Time < double.PositiveInfinity
                         ? Math.Max(spawnTime + _handling.DasCutDelay, _arrEvent.Time)
                         : spawnTime + _handling.DasCutDelay;
-                
+
                 if (!_handling.CancelDasDelayWithInput)
                     _dasDelay = _arrEvent.Time;
             }
@@ -1166,7 +1204,7 @@ namespace UStacker.Gameplay.InputProcessing
 
             var lockProgress = (_lockdownEvent.Time - functionStartTime) / _lockDelay;
 
-            ActivePiece.SetVisibility(Mathf.Lerp(1f, .5f, (float) lockProgress));
+            ActivePiece.SetVisibility(Mathf.Lerp(1f, .5f, (float)lockProgress));
         }
 
         private void StartLockdown(double lockStart)

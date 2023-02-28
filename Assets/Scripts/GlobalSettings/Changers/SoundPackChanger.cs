@@ -49,7 +49,7 @@ namespace UStacker.GlobalSettings.Changers
             SetValue(newSoundPack);
         }
 
-        private void OpenSoundFolder()
+        private static void OpenSoundFolder()
         {
             if (!Directory.Exists(PersistentPaths.SoundPacks))
                 Directory.CreateDirectory(PersistentPaths.SoundPacks);

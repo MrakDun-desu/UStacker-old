@@ -65,15 +65,15 @@ namespace UStacker.Gameplay.GameStateManagement
                 0, IsReplay));
             _mediator.Send(new GameStateChangedMessage(
                 GameState.Initializing,
-                GameState.GameStartCountdown,
+                GameState.StartCountdown,
                 0, IsReplay));
         }
 
         public void StartGame()
         {
-            if (CurrentState is 
-                GameState.GameStartCountdown or 
-                GameState.GameResumeCountdown)
+            if (CurrentState is
+                GameState.StartCountdown or
+                GameState.ResumeCountdown)
             {
                 _mediator.Send(new GameStateChangedMessage(
                     _currentState,
@@ -85,6 +85,17 @@ namespace UStacker.Gameplay.GameStateManagement
                 Debug.LogWarning("Trying to start game from invalid state " + CurrentState);
         }
 
+        public void PauseGameIfRunning()
+        {
+            if (CurrentState is
+                GameState.Initializing or
+                GameState.Running or
+                GameState.ResumeCountdown or
+                GameState.StartCountdown)
+                _mediator.Send(
+                    new GameStateChangedMessage(CurrentState, GameState.Paused, _timer.CurrentTime, IsReplay));
+        }
+
         public void TogglePause()
         {
             GameState newState;
@@ -92,18 +103,20 @@ namespace UStacker.Gameplay.GameStateManagement
             {
                 case GameState.Unset or
                     GameState.Any or
-                    GameState.Ended or
                     GameState.Lost:
                     Debug.LogWarning("Trying to toggle pause in invalid state " + CurrentState);
+                    return;
+                case GameState.Ended:
+                    // in ended we can't pause, but we don't want do throw an error because we might try
                     return;
                 case GameState.Paused:
                     switch (_previousState)
                     {
-                        case GameState.Initializing or GameState.GameStartCountdown:
-                            newState = GameState.GameStartCountdown;
+                        case GameState.Initializing or GameState.StartCountdown:
+                            newState = GameState.StartCountdown;
                             break;
-                        case GameState.Running or GameState.GameResumeCountdown:
-                            newState = GameState.GameResumeCountdown;
+                        case GameState.Running or GameState.ResumeCountdown:
+                            newState = GameState.ResumeCountdown;
                             break;
                         default:
                             Debug.LogWarning("Trying to unpause game with invalid previous state " + _previousState);
@@ -111,10 +124,10 @@ namespace UStacker.Gameplay.GameStateManagement
                     }
 
                     break;
-                case GameState.Initializing or 
+                case GameState.Initializing or
                     GameState.Running or
-                    GameState.GameResumeCountdown or 
-                    GameState.GameStartCountdown:
+                    GameState.ResumeCountdown or
+                    GameState.StartCountdown:
                     newState = GameState.Paused;
                     break;
                 default:
@@ -150,10 +163,29 @@ namespace UStacker.Gameplay.GameStateManagement
 
         public void EndGame(double endTime)
         {
-            if (CurrentState != GameState.Running)
+            switch (CurrentState)
             {
-                Debug.LogWarning("Trying to end game from invalid state " + CurrentState);
-                return;
+                case GameState.Unset or
+                    GameState.Any or
+                    GameState.Initializing or
+                    GameState.StartCountdown or
+                    GameState.ResumeCountdown or
+                    GameState.Ended or
+                    GameState.Lost:
+                    Debug.LogWarning("Trying to end game from invalid state " + CurrentState);
+                    return;
+                case GameState.Paused:
+                    if (!IsReplay)
+                    {
+                        Debug.LogWarning("Trying to end game from invalid state " + CurrentState);
+                        return;
+                    }
+
+                    break;
+                case GameState.Running:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             if (!IsReplay)
@@ -169,9 +201,9 @@ namespace UStacker.Gameplay.GameStateManagement
                 Replay.Stats = _statCounterManager.Stats;
                 Replay.GameLength = endTime;
                 Replay.TimeStamp = DateTime.UtcNow;
-                
+
                 _resultDisplayer.DisplayedReplay = Replay;
-                
+
                 if (AppSettings.Gameplay.AutosaveReplaysOnDisk)
                     Replay.Save();
             }

@@ -19,7 +19,6 @@ namespace UStacker.Gameplay.Communication
             {"PieceRotated", typeof(PieceRotatedMessage)},
             {"PieceSpawned", typeof(PieceSpawnedMessage)},
             {"ScoreChanged", typeof(ScoreChangedMessage)},
-            {"SeedSet", typeof(SeedSetMessage)},
         };
     }
 }

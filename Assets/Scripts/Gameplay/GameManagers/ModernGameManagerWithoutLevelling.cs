@@ -70,7 +70,7 @@ namespace UStacker.Gameplay.GameManagers
                 return;
 
             const float backToBackMultiplier = 1.5f;
-            if (message.CurrentBackToBack >= 1 && message.LinesCleared > 0)
+            if (message is {CurrentBackToBack: >= 1, LinesCleared: > 0})
                 scoreAddition = (int) (scoreAddition * backToBackMultiplier);
 
             _currentScore += scoreAddition;

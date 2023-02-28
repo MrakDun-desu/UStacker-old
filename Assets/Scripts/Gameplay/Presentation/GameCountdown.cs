@@ -44,14 +44,14 @@ namespace UStacker.Gameplay.Presentation
         
         private void OnGameStateChange(GameStateChangedMessage message)
         {
-            if (message.NewState is GameState.GameStartCountdown or GameState.GameResumeCountdown)
+            if (message.NewState is GameState.StartCountdown or GameState.ResumeCountdown)
             {
                 if (message.IsReplay)
                     CountdownFinished.Invoke();
                 else
                     StartCountdown();
             }
-            else if (message.PreviousState is GameState.GameStartCountdown or GameState.GameResumeCountdown)
+            else if (message.PreviousState is GameState.StartCountdown or GameState.ResumeCountdown)
                 StopCountdown();
         }
 
