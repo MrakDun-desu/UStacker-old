@@ -48,6 +48,9 @@ namespace UStacker.Gameplay
         {
             foreach (var pool in _piecePools.Values)
                 pool.Dispose();
+
+            if (_randomizer is CustomRandomizer rand)
+                rand.Dispose();
         }
 
         private void OnGameStateChange(GameStateChangedMessage message)

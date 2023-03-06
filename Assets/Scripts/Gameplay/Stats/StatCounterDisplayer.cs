@@ -18,7 +18,7 @@ using Random = UStacker.Common.Random;
 
 namespace UStacker.Gameplay.Stats
 {
-    public class StatCounterDisplayer : MonoBehaviour
+    public class StatCounterDisplayer : MonoBehaviour, IDisposable
     {
 
         private const string UPDATED_KEY = "CounterUpdated";
@@ -57,6 +57,7 @@ namespace UStacker.Gameplay.Stats
 
         private void OnDestroy()
         {
+            Dispose();
             if (_currentlyUnderMouse == this)
                 _currentlyUnderMouse = null;
         }
@@ -345,5 +346,11 @@ namespace UStacker.Gameplay.Stats
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            _luaState?.Dispose();
+            _updateFunction?.Dispose();
+        }
     }
 }

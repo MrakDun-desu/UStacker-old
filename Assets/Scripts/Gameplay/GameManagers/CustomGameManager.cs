@@ -12,7 +12,7 @@ using Random = UStacker.Common.Random;
 
 namespace UStacker.Gameplay.GameManagers
 {
-    public class CustomGameManager : MonoBehaviour, IGameManager
+    public class CustomGameManager : MonoBehaviour, IGameManager, IDisposable
     {
         private const string STARTING_LEVEL_NAME = "StartingLevel";
         private const string BOARD_INTERFACE_NAME = "Board";
@@ -203,6 +203,16 @@ namespace UStacker.Gameplay.GameManagers
                 _currentMessageTime ?? _timer.CurrentTime));
         }
 
+        private void OnDestroy()
+        {
+            Dispose();
+        }
+
         #endregion
+
+        public void Dispose()
+        {
+            _luaState?.Dispose();
+        }
     }
 }

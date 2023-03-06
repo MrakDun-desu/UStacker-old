@@ -1,14 +1,15 @@
+using System;
 using System.Collections.Generic;
-using UStacker.Common;
 using UStacker.Common.Extensions;
 using NLua;
 using NLua.Exceptions;
 using UStacker.Common.LuaApi;
 using UStacker.Gameplay.Communication;
+using Random = UStacker.Common.Random;
 
 namespace UStacker.Gameplay.Randomizers
 {
-    public class CustomRandomizer : IRandomizer
+    public class CustomRandomizer : IRandomizer, IDisposable
     {
         private const string AVAILABLE_PIECES_VARIABLE_NAME = "AvailablePieces";
         private readonly List<string> _availableValues = new()
@@ -34,7 +35,6 @@ namespace UStacker.Gameplay.Randomizers
             _availableValues = _availableValues.Filter(availablePieces);
             _mediator = mediator;
 
-            _luaState = CreateLua.WithAllPrerequisites(out _random);
             InsertAvailableValuesIntoLua();
             try
             {
@@ -114,6 +114,13 @@ namespace UStacker.Gameplay.Randomizers
             var availablePiecesTable = (LuaTable) _luaState[AVAILABLE_PIECES_VARIABLE_NAME];
             for (var i = 0; i < _availableValues.Count; i++)
                 availablePiecesTable[i + 1] = _availableValues[i];
+        }
+
+        public void Dispose()
+        {
+            _luaState?.Dispose();
+            _nextPieceFunction?.Dispose();
+            _resetFunction?.Dispose();
         }
     }
 }

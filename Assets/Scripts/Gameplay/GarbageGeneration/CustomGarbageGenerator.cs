@@ -1,12 +1,13 @@
-﻿using UStacker.Common;
+﻿using System;
 using UStacker.Gameplay.Communication;
 using NLua;
 using NLua.Exceptions;
 using UStacker.Common.LuaApi;
+using Random = UStacker.Common.Random;
 
 namespace UStacker.Gameplay.GarbageGeneration
 {
-    public class CustomGarbageGenerator : IGarbageGenerator
+    public class CustomGarbageGenerator : IGarbageGenerator, IDisposable
     {
 
         private const string BOARD_VARIABLE_NAME = "Board";
@@ -14,15 +15,16 @@ namespace UStacker.Gameplay.GarbageGeneration
         private readonly LuaFunction _resetFunction;
         private readonly Random _random;
         private readonly Mediator _mediator;
+        private readonly Lua _luaState;
 
         public CustomGarbageGenerator(GarbageBoardInterface boardInterface, string script, Mediator mediator)
         {
             _mediator = mediator;
-            var luaState = CreateLua.WithAllPrerequisites(out _random);
-            luaState[BOARD_VARIABLE_NAME] = boardInterface;
+            _luaState = CreateLua.WithAllPrerequisites(out _random);
+            _luaState[BOARD_VARIABLE_NAME] = boardInterface;
             try
             {
-                var scriptOutput = luaState.DoString(script);
+                var scriptOutput = _luaState.DoString(script);
 
                 if (scriptOutput.Length < 2)
                 {
@@ -71,6 +73,13 @@ namespace UStacker.Gameplay.GarbageGeneration
             {
                 _mediator.Send(new GameCrashedMessage($"Custom garbage generation function crashed. Lua exception: {ex.Message}"));
             }
+        }
+        
+        public void Dispose()
+        {
+            _generationFunction?.Dispose();
+            _resetFunction?.Dispose();
+            _luaState?.Dispose();
         }
     }
 }

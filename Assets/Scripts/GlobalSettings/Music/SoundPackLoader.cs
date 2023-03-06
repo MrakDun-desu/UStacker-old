@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 using UStacker.Common;
 using UStacker.Common.Alerts;
 using Newtonsoft.Json;
-using NLua.Exceptions;
 using UnityEngine;
-using UStacker.Common.LuaApi;
 
 namespace UStacker.GlobalSettings.Music
 {
@@ -86,19 +84,6 @@ namespace UStacker.GlobalSettings.Music
                 return;
 
             SoundEffectsScript = await File.ReadAllTextAsync(scriptPath);
-            var lua = CreateLua.WithAllPrerequisites(out _);
-            try
-            {
-                lua.DoString(SoundEffectsScript);
-            }
-            catch (LuaException ex)
-            {
-                AlertDisplayer.Instance.ShowAlert(new Alert(
-                    "Error loading script!",
-                    $"Error loading sound effects script.\nLua error: {ex.Message}",
-                    AlertType.Error));
-                SoundEffectsScript = null;
-            }
         }
 
         private static async Task LoadMusicAsync(string path)

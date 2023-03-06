@@ -12,7 +12,7 @@ using UStacker.GlobalSettings.Music;
 namespace UStacker.Gameplay.SoundEffects
 {
     [RequireComponent(typeof(AudioSource))]
-    public class SoundEffectsPlayer : MonoBehaviour
+    public class SoundEffectsPlayer : MonoBehaviour, IDisposable
     {
         [SerializeField] private AudioClipCollection _defaultEffects = new();
         [SerializeField] private Mediator _mediator;
@@ -28,6 +28,11 @@ namespace UStacker.Gameplay.SoundEffects
             
             if (!TryRegisterCustomFunctions())
                 RegisterDefaultFunctions();
+        }
+
+        private void OnDestroy()
+        {
+            Dispose();
         }
 
         private void LateUpdate()
@@ -323,6 +328,11 @@ namespace UStacker.Gameplay.SoundEffects
 
             _audioSource.PlayOneShot(clip);
             _playedInThisUpdate.Add(clipName);
+        }
+
+        public void Dispose()
+        {
+            _luaState?.Dispose();
         }
     }
 }

@@ -133,6 +133,9 @@ namespace UStacker.Gameplay
         {
             _garbageLayerPool?.Dispose();
             _garbageBlockPool?.Dispose();
+            if (_garbageGenerator is CustomGarbageGenerator gen)
+                gen.Dispose();
+            
             BoardVisibilityApplier.VisibilityChanged -= ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged -= ChangeBoardZoom;
             WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
