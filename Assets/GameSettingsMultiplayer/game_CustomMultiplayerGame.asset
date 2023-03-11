@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36f7ab6fbbd4e8b40a0d398785ed582d, type: 3}
+  m_Name: game_CustomMultiplayerGame
+  m_EditorClassIdentifier: 
+  GameType: {fileID: 11400000, guid: 44caeebb6fc82e9428a7a03228eab12f, type: 2}
+  Settings:
+    <General>k__BackingField:
+      _nextPieceCount: 5
+      _randomizerType: 0
+      _customRandomizerName: 
+      <AllowedSpins>k__BackingField: 2
+      <UseCustomSeed>k__BackingField: 0
+      <CustomSeed>k__BackingField: 0
+      <CustomRandomizerScript>k__BackingField: 
+      <ActiveSeed>k__BackingField: 0
+    <Controls>k__BackingField:
+      _rotationSystemType: 2
+      _customRotationSystem: 
+      <Allow180Spins>k__BackingField: 1
+      <AllowHardDrop>k__BackingField: 1
+      <AllowHold>k__BackingField: 1
+      <AllowMoveToWall>k__BackingField: 1
+      <UnlimitedHold>k__BackingField: 0
+      <ShowGhostPiece>k__BackingField: 1
+      <OverrideHandling>k__BackingField: 0
+      <Handling>k__BackingField:
+        _delayedAutoShift: 0.125
+        _automaticRepeatRate: 0.2
+        _softDropFactor: 20
+        _dasCutDelay: 0
+        _doubleDropPreventionInterval: 0
+        _softDropDelay: 0
+        _zeroGravitySoftDropBase: 0.02
+        <DelayDasOn>k__BackingField: 0
+        <SimultaneousDasBehavior>k__BackingField: 1
+        <DiagonalLockBehavior>k__BackingField: 0
+        <CancelDasDelayWithInput>k__BackingField: 1
+      <ActiveRotationSystem>k__BackingField:
+        DefaultTable:
+          StartState: 0
+          FullSpinKicks: []
+          ZeroToThree:
+          - {x: 0, y: 0}
+          ZeroToOne:
+          - {x: 0, y: 0}
+          OneToZero:
+          - {x: 0, y: 0}
+          OneToTwo:
+          - {x: 0, y: 0}
+          TwoToOne:
+          - {x: 0, y: 0}
+          TwoToThree:
+          - {x: 0, y: 0}
+          ThreeToTwo:
+          - {x: 0, y: 0}
+          ThreeToZero:
+          - {x: 0, y: 0}
+          ZeroToTwo:
+          - {x: 0, y: 0}
+          TwoToZero:
+          - {x: 0, y: 0}
+          OneToThree:
+          - {x: 0, y: 0}
+          ThreeToOne:
+          - {x: 0, y: 0}
+    <BoardDimensions>k__BackingField:
+      _boardWidth: 10
+      _boardHeight: 20
+      _lethalHeight: 20
+      _pieceSpawnHeight: 21
+      _blockCutHeight: 40
+      _boardPadding: 4
+    <Gravity>k__BackingField:
+      _defaultGravity: 0.02
+      _defaultLockDelay: 0.5
+      _piecePlacementDelay: 0
+      _lineClearDelay: 0
+      _hardLockAmount: 5
+      <LockDelayType>k__BackingField: 1
+      <HardLockType>k__BackingField: 0
+      <TopoutCondition>k__BackingField: 0
+      <AllowClutchClears>k__BackingField: 1
+    <Objective>k__BackingField:
+      _gameManagerType: 0
+      _customGameManager: 
+      _garbageGenerationType: 0
+      _customGarbageGeneratorName: 
+      _endConditionCount: 0
+      _garbageHeight: 0
+      <MainStat>k__BackingField: 1
+      <GameEndCondition>k__BackingField: 0
+      <CustomGarbageScript>k__BackingField: 
+      <CustomGameManagerScript>k__BackingField: 
+      <ToppingOutIsOkay>k__BackingField: 0
+      <StartingLevel>k__BackingField: 
+    <Presentation>k__BackingField:
+      _title: Custom game
+      _countdownInterval: 0.65
+      _countdownCount: 3

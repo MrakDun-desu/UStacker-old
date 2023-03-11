@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UStacker.GlobalSettings.StatCounting;
 
 namespace UStacker.GameSettings.SettingGroups
 {
@@ -7,13 +8,23 @@ namespace UStacker.GameSettings.SettingGroups
     public record PresentationSettings
     {
         // backing fields
-        [SerializeField]
-        private float _countdownInterval = .65f;
-        [SerializeField]
-        private uint _countdownCount = 3;
-
-        [field: SerializeField]
-        public string Title { get; set; } = "Custom game";
+        [SerializeField] private string _title = "Custom game";
+        [SerializeField] private float _countdownInterval = .65f;
+        [SerializeField] private uint _countdownCount = 3;
+        
+        public string Title
+        {
+            get => _title;
+            set
+            {
+                _title = value.Length switch
+                {
+                    <= 0 => "Unset",
+                    > 100 => value[..100],
+                    _ => value
+                };
+            }
+        }
 
         public float CountdownInterval
         {
@@ -26,5 +37,10 @@ namespace UStacker.GameSettings.SettingGroups
             get => _countdownCount;
             set => _countdownCount = Math.Clamp(value, 1, 10);
         }
+
+        [field: SerializeField]
+        public StatCounterGroup DefaultStatCounterGroup { get; set; }
+        
+        public Guid? StatCounterGroupOverrideId { get; set; }
     }
 }

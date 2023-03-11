@@ -141,15 +141,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1865c3bf6df74c7d8724397276162253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _musicConfiguration:
+  Configuration:
     GameMusic:
     - Skydiving
     - Rain
     - Classic 1
     MenuMusic:
     - Rust
-    VictoryMusic: []
-    LossMusic: []
+    LobbyMusic:
+    - Rain
     GameMusicGroups:
       _entries:
       - Key: Chill Music

@@ -1,10 +1,8 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using UStacker.GlobalSettings.Appliers;
 using UStacker.GlobalSettings.Changers;
-using UStacker.GlobalSettings.StatCounting;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -19,8 +17,6 @@ namespace UStacker.GlobalSettings.Startup
         [SerializeField] private InputActionAsset _actionAsset;
         [SerializeField] private TMP_Text _loaderMessagePrefab;
         [SerializeField] private Transform _loaderMessageParent;
-        [SerializeField] private PremadeStatCountersSo _premadeStatCounters;
-        [SerializeField] private StringReferenceSO[] _gameTypes = Array.Empty<StringReferenceSO>();
 
         private uint _loadersActive;
         public event Action SettingChanged;
@@ -57,7 +53,6 @@ namespace UStacker.GlobalSettings.Startup
         {
             await AppSettings.TryLoadAsync();
             SettingChanged?.Invoke();
-            AddDefaultStatCounters();
             FinishStartup();
         }
 
@@ -77,25 +72,6 @@ namespace UStacker.GlobalSettings.Startup
         {
             _loadersActive--;
             FinishStartup();
-        }
-
-        private void AddDefaultStatCounters()
-        {
-            if (AppSettings.StatCounting.StatCounterGroups.Count > 0 || _premadeStatCounters == null) return;
-            AppSettings.StatCounting.DefaultGroup = _premadeStatCounters.DefaultGroup;
-
-            foreach (var group in _premadeStatCounters.PremadeGroups)
-            {
-                var groupId = Guid.NewGuid();
-                while (AppSettings.StatCounting.StatCounterGroups.ContainsKey(groupId))
-                    groupId = Guid.NewGuid();
-
-                AppSettings.StatCounting.StatCounterGroups[groupId] = group;
-
-                if (_gameTypes.Select(gameType => gameType.Value).Contains(group.Name))
-                    AppSettings.StatCounting.GameStatCounterDictionary[group.Name] = groupId;
-            }
-
         }
     }
 }

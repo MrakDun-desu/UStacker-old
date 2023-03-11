@@ -40,5 +40,7 @@ namespace UStacker.GlobalSettings.Groups
                 _countdownCount = null;
             }
         }
+        
+        public Guid? StatCounterGroupId { get; set; }
     }
 }

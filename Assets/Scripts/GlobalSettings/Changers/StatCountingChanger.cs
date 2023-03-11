@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UStacker.GlobalSettings.StatCounting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -97,11 +96,6 @@ namespace UStacker.GlobalSettings.Changers
         private void DeleteGroup(Guid groupId)
         {
             if (!_groupChangers.ContainsKey(groupId)) return;
-
-            var keysToRemove = AppSettings.StatCounting.GameStatCounterDictionary.Where(pair => pair.Value == groupId)
-                .Select(pair => pair.Key).ToArray();
-            foreach (var key in keysToRemove)
-                AppSettings.StatCounting.GameStatCounterDictionary.Remove(key);
 
             var removedChanger = _groupChangers[groupId];
 

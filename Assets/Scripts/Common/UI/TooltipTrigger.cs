@@ -15,7 +15,8 @@ namespace UStacker.Common.UI
         {
             yield return new WaitForSeconds(WAIT_SECONDS);
             
-            Tooltip.Instance.Show(_tooltipText);
+            if (Tooltip.Instance != null)
+                Tooltip.Instance.Show(_tooltipText);
         }
         
         public void OnPointerEnter(PointerEventData eventData)
@@ -37,7 +38,8 @@ namespace UStacker.Common.UI
             if (string.IsNullOrEmpty(_tooltipText) || Tooltip.CurrentUser != gameObject)
                 return;
             
-            Tooltip.Instance.Hide();
+            if (Tooltip.Instance != null)
+                Tooltip.Instance.Hide();
             StopCoroutine(_displayCoroutine);
         }
 

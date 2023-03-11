@@ -98,7 +98,7 @@ namespace UStacker.GlobalSettings.Changers
 
         private void RebindCancelled(int index)
         {
-            _action.action.RemoveBindingOverride(index);
+            _action.action.ApplyBindingOverride(index, string.Empty);
             EndRebind();
         }
 

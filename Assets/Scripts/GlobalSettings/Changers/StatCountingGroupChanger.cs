@@ -4,6 +4,7 @@ using System.Linq;
 using UStacker.Common;
 using TMPro;
 using UnityEngine;
+using UStacker.GlobalSettings.Groups;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -23,10 +24,19 @@ namespace UStacker.GlobalSettings.Changers
 
         private Guid ChangedGroupId
         {
-            get => AppSettings.StatCounting.GameStatCounterDictionary.TryGetValue(_gameType, out var value)
-                ? value
+            get => AppSettings.GameOverrides.TryGetValue(_gameType, out var overrides) && overrides.StatCounterGroupId is {} groupId
+                ? groupId
                 : Guid.Empty;
-            set => AppSettings.StatCounting.GameStatCounterDictionary[_gameType] = value;
+            set
+            {
+                if (AppSettings.GameOverrides.TryGetValue(_gameType, out var overrides))
+                    overrides.StatCounterGroupId = value;
+                else
+                {
+                    var newOverrides = new GameSettingsOverrides { StatCounterGroupId = value };
+                    AppSettings.GameOverrides[_gameType] = newOverrides;
+                }
+            }
         }
 
         private void Start()
@@ -52,19 +62,12 @@ namespace UStacker.GlobalSettings.Changers
                     _dropdown.SetValueWithoutNotify(i);
             }
             
-            _dropdown.options.Add(new TMP_Dropdown.OptionData("Default"));
-            if (ChangedGroupId == Guid.Empty)
-                _dropdown.SetValueWithoutNotify(_dropdown.options.Count - 1);
-
             _dropdown.RefreshShownValue();
         }
 
         private void OnDropdownPicked(int pickedIndex)
         {
-            if (pickedIndex >= _availableGroups.Count)
-                AppSettings.StatCounting.GameStatCounterDictionary.Remove(_gameType);
-            else
-                ChangedGroupId = _availableGroups[pickedIndex].Key;
+            ChangedGroupId = _availableGroups[pickedIndex].Key;
             
             InvokeSettingChanged();
         }

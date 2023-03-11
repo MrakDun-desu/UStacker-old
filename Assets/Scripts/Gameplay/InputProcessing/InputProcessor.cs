@@ -11,7 +11,6 @@ using UStacker.Gameplay.Spins;
 using UStacker.Gameplay.Timing;
 using UStacker.GameSettings;
 using UStacker.GameSettings.Enums;
-using UStacker.GlobalSettings;
 using UStacker.GlobalSettings.Enums;
 using UStacker.GlobalSettings.Groups;
 
@@ -25,8 +24,6 @@ namespace UStacker.Gameplay.InputProcessing
         [SerializeField] private GhostPiece _ghostPiece;
         [SerializeField] private GameTimer _timer;
         [SerializeField] private PieceContainer _pieceHolderPrefab;
-        [SerializeField] private RotationSystemSO _srsRotationSystemSo;
-        [SerializeField] private RotationSystemSO _srsPlusRotationSystemSo;
 
         private PieceContainer _pieceHolder;
         private List<InputActionMessage> _actionList;
@@ -169,7 +166,7 @@ namespace UStacker.Gameplay.InputProcessing
         private void OnGameStateChange(GameStateChangedMessage message)
         {
             if (message is { PreviousState: GameState.Unset, NewState: GameState.Initializing })
-                FirstTimeInitialize(message.IsReplay);
+                FirstTimeInitialize();
 
             if (message.NewState == GameState.Initializing)
             {
@@ -198,37 +195,7 @@ namespace UStacker.Gameplay.InputProcessing
 
         }
 
-        private void FirstTimeInitialize(bool isReplay)
-        {
-            InitializePieceHolder();
-            InitializeSpinHandler(isReplay);
-
-            if (!GameSettings.Controls.OverrideHandling && !isReplay)
-                GameSettings.Controls.Handling = AppSettings.Handling with { };
-        }
-
-        private void InitializeSpinHandler(bool isReplay)
-        {
-            if (isReplay)
-            {
-                _spinHandler = new SpinHandler(GameSettings.Controls.ActiveRotationSystem, GameSettings.General.AllowedSpins);
-                return;
-            }
-
-            GameSettings.Controls.ActiveRotationSystem =
-                GameSettings.Controls.RotationSystemType switch
-                {
-                    RotationSystemType.SRS => _srsRotationSystemSo.RotationSystem,
-                    RotationSystemType.SRSPlus => _srsPlusRotationSystemSo.RotationSystem,
-                    RotationSystemType.None => new RotationSystem(),
-                    RotationSystemType.Custom => GameSettings.Controls.ActiveRotationSystem,
-                    _ => new RotationSystem()
-                };
-
-            _spinHandler = new SpinHandler(GameSettings.Controls.ActiveRotationSystem, GameSettings.General.AllowedSpins);
-        }
-
-        private void InitializePieceHolder()
+        private void FirstTimeInitialize()
         {
             if (!GameSettings.Controls.AllowHold) return;
             _pieceHolder = Instantiate(_pieceHolderPrefab, _board.transform);
@@ -236,6 +203,8 @@ namespace UStacker.Gameplay.InputProcessing
                 -PieceContainer.Width,
                 (int)_board.Height - PieceContainer.Height
             );
+            
+            _spinHandler = new SpinHandler(GameSettings.Controls.ActiveRotationSystem, GameSettings.General.AllowedSpins);
         }
 
         private void HandlePauseBufferedInputs()

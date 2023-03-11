@@ -8,10 +8,11 @@ using UStacker.GlobalSettings.StatCounting;
 using UnityEngine;
 using UStacker.Gameplay.Initialization;
 using UStacker.Gameplay.Timing;
+using UStacker.GameSettings;
 
 namespace UStacker.Gameplay.Stats
 {
-    public class StatCounterManager : MonoBehaviour
+    public class StatCounterManager : MonoBehaviour, IGameSettingsDependency
     {
         [SerializeField] private Board _board;
         [SerializeField] private Canvas _statCountersCanvas;
@@ -20,6 +21,7 @@ namespace UStacker.Gameplay.Stats
         [SerializeField] private Mediator _mediator;
         [SerializeField] private StatContainer _stats = new();
 
+        public GameSettingsSO.SettingsContainer GameSettings { private get; set; }
         public ReadonlyStatContainer Stats;
         
         private void Awake()
@@ -32,7 +34,10 @@ namespace UStacker.Gameplay.Stats
             _mediator.Register<ScoreChangedMessage>(OnScoreChanged, 10);
             _mediator.Register<LevelChangedMessage>(OnLevelChanged, 10);
             _mediator.Register<GameStateChangedMessage>(OnGameStateChange);
-            
+        }
+
+        private void Start()
+        {
             CreateStatCounters();
         }
 
@@ -58,20 +63,14 @@ namespace UStacker.Gameplay.Stats
 
         private void CreateStatCounters()
         {
-            var counterGroups = AppSettings.StatCounting.StatCounterGroups;
-            counterGroups ??= new Dictionary<Guid, StatCounterGroup>();
-            if (counterGroups.Count <= 0) return;
-
-            AppSettings.StatCounting.GameStatCounterDictionary ??= new Dictionary<string, Guid>();
+            var counterGroup = GameSettings.Presentation.DefaultStatCounterGroup;
             
-            StatCounterGroup counterGroup;
-            if (AppSettings.StatCounting.GameStatCounterDictionary.TryGetValue(GameInitializer.GameType, out var groupId))
+            if (GameSettings.Presentation.StatCounterGroupOverrideId is { } overrideId)
             {
-                if (!AppSettings.StatCounting.StatCounterGroups.TryGetValue(groupId, out counterGroup)) return;
-            }
-            else
-            {
-                counterGroup = AppSettings.StatCounting.DefaultGroup;
+                AppSettings.StatCounting.StatCounterGroups ??= new Dictionary<Guid, StatCounterGroup>();
+
+                if (AppSettings.StatCounting.StatCounterGroups.ContainsKey(overrideId))
+                    counterGroup = AppSettings.StatCounting.StatCounterGroups[overrideId];
             }
 
             var usedCounters = counterGroup.StatCounters.Where(counter => !string.IsNullOrEmpty(counter.Script))

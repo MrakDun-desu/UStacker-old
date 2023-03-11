@@ -113,7 +113,7 @@ namespace UStacker.Gameplay
             _mediator.Register<SeedSetMessage>(OnSeedSet);
 
             FirstTimeInitialize();
-            
+
             ChangeBoardZoom(AppSettings.Gameplay.BoardZoom);
             ChangeVisibility(AppSettings.Gameplay.BoardVisibility);
             _warningPieceTreshhold = AppSettings.Gameplay.WarningPieceTreshhold;
@@ -135,7 +135,7 @@ namespace UStacker.Gameplay
             _garbageBlockPool?.Dispose();
             if (_garbageGenerator is CustomGarbageGenerator gen)
                 gen.Dispose();
-            
+
             BoardVisibilityApplier.VisibilityChanged -= ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged -= ChangeBoardZoom;
             WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
@@ -149,12 +149,12 @@ namespace UStacker.Gameplay
         {
             _garbageGenerator?.ResetState(message.Seed);
         }
-        
+
         private void OnGameStateChanged(GameStateChangedMessage message)
         {
             if (message.NewState != GameState.Initializing)
                 return;
-            
+
             ClearAllBlocks();
             ResetB2bAndCombo();
             _garbageGenerator?.GenerateGarbage(GameSettings.Objective.GarbageHeight, new PiecePlacedMessage());
@@ -342,18 +342,18 @@ namespace UStacker.Gameplay
 
             slots = Slots;
             for (var y = lineNumber; y < Blocks.Count; y++)
-            for (var x = 0; x < Blocks[y].Length; x++)
-            {
-                if (!slots[y][x]) continue;
+                for (var x = 0; x < Blocks[y].Length; x++)
+                {
+                    if (!slots[y][x]) continue;
 
-                Blocks[y][x].transform.position -= Up;
-            }
+                    Blocks[y][x].transform.position -= Up;
+                }
         }
 
-        private void CheckAndClearLines(out uint linesCleared, out uint cheeseLinesCleared)
+        private void CheckAndClearLines(out uint linesCleared, out uint garbageLinesCleared)
         {
             linesCleared = 0;
-            var cheeseHeightStart = GarbageHeight;
+            var garbageHeightStart = GarbageHeight;
             var slots = Slots;
             for (var y = Blocks.Count - 1; y >= GameSettings.BoardDimensions.BlockCutHeight; y--)
             {
@@ -379,7 +379,7 @@ namespace UStacker.Gameplay
             if (linesCleared > 0)
                 LinesCleared?.Invoke();
 
-            cheeseLinesCleared = cheeseHeightStart - GarbageHeight;
+            garbageLinesCleared = garbageHeightStart - GarbageHeight;
         }
 
         private void SendPlacementMessage(uint linesCleared, uint garbageLinesCleared, bool wasAllClear,
@@ -483,7 +483,7 @@ namespace UStacker.Gameplay
                 if (blockPos.y >= LethalHeight) isCompletelyBelowLethal = false;
             }
 
-            CheckAndClearLines(out var linesCleared, out var cheeseLinesCleared);
+            CheckAndClearLines(out var linesCleared, out var garbageLinesCleared);
 
             var linesWereCleared = linesCleared > 0;
             var wasAllClear = Blocks.Count == 0;
@@ -492,7 +492,7 @@ namespace UStacker.Gameplay
 
             SendPlacementMessage(
                 linesCleared,
-                cheeseLinesCleared,
+                garbageLinesCleared,
                 wasAllClear,
                 placementTime,
                 lastSpinResult,
@@ -564,12 +564,12 @@ namespace UStacker.Gameplay
                 {
                     if (!line[x]) continue;
 
-                    var cheeseBlock = _garbageBlockPool.Get();
-                    var cheeseBlockTransform = cheeseBlock.transform;
-                    cheeseBlockTransform.SetParent(newGarbageLayer.transform);
-                    cheeseBlockTransform.localPosition = new Vector3(x + .5f, height + .5f);
-                    cheeseBlockTransform.localScale = Vector3.one;
-                    newGarbageLayer.AddBlock(cheeseBlock);
+                    var garbageBlock = _garbageBlockPool.Get();
+                    var garbageBlockTransform = garbageBlock.transform;
+                    garbageBlockTransform.SetParent(newGarbageLayer.transform);
+                    garbageBlockTransform.localPosition = new Vector3(x + .5f, height + .5f);
+                    garbageBlockTransform.localScale = Vector3.one;
+                    newGarbageLayer.AddBlock(garbageBlock);
                 }
             }
 
@@ -581,12 +581,12 @@ namespace UStacker.Gameplay
 
             var activeSlots = Slots;
             for (var y = 0; y < Blocks.Count; y++)
-            for (var x = 0; x < Blocks[y].Length; x++)
-            {
-                if (!activeSlots[y][x]) continue;
+                for (var x = 0; x < Blocks[y].Length; x++)
+                {
+                    if (!activeSlots[y][x]) continue;
 
-                Blocks[y][x].transform.position += Up * height;
-            }
+                    Blocks[y][x].transform.position += Up * height;
+                }
 
             for (var i = 0; i < height; i++)
                 Blocks.Insert(0, new ClearableBlock[Width]);

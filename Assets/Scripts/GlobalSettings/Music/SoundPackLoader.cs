@@ -115,7 +115,7 @@ namespace UStacker.GlobalSettings.Music
         private static async Task GetAudioClipAsync(string path, IDictionary<string, AudioClip> target)
         {
             var clipName = Path.GetFileNameWithoutExtension(path);
-            var clip = await FileHandling.LoadAudioClipFromUrl(path);
+            var clip = await FileHandling.LoadAudioClipFromUrlAsync(path);
             if (clip is null) return;
 
             target[clipName] = clip;

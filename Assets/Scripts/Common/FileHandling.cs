@@ -50,7 +50,7 @@ namespace UStacker.Common
 
         #endregion
 
-        public static async Task<Texture2D> LoadTextureFromUrl(string path, bool isFile = true)
+        public static async Task<Texture2D> LoadTextureFromUrlAsync(string path, bool isFile = true)
         {
             if (isFile && GetFileType(path) != FileType.Texture) return null;
 
@@ -76,7 +76,7 @@ namespace UStacker.Common
             return texture;
         }
 
-        public static async Task<AudioClip> LoadAudioClipFromUrl(string path, bool isFile = true)
+        public static async Task<AudioClip> LoadAudioClipFromUrlAsync(string path, bool isFile = true)
         {
             if (isFile && GetFileType(path) != FileType.AudioClip) return null;
 
@@ -138,7 +138,7 @@ namespace UStacker.Common
             };
         }
 
-        private static async Task<bool> CopyMemory(Stream source, Stream destination)
+        private static async Task<bool> CopyMemoryAsync(Stream source, Stream destination)
         {
             const int bufferSize = 0x1000;
             var buffer = new byte[bufferSize];
@@ -156,8 +156,26 @@ namespace UStacker.Common
 
             return true;
         }
+        
+        private static bool CopyMemory(Stream source, Stream destination)
+        {
+            const int bufferSize = 0x1000;
+            var buffer = new byte[bufferSize];
 
-        public static async Task<byte[]> Zip(string str)
+            try
+            {
+                while (source.Read(buffer) != 0)
+                    destination.Write(buffer);
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static async Task<byte[]> ZipAsync(string str)
         {
             var bytes = Encoding.UTF8.GetBytes(str);
 
@@ -165,19 +183,45 @@ namespace UStacker.Common
             using var outputStream = new MemoryStream();
             await using (var gZipStream = new GZipStream(outputStream, CompressionMode.Compress))
             {
-                await CopyMemory(sourceStream, gZipStream);
+                await CopyMemoryAsync(sourceStream, gZipStream);
             }
 
             return outputStream.ToArray();
         }
 
-        public static async Task<string> Unzip(byte[] bytes)
+        public static byte[] Zip(string str)
+        {
+            var bytes = Encoding.UTF8.GetBytes(str);
+
+            using var sourceStream = new MemoryStream(bytes);
+            using var outputStream = new MemoryStream();
+            using (var gZipStream = new GZipStream(outputStream, CompressionMode.Compress))
+            {
+                CopyMemory(sourceStream, gZipStream);
+            }
+
+            return outputStream.ToArray();
+        }
+
+        public static async Task<string> UnzipAsync(byte[] bytes)
         {
             using var sourceStream = new MemoryStream(bytes);
             using var outputStream = new MemoryStream();
             await using (var gZipStream = new GZipStream(sourceStream, CompressionMode.Decompress))
             {
-                await CopyMemory(gZipStream, outputStream);
+                await CopyMemoryAsync(gZipStream, outputStream);
+            }
+
+            return Encoding.UTF8.GetString(outputStream.ToArray());
+        }
+        
+        public static string Unzip(byte[] bytes)
+        {
+            using var sourceStream = new MemoryStream(bytes);
+            using var outputStream = new MemoryStream();
+            using (var gZipStream = new GZipStream(sourceStream, CompressionMode.Decompress))
+            {
+                CopyMemory(gZipStream, outputStream);
             }
 
             return Encoding.UTF8.GetString(outputStream.ToArray());
@@ -217,7 +261,7 @@ namespace UStacker.Common
             await using var sourceReader = File.OpenRead(source);
             await using var destinationWriter = File.Create(destination);
 
-            return await CopyMemory(sourceReader, destinationWriter);
+            return await CopyMemoryAsync(sourceReader, destinationWriter);
         }
 
         public static bool CreateDirectoriesRecursively(string path)

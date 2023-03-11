@@ -32,7 +32,7 @@ namespace UStacker.GlobalSettings.BlockSkins
 
         public async Task<bool> TryLoadSpriteAsync()
         {
-            var sourceTexture = await FileHandling.LoadTextureFromUrl(Filename, !LoadFromUrl);
+            var sourceTexture = await FileHandling.LoadTextureFromUrlAsync(Filename, !LoadFromUrl);
             if (sourceTexture is null)
                 return false;
 

@@ -81,7 +81,7 @@ MonoBehaviour:
     <Objective>k__BackingField:
       _gameManagerType: 3
       _customGameManager: 
-      _garbageGeneration: 0
+      _garbageGenerationType: 0
       _customGarbageGeneratorName: 
       _endConditionCount: 40
       _garbageHeight: 10
@@ -92,7 +92,95 @@ MonoBehaviour:
       <ToppingOutIsOkay>k__BackingField: 1
       <StartingLevel>k__BackingField: 8
     <Presentation>k__BackingField:
+      _title: Classic Marathon
       _countdownInterval: 0.65
       _countdownCount: 3
-      <Title>k__BackingField: Classic Marathon
-      <UseCountdown>k__BackingField: 1
+      <DefaultStatCounterGroup>k__BackingField:
+        _name: Classic Marathon
+        _statCounterSos:
+        - {fileID: 11400000, guid: a93c75259ac95fa4c8e35e2570556598, type: 2}
+        - {fileID: 11400000, guid: a9fc146114079ad4698de12de2b720a5, type: 2}
+        - {fileID: 11400000, guid: a059b8164b4204e44b92ef546184abe2, type: 2}
+        - {fileID: 11400000, guid: b8aa3efaa10821544ab1a3937865e458, type: 2}
+        - {fileID: 11400000, guid: 7df7f198474b5174297ea76a062840b6, type: 2}
+        - {fileID: 11400000, guid: 2077419e4bb765a4d9bc5e3f7bbc20fa, type: 2}
+        _statCounters:
+        - Name: Clear type action text
+          Type: 0
+          Filename: 
+          Script: "PieceTypes = {\n\t[\"t\"] = \"T\",\n\t[\"i\"] = \"I\",\n\t[\"o\"]
+            = \"O\",\n\t[\"s\"] = \"S\",\n\t[\"z\"] = \"Z\",\n\t[\"l\"] = \"L\",\n\t[\"j\"]
+            = \"J\"\n}\n\nClearCounts = {\n\t\"Single\",\n\t\"Double\",\n\t\"Triple\",\n\t\"Quad\",\n\t\"Quint\",\n\t\"Hexad\",\n\t\"Heptad\",\n\t\"Octad\",\n\t\"Nonad\",\n\t\"Decad\"\n}\n\nfunction
+            OnPiecePlaced(message)\n\tlocal output = \"\"\n\t\n\tif message.WasSpin
+            or message.WasSpinMini then\n\t\toutput = PieceTypes[message.PieceType]\n\tend\n\tif
+            output == nil then output = \"\" end\n\tif message.WasSpin then\n\t\toutput
+            = output .. \" Spin \"\n\telseif message.WasSpinMini then\n\t\toutput
+            = output .. \" Spin Mini \"\n\tend\n\n\tif message.LinesCleared <= 0
+            then\n\t\tif output == \"\" then\n\t\t\treturn\n\t\tend\n\t\tSetVisibility(1)\n\t\tAnimateVisibility(0,
+            2)\n\t\treturn output\n\tend\n\n\tSetVisibility(1)\n\tAnimateVisibility(0,
+            2)\n\tif message.LinesCleared <= #ClearCounts then\n\t\treturn output
+            .. ClearCounts[message.LinesCleared]\n\telse\n\t\tlocal overflow = message.LinesCleared
+            - #ClearCounts\n\t\treturn output .. ClearCounts[#ClearCounts] .. overflow\n\tend\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
+            {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
+          Position: {x: -10, y: 15}
+          Size: {x: 9, y: 2}
+          UpdateInterval: 0
+        - Name: Level
+          Type: 0
+          Filename: 
+          Script: "Name = \"\"\nCurrent = \"\"\nTotal = \"\"\nLevel = \"0\"\nfunction
+            OnConditionChange(message)\n\tName = message.ConditionName\n\tif Name
+            == nil or Name == \"None\" or Name == \"\" then\n\t\treturn \"\"\n\tend\n\tCurrent
+            = StatUtility:FormatNumber(message.CurrentCount, 0)\n\tTotal = StatUtility:FormatNumber(message.TotalCount,
+            0)\n\treturn FormatOutput()\nend\nfunction OnLevelChange(message)\n\tLevel
+            = message.Level\n\tif Level == nil or Level == \"None\" or Level == \"\"
+            then\n\t\treturn \"\"\n\tend\n\treturn FormatOutput()\nend\nfunction
+            FormatOutput()\n\treturn \"Level \" .. Level .. \"\\n\" .. Current ..
+            \"/\" .. Total .. \" \" .. Name .. \" to next\"\nend\nSetText(\"\")\nreturn
+            {\n\t[\"LevelUpConditionChanged\"] = OnConditionChange,\n\t[\"LevelChanged\"]
+            = OnLevelChange\n}"
+          Position: {x: 0, y: -3}
+          Size: {x: 10, y: 3}
+          UpdateInterval: 0.01
+        - Name: Lines cleared
+          Type: 0
+          Filename: 
+          Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+            then\n\t\treturn \"Lines cleared: 0\"\n\tend\nend\nfunction OnPiecePlaced(message)\n\treturn
+            \"Lines cleared: \" .. Stats.LinesCleared\nend\nSetText(\"Lines cleared:
+            0\")\nreturn {\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStateChanged\"]
+            = Reset\n}"
+          Position: {x: -10, y: 3}
+          Size: {x: 9, y: 2}
+          UpdateInterval: 0
+        - Name: Pieces
+          Type: 0
+          Filename: 
+          Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+            then\n\t\treturn FormatOutput()\n\tend\nend\n\nfunction FormatOutput()\r\n\tlocal
+            pps = Stats.PiecesPerSecond\r\n\tlocal piecesPlaced = Stats.PiecesPlaced\r\n\treturn
+            \"Pieces: \" .. piecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
+            {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] =
+            FormatOutput,\n\t[\"GameStateChanged\"] = Reset\n}"
+          Position: {x: -9, y: 6}
+          Size: {x: 8, y: 3}
+          UpdateInterval: 0.1
+        - Name: Score
+          Type: 0
+          Filename: 
+          Script: "function OnUpdated()\n\tlocal spp = Stats.Score / Stats.PiecesPlaced\n\treturn
+            \"Score: \" .. Stats.Score .. \"\\n\" .. StatUtility:FormatNumber(spp,
+            0) .. \" per piece\"\nend\nSetText(\"Score: 0\\n0 per piece\")\nreturn
+            {\n\t[\"ScoreChanged\"] = OnUpdated,\n\t[\"PiecePlaced\"] = OnUpdated\n}"
+          Position: {x: -10, y: 9}
+          Size: {x: 9, y: 3}
+          UpdateInterval: 0
+        - Name: Stopwatch
+          Type: 0
+          Filename: 
+          Script: "function OnUpdated()\n\treturn \"Time: \" .. StatUtility:GetFormattedTime()\nend\nSetText(\"Time:
+            \" .. StatUtility:FormatTime(0))\nreturn {\n\t[\"CounterUpdated\"] =
+            OnUpdated\n}"
+          Position: {x: -9, y: 0}
+          Size: {x: 8, y: 2}
+          UpdateInterval: 0.01

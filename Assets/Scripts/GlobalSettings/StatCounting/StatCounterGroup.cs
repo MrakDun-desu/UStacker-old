@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UStacker.Common;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -10,18 +9,13 @@ namespace UStacker.GlobalSettings.StatCounting
     public class StatCounterGroup : ISerializationCallbackReceiver
     {
         [JsonIgnore] [SerializeField] private string _name;
-        [JsonIgnore] [SerializeField] private StringReferenceSO _gameType;
         [JsonIgnore] [SerializeField] private List<StatCounterSO> _statCounterSos = new();
         [JsonIgnore] [SerializeField] private List<StatCounterRecord> _statCounters = new();
 
         public string Name
         {
-            get => _gameType == null ? _name : _gameType.Value;
-            set
-            {
-                _gameType = null;
-                _name = value;
-            }
+            get => _name;
+            set => _name = value;
         }
 
         public List<StatCounterRecord> StatCounters => _statCounters;
@@ -60,7 +54,7 @@ namespace UStacker.GlobalSettings.StatCounting
         {
             var output = new StatCounterGroup
             {
-                _name = _name, _gameType = _gameType
+                _name = _name
             };
 
             foreach (var counter in StatCounters) output.StatCounters.Add(counter.Copy());

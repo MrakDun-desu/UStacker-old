@@ -112,7 +112,7 @@ namespace UStacker.GlobalSettings.Backgrounds
             switch (FileHandling.GetFileType(path))
             {
                 case FileType.Texture:
-                    var newBackground = await FileHandling.LoadTextureFromUrl(path);
+                    var newBackground = await FileHandling.LoadTextureFromUrlAsync(path);
                     return new BackgroundRecord(newBackground);
                 case FileType.Video:
                     return new BackgroundRecord(path);

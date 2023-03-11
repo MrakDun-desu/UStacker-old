@@ -160,7 +160,7 @@ namespace UStacker.GlobalSettings.BlockSkins
         {
             var actualFilename = isFile ? Path.Combine(path, filename) : filename;
 
-            var texture = await FileHandling.LoadTextureFromUrl(actualFilename, isFile);
+            var texture = await FileHandling.LoadTextureFromUrlAsync(actualFilename, isFile);
 
             if (texture is not null)
                 textures[filename] = texture;

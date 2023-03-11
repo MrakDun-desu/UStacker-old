@@ -3859,8 +3859,6 @@ MonoBehaviour:
   _ghostPiece: {fileID: 2647458974245512054}
   _timer: {fileID: 139450738}
   _pieceHolderPrefab: {fileID: 8930354990229623398, guid: 1155493e35a2ad54faf7c922250b2086, type: 3}
-  _srsRotationSystemSo: {fileID: 11400000, guid: b743b260e26929048b5fc66f1375029b, type: 2}
-  _srsPlusRotationSystemSo: {fileID: 11400000, guid: a8fb02e35ee83f24f82981756a71a81c, type: 2}
   <PlacementsList>k__BackingField: []
 --- !u!4 &465133846
 Transform:
@@ -16880,6 +16878,9 @@ MonoBehaviour:
   - {fileID: 8141839149409263873}
   - {fileID: 8141839149409263872}
   - {fileID: 1685487600}
+  - {fileID: 557688170}
+  _srsRotationSystemSo: {fileID: 11400000, guid: b743b260e26929048b5fc66f1375029b, type: 2}
+  _srsPlusRotationSystemSo: {fileID: 11400000, guid: a8fb02e35ee83f24f82981756a71a81c, type: 2}
 --- !u!1001 &8051270337060656628
 PrefabInstance:
   m_ObjectHideFlags: 0

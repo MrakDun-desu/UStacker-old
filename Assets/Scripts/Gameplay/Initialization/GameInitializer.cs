@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UStacker.GameSettings;
+using UStacker.GameSettings.Enums;
 using UStacker.GlobalSettings;
 using UStacker.GlobalSettings.Music;
 
@@ -10,6 +11,8 @@ namespace UStacker.Gameplay.Initialization
     {
         [SerializeField] private MusicPlayerFinder _playerFinder;
         [SerializeField] private GameObject[] _gameSettingsDependencies = Array.Empty<GameObject>();
+        [SerializeField] private RotationSystemSO _srsRotationSystemSo;
+        [SerializeField] private RotationSystemSO _srsPlusRotationSystemSo;
 
         private static GameSettingsSO.SettingsContainer _gameSettings;
         private static GameReplay _replay;
@@ -27,6 +30,9 @@ namespace UStacker.Gameplay.Initialization
                     GameSettings.Presentation.CountdownInterval = interval;
                 if (overrides.StartingLevel is { } startingLevel)
                     GameSettings.Objective.StartingLevel = startingLevel;
+                
+                if (!GameSettings.Controls.OverrideHandling && _replay is null)
+                    GameSettings.Controls.Handling = AppSettings.Handling with { };
             }
         }
 
@@ -45,6 +51,16 @@ namespace UStacker.Gameplay.Initialization
 
         private void Awake()
         {
+            GameSettings.Controls.ActiveRotationSystem =
+            GameSettings.Controls.RotationSystemType switch
+            {
+                RotationSystemType.SRS => _srsRotationSystemSo.RotationSystem,
+                RotationSystemType.SRSPlus => _srsPlusRotationSystemSo.RotationSystem,
+                RotationSystemType.None => new RotationSystem(),
+                RotationSystemType.Custom => GameSettings.Controls.ActiveRotationSystem,
+                _ => new RotationSystem()
+            };
+
             _playerFinder.GameType = GameType;
             foreach (var dependantObject in _gameSettingsDependencies)
             {

@@ -79,7 +79,7 @@ namespace UStacker.Gameplay
                 Directory.CreateDirectory(directory);
 
             var serializedReplay = JsonConvert.SerializeObject(this, StaticSettings.ReplaySerializerSettings);
-            await File.WriteAllBytesAsync(savePath, await FileHandling.Zip(serializedReplay));
+            await File.WriteAllBytesAsync(savePath, await FileHandling.ZipAsync(serializedReplay));
 
             AlertDisplayer.Instance.ShowAlert(new Alert(
                 "Replay saved!",
@@ -92,7 +92,7 @@ namespace UStacker.Gameplay
             (bool, GameReplay) output = (false, null);
             if (!File.Exists(path)) return output;
 
-            var replayJson = await FileHandling.Unzip(await File.ReadAllBytesAsync(path));
+            var replayJson = await FileHandling.UnzipAsync(await File.ReadAllBytesAsync(path));
 
             try
             {
