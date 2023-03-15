@@ -116,7 +116,7 @@ namespace UStacker.GlobalSettings.Changers
             Value.Name = newValue;
         }
 
-        private void AddStatCounter(StatCounterRecord newCounter, bool addToValue = false)
+        private StatCounterChanger AddStatCounter(StatCounterRecord newCounter, bool addToValue = false)
         {
             var newCounterChanger = Instantiate(_counterChangerPrefab, _counterChangersContainer);
             newCounterChanger.Removed += RemoveStatCounter;
@@ -134,6 +134,8 @@ namespace UStacker.GlobalSettings.Changers
 
             if (addToValue)
                 Value.StatCounters.Add(newCounter);
+
+            return newCounterChanger;
         }
 
         private void RemoveStatCounter(StatCounterChanger changer)
@@ -162,7 +164,11 @@ namespace UStacker.GlobalSettings.Changers
 
         private void OnStatCounterAdded()
         {
-            AddStatCounter(new StatCounterRecord(), true);
+            var newCounterChanger = AddStatCounter(new StatCounterRecord(), true);
+            // invoking on type picked so the user doesn't need to pick from dropdown
+            // to actually set the counter type
+            newCounterChanger.OnTypePicked(0);
+            
             if (_isMinimized)
                 OnMinimize();
         }

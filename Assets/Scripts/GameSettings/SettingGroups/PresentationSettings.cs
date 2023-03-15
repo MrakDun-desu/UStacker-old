@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 using UnityEngine;
 using UStacker.GlobalSettings.StatCounting;
 
@@ -11,7 +12,7 @@ namespace UStacker.GameSettings.SettingGroups
         [SerializeField] private string _title = "Custom game";
         [SerializeField] private float _countdownInterval = .65f;
         [SerializeField] private uint _countdownCount = 3;
-        
+
         public string Title
         {
             get => _title;
@@ -38,9 +39,8 @@ namespace UStacker.GameSettings.SettingGroups
             set => _countdownCount = Math.Clamp(value, 1, 10);
         }
 
-        [field: SerializeField]
-        public StatCounterGroup DefaultStatCounterGroup { get; set; }
-        
-        public Guid? StatCounterGroupOverrideId { get; set; }
+        [field: SerializeField] public StatCounterGroup DefaultStatCounterGroup { get; set; } = new();
+
+        [JsonIgnore] public Guid? StatCounterGroupOverrideId { get; set; }
     }
 }

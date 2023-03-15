@@ -1003,7 +1003,7 @@ MonoBehaviour:
   _openGameButton: {fileID: 1161057088}
   _overrideChanger: {fileID: 6705578015730411975}
   _musicOptionChanger: {fileID: 6705578015730411974}
-  _statCountingGroupChanger: {fileID: 6705578015730411973}
+  _statCounterGroupOverrideChanger: {fileID: 6705578015730411973}
   _startingLevelChanger: {fileID: 6705578015730411972}
   _gameTitle: {fileID: 775193077}
   _gameDescription: {fileID: 752797066}
@@ -1131,10 +1131,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3308765352210650168, guid: ec02a401ab5546943b3ba3550c8bc597, type: 3}
-      propertyPath: m_text
-      value: Starting level
-      objectReference: {fileID: 0}
     - target: {fileID: 3578038601268008080, guid: ec02a401ab5546943b3ba3550c8bc597, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1174,10 +1170,6 @@ PrefabInstance:
     - target: {fileID: 3578038602370669357, guid: ec02a401ab5546943b3ba3550c8bc597, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837008494917785817, guid: ec02a401ab5546943b3ba3550c8bc597, type: 3}
-      propertyPath: m_Name
-      value: StatCountingGroupChanger
       objectReference: {fileID: 0}
     - target: {fileID: 6253793698477244525, guid: ec02a401ab5546943b3ba3550c8bc597, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1287,14 +1279,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: OverridesChanger
       objectReference: {fileID: 0}
-    - target: {fileID: 6705578015183685234, guid: ec02a401ab5546943b3ba3550c8bc597, type: 3}
-      propertyPath: _changedOverride
-      value: 
-      objectReference: {fileID: 11400000, guid: 2eac9bfd32fcf27439d78c2ced67144e, type: 2}
-    - target: {fileID: 6705578015366146220, guid: ec02a401ab5546943b3ba3550c8bc597, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6705578015366146227, guid: ec02a401ab5546943b3ba3550c8bc597, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1316,13 +1300,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 7976417072925347123, guid: ec02a401ab5546943b3ba3550c8bc597, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4501789439661490835, guid: ec02a401ab5546943b3ba3550c8bc597, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6705578015730411977}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec02a401ab5546943b3ba3550c8bc597, type: 3}
 --- !u!1 &6705578015730411972 stripped
 GameObject:
@@ -1362,27 +1342,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b340497df0cb48f0a5485fc07c4aaafb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &6705578015730411976 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4501789439661490835, guid: ec02a401ab5546943b3ba3550c8bc597, type: 3}
-  m_PrefabInstance: {fileID: 6705578015730411971}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6705578015730411977
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6705578015730411976}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cc1865ed61c49e9a8a6b7510c04638b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _tooltipText: 'Your preferred starting level. The game manager can choose to ignore
-
-    this
-    if set incorrectly'
 --- !u!1001 &8338311041139719455
 PrefabInstance:
   m_ObjectHideFlags: 0

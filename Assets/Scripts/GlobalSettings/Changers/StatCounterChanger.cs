@@ -118,7 +118,7 @@ namespace UStacker.GlobalSettings.Changers
             _removeButton.onClick.AddListener(() => Removed?.Invoke(this));
         }
 
-        private void OnTypePicked(int newValue)
+        public void OnTypePicked(int newValue)
         {
             var pickedValue = _premadeCounters[newValue].Value;
 

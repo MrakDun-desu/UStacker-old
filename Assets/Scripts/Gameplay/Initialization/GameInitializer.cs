@@ -31,6 +31,8 @@ namespace UStacker.Gameplay.Initialization
                 if (overrides.StartingLevel is { } startingLevel)
                     GameSettings.Objective.StartingLevel = startingLevel;
                 
+                GameSettings.Presentation.StatCounterGroupOverrideId = overrides.StatCounterGroupId;
+                
                 if (!GameSettings.Controls.OverrideHandling && _replay is null)
                     GameSettings.Controls.Handling = AppSettings.Handling with { };
             }

@@ -6,6 +6,7 @@ using UStacker.GlobalSettings.Changers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UStacker.Gameplay.GameStateManagement;
 
@@ -17,13 +18,13 @@ namespace UStacker.Gameplay
         [SerializeField] private Button _openReplayButton;
         [SerializeField] private TMP_InputField _replayFilename;
         [SerializeField] private MusicOptionChanger _musicOptionChanger;
-        [SerializeField] private StatCountingGroupChanger _statCountingGroupChanger;
+        [FormerlySerializedAs("_statCountingGroupChanger")] [SerializeField] private StatCounterGroupOverrideChanger _statCounterGroupOverrideChanger;
 
         private void Awake()
         {
             _openReplayButton.onClick.AddListener(OpenReplay);
             _musicOptionChanger.GameTypeStr = _replayGameType;
-            _statCountingGroupChanger.GameTypeStr = _replayGameType;
+            _statCounterGroupOverrideChanger.GameTypeStr = _replayGameType;
         }
 
         private void OpenReplay()
