@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace UStacker.Common.UI
 {
-    public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
     {
         [TextArea(5, 30)][SerializeField] private string _tooltipText = string.Empty;
         private const float WAIT_SECONDS = 0.5f;
@@ -25,7 +25,7 @@ namespace UStacker.Common.UI
                 return;
             
             _displayCoroutine = StartCoroutine(DisplayCoroutine());
-            Tooltip.CurrentUser = gameObject;
+            Tooltip.CurrentUser = this;
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -35,7 +35,7 @@ namespace UStacker.Common.UI
 
         private void HideTooltip()
         {
-            if (string.IsNullOrEmpty(_tooltipText) || Tooltip.CurrentUser != gameObject)
+            if (string.IsNullOrEmpty(_tooltipText) || Tooltip.CurrentUser != this)
                 return;
             
             if (Tooltip.Instance != null)
@@ -44,6 +44,11 @@ namespace UStacker.Common.UI
         }
 
         private void OnDisable()
+        {
+            HideTooltip();
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
         {
             HideTooltip();
         }
