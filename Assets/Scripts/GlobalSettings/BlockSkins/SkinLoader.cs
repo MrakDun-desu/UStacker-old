@@ -85,16 +85,22 @@ namespace UStacker.GlobalSettings.BlockSkins
         {
             if (skinRecord.IsConnected)
             {
-                foreach (var connectedSprite in skinRecord.ConnectedSprites)
+                var availableKeys = skinRecord.ConnectedSprites.Keys;
+                foreach (var key in availableKeys)
                 {
-                    foreach (var spriteRecord in connectedSprite.Sprites)
+                    var spriteRecords = skinRecord.ConnectedSprites[key];
+                    for (var i = 0; i < spriteRecords.Count; i++)
                     {
-                        if (!spriteRecord.TryLoadSpriteFromDict(existingTextures))
-                            connectedSprite.Sprites.Remove(spriteRecord);
+                        if (spriteRecords[i].TryLoadSpriteFromDict(existingTextures)) continue;
+                        
+                        // if we couldn't load the sprite record, we remove it from the collection
+                        spriteRecords.RemoveAt(i);
+                        i--;
                     }
 
-                    if (connectedSprite.Sprites.Count == 0)
-                        skinRecord.ConnectedSprites.Remove(connectedSprite);
+                    // if there were no valid sprites, we remove the whole collection
+                    if (spriteRecords.Count == 0)
+                        skinRecord.ConnectedSprites.Remove(key);
                 }
 
                 if (skinRecord.ConnectedSprites.Count == 0)
@@ -124,7 +130,7 @@ namespace UStacker.GlobalSettings.BlockSkins
                 if (skinRecord.IsConnected)
                 {
                     var spriteRecords = skinRecords
-                        .SelectMany(sr => sr.ConnectedSprites.SelectMany(cr => cr.Sprites));
+                        .SelectMany(sr => sr.ConnectedSprites.Values.SelectMany(sprite => sprite));
 
                     foreach (var spriteRecord in spriteRecords)
                     {

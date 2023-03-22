@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UStacker.GlobalSettings.Enums;
 
 namespace UStacker.GlobalSettings.BlockSkins
 {
@@ -16,9 +17,10 @@ namespace UStacker.GlobalSettings.BlockSkins
         };
         public int Layer;
         public bool IsConnected;
+        public bool ConnectWithBoard;
         public bool RotateWithPiece;
         public float AnimationFps = 60f;
         public List<SpriteRecord> Sprites = new();
-        public List<ConnectedSprite> ConnectedSprites = new();
+        public Dictionary<Edges, List<SpriteRecord>> ConnectedSprites = new();
     }
 }

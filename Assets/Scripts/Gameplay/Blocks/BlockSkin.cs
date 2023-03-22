@@ -54,7 +54,7 @@ namespace UStacker.Gameplay.Blocks
                 StopCoroutine(_animationCoroutine);
                 _animationCoroutine = null;
             }
-            
+
             switch (_currentSprites.Count)
             {
                 case 0:
@@ -159,10 +159,14 @@ namespace UStacker.Gameplay.Blocks
             return myPos + (myTransform.right * (pos.x * boardScale.x) + myTransform.up * (pos.y * boardScale.y));
         }
 
-        private bool MyPieceInPos(Vector2Int pos)
+        private bool ConnectedBlockInPos(Vector2Int pos)
         {
             var checkedPos = RelativePos(pos);
-            return BlockCollection.BlockPositions.Any(worldPos => AreClose(worldPos, checkedPos));
+            var traversedBlocks = BlockCollection.BlockPositions;
+            if (SkinRecord.ConnectWithBoard)
+                traversedBlocks = traversedBlocks.Concat(Board.BlockPositions);
+
+            return traversedBlocks.Any(worldPos => AreClose(worldPos, checkedPos));
         }
 
         private bool AreClose(Vector3 pos1, Vector3 pos2)
@@ -204,30 +208,29 @@ namespace UStacker.Gameplay.Blocks
         private void PickConnectedPart()
         {
             var edges = Edges.None;
-            if (!MyPieceInPos(Vector2Int.right))
+            if (!ConnectedBlockInPos(Vector2Int.right))
                 edges |= Edges.Right;
-            if (!MyPieceInPos(Vector2Int.left))
+            if (!ConnectedBlockInPos(Vector2Int.left))
                 edges |= Edges.Left;
-            if (!MyPieceInPos(Vector2Int.up))
+            if (!ConnectedBlockInPos(Vector2Int.up))
                 edges |= Edges.Top;
-            if (!MyPieceInPos(Vector2Int.down))
+            if (!ConnectedBlockInPos(Vector2Int.down))
                 edges |= Edges.Bottom;
 
-            if (!MyPieceInPos(new Vector2Int(1, 1)) && MyPieceInPos(Vector2Int.up) && MyPieceInPos(Vector2Int.right))
+            if (!ConnectedBlockInPos(new Vector2Int(1, 1)) && ConnectedBlockInPos(Vector2Int.up) && ConnectedBlockInPos(Vector2Int.right))
                 edges |= Edges.TopRight;
-            if (!MyPieceInPos(new Vector2Int(-1, 1)) && MyPieceInPos(Vector2Int.up) && MyPieceInPos(Vector2Int.left))
+            if (!ConnectedBlockInPos(new Vector2Int(-1, 1)) && ConnectedBlockInPos(Vector2Int.up) && ConnectedBlockInPos(Vector2Int.left))
                 edges |= Edges.TopLeft;
-            if (!MyPieceInPos(new Vector2Int(1, -1)) && MyPieceInPos(Vector2Int.down) && MyPieceInPos(Vector2Int.right))
+            if (!ConnectedBlockInPos(new Vector2Int(1, -1)) && ConnectedBlockInPos(Vector2Int.down) && ConnectedBlockInPos(Vector2Int.right))
                 edges |= Edges.BottomRight;
-            if (!MyPieceInPos(new Vector2Int(-1, -1)) && MyPieceInPos(Vector2Int.down) && MyPieceInPos(Vector2Int.left))
+            if (!ConnectedBlockInPos(new Vector2Int(-1, -1)) && ConnectedBlockInPos(Vector2Int.down) && ConnectedBlockInPos(Vector2Int.left))
                 edges |= Edges.BottomLeft;
 
-            var connectedSprite = SkinRecord.ConnectedSprites.Find(sprite => sprite.Edges == edges) ??
-                                  SkinRecord.ConnectedSprites.Find(sprite => sprite.Edges == Edges.None);
-            if (connectedSprite is null)
-                return;
+            if (!SkinRecord.ConnectedSprites.TryGetValue(edges, out var newSprites))
+                if (!SkinRecord.ConnectedSprites.TryGetValue(Edges.None, out newSprites))
+                    return;
 
-            _currentSprites = connectedSprite.Sprites;
+            _currentSprites = newSprites;
             HandleSpritesChanged();
         }
 

@@ -41,6 +41,10 @@ namespace UStacker.Gameplay
         [SerializeField] private UnityEvent<double> ToppedOut;
 
         private readonly List<ClearableBlock[]> Blocks = new();
+        
+        public IEnumerable<Vector3> BlockPositions =>
+            Blocks.SelectMany(tf => tf.Select(block => block.transform.position));
+
         private bool _backToBackActive;
         private bool _comboActive;
         private uint _currentBackToBack;
