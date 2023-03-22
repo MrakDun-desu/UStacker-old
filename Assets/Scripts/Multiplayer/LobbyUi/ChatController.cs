@@ -51,7 +51,7 @@ namespace UStacker.Multiplayer.LobbyUi
             if (message.Length > 250)
             {
                 message = message[..250];
-                AlertDisplayer.Instance.ShowAlert(new Alert(
+                AlertDisplayer.ShowAlert(new Alert(
                     "Chat message shortened",
                     "Your message exceeded the limit of 250 characters.", 
                     AlertType.Info));

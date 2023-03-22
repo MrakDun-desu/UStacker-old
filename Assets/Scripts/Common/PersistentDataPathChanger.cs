@@ -25,7 +25,7 @@ namespace UStacker.Common
                     "Data path couldn't be changed. Some of the files might have been copied, but the operation couldn't finish.",
                     AlertType.Error);
 
-            AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.ShowAlert(shownAlert);
         }
     }
 }

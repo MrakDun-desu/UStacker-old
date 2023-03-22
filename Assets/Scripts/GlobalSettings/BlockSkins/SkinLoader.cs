@@ -39,7 +39,7 @@ namespace UStacker.GlobalSettings.BlockSkins
                 
                 SkinChanged?.Invoke();
                 if (showAlert)
-                    AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                    AlertDisplayer.ShowAlert(defaultAlert);
                 return;
             }
 
@@ -47,7 +47,7 @@ namespace UStacker.GlobalSettings.BlockSkins
             {
                 SkinChanged?.Invoke();
                 if (showAlert)
-                    AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                    AlertDisplayer.ShowAlert(defaultAlert);
                 return;
             }
 
@@ -63,7 +63,7 @@ namespace UStacker.GlobalSettings.BlockSkins
                     "Skin has been successfully loaded and changed",
                     AlertType.Success
                 );
-            AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.ShowAlert(shownAlert);
         }
 
         private static async Task GetSkinAsync(string path)

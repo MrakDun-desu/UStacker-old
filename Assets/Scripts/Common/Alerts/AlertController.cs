@@ -4,6 +4,7 @@ using UStacker.Common.Extensions;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Pool;
 using UnityEngine.UI;
 
 namespace UStacker.Common.Alerts
@@ -23,15 +24,23 @@ namespace UStacker.Common.Alerts
         [SerializeField] private float _movement = 200f;
         [SerializeField] private float _appearTime = .5f;
 
-        private bool _destroyedFlag;
         private bool _removeStarted;
+        private bool _activeInPool;
         private Image[] _controlledImages = Array.Empty<Image>();
         private TMP_Text[] _controlledTexts = Array.Empty<TMP_Text>();
+        
+        public ObjectPool<AlertController> SourcePool { get; set; }
 
-        public void Initialize(Alert alert)
+        private void Awake()
         {
             _controlledImages = GetComponentsInChildren<Image>();
             _controlledTexts = GetComponentsInChildren<TMP_Text>();
+        }
+
+        public void Initialize(Alert alert)
+        {
+            _removeStarted = false;
+            _activeInPool = true;
             _backgroundImage.sprite = alert.AlertType switch
             {
                 AlertType.Success => _successSprite,
@@ -43,6 +52,16 @@ namespace UStacker.Common.Alerts
 
             _title.text = alert.Title;
             _text.text = alert.Text;
+            
+            _text.ForceMeshUpdate();
+            var newTextSize = new Vector2(_text.rectTransform.sizeDelta.x, _text.preferredHeight);
+            var newContainerSize = newTextSize.y != 0 ? newTextSize : _title.rectTransform.sizeDelta;
+
+            _controlledTransform.localPosition = new Vector3();
+            _text.rectTransform.sizeDelta = newTextSize;
+            _controlledTransform.sizeDelta = newContainerSize;
+            ((RectTransform) transform).sizeDelta = newContainerSize;
+            
             _closeButton.onClick.AddListener(RemoveAlert);
             SetAlpha(0);
             DOTween.To(GetAlpha, SetAlpha, 1, _appearTime).SetEase(Ease.Linear);
@@ -62,17 +81,15 @@ namespace UStacker.Common.Alerts
             _controlledTransform.DOMoveY(_movement, _appearTime).SetRelative(true)
                 .OnComplete(() =>
                 {
-                    _destroyedFlag = true;
-                    Destroy(gameObject);
+                    if (!_activeInPool) return;
+                    SourcePool.Release(this);
+                    _activeInPool = false;
                 });
             DOTween.To(GetAlpha, SetAlpha, 0, _appearTime).SetEase(Ease.Linear);
         }
 
         private void SetAlpha(float value)
         {
-            if (_destroyedFlag)
-                return;
-            
             foreach (var image in _controlledImages)
                 image.color = image.color.WithAlpha(value);
             foreach (var text in _controlledTexts)
@@ -81,9 +98,6 @@ namespace UStacker.Common.Alerts
 
         private float GetAlpha()
         {
-            if (_destroyedFlag)
-                return 0;
-            
             return _controlledImages[0].color.a;
         }
     }

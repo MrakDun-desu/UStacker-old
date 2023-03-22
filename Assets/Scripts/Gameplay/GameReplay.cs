@@ -81,7 +81,7 @@ namespace UStacker.Gameplay
             var serializedReplay = JsonConvert.SerializeObject(this, StaticSettings.ReplaySerializerSettings);
             await File.WriteAllBytesAsync(savePath, await FileHandling.ZipAsync(serializedReplay));
 
-            AlertDisplayer.Instance.ShowAlert(new Alert(
+            AlertDisplayer.ShowAlert(new Alert(
                 "Replay saved!",
                 $"Game replay has been saved into a file {savePath}",
                 AlertType.Success));

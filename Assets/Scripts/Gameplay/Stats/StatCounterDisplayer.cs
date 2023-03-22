@@ -112,7 +112,7 @@ namespace UStacker.Gameplay.Stats
                 }
                 catch (LuaException ex)
                 {
-                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                    AlertDisplayer.ShowAlert(new Alert(
                         "Error executing stat counter script!",
                         $"Error executing stat counter script with name {_statCounter.Name}.\nLua error: {ex.Message}",
                         AlertType.Error
@@ -200,7 +200,7 @@ namespace UStacker.Gameplay.Stats
             }
             catch (LuaException ex)
             {
-                AlertDisplayer.Instance.ShowAlert(new Alert(
+                AlertDisplayer.ShowAlert(new Alert(
                     "Error reading stat counter script!",
                     $"Stat {_statCounter.Name} won't be displayed.\nLua error: {ex.Message}",
                     AlertType.Error
@@ -215,7 +215,7 @@ namespace UStacker.Gameplay.Stats
             {
                 if (eventNameObj is not string eventName)
                 {
-                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                    AlertDisplayer.ShowAlert(new Alert(
                         "Invalid event name!",
                         $"Stat counter {_statCounter.Name} tried registering an invalid event {eventNameObj}",
                         AlertType.Warning));
@@ -224,7 +224,7 @@ namespace UStacker.Gameplay.Stats
 
                 if (events[eventNameObj] is not LuaFunction function)
                 {
-                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                    AlertDisplayer.ShowAlert(new Alert(
                         "Invalid event handler!",
                         $"Stat counter {_statCounter.Name} tried registering an invalid handler for event {eventName}",
                         AlertType.Warning));
@@ -235,7 +235,7 @@ namespace UStacker.Gameplay.Stats
                 
                 if (!RegisterableMessages.Default.ContainsKey(eventName))
                 {
-                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                    AlertDisplayer.ShowAlert(new Alert(
                         "Invalid event name!",
                         $"Stat counter {_statCounter.Name} tried registering an invalid event {eventName}",
                         AlertType.Warning));
@@ -253,7 +253,7 @@ namespace UStacker.Gameplay.Stats
                     }
                     catch (LuaException ex)
                     {
-                        AlertDisplayer.Instance.ShowAlert(new Alert(
+                        AlertDisplayer.ShowAlert(new Alert(
                             "Error executing stat counter script!",
                             $"Error executing stat counter script with name {_statCounter.Name}.\nLua error: {ex.Message}",
                             AlertType.Error

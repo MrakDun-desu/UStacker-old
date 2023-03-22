@@ -87,13 +87,13 @@ namespace UStacker.Multiplayer.Settings
         {
             if (_localPlayer is null || !_localPlayer.HasHostPrivileges)
             {
-                AlertDisplayer.Instance.ShowAlert(new Alert("Permission denied!", AlertType.Warning));
+                AlertDisplayer.ShowAlert(new Alert("Permission denied!", AlertType.Warning));
                 return;
             }
             _startGameButton.interactable = false;
             SettingsSynchronized = false;
             SynchronizeSettings(Settings);
-            AlertDisplayer.Instance.ShowAlert(new Alert("Settings saved!", AlertType.Success));
+            AlertDisplayer.ShowAlert(new Alert("Settings saved!", AlertType.Success));
         }
 
         [ServerRpc(RequireOwnership = false)]

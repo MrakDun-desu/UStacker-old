@@ -115,7 +115,7 @@ namespace UStacker.Multiplayer
         // ReSharper disable once UnusedParameter.Local
         private void GameStartDeclined(NetworkConnection _, string reason)
         {
-            AlertDisplayer.Instance.ShowAlert(new Alert("Couldn't start game!", reason, AlertType.Warning), false);
+            AlertDisplayer.ShowAlert(new Alert("Couldn't start game!", reason, AlertType.Warning), false);
         }
 
         [ObserversRpc(RunLocally = true)]

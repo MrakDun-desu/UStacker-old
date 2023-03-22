@@ -46,7 +46,7 @@ namespace UStacker.GlobalSettings.Backgrounds
 
                 BackgroundPackChanged?.Invoke();
                 if (showAlert)
-                    AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                    AlertDisplayer.ShowAlert(defaultAlert);
                 return;
             }
 
@@ -54,7 +54,7 @@ namespace UStacker.GlobalSettings.Backgrounds
             {
                 BackgroundPackChanged?.Invoke();
                 if (showAlert)
-                    AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                    AlertDisplayer.ShowAlert(defaultAlert);
                 return;
             }
 
@@ -74,7 +74,7 @@ namespace UStacker.GlobalSettings.Backgrounds
                     "Background pack has been successfully loaded and changed",
                     AlertType.Success
                 );
-            AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.ShowAlert(shownAlert);
         }
 
         private static async Task HandleBackgroundLoadAsync(string path)

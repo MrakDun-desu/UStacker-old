@@ -44,7 +44,7 @@ namespace UStacker.GlobalSettings.Music
                 }
                 SoundPackChanged?.Invoke();
                 if (showAlert)
-                    AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                    AlertDisplayer.ShowAlert(defaultAlert);
                 return;
             }
 
@@ -52,7 +52,7 @@ namespace UStacker.GlobalSettings.Music
             {
                 SoundPackChanged?.Invoke();
                 if (showAlert)
-                    AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                    AlertDisplayer.ShowAlert(defaultAlert);
                 return;
             }
             var taskList = new List<Task>
@@ -72,7 +72,7 @@ namespace UStacker.GlobalSettings.Music
                     "Sound pack has been successfully loaded and changed",
                     AlertType.Success
                 );
-            AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.ShowAlert(shownAlert);
         }
 
         private static async Task LoadSoundEffectsAsync(string path)

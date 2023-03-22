@@ -37,7 +37,7 @@ namespace UStacker.Gameplay
             var (replayValid, replay) = await GameReplay.TryLoad(_replayFilename.text);
             if (!replayValid)
             {
-                AlertDisplayer.Instance.ShowAlert(new Alert(
+                AlertDisplayer.ShowAlert(new Alert(
                     "Couldn't load replay!",
                     "Replay either couldn't be found or was in invalid format",
                     AlertType.Error));

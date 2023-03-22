@@ -87,7 +87,7 @@ namespace UStacker.GameSettings.SettingGroups
                     $"Rotation system {CustomRotationSystem} couldn't be found.",
                     AlertType.Error);
 
-            AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.ShowAlert(shownAlert);
         }
     }
 }

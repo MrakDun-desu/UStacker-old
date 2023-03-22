@@ -151,7 +151,7 @@ namespace UStacker.Multiplayer
         [TargetRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void DisplayRoomFullWarning(NetworkConnection _)
-            => AlertDisplayer.Instance.ShowAlert(new Alert("Room is full!", string.Empty, AlertType.Warning));
+            => AlertDisplayer.ShowAlert(new Alert("Room is full!", string.Empty, AlertType.Warning));
 
         // ReSharper restore UnusedParameter.Local
         

@@ -117,7 +117,7 @@ namespace UStacker.GameSettings.SettingGroups
                     $"Garbage script {CustomGarbageScriptName} couldn't be found.",
                     AlertType.Error);
 
-            AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.ShowAlert(shownAlert);
         }
 
         private bool TryReloadGameManagerScript()
@@ -147,7 +147,7 @@ namespace UStacker.GameSettings.SettingGroups
                     $"Game manager {CustomGameManager} couldn't be found.",
                     AlertType.Error);
 
-            AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.ShowAlert(shownAlert);
         }
     }
 }

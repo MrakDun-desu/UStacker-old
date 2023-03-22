@@ -75,7 +75,7 @@ namespace UStacker.Gameplay.SoundEffects
             }
             catch (LuaException ex)
             {
-                AlertDisplayer.Instance.ShowAlert(new Alert(
+                AlertDisplayer.ShowAlert(new Alert(
                     "Error reading sound effects script!",
                     $"Switching to default sound effects.\nLua error: {ex.Message}",
                     AlertType.Error
@@ -89,7 +89,7 @@ namespace UStacker.Gameplay.SoundEffects
             {
                 if (eventNameObj is not string eventName)
                 {
-                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                    AlertDisplayer.ShowAlert(new Alert(
                         "Invalid event name!",
                         $"Custom sound effects script tried registering an invalid event {eventNameObj}",
                         AlertType.Warning));
@@ -98,7 +98,7 @@ namespace UStacker.Gameplay.SoundEffects
 
                 if (events[eventNameObj] is not LuaFunction function)
                 {
-                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                    AlertDisplayer.ShowAlert(new Alert(
                         "Invalid event handler!",
                         $"Custom sound effects script tried registering an invalid handler for event {eventName}",
                         AlertType.Warning));
@@ -107,7 +107,7 @@ namespace UStacker.Gameplay.SoundEffects
 
                 if (!RegisterableMessages.Default.ContainsKey(eventName))
                 {
-                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                    AlertDisplayer.ShowAlert(new Alert(
                         "Invalid event name!",
                         $"Custom sound effects script tried registering an invalid event {eventName}",
                         AlertType.Warning));
@@ -123,7 +123,7 @@ namespace UStacker.Gameplay.SoundEffects
                     }
                     catch (LuaException ex)
                     {
-                        AlertDisplayer.Instance.ShowAlert(new Alert(
+                        AlertDisplayer.ShowAlert(new Alert(
                             "Error executing user code!",
                             $"Error executing sound effects script.\nLua error: {ex.Message}",
                             AlertType.Error
@@ -297,7 +297,7 @@ namespace UStacker.Gameplay.SoundEffects
             if (!SoundPackLoader.SoundEffects.TryGetValue(clipName, out var clip))
                 if (!_defaultEffects.TryGetValue(clipName, out clip))
                 {
-                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                    AlertDisplayer.ShowAlert(new Alert(
                         "Clip not found!",
                         $"Sound effect with a name {clipName} was not found.",
                         AlertType.Warning
@@ -324,7 +324,7 @@ namespace UStacker.Gameplay.SoundEffects
             if (!SoundPackLoader.SoundEffects.TryGetValue(clipName, out var clip))
                 if (!_defaultEffects.TryGetValue(clipName, out clip))
                 {
-                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                    AlertDisplayer.ShowAlert(new Alert(
                         "Clip not found!",
                         $"Sound effect with a name {clipName} was not found.",
                         AlertType.Warning

@@ -82,7 +82,7 @@ namespace UStacker.GameSettings.SettingGroups
                     $"Randomizer {CustomRandomizer} couldn't be found.",
                     AlertType.Error);
 
-            AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.ShowAlert(shownAlert);
         }
     }
 }

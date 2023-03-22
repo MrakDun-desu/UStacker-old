@@ -103,7 +103,7 @@ namespace UStacker.Gameplay.GameManagers
             {
                 if (eventNameObj is not string eventName)
                 {
-                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                    AlertDisplayer.ShowAlert(new Alert(
                         "Invalid event name!",
                         $"Custom game manager tried registering an invalid event {eventNameObj}",
                         AlertType.Warning));
@@ -112,7 +112,7 @@ namespace UStacker.Gameplay.GameManagers
 
                 if (events[eventNameObj] is not LuaFunction function)
                 {
-                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                    AlertDisplayer.ShowAlert(new Alert(
                         "Invalid event handler!",
                         $"Custom game manager tried registering an invalid handler for event {eventName}",
                         AlertType.Warning));
@@ -121,7 +121,7 @@ namespace UStacker.Gameplay.GameManagers
 
                 if (!RegisterableMessages.Default.ContainsKey(eventName))
                 {
-                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                    AlertDisplayer.ShowAlert(new Alert(
                         "Invalid event name!",
                         $"Custom game manager tried registering an invalid event {eventName}",
                         AlertType.Warning));

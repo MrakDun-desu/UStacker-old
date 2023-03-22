@@ -81,7 +81,7 @@ namespace UStacker.GameSettings.Changers
                     $"Game preset {presetName} couldn't be found.",
                     AlertType.Error);
             
-            AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.ShowAlert(shownAlert);
         }
 
         private void OnSaveButtonClicked()
@@ -93,7 +93,7 @@ namespace UStacker.GameSettings.Changers
         {
             var presetName = _targetSo.Settings.Presentation.Title;
             presetName = await _targetSo.Save(presetName);
-            AlertDisplayer.Instance.ShowAlert(
+            AlertDisplayer.ShowAlert(
                 new Alert("Game settings saved!",
                     $"Game settings have been saved to a file {presetName}.",
                     AlertType.Success));
