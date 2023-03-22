@@ -6,6 +6,8 @@ using UStacker.GameSettings.Enums;
 using TMPro;
 using UnityEngine;
 using UStacker.Gameplay.GameStateManagement;
+using UStacker.Gameplay.InputProcessing;
+using UStacker.GlobalSettings.Music;
 
 namespace UStacker.Gameplay.Stats
 {
@@ -16,6 +18,8 @@ namespace UStacker.Gameplay.Stats
         [SerializeField] private StringReferenceSO _replayGameType;
         [SerializeField] private GameStateManager _stateManager;
         [SerializeField] private ReplayController _replayController;
+        [SerializeField] private InputProcessor _inputProcessor;
+        [SerializeField] private MusicPlayerFinder _musicPlayerFinder;
 
         [Space]
         [SerializeField] private GameResultStatDisplayer _scoreText;
@@ -110,15 +114,11 @@ namespace UStacker.Gameplay.Stats
             }
         }
 
-        public void TakeReplayFromInitializer()
-        {
-            DisplayedReplay = GameInitializer.Replay;
-        }
-
         public void ShowReplay()
         {
-            GameInitializer.Replay = _displayedReplay;
-            GameInitializer.GameType = _replayGameType.Value;
+            _inputProcessor.ActionList = _displayedReplay.ActionList;
+            _inputProcessor.PlacementsList = _displayedReplay.PiecePlacementList;
+            _musicPlayerFinder.GameType = _replayGameType.Value;
             GameStateManager.IsReplay = true;
 
             _replayController.SetReplay(DisplayedReplay);
@@ -127,8 +127,9 @@ namespace UStacker.Gameplay.Stats
 
         public void PlayGameAgain()
         {
-            GameInitializer.Replay = null;
-            GameInitializer.GameType = _displayedReplay.GameType ?? _replayGameType.Value;
+            _inputProcessor.ActionList = null;
+            _inputProcessor.PlacementsList = null;
+            _musicPlayerFinder.GameType = _displayedReplay.GameType ?? _replayGameType.Value;
             GameStateManager.IsReplay = false;
             _stateManager.InitializeGame();
         }

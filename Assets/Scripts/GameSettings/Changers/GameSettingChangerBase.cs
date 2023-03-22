@@ -23,9 +23,24 @@ namespace UStacker.GameSettings.Changers
                 _title.text = _controlPath[^1].FormatCamelCase();
         }
 
+        protected virtual void Start()
+        {
+            RefreshValue();
+            _gameSettingsSO.SettingsReloaded += RefreshValue;
+        }
+
+        protected void OnDestroy()
+        {
+            _gameSettingsSO.SettingsReloaded -= RefreshValue;
+        }
+
+        protected abstract void RefreshValue();
+
         protected void SetValue(T value)
         {
             _gameSettingsSO.SetValue(value, _controlPath);
+            
+            RefreshValue();
         }
     }
 }

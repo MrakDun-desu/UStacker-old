@@ -17,11 +17,24 @@ namespace UStacker.Gameplay.GameManagers
         [SerializeField] private Board _board;
         [SerializeField] private GameTimer _timer;
 
-        public GameSettingsSO.SettingsContainer GameSettings { private get; set; }
+        private IGameManager _currentManager;
+        private GameSettingsSO.SettingsContainer _gameSettings;
 
-        private void Awake()
+        public GameSettingsSO.SettingsContainer GameSettings
         {
-            IGameManager manager = GameSettings.Objective.GameManagerType switch
+            private get => _gameSettings;
+            set
+            {
+                _gameSettings = value;
+                Initialize();
+            }
+        }
+
+        private void Initialize()
+        {
+            _currentManager?.Delete();
+
+            _currentManager = GameSettings.Objective.GameManagerType switch
             {
                 GameManagerType.None => null,
                 GameManagerType.ModernWithLevelling => gameObject.AddComponent<ModernGameManagerWithLevelling>(),
@@ -32,15 +45,12 @@ namespace UStacker.Gameplay.GameManagers
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-            if (manager is null)
-            {
-                Destroy(gameObject);
+            if (_currentManager is null)
                 return;
-            }
 
-            manager.Initialize(GameSettings.Objective.StartingLevel, _mediator);
+            _currentManager.Initialize(GameSettings.Objective.StartingLevel, _mediator);
 
-            if (manager is CustomGameManager custom)
+            if (_currentManager is CustomGameManager custom)
                 custom.CustomInitialize(
                     _board, 
                     _timer, 

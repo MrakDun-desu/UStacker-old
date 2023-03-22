@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: game_CheeseRace20L
   m_EditorClassIdentifier: 
   GameType: {fileID: 11400000, guid: 2eac9bfd32fcf27439d78c2ced67144e, type: 2}
-  Settings:
+  _settings:
     <General>k__BackingField:
       _nextPieceCount: 5
       _randomizerType: 0
@@ -35,44 +35,32 @@ MonoBehaviour:
       <OverrideHandling>k__BackingField: 0
       <Handling>k__BackingField:
         _delayedAutoShift: 0.125
-        _automaticRepeatRate: 0.2
+        _automaticRepeatRate: 0.05
         _softDropFactor: 20
         _dasCutDelay: 0
         _doubleDropPreventionInterval: 0
         _softDropDelay: 0
+        _delayDasOn: 0
+        _diagonalLockBehavior: 0
+        _cancelDasDelayWithInput: 1
         _zeroGravitySoftDropBase: 0.02
-        <DelayDasOn>k__BackingField: 0
-        <SimultaneousDasBehavior>k__BackingField: 1
-        <DiagonalLockBehavior>k__BackingField: 0
-        <CancelDasDelayWithInput>k__BackingField: 1
+        _simultaneousDasBehavior: 1
       <ActiveRotationSystem>k__BackingField:
         DefaultTable:
           StartState: 0
           FullSpinKicks: []
-          ZeroToThree:
-          - {x: 0, y: 0}
-          ZeroToOne:
-          - {x: 0, y: 0}
-          OneToZero:
-          - {x: 0, y: 0}
-          OneToTwo:
-          - {x: 0, y: 0}
-          TwoToOne:
-          - {x: 0, y: 0}
-          TwoToThree:
-          - {x: 0, y: 0}
-          ThreeToTwo:
-          - {x: 0, y: 0}
-          ThreeToZero:
-          - {x: 0, y: 0}
-          ZeroToTwo:
-          - {x: 0, y: 0}
-          TwoToZero:
-          - {x: 0, y: 0}
-          OneToThree:
-          - {x: 0, y: 0}
-          ThreeToOne:
-          - {x: 0, y: 0}
+          ZeroToThree: []
+          ZeroToOne: []
+          OneToZero: []
+          OneToTwo: []
+          TwoToOne: []
+          TwoToThree: []
+          ThreeToTwo: []
+          ThreeToZero: []
+          ZeroToTwo: []
+          TwoToZero: []
+          OneToThree: []
+          ThreeToOne: []
     <BoardDimensions>k__BackingField:
       _boardWidth: 10
       _boardHeight: 20
@@ -93,18 +81,18 @@ MonoBehaviour:
     <Objective>k__BackingField:
       _gameManagerType: 0
       _customGameManager: 
-      _garbageGenerationType: 1
+      _garbageGenerationType: 0
       _customGarbageGeneratorName: 
-      _endConditionCount: 20
-      _garbageHeight: 5
+      _endConditionCount: 40
+      _garbageHeight: 10
       <MainStat>k__BackingField: 1
-      <GameEndCondition>k__BackingField: 2
+      <GameEndCondition>k__BackingField: 1
       <CustomGarbageScript>k__BackingField: 
       <CustomGameManagerScript>k__BackingField: 
       <ToppingOutIsOkay>k__BackingField: 0
       <StartingLevel>k__BackingField: 
     <Presentation>k__BackingField:
-      _title: Cheese Race 20L
+      _title: Custom game
       _countdownInterval: 0.65
       _countdownCount: 3
       <DefaultStatCounterGroup>k__BackingField:

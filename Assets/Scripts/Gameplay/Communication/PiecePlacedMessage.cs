@@ -14,21 +14,21 @@ namespace UStacker.Gameplay.Communication
         public readonly bool WasAllClear;
         public readonly bool WasSpin;
         public readonly bool WasSpinMini;
-        [UsedImplicitly]
-        public readonly bool WasSpinMiniRaw;
-        [UsedImplicitly]
-        public readonly bool WasSpinRaw;
+        [UsedImplicitly] public readonly bool WasSpinMiniRaw;
+        [UsedImplicitly] public readonly bool WasSpinRaw;
         public readonly bool BrokenCombo;
         public readonly bool BrokenBackToBack;
         public double Time { get; }
         public readonly uint GarbageLinesCleared;
         public readonly int TotalRotation;
         public readonly Vector2Int TotalMovement;
+        public readonly Vector2Int[] BlockPositions;
         public bool WasBtbClear => WasSpin || WasSpinMini || LinesCleared > 3;
 
         public PiecePlacedMessage(uint linesCleared, uint garbageLinesCleared, uint currentCombo,
             uint currentBackToBack, string pieceType, bool wasAllClear, bool wasSpin, bool wasSpinMini, bool wasSpinRaw,
-            bool wasSpinMiniRaw, bool brokenCombo, bool brokenBackToBack, int totalRotation, Vector2Int totalMovement, double time)
+            bool wasSpinMiniRaw, bool brokenCombo, bool brokenBackToBack, int totalRotation, Vector2Int totalMovement,
+            Vector2Int[] blockPositions, double time)
         {
             Time = time;
             LinesCleared = linesCleared;
@@ -45,7 +45,7 @@ namespace UStacker.Gameplay.Communication
             BrokenBackToBack = brokenBackToBack;
             TotalRotation = totalRotation;
             TotalMovement = totalMovement;
+            BlockPositions = blockPositions;
         }
-
     }
 }

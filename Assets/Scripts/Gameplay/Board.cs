@@ -109,18 +109,27 @@ namespace UStacker.Gameplay
             _camera = Camera.main;
             transform.position += _offset;
 
-            _mediator.Register<GameStateChangedMessage>(OnGameStateChanged);
-            _mediator.Register<SeedSetMessage>(OnSeedSet);
-
-            FirstTimeInitialize();
-
             ChangeBoardZoom(AppSettings.Gameplay.BoardZoom);
             ChangeVisibility(AppSettings.Gameplay.BoardVisibility);
             _warningPieceTreshhold = AppSettings.Gameplay.WarningPieceTreshhold;
 
+            InitializeGarbagePools();
+            
             BoardVisibilityApplier.VisibilityChanged += ChangeVisibility;
             BoardZoomApplier.BoardZoomChanged += ChangeBoardZoom;
             WarningPieceTreshholdApplier.TreshholdChanged += ChangeWarningPieceTreshhold;
+        }
+
+        private void OnEnable()
+        {
+            _mediator.Register<GameStateChangedMessage>(OnGameStateChanged);
+            _mediator.Register<SeedSetMessage>(OnSeedSet);
+        }
+
+        private void OnDisable()
+        {
+            _mediator.Unregister<GameStateChangedMessage>(OnGameStateChanged);
+            _mediator.Unregister<SeedSetMessage>(OnSeedSet);
         }
 
         private void Update()
@@ -141,8 +150,18 @@ namespace UStacker.Gameplay
             WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
         }
 
-        public GameSettingsSO.SettingsContainer GameSettings { private get; set; }
+        private GameSettingsSO.SettingsContainer _gameSettings;
 
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            private get => _gameSettings;
+            set
+            {
+                _gameSettings = value;
+                Initialize();
+            }
+        }
+        
         public event Action LinesCleared;
 
         private void OnSeedSet(SeedSetMessage message)
@@ -160,7 +179,7 @@ namespace UStacker.Gameplay
             _garbageGenerator?.GenerateGarbage(GameSettings.Objective.GarbageHeight, new PiecePlacedMessage());
         }
 
-        private void FirstTimeInitialize()
+        private void Initialize()
         {
             InitializeDimensions();
             InitializeGarbageGenerator();
@@ -180,33 +199,31 @@ namespace UStacker.Gameplay
 
             _statsCanvasTransform.sizeDelta =
                 new Vector2(boardDimensions.BoardWidth + 200f, boardDimensions.BoardHeight + 200f);
-
-            _camera.orthographicSize =
-                boardDimensions.BoardHeight * .5f + boardDimensions.BoardPadding;
         }
 
         private void InitializeGarbageGenerator()
         {
+            if (_garbageGenerator is CustomGarbageGenerator gen)
+            {
+                gen.Dispose();
+                _garbageGenerator = null;
+            }
+            
             if (GameSettings.Objective.GarbageGenerationType == GarbageGenerationType.None)
                 return;
 
-            InitializeGarbagePools();
-
             var readonlyBoard = new GarbageBoardInterface(this);
 
-            IGarbageGenerator garbageGenerator;
             if (GameSettings.Objective.GarbageGenerationType.HasFlag(GarbageGenerationType.CustomFlag))
             {
-                garbageGenerator = new CustomGarbageGenerator(readonlyBoard,
+                _garbageGenerator = new CustomGarbageGenerator(readonlyBoard,
                     GameSettings.Objective.CustomGarbageScript, _mediator);
             }
             else
             {
-                garbageGenerator = new DefaultGarbageGenerator(
+                _garbageGenerator = new DefaultGarbageGenerator(
                     readonlyBoard, GameSettings.Objective.GarbageGenerationType);
             }
-
-            _garbageGenerator = garbageGenerator;
         }
 
         private void InitializeGarbagePools()
@@ -215,19 +232,13 @@ namespace UStacker.Gameplay
                 CreateGarbageLayer,
                 layer => layer.gameObject.SetActive(true),
                 layer => layer.gameObject.SetActive(false),
-                DestroyGarbageLayer,
-                true,
-                (int)(_height / 2u),
-                (int)_height);
+                DestroyGarbageLayer);
 
             _garbageBlockPool = new ObjectPool<ClearableBlock>(
                 CreateGarbageBlock,
                 block => block.Visibility = 1,
                 block => block.Visibility = 0,
-                b => Destroy(b.gameObject),
-                true,
-                (int)(_height * _width / 2u),
-                (int)(_height * _width));
+                b => Destroy(b.gameObject));
         }
 
         private GarbageLayer CreateGarbageLayer()
@@ -383,7 +394,8 @@ namespace UStacker.Gameplay
         }
 
         private void SendPlacementMessage(uint linesCleared, uint garbageLinesCleared, bool wasAllClear,
-            double placementTime, SpinResult lastResult, string pieceType, int totalRotation, Vector2Int totalMovement)
+            double placementTime, SpinResult lastResult, string pieceType, int totalRotation, Vector2Int totalMovement,
+            Vector2Int[] blockPositions)
         {
             var brokenBtb = false;
             var brokenCombo = false;
@@ -419,7 +431,7 @@ namespace UStacker.Gameplay
                 _currentCombo, _currentBackToBack,
                 pieceType, wasAllClear, lastResult.WasSpin,
                 lastResult.WasSpinMini, lastResult.WasSpinRaw, lastResult.WasSpinMiniRaw,
-                brokenCombo, brokenBtb, totalRotation, totalMovement, placementTime);
+                brokenCombo, brokenBtb, totalRotation, totalMovement, blockPositions, placementTime);
             _mediator.Send(newMessage);
             _garbageGenerator?.GenerateGarbage(GameSettings.Objective.GarbageHeight - GarbageHeight, newMessage);
         }
@@ -472,6 +484,8 @@ namespace UStacker.Gameplay
             if (!CanPlace(piece)) return false;
             lastSpinResult ??= new SpinResult();
 
+            var placedPositions = piece.BlockPositions.Select(WorldSpaceToBoardPosition).ToArray();
+
             var isPartlyBelowLethal = false;
             var isCompletelyBelowLethal = true;
 
@@ -498,7 +512,8 @@ namespace UStacker.Gameplay
                 lastSpinResult,
                 piece.Type,
                 totalRotation,
-                totalMovement);
+                totalMovement,
+                placedPositions);
 
             if (GameSettings.Gravity.AllowClutchClears && linesWereCleared) return true;
 

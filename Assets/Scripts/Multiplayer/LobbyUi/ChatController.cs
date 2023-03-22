@@ -1,6 +1,5 @@
 ﻿using FishNet;
 using FishNet.Connection;
-using FishNet.Object;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,20 +19,30 @@ namespace UStacker.Multiplayer.LobbyUi
         private void Awake()
         {
             _chatField.OnEnter(OnMessageSent);
-            InstanceFinder.ClientManager.RegisterBroadcast<ChatBroadcast>(OnChatBroadcast);
+        }
+
+        private void OnEnable()
+        {
+            InstanceFinder.ClientManager.RegisterBroadcast<ChatBroadcast>(OnChatBroadcastClient);
             InstanceFinder.ServerManager.RegisterBroadcast<ChatBroadcast>(OnChatBroadcastServer);
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
-            InstanceFinder.ClientManager.UnregisterBroadcast<ChatBroadcast>(OnChatBroadcast);
-            InstanceFinder.ServerManager.UnregisterBroadcast<ChatBroadcast>(OnChatBroadcastServer);
+            if (InstanceFinder.ClientManager != null)
+                InstanceFinder.ClientManager.UnregisterBroadcast<ChatBroadcast>(OnChatBroadcastClient);
+            
+            if (InstanceFinder.ServerManager != null)
+                InstanceFinder.ServerManager.UnregisterBroadcast<ChatBroadcast>(OnChatBroadcastServer);
         }
 
-        private void OnChatBroadcast(ChatBroadcast broadcast)
+        private void OnChatBroadcastClient(ChatBroadcast broadcast)
         {
+            if (!Player.ConnectedPlayers.TryGetValue(broadcast.SenderId, out var sender))
+                return;
+            
             var newChatMessage = Instantiate(_chatMessagePrefab, _chatListParent);
-            newChatMessage.Init(broadcast.SenderName, broadcast.Content);
+            newChatMessage.Init(sender.DisplayName, broadcast.Content);
             _chatScrollRect.verticalScrollbar.SetValueWithoutNotify(0);
         }
 
@@ -44,22 +53,21 @@ namespace UStacker.Multiplayer.LobbyUi
                 message = message[..250];
                 AlertDisplayer.Instance.ShowAlert(new Alert(
                     "Chat message shortened",
-                    "Your message exceeded the limit of 250 characters, so it was shortened.", 
+                    "Your message exceeded the limit of 250 characters.", 
                     AlertType.Info));
             }
 
-            InstanceFinder.ClientManager.Broadcast(new ChatBroadcast(message, string.Empty));
+            InstanceFinder.ClientManager.Broadcast(new ChatBroadcast(message));
             _chatField.SetTextWithoutNotify(string.Empty);
             _chatField.ActivateInputField();
         }
 
-        [Server]
         private static void OnChatBroadcastServer(NetworkConnection senderConnection, ChatBroadcast chatBroadcast)
         {
-            if (!Player.ConnectedPlayers.TryGetValue(senderConnection.ClientId, out var sender))
+            if (!Player.ConnectedPlayers.ContainsKey(senderConnection.ClientId))
                 return;
 
-            var actualBroadcast = new ChatBroadcast(chatBroadcast.Content, sender.DisplayName);
+            var actualBroadcast = new ChatBroadcast(chatBroadcast.Content, senderConnection.ClientId);
             InstanceFinder.ServerManager.Broadcast(actualBroadcast);
         }
     }

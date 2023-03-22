@@ -12,6 +12,8 @@ namespace UStacker.Gameplay.Stats
             _parent = parent;
         }
 
+        
+        // ReSharper disable UnusedMember.Global
         public long Score => _parent.Score;
         public string Level => _parent.Level;
         public uint LinesCleared => _parent.LinesCleared;
@@ -40,6 +42,7 @@ namespace UStacker.Gameplay.Stats
         public double KeysPerPiece => _parent.KeysPerPiece;
         public double KeysPerSecond => _parent.KeysPerSecond;
         public double LinesPerMinute => _parent.LinesPerMinute;
+        // ReSharper restore UnusedMember.Global
 
         public static implicit operator StatContainer(ReadonlyStatContainer source)
         {

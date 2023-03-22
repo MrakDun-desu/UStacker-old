@@ -11,8 +11,6 @@ namespace UStacker.GameSettings.Changers
             }
 
             SetValue(ulongValue);
-            var actualValue = _gameSettingsSO.GetValue<ulong>(_controlPath);
-            _valueField.SetTextWithoutNotify(actualValue.ToString());
         }
     }
 }

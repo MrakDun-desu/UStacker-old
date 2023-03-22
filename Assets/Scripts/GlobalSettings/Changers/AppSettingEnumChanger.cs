@@ -12,17 +12,20 @@ namespace UStacker.GlobalSettings.Changers
 
         [SerializeField] private EnumWithName[] _values;
 
-        protected virtual void Start()
+        private void Awake()
         {
             _dropdown.ClearOptions();
-            foreach (var value in _values) _dropdown.options.Add(new TMP_Dropdown.OptionData(value.Name));
+            foreach (var value in _values) 
+                _dropdown.options.Add(new TMP_Dropdown.OptionData(value.Name));
+        }
 
-            RefreshDropdownValue();
-            AppSettings.SettingsReloaded += RefreshDropdownValue;
+        protected override void Start()
+        {
+            base.Start();
             _dropdown.onValueChanged.AddListener(OnValuePicked);
         }
 
-        private void RefreshDropdownValue()
+        protected override void RefreshValue()
         {
             for (var i = 0; i < _values.Length; i++)
             {

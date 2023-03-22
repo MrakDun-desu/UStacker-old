@@ -1,4 +1,5 @@
 ﻿using FishNet;
+using FishNet.Object;
 using UnityEngine;
 using UnityEngine.UI;
 using SceneManager = UnityEngine.SceneManagement.SceneManager;

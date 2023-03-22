@@ -25,17 +25,21 @@ namespace UStacker.GlobalSettings.Changers
         [SerializeField] private string _infinityString = "INF";
         [SerializeField] private UnityEvent<float> _valueChanged;
 
-        private void Start()
+        protected override void Start()
         {
             OnValidate();
-            RefreshValue();
-
-            _slider.ValueChanged += _ => OnSliderMoved();
+            base.Start();
+            _slider.ValueChanged += OnSliderMoved;
             _valueField.onEndEdit.AddListener(OnValueRewritten);
-            AppSettings.SettingsReloaded += RefreshValue;
         }
 
-        private new void OnValidate()
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            _slider.ValueChanged -= OnSliderMoved;
+        }
+
+        protected override void OnValidate()
         {
             base.OnValidate();
             _slider.MaxValue = (float) _maxValue;
@@ -43,7 +47,7 @@ namespace UStacker.GlobalSettings.Changers
             _slider.Range = (float) _range;
         }
 
-        private void RefreshValue()
+        protected override void RefreshValue()
         {
             var value = AppSettings.GetValue<double>(_controlPath);
             _slider.SetRealValue((float) value);
@@ -73,29 +77,15 @@ namespace UStacker.GlobalSettings.Changers
             newValue /= _multiplier;
 
             SetValue(newValue);
-            var actualValue = AppSettings.GetValue<double>(_controlPath);
-            _slider.SetRealValue((float) actualValue);
-            _valueField.SetTextWithoutNotify(double.IsPositiveInfinity(actualValue)
-                ? _infinityString
-                : FormatValue(actualValue));
-            _valueChanged.Invoke((float) actualValue);
         }
 
-        private void OnSliderMoved()
+        private void OnSliderMoved(float _)
         {
             var value = (double) _slider.GetRealValue();
             if (Math.Abs(value - _maxValue) < float.Epsilon && _maxIsInfinity)
                 value = double.PositiveInfinity;
 
             SetValue(value);
-            var actualValue = AppSettings.GetValue<double>(_controlPath);
-
-            _valueField.SetTextWithoutNotify(double.IsPositiveInfinity(actualValue)
-                ? _infinityString
-                : FormatValue(actualValue));
-            _slider.SetRealValue((float) actualValue);
-
-            _valueChanged.Invoke((float) actualValue);
         }
     }
 }

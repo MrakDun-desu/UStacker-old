@@ -11,6 +11,9 @@ namespace UStacker.GameSettings
 
         public KickTable GetKickTable(string pieceType)
         {
+            if (KickTables.ContainsKey(pieceType))
+                return KickTables[pieceType];
+            
             if (pieceType.StartsWith("giant"))
                 pieceType = pieceType[^1].ToString().ToLowerInvariant();
 

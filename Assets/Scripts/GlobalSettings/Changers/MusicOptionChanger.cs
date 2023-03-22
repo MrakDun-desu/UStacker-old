@@ -50,13 +50,11 @@ namespace UStacker.GlobalSettings.Changers
             }
         }
 
-        private void Start()
+        protected override void Start()
         {
-            RefreshValue();
-
+            base.Start();
             _nameDropdown.onValueChanged.AddListener(OnNameSelected);
             _typeDropdown.onValueChanged.AddListener(OnTypeSelected);
-            AppSettings.SettingsReloaded += RefreshValue;
         }
 
         private void RefreshNameOptions(MusicOption currentOption)
@@ -97,7 +95,7 @@ namespace UStacker.GlobalSettings.Changers
             }
         }
 
-        private void RefreshValue()
+        protected override void RefreshValue()
         {
             _typeDropdown.ClearOptions();
             foreach (var optionName in Enum.GetNames(typeof(OptionType)))

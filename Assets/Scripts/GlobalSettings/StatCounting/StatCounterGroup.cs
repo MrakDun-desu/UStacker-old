@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -22,10 +23,8 @@ namespace UStacker.GlobalSettings.StatCounting
 
         public void OnBeforeSerialize()
         {
-            foreach (var counterSo in _statCounterSos)
+            foreach (var counterSo in _statCounterSos.Where(counterSo => counterSo is not null))
             {
-                if (counterSo is null) continue;
-
                 bool Predicate(StatCounterRecord counter)
                 {
                     return counter.Name == counterSo.Value.Name;
@@ -36,6 +35,7 @@ namespace UStacker.GlobalSettings.StatCounting
                 else
                     _statCounters.Find(Predicate).Script = counterSo.Value.Script;
             }
+
             for (var i = 0; i < _statCounters.Count; i++)
             {
                 var counter = _statCounters[i];

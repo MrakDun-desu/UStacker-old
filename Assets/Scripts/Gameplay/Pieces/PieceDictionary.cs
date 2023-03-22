@@ -1,8 +1,7 @@
 ﻿using System;
 using UStacker.Common;
-using UStacker.Gameplay.Pieces;
 
-namespace UStacker.Gameplay.Initialization
+namespace UStacker.Gameplay.Pieces
 {
     [Serializable]
     public class PieceDictionary : SerializableDictionary<string, Piece>

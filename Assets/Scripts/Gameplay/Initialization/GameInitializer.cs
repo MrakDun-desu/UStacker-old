@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using UStacker.Gameplay.GameStateManagement;
+using UStacker.Gameplay.InputProcessing;
 using UStacker.GameSettings;
 using UStacker.GameSettings.Enums;
 using UStacker.GlobalSettings;
@@ -13,6 +15,8 @@ namespace UStacker.Gameplay.Initialization
         [SerializeField] private GameObject[] _gameSettingsDependencies = Array.Empty<GameObject>();
         [SerializeField] private RotationSystemSO _srsRotationSystemSo;
         [SerializeField] private RotationSystemSO _srsPlusRotationSystemSo;
+        [SerializeField] private InputProcessor _inputProcessor;
+        [SerializeField] private GameStateManager _stateManager;
 
         private static GameSettingsSO.SettingsContainer _gameSettings;
         private static GameReplay _replay;
@@ -32,9 +36,9 @@ namespace UStacker.Gameplay.Initialization
                     GameSettings.Objective.StartingLevel = startingLevel;
                 
                 GameSettings.Presentation.StatCounterGroupOverrideId = overrides.StatCounterGroupId;
-                
+
                 if (!GameSettings.Controls.OverrideHandling && _replay is null)
-                    GameSettings.Controls.Handling = AppSettings.Handling with { };
+                    GameSettings.Controls.Handling.Override(AppSettings.Handling);
             }
         }
 
@@ -45,14 +49,19 @@ namespace UStacker.Gameplay.Initialization
             {
                 _replay = value;
                 if (_replay is not null)
-                    GameSettings = _replay?.GameSettings;
+                    GameSettings = _replay.GameSettings;
             }
         }
 
         public static string GameType { get; set; }
 
-        private void Awake()
+        private void Start()
         {
+            if (Replay is not null)
+            {
+                _inputProcessor.PlacementsList = Replay.PiecePlacementList;
+                _inputProcessor.ActionList = Replay.ActionList;
+            }
             GameSettings.Controls.ActiveRotationSystem =
             GameSettings.Controls.RotationSystemType switch
             {
@@ -64,12 +73,20 @@ namespace UStacker.Gameplay.Initialization
             };
 
             _playerFinder.GameType = GameType;
+            _stateManager.GameType = GameType;
             foreach (var dependantObject in _gameSettingsDependencies)
             {
                 var dependencies = dependantObject.GetComponents<IGameSettingsDependency>();
                 foreach (var dependency in dependencies)
                     dependency.GameSettings = GameSettings;
             }
+            
+            GameStateChangeEventReceiver.Activate();
+        }
+
+        private void OnDestroy()
+        {
+            GameStateChangeEventReceiver.Deactivate();
         }
     }
 }

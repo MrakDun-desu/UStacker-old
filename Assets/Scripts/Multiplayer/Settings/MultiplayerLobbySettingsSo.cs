@@ -6,12 +6,25 @@ namespace UStacker.Multiplayer.Settings
     [CreateAssetMenu(fileName = "LobbySettings", menuName = "UStacker/Lobby settings asset")]
     public class MultiplayerLobbySettingsSo : ScriptableObject
     {
-        public SettingsContainer Settings = new();
+        public event Action SettingsReloaded;
+
+        private SettingsContainer _settings = new();
+        
+        public SettingsContainer Settings
+        {
+            get => _settings;
+            set
+            {
+                 _settings = value;   
+                 SettingsReloaded?.Invoke();
+            }
+        }
 
         [Serializable]
         public class SettingsContainer
         {
             [SerializeField] [Range(2, 2000)] private uint _playerLimit = 2;
+            [SerializeField] [Range(1, 2000)] private uint _minimumPlayers = 2;
             [SerializeField] [Range(1, 1000)] private uint _firstTo = 1;
             [SerializeField] [Range(1, 1000)] private uint _winBy = 1;
 
@@ -19,9 +32,15 @@ namespace UStacker.Multiplayer.Settings
             {
                 get => _playerLimit;
                 // Max player limit is the same as the maximum clients on transport
-                set => _playerLimit = Math.Clamp(value, 2, 2000);
+                set => _playerLimit = Math.Clamp(value, Math.Max(2, MinimumPlayers), 2000);
             }
 
+            public uint MinimumPlayers
+            {
+                get => _minimumPlayers;
+                set => _minimumPlayers = Math.Clamp(value, 1, Math.Min(2000, PlayerLimit));
+            }
+            
             public uint FirstTo
             {
                 get => _firstTo;

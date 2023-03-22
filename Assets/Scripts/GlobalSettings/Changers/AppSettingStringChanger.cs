@@ -7,14 +7,13 @@ namespace UStacker.GlobalSettings.Changers
     {
         [Space] [SerializeField] private TMP_InputField _field;
 
-        private void Start()
+        protected override void Start()
         {
-            RefreshValue();
-            AppSettings.SettingsReloaded += RefreshValue;
+            base.Start();
             _field.onEndEdit.AddListener(SetValue);
         }
 
-        private void RefreshValue()
+        protected override void RefreshValue()
         {
             _field.text = AppSettings.GetValue<string>(_controlPath);
         }

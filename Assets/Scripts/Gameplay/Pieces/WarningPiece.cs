@@ -39,7 +39,11 @@ namespace UStacker.Gameplay.Pieces
 
         public GameSettingsSO.SettingsContainer GameSettings
         {
-            set => _settings = value;
+            set
+            {
+                _settings = value;
+                Initialize();
+            }
         }
 
         public event Action PieceChanged;
@@ -63,7 +67,7 @@ namespace UStacker.Gameplay.Pieces
             _blockPool.Dispose();
         }
 
-        private void Start()
+        private void Initialize()
         {
             if (_settings.General.NextPieceCount <= 0)
                 _isEnabled = false;

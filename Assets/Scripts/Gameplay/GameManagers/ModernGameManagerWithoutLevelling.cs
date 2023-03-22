@@ -19,6 +19,11 @@ namespace UStacker.Gameplay.GameManagers
             _mediator.Register<GameStateChangedMessage>(HandleGameStateChange);
         }
 
+        public void Delete()
+        {
+            Destroy(this);
+        }
+
         private void ResetState()
         {
             _currentScore = 0;

@@ -53,7 +53,7 @@ namespace UStacker.GlobalSettings.Changers
 
         private void OnToggleClicked(bool isOn)
         {
-            if (_availableGroups.Count < _dropdown.value)
+            if (_availableGroups.Count <= _dropdown.value)
                 return;
             
             ChangedGroupId = isOn ? _availableGroups[_dropdown.value].Key : null;

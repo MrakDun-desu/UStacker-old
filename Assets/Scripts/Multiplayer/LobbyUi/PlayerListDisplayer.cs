@@ -17,8 +17,8 @@ namespace UStacker.Multiplayer.LobbyUi
 
         private void Awake()
         {
-            Player.PlayerAdded += OnPlayerAdded;
-            Player.PlayerRemoved += OnPlayerRemoved;
+            Player.PlayerJoined += PlayerJoined;
+            Player.PlayerLeft += PlayerLeft;
             _cardsPool = new ObjectPool<PlayerListCard>(
                 () => Instantiate(_cardPrefab, _cardsParent),
                 card => card.gameObject.SetActive(true),
@@ -28,12 +28,12 @@ namespace UStacker.Multiplayer.LobbyUi
 
         private void OnDestroy()
         {
-            Player.PlayerAdded -= OnPlayerAdded;
-            Player.PlayerRemoved -= OnPlayerRemoved;
+            Player.PlayerJoined -= PlayerJoined;
+            Player.PlayerLeft -= PlayerLeft;
             _cardsPool.Dispose();
         }
 
-        private void OnPlayerAdded(int playerId)
+        private void PlayerJoined(int playerId)
         {
             RefreshPlayerCount();
 
@@ -48,7 +48,7 @@ namespace UStacker.Multiplayer.LobbyUi
             _playerListCards[playerId] = newCard;
         }
 
-        private void OnPlayerRemoved(int playerId)
+        private void PlayerLeft(int playerId)
         {
             RefreshPlayerCount();
             Player.ConnectedPlayers[playerId].SpectateChanged -= OnPlayerSpectateChanged;

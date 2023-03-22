@@ -10,176 +10,182 @@ using UnityEngine;
 
 namespace UStacker.Multiplayer
 {
-	public sealed class NetworkDiscovery : MonoBehaviour
-	{
-		[SerializeField]
-		[Tooltip("A string that differentiates application/game from others. Must not be null, empty, or blank. Do not change during runtime")]
-		private string _secret;
+    public sealed class NetworkDiscovery : MonoBehaviour
+    {
+        [Tooltip("Interval between discovery tries in seconds")] [SerializeField]
+        private float _discoveryInterval;
 
-		[SerializeField]
-		[Tooltip("The port number used by this NetworkDiscovery component. Must be different from the one used by the Transport")]
-		private ushort _port;
+        private const string SECRET = "UStacker Discovery";
+        private const ushort PORT = 7771;
 
-		[SerializeField]
-		[Tooltip("Interval between discovery tries in seconds")]
-		private float _discoveryInterval;
+        private UdpClient _serverUdpClient;
+        private UdpClient _clientUdpClient;
+        private byte[] _secretBytes;
 
-		private UdpClient _serverUdpClient;
-		private UdpClient _clientUdpClient;
-		private byte[] _secretBytes;
+        public bool IsAdvertising => _serverUdpClient != null;
 
-		public bool IsAdvertising => _serverUdpClient != null;
+        public bool IsSearching => _clientUdpClient != null;
 
-		public bool IsSearching => _clientUdpClient != null;
+        public event Action<IPEndPoint> ServerDiscovered;
 
-		public event Action<IPEndPoint> ServerDiscovered;
+        private void Awake()
+        {
+            _secretBytes = Encoding.UTF8.GetBytes(SECRET);
+        }
 
-		private void Awake()
-		{
-			_secretBytes = Encoding.UTF8.GetBytes(_secret);
-		}
+        private void OnDestroy()
+        {
+            StopAdvertisingServer();
+            StopSearchingForServers();
+        }
 
-		private void OnDestroy()
-		{
-			StopAdvertisingServer();
-			StopSearchingForServers();
-		}
+        public void StartAdvertisingServer()
+        {
+            if (!InstanceFinder.IsServer)
+            {
+                if (NetworkManager.StaticCanLog(LoggingType.Warning))
+                    Debug.LogWarning("Unable to start advertising server. Server is inactive.", this);
 
-		public void StartAdvertisingServer()
-		{
-			if (!InstanceFinder.IsServer)
-			{
-				if (NetworkManager.StaticCanLog(LoggingType.Warning)) Debug.LogWarning("Unable to start advertising server. Server is inactive.", this);
+                return;
+            }
 
-				return;
-			}
+            if (IsAdvertising)
+            {
+                if (NetworkManager.StaticCanLog(LoggingType.Common))
+                    Debug.Log("Server is already being advertised.", this);
 
-			if (IsAdvertising)
-			{
-				if (NetworkManager.StaticCanLog(LoggingType.Common)) Debug.Log("Server is already being advertised.", this);
+                return;
+            }
 
-				return;
-			}
+            if (PORT == InstanceFinder.TransportManager.Transport.GetPort())
+            {
+                if (NetworkManager.StaticCanLog(LoggingType.Warning))
+                    Debug.LogWarning("Unable to start advertising server on the same port as the transport.", this);
 
-			if (_port == InstanceFinder.TransportManager.Transport.GetPort())
-			{
-				if (NetworkManager.StaticCanLog(LoggingType.Warning)) Debug.LogWarning("Unable to start advertising server on the same port as the transport.", this);
+                return;
+            }
 
-				return;
-			}
+            _serverUdpClient = new UdpClient(PORT)
+            {
+                EnableBroadcast = true,
+                MulticastLoopback = false,
+                Ttl = 10
+            };
 
-			_serverUdpClient = new UdpClient(_port)
-			{
-				EnableBroadcast = true,
-				MulticastLoopback = false,
-				Ttl = 10
-			};
+            _ = AdvertiseServerAsync();
 
-			_ = AdvertiseServerAsync();
+            if (NetworkManager.StaticCanLog(LoggingType.Common)) Debug.Log("Started advertising server.", this);
+        }
 
-			if (NetworkManager.StaticCanLog(LoggingType.Common)) Debug.Log("Started advertising server.", this);
-		}
+        public void StopAdvertisingServer()
+        {
+            if (_serverUdpClient == null) return;
 
-		public void StopAdvertisingServer()
-		{
-			if (_serverUdpClient == null) return;
+            _serverUdpClient.Close();
 
-			_serverUdpClient.Close();
+            _serverUdpClient = null;
 
-			_serverUdpClient = null;
+            if (NetworkManager.StaticCanLog(LoggingType.Common)) Debug.Log("Stopped advertising server.", this);
+        }
 
-			if (NetworkManager.StaticCanLog(LoggingType.Common)) Debug.Log("Stopped advertising server.", this);
-		}
+        private async Task AdvertiseServerAsync()
+        {
+            while (_serverUdpClient != null)
+            {
+                var result = await _serverUdpClient.ReceiveAsync();
 
-		private async Task AdvertiseServerAsync()
-		{
-			while (_serverUdpClient != null)
-			{
-				var result = await _serverUdpClient.ReceiveAsync();
-				
+                var receivedSecret = Encoding.UTF8.GetString(result.Buffer);
 
-				var receivedSecret = Encoding.UTF8.GetString(result.Buffer);
-				Debug.Log("Received message from client with content " + receivedSecret);
+#if UNITY_EDITOR
+                Debug.Log("Received message from client with content " + receivedSecret);
+#endif
 
-				if (receivedSecret != _secret)
-				{
-					await Task.Delay(TimeSpan.FromSeconds(_discoveryInterval));
-					continue;
-				}
-				var okBytes = BitConverter.GetBytes(true);
+                if (receivedSecret != SECRET)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(_discoveryInterval));
+                    continue;
+                }
 
-				await _serverUdpClient.SendAsync(okBytes, okBytes.Length, result.RemoteEndPoint);
-			}
-		}
+                var okBytes = BitConverter.GetBytes(true);
 
-		public void StartSearchingForServers()
-		{
-			if (InstanceFinder.IsServer)
-			{
-				if (NetworkManager.StaticCanLog(LoggingType.Warning)) Debug.LogWarning("Unable to start searching for servers. Server is active.", this);
+                await _serverUdpClient.SendAsync(okBytes, okBytes.Length, result.RemoteEndPoint);
+            }
+        }
 
-				return;
-			}
+        public void StartSearchingForServers()
+        {
+            if (InstanceFinder.IsServer)
+            {
+                if (NetworkManager.StaticCanLog(LoggingType.Warning))
+                    Debug.LogWarning("Unable to start searching for servers. Server is active.", this);
 
-			if (InstanceFinder.IsClient)
-			{
-				if (NetworkManager.StaticCanLog(LoggingType.Warning)) Debug.LogWarning("Unable to start searching for servers. Client is active.", this);
+                return;
+            }
 
-				return;
-			}
+            if (InstanceFinder.IsClient)
+            {
+                if (NetworkManager.StaticCanLog(LoggingType.Warning))
+                    Debug.LogWarning("Unable to start searching for servers. Client is active.", this);
 
-			if (IsSearching)
-			{
-				if (NetworkManager.StaticCanLog(LoggingType.Common)) Debug.Log("Already searching for servers.", this);
+                return;
+            }
 
-				return;
-			}
+            if (IsSearching)
+            {
+                if (NetworkManager.StaticCanLog(LoggingType.Common)) Debug.Log("Already searching for servers.", this);
 
-			_clientUdpClient = new UdpClient
-			{
-				EnableBroadcast = true,
-				MulticastLoopback = false,
-			};
+                return;
+            }
 
-			_ = SearchForServersAsync();
+            _clientUdpClient = new UdpClient
+            {
+                EnableBroadcast = true,
+                MulticastLoopback = false,
+            };
 
-			if (NetworkManager.StaticCanLog(LoggingType.Common)) Debug.Log("Started searching for servers.", this);
-		}
+            _ = SearchForServersAsync();
 
-		public void StopSearchingForServers()
-		{
-			if (_clientUdpClient == null) return;
+            if (NetworkManager.StaticCanLog(LoggingType.Common)) Debug.Log("Started searching for servers.", this);
+        }
 
-			_clientUdpClient.Close();
+        public void StopSearchingForServers()
+        {
+            if (_clientUdpClient == null) return;
 
-			_clientUdpClient = null;
+            _clientUdpClient.Close();
 
-			if (NetworkManager.StaticCanLog(LoggingType.Common)) Debug.Log("Stopped searching for servers.", this);
-		}
+            _clientUdpClient = null;
 
-		private async Task SearchForServersAsync()
-		{
-			var endPoint = new IPEndPoint(IPAddress.Broadcast, _port);
+            if (NetworkManager.StaticCanLog(LoggingType.Common)) Debug.Log("Stopped searching for servers.", this);
+        }
 
-			while (_clientUdpClient != null)
-			{
-				await _clientUdpClient.SendAsync(_secretBytes, _secretBytes.Length, endPoint);
-				
-				Debug.Log("Sent search message");
+        private async Task SearchForServersAsync()
+        {
+            var endPoint = new IPEndPoint(IPAddress.Broadcast, PORT);
 
-				var result = await _clientUdpClient.ReceiveAsync();
-				
-				Debug.Log("Received search result");
+            while (_clientUdpClient != null)
+            {
+                await _clientUdpClient.SendAsync(_secretBytes, _secretBytes.Length, endPoint);
+#if UNITY_EDITOR
+                Debug.Log("Sent search message");
+#endif
 
-				if (!BitConverter.ToBoolean(result.Buffer, 0))
-				{
-					await Task.Delay(TimeSpan.FromSeconds(_discoveryInterval));
-					continue;
-				}
-				ServerDiscovered?.Invoke(result.RemoteEndPoint);
+                var result = await _clientUdpClient.ReceiveAsync();
 
-				StopSearchingForServers();
-			}
-		}
-	}
+#if UNITY_EDITOR
+                Debug.Log("Received search result");
+#endif
+
+                if (!BitConverter.ToBoolean(result.Buffer, 0))
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(_discoveryInterval));
+                    continue;
+                }
+
+                ServerDiscovered?.Invoke(result.RemoteEndPoint);
+
+                StopSearchingForServers();
+            }
+        }
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using UStacker.Gameplay.Enums;
@@ -8,6 +9,7 @@ namespace UStacker.Gameplay.GameStateManagement
     [Serializable]
     public class GameStateChangeEvent
     {
+        [UsedImplicitly] // used only for ease of use in Unity arrays
         [SerializeField] private string _name;
         public GameState PreviousState = GameState.Any;
         public GameState NewState = GameState.Any;

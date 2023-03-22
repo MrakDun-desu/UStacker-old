@@ -34,6 +34,11 @@ namespace UStacker.Gameplay.GameManagers
             _mediator.Register<SeedSetMessage>(OnSeedSet);
         }
 
+        public void Delete()
+        {
+            Destroy(this);
+        }
+
         private void ResetState()
         {
             _currentScore = 0;

@@ -11,7 +11,9 @@ namespace UStacker.GlobalSettings.Changers
         [SerializeField] private TMP_Text _title;
         [SerializeField] private bool _autoformatName = true;
 
-        protected void OnValidate()
+        public event Action SettingChanged;
+        
+        protected virtual void OnValidate()
         {
             if (_title == null) return;
             if (!AppSettings.SettingExists<T>(_controlPath))
@@ -20,16 +22,30 @@ namespace UStacker.GlobalSettings.Changers
                 _title.text = _controlPath[^1].FormatCamelCase();
         }
 
-        public event Action SettingChanged;
+        protected virtual void Start()
+        {
+            RefreshValue();
+            AppSettings.SettingsReloaded += RefreshValue;
+        }
+
+        protected virtual void OnDestroy()
+        {
+            AppSettings.SettingsReloaded -= RefreshValue;
+        }
+
+        protected abstract void RefreshValue();
 
         protected void InvokeSettingChanged()
         {
             SettingChanged?.Invoke();
         }
 
-        public void SetValue(T value)
+        protected void SetValue(T value)
         {
-            if (AppSettings.TrySetValue(value, _controlPath)) SettingChanged?.Invoke();
+            if (AppSettings.TrySetValue(value, _controlPath)) 
+                SettingChanged?.Invoke();
+            
+            RefreshValue();
         }
     }
 }

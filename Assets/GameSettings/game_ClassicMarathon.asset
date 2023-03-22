@@ -13,38 +13,38 @@ MonoBehaviour:
   m_Name: game_ClassicMarathon
   m_EditorClassIdentifier: 
   GameType: {fileID: 11400000, guid: 9e871d44a98d84541bd957a59c36de9e, type: 2}
-  Settings:
+  _settings:
     <General>k__BackingField:
-      _nextPieceCount: 1
-      _randomizerType: 3
+      _nextPieceCount: 5
+      _randomizerType: 0
       _customRandomizerName: 
-      <AllowedSpins>k__BackingField: 0
+      <AllowedSpins>k__BackingField: 2
       <UseCustomSeed>k__BackingField: 0
       <CustomSeed>k__BackingField: 0
       <CustomRandomizerScript>k__BackingField: 
-      <ActiveSeed>k__BackingField: 10074705297572487699
+      <ActiveSeed>k__BackingField: 0
     <Controls>k__BackingField:
-      _rotationSystemType: 0
+      _rotationSystemType: 2
       _customRotationSystem: 
-      <Allow180Spins>k__BackingField: 0
-      <AllowHardDrop>k__BackingField: 0
-      <AllowHold>k__BackingField: 0
-      <AllowMoveToWall>k__BackingField: 0
+      <Allow180Spins>k__BackingField: 1
+      <AllowHardDrop>k__BackingField: 1
+      <AllowHold>k__BackingField: 1
+      <AllowMoveToWall>k__BackingField: 1
       <UnlimitedHold>k__BackingField: 0
-      <ShowGhostPiece>k__BackingField: 0
-      <OverrideHandling>k__BackingField: 1
+      <ShowGhostPiece>k__BackingField: 1
+      <OverrideHandling>k__BackingField: 0
       <Handling>k__BackingField:
-        _delayedAutoShift: 0.25
-        _automaticRepeatRate: 0.1
-        _softDropFactor: 2
+        _delayedAutoShift: 0.125
+        _automaticRepeatRate: 0.05
+        _softDropFactor: 20
         _dasCutDelay: 0
         _doubleDropPreventionInterval: 0
         _softDropDelay: 0
+        _delayDasOn: 0
+        _diagonalLockBehavior: 0
+        _cancelDasDelayWithInput: 1
         _zeroGravitySoftDropBase: 0.02
-        <DelayDasOn>k__BackingField: 0
-        <SimultaneousDasBehavior>k__BackingField: 0
-        <DiagonalLockBehavior>k__BackingField: 0
-        <CancelDasDelayWithInput>k__BackingField: 1
+        _simultaneousDasBehavior: 1
       <ActiveRotationSystem>k__BackingField:
         DefaultTable:
           StartState: 0
@@ -70,29 +70,29 @@ MonoBehaviour:
       _boardPadding: 4
     <Gravity>k__BackingField:
       _defaultGravity: 0.02
-      _defaultLockDelay: 0
+      _defaultLockDelay: 0.5
       _piecePlacementDelay: 0
-      _lineClearDelay: 0.5
-      _hardLockAmount: 1
+      _lineClearDelay: 0
+      _hardLockAmount: 5
       <LockDelayType>k__BackingField: 1
       <HardLockType>k__BackingField: 0
       <TopoutCondition>k__BackingField: 0
-      <AllowClutchClears>k__BackingField: 0
+      <AllowClutchClears>k__BackingField: 1
     <Objective>k__BackingField:
-      _gameManagerType: 3
+      _gameManagerType: 0
       _customGameManager: 
       _garbageGenerationType: 0
       _customGarbageGeneratorName: 
       _endConditionCount: 40
       _garbageHeight: 10
-      <MainStat>k__BackingField: 0
-      <GameEndCondition>k__BackingField: 0
+      <MainStat>k__BackingField: 1
+      <GameEndCondition>k__BackingField: 1
       <CustomGarbageScript>k__BackingField: 
       <CustomGameManagerScript>k__BackingField: 
-      <ToppingOutIsOkay>k__BackingField: 1
-      <StartingLevel>k__BackingField: 8
+      <ToppingOutIsOkay>k__BackingField: 0
+      <StartingLevel>k__BackingField: 
     <Presentation>k__BackingField:
-      _title: Classic Marathon
+      _title: Custom game
       _countdownInterval: 0.65
       _countdownCount: 3
       <DefaultStatCounterGroup>k__BackingField:

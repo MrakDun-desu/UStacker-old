@@ -13,8 +13,6 @@ namespace UStacker.GameSettings.Changers
             }
 
             SetValue(uintValue);
-            var actualValue = _gameSettingsSO.GetValue<uint>(_controlPath);
-            _valueField.SetTextWithoutNotify(actualValue.ToString());
         }
     }
 }

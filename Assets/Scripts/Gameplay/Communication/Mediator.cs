@@ -7,7 +7,7 @@ namespace UStacker.Gameplay.Communication
     public class Mediator : MonoBehaviour
     {
         private readonly Dictionary<Type, MessageCollection> _registeredActions = new();
-
+        
         public void Register<TMessage>(Action<TMessage> action, uint priority = 0)
             where TMessage : IMessage
         {
@@ -46,9 +46,14 @@ namespace UStacker.Gameplay.Communication
             }
             catch (InvalidOperationException)
             {
-                Debug.Log($"Message collection was modified for {message}");
+                Debug.Log($"Exception occured while sending {message}");
                 throw;
             }
+        }
+
+        public void Clear()
+        {
+            _registeredActions.Clear();
         }
 
         public void OnDestroy()

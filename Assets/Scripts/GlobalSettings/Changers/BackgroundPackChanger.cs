@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UStacker.Common;
 using UStacker.GlobalSettings.Backgrounds;
@@ -13,11 +14,15 @@ namespace UStacker.GlobalSettings.Changers
         [SerializeField] private Button _folderButton;
         [SerializeField] private Button _docsButton;
 
-        private void Start()
+        private void Awake()
         {
             RefreshNames();
+        }
 
-            AppSettings.SettingsReloaded += RefreshValue;
+        protected override void Start()
+        {
+            base.Start();
+
             _dropdown.onValueChanged.AddListener(OnOptionPicked);
             _folderButton.onClick.AddListener(OpenBackgroundFolder);
             _docsButton.onClick.AddListener(OpenDocumentation);
@@ -37,7 +42,7 @@ namespace UStacker.GlobalSettings.Changers
             SetValue(newBackgroundFolder);
         }
 
-        private void RefreshValue()
+        protected override void RefreshValue()
         {
             for (var i = 0; i < _dropdown.options.Count; i++)
             {
@@ -76,6 +81,7 @@ namespace UStacker.GlobalSettings.Changers
 
             if (!_dropdown.options.Exists(item => item.text == BackgroundPackLoader.DEFAULT_PATH))
                 _dropdown.options.Insert(0, new TMP_Dropdown.OptionData(BackgroundPackLoader.DEFAULT_PATH));
+            
             RefreshValue();
         }
     }

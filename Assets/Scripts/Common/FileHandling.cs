@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -138,43 +137,6 @@ namespace UStacker.Common
             };
         }
 
-        private static async Task<bool> CopyMemoryAsync(Stream source, Stream destination)
-        {
-            const int bufferSize = 0x1000;
-            var buffer = new byte[bufferSize];
-
-            try
-            {
-                int readLength;
-                while ((readLength = await source.ReadAsync(buffer)) != 0)
-                    await destination.WriteAsync(buffer.AsMemory(0, readLength));
-            }
-            catch
-            {
-                return false;
-            }
-
-            return true;
-        }
-        
-        private static bool CopyMemory(Stream source, Stream destination)
-        {
-            const int bufferSize = 0x1000;
-            var buffer = new byte[bufferSize];
-
-            try
-            {
-                while (source.Read(buffer) != 0)
-                    destination.Write(buffer);
-            }
-            catch
-            {
-                return false;
-            }
-
-            return true;
-        }
-
         public static async Task<byte[]> ZipAsync(string str)
         {
             var bytes = Encoding.UTF8.GetBytes(str);
@@ -183,7 +145,7 @@ namespace UStacker.Common
             using var outputStream = new MemoryStream();
             await using (var gZipStream = new GZipStream(outputStream, CompressionMode.Compress))
             {
-                await CopyMemoryAsync(sourceStream, gZipStream);
+                await sourceStream.CopyToAsync(gZipStream);
             }
 
             return outputStream.ToArray();
@@ -197,7 +159,7 @@ namespace UStacker.Common
             using var outputStream = new MemoryStream();
             using (var gZipStream = new GZipStream(outputStream, CompressionMode.Compress))
             {
-                CopyMemory(sourceStream, gZipStream);
+                sourceStream.CopyTo(gZipStream);
             }
 
             return outputStream.ToArray();
@@ -209,7 +171,7 @@ namespace UStacker.Common
             using var outputStream = new MemoryStream();
             await using (var gZipStream = new GZipStream(sourceStream, CompressionMode.Decompress))
             {
-                await CopyMemoryAsync(gZipStream, outputStream);
+                await gZipStream.CopyToAsync(outputStream);
             }
 
             return Encoding.UTF8.GetString(outputStream.ToArray());
@@ -221,19 +183,19 @@ namespace UStacker.Common
             using var outputStream = new MemoryStream();
             using (var gZipStream = new GZipStream(sourceStream, CompressionMode.Decompress))
             {
-                CopyMemory(gZipStream, outputStream);
+                gZipStream.CopyTo(outputStream);
             }
 
             return Encoding.UTF8.GetString(outputStream.ToArray());
         }
 
-        public static async Task<bool> CopyDirectoryRecursivelyAsync(string sourcePath, string destinationPath)
+        public static async Task CopyDirectoryRecursivelyAsync(string sourcePath, string destinationPath)
         {
             var dir = new DirectoryInfo(sourcePath);
             if (!Directory.Exists(destinationPath) || !dir.Exists)
-                return false;
+                return;
 
-            var taskList = new List<Task<bool>>();
+            var taskList = new List<Task>();
             // not converting to LINQ for better readability
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var file in dir.EnumerateFiles())
@@ -251,35 +213,24 @@ namespace UStacker.Common
             }
 
             await Task.WhenAll(taskList);
-            return taskList.All(task => task.Result);
         }
 
-        public static async Task<bool> CopyFileAsync(string source, string destination)
+        public static async Task CopyFileAsync(string source, string destination)
         {
-            if (!File.Exists(source)) return false;
+            if (!File.Exists(source)) return;
             
             await using var sourceReader = File.OpenRead(source);
             await using var destinationWriter = File.Create(destination);
-
-            return await CopyMemoryAsync(sourceReader, destinationWriter);
+            await sourceReader.CopyToAsync(destinationWriter);
         }
 
-        public static bool CreateDirectoriesRecursively(string path)
+        public static void CreateDirectoriesRecursively(string path)
         {
             if (Directory.Exists(path))
-                return true;
+                return;
 
             CreateDirectoriesRecursively(Path.GetDirectoryName(path));
-            try
-            {
-                Directory.CreateDirectory(path);
-            }
-            catch
-            {
-                return false;
-            }
-
-            return true;
+            Directory.CreateDirectory(path);
         }
     }
 

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using UStacker.Common;
 using UStacker.GlobalSettings.Groups;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace UStacker.GlobalSettings
 {
@@ -152,18 +151,19 @@ namespace UStacker.GlobalSettings
             return output is not null;
         }
 
-        [Serializable]
         internal record SettingsContainer
         {
-            [field: SerializeField] public HandlingSettings Handling { get; set; } = new();
-            [field: SerializeField] public SoundSettings Sound { get; set; } = new();
-            [field: SerializeField] public GameplaySettings Gameplay { get; set; } = new();
-            [field: SerializeField] public VideoSettings Video { get; set; } = new();
-            [field: SerializeField] public CustomizationSettings Customization { get; set; } = new();
-            [field: SerializeField] public StatCountingSettings StatCounting { get; set; } = new();
-            [field: SerializeField] public OtherSettings Others { get; set; } = new();
-            [field: SerializeField] public string Rebinds { get; set; } = string.Empty;
-            [field: SerializeField] public OverridesDictionary GameOverrrides { get; set; } = new();
+            // ReSharper disable MemberHidesStaticFromOuterClass
+            public HandlingSettings Handling { get; } = new();
+            public SoundSettings Sound { get; } = new();
+            public GameplaySettings Gameplay { get; } = new();
+            public VideoSettings Video { get; } = new();
+            public CustomizationSettings Customization { get; } = new();
+            public StatCountingSettings StatCounting { get; } = new();
+            public OtherSettings Others { get; } = new();
+            public string Rebinds { get; set; } = string.Empty;
+            // ReSharper restore MemberHidesStaticFromOuterClass
+            public OverridesDictionary GameOverrrides { get; } = new();
         }
     }
 }

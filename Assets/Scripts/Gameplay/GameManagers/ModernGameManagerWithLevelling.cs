@@ -36,6 +36,11 @@ namespace UStacker.Gameplay.GameManagers
             _mediator.Register<GameStateChangedMessage>(HandleGameStateChange);
         }
 
+        public void Delete()
+        {
+            Destroy(this);
+        }
+
         private void ResetState()
         {
             _currentLevel = Math.Clamp(_startingLevel, MIN_LEVEL, MAX_LEVEL);

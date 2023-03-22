@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UStacker.Common;
 using UStacker.GlobalSettings.Music;
@@ -13,24 +14,28 @@ namespace UStacker.GlobalSettings.Changers
         [SerializeField] private Button _folderButton;
         [SerializeField] private Button _docsButton;
 
-        private void Start()
+        private void Awake()
         {
             RefreshNames();
+        }
 
-            AppSettings.SettingsReloaded += RefreshValue;
+        protected override void Start()
+        {
+            base.Start();
+
             _dropdown.onValueChanged.AddListener(OptionPicked);
             _folderButton.onClick.AddListener(OpenSoundFolder);
             _docsButton.onClick.AddListener(OpenDocumentation);
         }
-        
+
         private void OnApplicationFocus(bool hasFocus)
         {
             if (!hasFocus) return;
-            
+
             RefreshNames();
         }
 
-        private void RefreshValue()
+        protected override void RefreshValue()
         {
             for (var i = 0; i < _dropdown.options.Count; i++)
             {
@@ -39,6 +44,7 @@ namespace UStacker.GlobalSettings.Changers
                 _dropdown.SetValueWithoutNotify(i);
                 break;
             }
+
             _dropdown.RefreshShownValue();
         }
 
@@ -67,7 +73,8 @@ namespace UStacker.GlobalSettings.Changers
 
         private void OpenDocumentation()
         {
-            const string backgroundDocsUrl = StaticSettings.WikiUrl + "blob/main/Style customization/Sound-customization.md";
+            const string backgroundDocsUrl =
+                StaticSettings.WikiUrl + "blob/main/Style customization/Sound-customization.md";
             Application.OpenURL(backgroundDocsUrl);
         }
 

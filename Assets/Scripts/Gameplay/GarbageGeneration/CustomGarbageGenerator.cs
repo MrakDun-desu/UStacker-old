@@ -9,7 +9,6 @@ namespace UStacker.Gameplay.GarbageGeneration
 {
     public class CustomGarbageGenerator : IGarbageGenerator, IDisposable
     {
-
         private const string BOARD_VARIABLE_NAME = "Board";
         private readonly LuaFunction _generationFunction;
         private readonly LuaFunction _resetFunction;

@@ -5,12 +5,12 @@ namespace UStacker.Multiplayer.Broadcasts
     public readonly struct ChatBroadcast : IBroadcast
     {
         public readonly string Content;
-        public readonly string SenderName;
+        public readonly int SenderId;
 
-        public ChatBroadcast(string content, string senderName)
+        public ChatBroadcast(string content, int senderId = -1)
         {
             Content = content;
-            SenderName = senderName;
+            SenderId = senderId;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace UStacker.Gameplay
         public StatContainer Stats { get; set; }
         public GameSettingsSO.SettingsContainer GameSettings { get; set; }
         public List<InputActionMessage> ActionList { get; set; } = new();
-        public List<PiecePlacementInfo> PiecePlacementList { get; set; } = new();
+        public List<double> PiecePlacementList { get; set; } = new();
 
         public void Save()
         {

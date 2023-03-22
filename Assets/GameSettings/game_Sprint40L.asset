@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: game_Sprint40L
   m_EditorClassIdentifier: 
   GameType: {fileID: 11400000, guid: d1ef566a279ff264c88ee9c93b7c99f7, type: 2}
-  Settings:
+  _settings:
     <General>k__BackingField:
       _nextPieceCount: 5
-      _randomizerType: 1
+      _randomizerType: 0
       _customRandomizerName: 
       <AllowedSpins>k__BackingField: 2
       <UseCustomSeed>k__BackingField: 0
       <CustomSeed>k__BackingField: 0
       <CustomRandomizerScript>k__BackingField: 
-      <ActiveSeed>k__BackingField: 1655679137033317891
+      <ActiveSeed>k__BackingField: 16688664036304051815
     <Controls>k__BackingField:
       _rotationSystemType: 2
       _customRotationSystem: 
@@ -34,17 +34,17 @@ MonoBehaviour:
       <ShowGhostPiece>k__BackingField: 1
       <OverrideHandling>k__BackingField: 0
       <Handling>k__BackingField:
-        _delayedAutoShift: 0.0833333358168602
-        _automaticRepeatRate: 0.0016666667070239782
+        _delayedAutoShift: 0.08666666597127914
+        _automaticRepeatRate: 0
         _softDropFactor: Infinity
-        _dasCutDelay: 0
-        _doubleDropPreventionInterval: 0
+        _dasCutDelay: 0.03333333507180214
+        _doubleDropPreventionInterval: 0.01666666753590107
         _softDropDelay: 0
+        _delayDasOn: 1
+        _diagonalLockBehavior: 0
+        _cancelDasDelayWithInput: 1
         _zeroGravitySoftDropBase: 0.02
-        <DelayDasOn>k__BackingField: 0
-        <SimultaneousDasBehavior>k__BackingField: 1
-        <DiagonalLockBehavior>k__BackingField: 0
-        <CancelDasDelayWithInput>k__BackingField: 1
+        _simultaneousDasBehavior: 2
       <ActiveRotationSystem>k__BackingField:
         DefaultTable:
           StartState: 0
@@ -156,11 +156,11 @@ MonoBehaviour:
       <CustomGarbageScript>k__BackingField: 
       <CustomGameManagerScript>k__BackingField: 
       <ToppingOutIsOkay>k__BackingField: 0
-      <StartingLevel>k__BackingField: 1
+      <StartingLevel>k__BackingField: 
     <Presentation>k__BackingField:
-      _title: Sprint 40L
-      _countdownInterval: 0.65
-      _countdownCount: 3
+      _title: Custom game
+      _countdownInterval: 0.5
+      _countdownCount: 2
       <DefaultStatCounterGroup>k__BackingField:
         _name: Sprint 40L
         _statCounterSos:

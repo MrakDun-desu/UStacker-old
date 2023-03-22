@@ -12,15 +12,25 @@ namespace UStacker.Gameplay.Presentation
     public class GameCountdown : MonoBehaviour, IGameSettingsDependency
     {
         [SerializeField] private TMP_Text _gameTitle;
+        [SerializeField] private TMP_Text _countdownText;
         [SerializeField] private string _noCountdownMessage = "Ready";
         [SerializeField] private string _lastMessage = "Start!";
         [SerializeField] private Mediator _mediator;
         [SerializeField] private UnityEvent CountdownFinished;
-        
-        public GameSettingsSO.SettingsContainer GameSettings { private get; set; }
-        
+
+        private GameSettingsSO.SettingsContainer _gameSettings;
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            private get => _gameSettings;
+            set
+            {
+                _gameSettings = value;
+                Initialize();
+            }
+        }
+
         private bool _active;
-        private TMP_Text _countdownText;
         private uint _currentCount;
         private float _nextInterval;
         private float _interval = .1f;
@@ -28,31 +38,44 @@ namespace UStacker.Gameplay.Presentation
 
         private void Awake()
         {
-            _countdownText = GetComponent<TMP_Text>();
-            CountdownFinished.AddListener(() => gameObject.SetActive(false));
-            _mediator.Register<GameStateChangedMessage>(OnGameStateChange);
-            
-            FirstTimeInitialize();
+            CountdownFinished.AddListener(() => _countdownText.alpha = 0);
         }
 
-        private void FirstTimeInitialize()
+        private void OnEnable()
+        {
+            _mediator.Register<GameStateChangedMessage>(OnGameStateChange);
+        }
+
+        private void OnDisable()
+        {
+            _mediator.Unregister<GameStateChangedMessage>(OnGameStateChange);
+        }
+
+        private void Initialize()
         {
             _gameTitle.text = GameSettings.Presentation.Title;
             _interval = GameSettings.Presentation.CountdownInterval;
             _count = GameSettings.Presentation.CountdownCount;
+
+            transform.localPosition = new Vector2(
+                GameSettings.BoardDimensions.BoardWidth / 2f,
+                GameSettings.BoardDimensions.BoardHeight / 2f);
         }
-        
+
         private void OnGameStateChange(GameStateChangedMessage message)
         {
-            if (message.NewState is GameState.StartCountdown or GameState.ResumeCountdown)
+            switch (message)
             {
-                if (message.IsReplay)
+                case {NewState: GameState.ResumeCountdown, IsReplay: true}:
                     CountdownFinished.Invoke();
-                else
+                    break;
+                case {NewState: GameState.StartCountdown or GameState.ResumeCountdown}:
                     StartCountdown();
+                    break;
+                case {PreviousState: GameState.StartCountdown or GameState.ResumeCountdown}:
+                    StopCountdown();
+                    break;
             }
-            else if (message.PreviousState is GameState.StartCountdown or GameState.ResumeCountdown)
-                StopCountdown();
         }
 
         private void Update()
@@ -86,12 +109,12 @@ namespace UStacker.Gameplay.Presentation
         private void StopCountdown()
         {
             _active = false;
-            _countdownText.gameObject.SetActive(false);
+            _countdownText.alpha = 0;
         }
 
         private void StartCountdown()
         {
-            _countdownText.gameObject.SetActive(true);
+            _countdownText.alpha = 1;
             _nextInterval = Time.realtimeSinceStartup + _interval;
             _active = true;
             _currentCount = _count + 1;

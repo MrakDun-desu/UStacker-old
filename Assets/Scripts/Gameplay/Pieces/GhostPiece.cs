@@ -31,7 +31,11 @@ namespace UStacker.Gameplay.Pieces
 
         public GameSettingsSO.SettingsContainer GameSettings
         {
-            set => _settings = value;
+            set
+            {
+                 _settings = value;   
+                 Initialize();
+            }
         }
         public event Action<Color> ColorChanged;
         public event Action Rendered;
@@ -77,7 +81,7 @@ namespace UStacker.Gameplay.Pieces
             );
         }
 
-        private void Start()
+        private void Initialize()
         {
             if (!_settings.Controls.ShowGhostPiece)
                 gameObject.SetActive(false);

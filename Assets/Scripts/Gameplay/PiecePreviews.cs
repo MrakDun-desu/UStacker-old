@@ -21,11 +21,6 @@ namespace UStacker.Gameplay
                 : newPiece;
         }
 
-        public string GetFirstPieceType()
-        {
-            return _containers.Count > 0 ? _containers[^1].PieceType : "";
-        }
-
         public Piece GetFirstPiece()
         {
             return _containers.Count > 0 ? _containers[^1].Piece : null;

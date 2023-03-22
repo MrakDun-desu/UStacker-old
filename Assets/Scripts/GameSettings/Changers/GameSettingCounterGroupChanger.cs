@@ -12,15 +12,14 @@ namespace UStacker.GameSettings.Changers
     {
         [Space] [SerializeField] private TMP_Dropdown _dropdown;
         private readonly List<KeyValuePair<Guid, string>> _availableGroups = new();
-        
-        private void Start()
-        {
-            RefreshValue();
 
+        protected override void Start()
+        {
+            base.Start();
             _dropdown.onValueChanged.AddListener(OnDropdownPicked);
         }
         
-        private void RefreshValue()
+        protected override void RefreshValue()
         {
             _availableGroups.Clear();
 

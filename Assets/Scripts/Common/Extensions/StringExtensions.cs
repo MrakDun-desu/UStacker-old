@@ -28,6 +28,9 @@ namespace UStacker.Common.Extensions
         {
             switch (input.ToLower())
             {
+                case "" :
+                    output = 0;
+                    return true;
                 case "inf":
                 case "+inf":
                     output = double.PositiveInfinity;
@@ -38,6 +41,26 @@ namespace UStacker.Common.Extensions
                 default:
                     var parsedStr = input.Replace(',', '.');
                     return double.TryParse(parsedStr, NumberStyles.Float, CultureInfo.InvariantCulture, out output);
+            }
+        }
+
+        public static bool TryParseFloat(this string input, out float output)
+        {
+            switch (input.ToLower())
+            {
+                case "" :
+                    output = 0;
+                    return true;
+                case "inf":
+                case "+inf":
+                    output = float.PositiveInfinity;
+                    return true;
+                case "-inf":
+                    output = float.NegativeInfinity;
+                    return true;
+                default:
+                    var parsedStr = input.Replace(',', '.');
+                    return float.TryParse(parsedStr, NumberStyles.Float, CultureInfo.InvariantCulture, out output);
             }
         }
 

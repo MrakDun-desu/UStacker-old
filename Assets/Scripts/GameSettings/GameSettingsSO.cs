@@ -16,7 +16,18 @@ namespace UStacker.GameSettings
         private const string FILENAME_EXTENSION = ".json";
         private const char INVALID_CHAR_REPLACEMENT = '_';
         public StringReferenceSO GameType;
-        public SettingsContainer Settings = new();
+        [SerializeField]
+        private SettingsContainer _settings = new();
+
+        public SettingsContainer Settings
+        {
+            get => _settings;
+            set
+            {
+                _settings = value;
+                SettingsReloaded?.Invoke();
+            }
+        }
 
         public event Action SettingsReloaded;
 

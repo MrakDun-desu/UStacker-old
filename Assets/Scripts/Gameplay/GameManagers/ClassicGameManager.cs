@@ -89,6 +89,11 @@ namespace UStacker.Gameplay.GameManagers
             _mediator.Register<GameStateChangedMessage>(HandleGameStateChange);
         }
 
+        public void Delete()
+        {
+            Destroy(this);
+        }
+
         private void ResetState()
         {
             _currentLevel = (uint) Mathf.Min(_startingLevel, _levelGravities.Length - 1);

@@ -7,14 +7,13 @@ namespace UStacker.GameSettings.Changers
     {
         [Space] [SerializeField] private Toggle _toggle;
 
-        private void Start()
+        protected override void Start()
         {
-            RefreshValue();
-            _gameSettingsSO.SettingsReloaded += RefreshValue;
+            base.Start();
             _toggle.onValueChanged.AddListener(SetValue);
         }
 
-        private void RefreshValue()
+        protected override void RefreshValue()
         {
             _toggle.isOn = _gameSettingsSO.GetValue<bool>(_controlPath);
         }

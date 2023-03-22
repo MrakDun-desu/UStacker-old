@@ -4,6 +4,7 @@ using UStacker.Common.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UStacker.Common.Extensions;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -20,24 +21,28 @@ namespace UStacker.GlobalSettings.Changers
         [SerializeField] private float _maxValue = 100;
         [SerializeField] private float _multiplier = 1;
 
-        [Header("Other settings")]
-        [SerializeField] private bool _maxIsInfinity;
+        [Header("Other settings")] [SerializeField]
+        private bool _maxIsInfinity;
+
         [SerializeField] private string _infinityString = "INF";
         [SerializeField] private UnityEvent<float> _valueChanged;
 
 
-        private void Start()
+        protected override void Start()
         {
             OnValidate();
-
-            RefreshValue();
-
-            _slider.ValueChanged += _ => OnSliderMoved();
+            base.Start();
+            _slider.ValueChanged += OnSliderMoved;
             _valueField.onEndEdit.AddListener(OnValueRewritten);
-            AppSettings.SettingsReloaded += RefreshValue;
         }
 
-        private new void OnValidate()
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            _slider.ValueChanged -= OnSliderMoved;
+        }
+
+        protected override void OnValidate()
         {
             base.OnValidate();
             _slider.MaxValue = _maxValue;
@@ -45,7 +50,7 @@ namespace UStacker.GlobalSettings.Changers
             _slider.Range = _range;
         }
 
-        private void RefreshValue()
+        protected override void RefreshValue()
         {
             var value = AppSettings.GetValue<float>(_controlPath);
             _slider.SetRealValue(value);
@@ -55,16 +60,17 @@ namespace UStacker.GlobalSettings.Changers
 
         private string FormatValue(float value)
         {
-            if (float.IsPositiveInfinity(value)) return _infinityString;
-            return Math.Round(value * _multiplier, 2).ToString(CultureInfo.InvariantCulture).Replace('.', ',');
+            return float.IsPositiveInfinity(value)
+                ? _infinityString
+                : Math.Round(value * _multiplier, 2).ToString(CultureInfo.InvariantCulture).Replace('.', ',');
         }
 
         private void OnValueRewritten(string value)
         {
-            if (string.IsNullOrEmpty(value)) value = "0";
+            if (string.IsNullOrEmpty(value))
+                value = "0";
 
-            value = value.Replace('.', ',');
-            var isValid = float.TryParse(value, out var newValue);
+            var isValid = value.TryParseFloat(out var newValue);
 
             if (!isValid)
             {
@@ -75,27 +81,15 @@ namespace UStacker.GlobalSettings.Changers
             newValue /= _multiplier;
 
             SetValue(newValue);
-            var actualValue = AppSettings.GetValue<float>(_controlPath);
-            _slider.SetRealValue(actualValue);
-            _valueField.SetTextWithoutNotify(float.IsPositiveInfinity(actualValue)
-                ? _infinityString
-                : FormatValue(actualValue));
-            _valueChanged.Invoke(actualValue);
         }
 
-        private void OnSliderMoved()
+        private void OnSliderMoved(float f)
         {
             var value = _slider.GetRealValue();
             if (Mathf.Abs(value - _maxValue) < float.Epsilon && _maxIsInfinity)
                 value = float.PositiveInfinity;
 
             SetValue(value);
-            var actualValue = AppSettings.GetValue<float>(_controlPath);
-            _slider.SetRealValue(actualValue);
-            _valueField.SetTextWithoutNotify(float.IsPositiveInfinity(actualValue)
-                ? _infinityString
-                : FormatValue(actualValue));
-            _valueChanged.Invoke(actualValue);
         }
     }
 }

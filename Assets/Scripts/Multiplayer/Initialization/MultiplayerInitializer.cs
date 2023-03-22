@@ -73,7 +73,7 @@ namespace UStacker.Multiplayer.Initialization
             }
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             _networkDiscovery.ServerDiscovered -= OnServerDiscovered;
             Player.LocalPlayerStarted -= OnLocalPlayerStarted;

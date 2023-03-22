@@ -89,17 +89,97 @@ namespace UStacker.Gameplay.Stats
             _sizeHandle.gameObject.SetActive(false);
         }
 
-        private void OnGameStarted(SeedSetMessage message)
+        private void OnSeedSet(SeedSetMessage message)
         {
             _random.State = message.Seed;
         }
 
-        private void RefreshStatCounter()
+        private void RegisterMethod(string methodName)
         {
+            _luaState.RegisterFunction(methodName, this, GetType().GetMethod(methodName));
+        }
+
+        private IEnumerator UpdateCor()
+        {
+            while (true)
+            {
+                if (!gameObject.activeSelf)
+                    yield break;
+                
+                try
+                {
+                    DisplayOutput(_updateFunction.Call());
+                }
+                catch (LuaException ex)
+                {
+                    AlertDisplayer.Instance.ShowAlert(new Alert(
+                        "Error executing stat counter script!",
+                        $"Error executing stat counter script with name {_statCounter.Name}.\nLua error: {ex.Message}",
+                        AlertType.Error
+                    ));
+                    gameObject.SetActive(false);
+
+                    yield break;
+                }
+
+                yield return new WaitForSeconds(_statCounter.UpdateInterval);
+            }
+        }
+
+        private void DisplayOutput(object[] output)
+        {
+            if (output is null) return;
+            if (output.Length <= 0 || output[0] is not string outText) return;
+
+            _displayText.text = outText;
+        }
+
+        private void HandlePositionDrag(Vector2 mousePos)
+        {
+            if (Mouse.current.leftButton.wasPressedThisFrame && _moveHandle.GetWorldSpaceRect().Contains(mousePos))
+            {
+                _dragStartPosition = mousePos;
+                _dragStartTransformPosition = _textContainer.localPosition;
+                _isDraggingPosition = true;
+            }
+            else if (Mouse.current.leftButton.isPressed && _isDraggingPosition)
+            {
+                var positionDifference = (Vector3) mousePos - _dragStartPosition;
+                var newPos = _dragStartTransformPosition + positionDifference;
+                newPos.x = Mathf.Round(newPos.x);
+                newPos.y = Mathf.Round(newPos.y);
+                _textContainer.localPosition = newPos;
+                _statCounter.Position = newPos;
+            }
+            else if (Mouse.current.leftButton.wasReleasedThisFrame) _isDraggingPosition = false;
+        }
+
+        private void HandleSizeDrag(Vector2 mousePos)
+        {
+            if (Mouse.current.leftButton.wasPressedThisFrame && _sizeHandle.GetWorldSpaceRect().Contains(mousePos))
+                _isDraggingSize = true;
+            else if (Mouse.current.leftButton.isPressed && _isDraggingSize)
+            {
+                var containerPos = (Vector2) _textContainer.position;
+                var sizeDelta = (mousePos - containerPos) / _textContainer.lossyScale;
+                sizeDelta.x = Mathf.Round(sizeDelta.x);
+                sizeDelta.y = Mathf.Round(sizeDelta.y);
+                if (sizeDelta.x < 1 || sizeDelta.y < 1) return;
+                _textContainer.sizeDelta = sizeDelta;
+                _statCounter.Size = sizeDelta;
+            }
+            else if (Mouse.current.leftButton.wasReleasedThisFrame) _isDraggingSize = false;
+        }
+        
+        public void RefreshStatCounter(StatCounterRecord statCounter)
+        {
+            _statCounter = statCounter;
+            
             _textContainer.localPosition =
                 new Vector3(_statCounter.Position.x, _statCounter.Position.y, _textContainer.localPosition.z);
             _textContainer.sizeDelta = _statCounter.Size;
 
+            Dispose();
             _luaState = CreateLua.WithAllPrerequisites(out _random);
             _luaState[UTILITY_NAME] = _statUtility;
             _luaState[STAT_CONTAINER_NAME] = _statContainer;
@@ -191,94 +271,26 @@ namespace UStacker.Gameplay.Stats
             StartCoroutine(UpdateCor());
         }
 
-        private void RegisterMethod(string methodName)
-        {
-            _luaState.RegisterFunction(methodName, this, GetType().GetMethod(methodName));
-        }
-
-        private IEnumerator UpdateCor()
-        {
-            while (true)
-            {
-                if (!gameObject.activeSelf)
-                    yield break;
-                
-                try
-                {
-                    DisplayOutput(_updateFunction.Call());
-                }
-                catch (LuaException ex)
-                {
-                    AlertDisplayer.Instance.ShowAlert(new Alert(
-                        "Error executing stat counter script!",
-                        $"Error executing stat counter script with name {_statCounter.Name}.\nLua error: {ex.Message}",
-                        AlertType.Error
-                    ));
-                    gameObject.SetActive(false);
-
-                    yield break;
-                }
-
-                yield return new WaitForSeconds(_statCounter.UpdateInterval);
-            }
-        }
-
-        private void DisplayOutput(object[] output)
-        {
-            if (output is null) return;
-            if (output.Length <= 0 || output[0] is not string outText) return;
-
-            _displayText.text = outText;
-        }
-
-        private void HandlePositionDrag(Vector2 mousePos)
-        {
-            if (Mouse.current.leftButton.wasPressedThisFrame && _moveHandle.GetWorldSpaceRect().Contains(mousePos))
-            {
-                _dragStartPosition = mousePos;
-                _dragStartTransformPosition = _textContainer.localPosition;
-                _isDraggingPosition = true;
-            }
-            else if (Mouse.current.leftButton.isPressed && _isDraggingPosition)
-            {
-                var positionDifference = (Vector3) mousePos - _dragStartPosition;
-                var newPos = _dragStartTransformPosition + positionDifference;
-                newPos.x = Mathf.Round(newPos.x);
-                newPos.y = Mathf.Round(newPos.y);
-                _textContainer.localPosition = newPos;
-                _statCounter.Position = newPos;
-            }
-            else if (Mouse.current.leftButton.wasReleasedThisFrame) _isDraggingPosition = false;
-        }
-
-        private void HandleSizeDrag(Vector2 mousePos)
-        {
-            if (Mouse.current.leftButton.wasPressedThisFrame && _sizeHandle.GetWorldSpaceRect().Contains(mousePos))
-                _isDraggingSize = true;
-            else if (Mouse.current.leftButton.isPressed && _isDraggingSize)
-            {
-                var containerPos = (Vector2) _textContainer.position;
-                var sizeDelta = (mousePos - containerPos) / _textContainer.lossyScale;
-                sizeDelta.x = Mathf.Round(sizeDelta.x);
-                sizeDelta.y = Mathf.Round(sizeDelta.y);
-                if (sizeDelta.x < 1 || sizeDelta.y < 1) return;
-                _textContainer.sizeDelta = sizeDelta;
-                _statCounter.Size = sizeDelta;
-            }
-            else if (Mouse.current.leftButton.wasReleasedThisFrame) _isDraggingSize = false;
-        }
 
         public void Initialize(Mediator mediator, StatBoardInterface board,
-            ReadonlyStatContainer statContainer, StatUtility statUtility,
-            StatCounterRecord statCounter)
+            ReadonlyStatContainer statContainer, StatUtility statUtility)
         {
             _mediator = mediator;
             _boardInterface = board;
             _statContainer = statContainer;
-            _statCounter = statCounter;
             _statUtility = statUtility;
-            _mediator.Register<SeedSetMessage>(OnGameStarted);
-            RefreshStatCounter();
+            _mediator.Register<SeedSetMessage>(OnSeedSet);
+        }
+
+        private void OnEnable()
+        {
+            if (_mediator != null)
+                _mediator.Register<SeedSetMessage>(OnSeedSet);
+        }
+
+        private void OnDisable()
+        {
+            _mediator.Register<SeedSetMessage>(OnSeedSet);
         }
 
         #region Callable functions

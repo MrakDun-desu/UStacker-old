@@ -35,6 +35,8 @@ namespace UStacker.Gameplay.GameStateManagement
         private GameState _currentState = GameState.Unset;
         private GameState _previousState;
 
+        public string GameType { get; set; }
+        
         private GameState CurrentState
         {
             get => _currentState;
@@ -191,13 +193,13 @@ namespace UStacker.Gameplay.GameStateManagement
             if (!IsReplay)
             {
                 _gameRecorder.ActionList.Sort((a, b) => a.Time.CompareTo(b.Time));
-                _gameRecorder.PiecePlacementList.Sort((a, b) => a.PlacementTime.CompareTo(b.PlacementTime));
-                Replay.GameType = GameInitializer.GameType;
+                _gameRecorder.PiecePlacementTimes.Sort();
+                Replay.GameType = GameType;
                 Replay.GameSettings = _replaySettings;
                 Replay.ActionList.Clear();
                 Replay.PiecePlacementList.Clear();
                 Replay.ActionList.AddRange(_gameRecorder.ActionList);
-                Replay.PiecePlacementList.AddRange(_gameRecorder.PiecePlacementList);
+                Replay.PiecePlacementList.AddRange(_gameRecorder.PiecePlacementTimes);
                 Replay.Stats = _statCounterManager.Stats;
                 Replay.GameLength = endTime;
                 Replay.TimeStamp = DateTime.UtcNow;
@@ -267,12 +269,28 @@ namespace UStacker.Gameplay.GameStateManagement
             _replaySettings.General.ActiveSeed = message.Seed;
         }
 
+        private void OnEnable()
+        {
+            _mediator.Register<GameCrashedMessage>(CrashGame);
+            _mediator.Register<SeedSetMessage>(OnSeedSet);
+            _mediator.Register<GameStateChangedMessage>(UpdateGameState, 10);
+        }
+
+        private void OnDisable()
+        {
+            _mediator.Unregister<GameCrashedMessage>(CrashGame);
+            _mediator.Unregister<SeedSetMessage>(OnSeedSet);
+            _mediator.Unregister<GameStateChangedMessage>(UpdateGameState);
+        }
+
+        private void UpdateGameState(GameStateChangedMessage message)
+        {
+            CurrentState = message.NewState;
+        }
+
         private void Awake()
         {
             _exitButton.onClick.AddListener(() => SceneManager.LoadScene("Scene_Menu_Main"));
-            _mediator.Register<GameCrashedMessage>(CrashGame);
-            _mediator.Register<SeedSetMessage>(OnSeedSet);
-            _mediator.Register<GameStateChangedMessage>(message => CurrentState = message.NewState, 10);
             AppSettings.Gameplay.PauseSingleplayerGamesOutOfFocusChanged += OnPauseSettingChange;
             OnPauseSettingChange(AppSettings.Gameplay.PauseSingleplayerGamesOutOfFocus);
         }

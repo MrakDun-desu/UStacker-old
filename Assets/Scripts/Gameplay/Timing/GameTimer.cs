@@ -79,10 +79,10 @@ namespace UStacker.Gameplay.Timing
                 _stopwatch.Reset();
             }
             
-            _sfxPlayer.RepressSfx = true;
             _offset = value;
             TimeScale = oldTimeScale;
             
+            _sfxPlayer.RepressSfx = true;
             _inputProcessor.Update(CurrentTime, true);
             _sfxPlayer.RepressSfx = false;
         }

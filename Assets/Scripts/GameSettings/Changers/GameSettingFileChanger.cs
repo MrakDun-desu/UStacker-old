@@ -5,7 +5,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UStacker.Common;
-using UStacker.GlobalSettings;
 
 namespace UStacker.GameSettings.Changers
 {
@@ -16,11 +15,9 @@ namespace UStacker.GameSettings.Changers
 
         protected abstract string TargetDir { get; }
 
-        private void Start()
+        protected override void Start()
         {
-            RefreshValue();
-
-            _gameSettingsSO.SettingsReloaded += RefreshValue;
+            base.Start();
             _dropdown.onValueChanged.AddListener(OnValuePicked);
             _openDirectoryButton.onClick.AddListener(OpenTargetDir);
         }
@@ -47,7 +44,7 @@ namespace UStacker.GameSettings.Changers
             SetValue(optionName);
         }
 
-        private void RefreshValue()
+        protected override void RefreshValue()
         {
             _dropdown.ClearOptions();
             _dropdown.options.Add(new TMP_Dropdown.OptionData(string.Empty));

@@ -16,16 +16,22 @@ namespace UStacker.Gameplay.SoundEffects
     {
         [SerializeField] private AudioClipCollection _defaultEffects = new();
         [SerializeField] private Mediator _mediator;
+        [SerializeField] private AudioSource _audioSource;
 
         public bool RepressSfx;
-        private AudioSource _audioSource;
         private Lua _luaState;
         private readonly List<string> _playedInThisUpdate = new();
 
         private void Awake()
         {
-            _audioSource = GetComponent<AudioSource>();
-            
+            if (!TryRegisterCustomFunctions())
+                RegisterDefaultFunctions();
+            SoundPackLoader.SoundPackChanged += Reload;
+        }
+
+        private void Reload()
+        {
+            Dispose();
             if (!TryRegisterCustomFunctions())
                 RegisterDefaultFunctions();
         }
@@ -332,6 +338,13 @@ namespace UStacker.Gameplay.SoundEffects
 
         public void Dispose()
         {
+            _mediator.Unregister<PiecePlacedMessage>(HandlePiecePlaced);
+            _mediator.Unregister<PieceRotatedMessage>(HandlePieceRotated);
+            _mediator.Unregister<PieceMovedMessage>(HandlePieceMoved);
+            _mediator.Unregister<HoldUsedMessage>(HandleHoldUsed);
+            _mediator.Unregister<PieceSpawnedMessage>(HandlePieceSpawned);
+            _mediator.Unregister<CountdownTickedMessage>(HandleCountdownTicked);
+            _mediator.Unregister<GameStateChangedMessage>(HandleGameStateChanged);
             _luaState?.Dispose();
         }
     }

@@ -17,18 +17,27 @@ namespace UStacker.Gameplay.GameStateManagement
         [SerializeField] private Mediator _mediator;
         [SerializeField] private StatCounterManager _statCounterManager;
         public UnityEvent<double> GameEnded;
-        public GameSettingsSO.SettingsContainer GameSettings { private get; set; }
+        
+
+        public GameSettingsSO.SettingsContainer GameSettings { get; set; }
 
         private GameState _gameState;
         private double _lastSentCondition;
 
-        private void Awake()
+        private void OnEnable()
         {
             _mediator.Register<PiecePlacedMessage>(OnPiecePlaced);
             _mediator.Register<ScoreChangedMessage>(OnScoreChanged);
             _mediator.Register<GameStateChangedMessage>(OnGameStateChanged);
         }
 
+        private void OnDisable()
+        {
+            _mediator.Unregister<PiecePlacedMessage>(OnPiecePlaced);
+            _mediator.Unregister<ScoreChangedMessage>(OnScoreChanged);
+            _mediator.Unregister<GameStateChangedMessage>(OnGameStateChanged);
+        }
+        
         private void OnGameStateChanged(GameStateChangedMessage message)
         {
             _gameState = message.NewState;

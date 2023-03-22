@@ -1,5 +1,4 @@
 using System.Globalization;
-using UnityEngine;
 
 namespace UStacker.GameSettings.Changers
 {
@@ -20,9 +19,6 @@ namespace UStacker.GameSettings.Changers
             }
 
             SetValue(floatValue);
-
-            var actualValue = _gameSettingsSO.GetValue<float>(_controlPath);
-            _valueField.SetTextWithoutNotify(actualValue.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

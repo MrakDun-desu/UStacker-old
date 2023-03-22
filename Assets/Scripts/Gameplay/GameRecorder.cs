@@ -10,11 +10,16 @@ namespace UStacker.Gameplay
         [SerializeField] private Mediator _mediator;
 
         public List<InputActionMessage> ActionList = new();
-        public List<PiecePlacementInfo> PiecePlacementList = new();
+        public List<double> PiecePlacementTimes = new();
 
         private bool _recording;
 
-        private void Awake()
+        private void OnEnable()
+        {
+            _mediator.Register<GameStateChangedMessage>(OnGameStateChange);
+        }
+
+        private void OnDisable()
         {
             _mediator.Register<GameStateChangedMessage>(OnGameStateChange);
         }
@@ -42,14 +47,13 @@ namespace UStacker.Gameplay
 
         private void AddPiecePlacementToList(PiecePlacedMessage message)
         {
-            var placementInfo = new PiecePlacementInfo(message.Time, message.TotalRotation, message.TotalMovement, message.PieceType);
-            PiecePlacementList.Add(placementInfo);
+            PiecePlacementTimes.Add(message.Time);
         }
 
         private void StartRecording()
         {
             ActionList.Clear();
-            PiecePlacementList.Clear();
+            PiecePlacementTimes.Clear();
             if (_recording) return;
             _mediator.Register<InputActionMessage>(AddInputActionToList);
             _mediator.Register<PiecePlacedMessage>(AddPiecePlacementToList);

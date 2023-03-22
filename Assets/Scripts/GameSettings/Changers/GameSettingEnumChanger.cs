@@ -10,11 +10,9 @@ namespace UStacker.GameSettings.Changers
 
         [SerializeField] private EnumWithName[] _values;
 
-        private void Start()
+        protected override void Start()
         {
-            RefreshValue();
-
-            _gameSettingsSO.SettingsReloaded += RefreshValue;
+            base.Start();
             _dropdown.onValueChanged.AddListener(OnValuePicked);
         }
 
@@ -23,7 +21,7 @@ namespace UStacker.GameSettings.Changers
             SetValue(_values[index].Value);
         }
 
-        private void RefreshValue()
+        protected override void RefreshValue()
         {
             _dropdown.ClearOptions();
             for (var i = 0; i < _values.Length; i++)

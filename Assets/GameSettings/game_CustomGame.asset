@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: game_CustomGame
   m_EditorClassIdentifier: 
   GameType: {fileID: 11400000, guid: d5b147ab88e76c1479291959c777b01d, type: 2}
-  Settings:
+  _settings:
     <General>k__BackingField:
       _nextPieceCount: 5
       _randomizerType: 0
@@ -22,7 +22,7 @@ MonoBehaviour:
       <UseCustomSeed>k__BackingField: 0
       <CustomSeed>k__BackingField: 0
       <CustomRandomizerScript>k__BackingField: 
-      <ActiveSeed>k__BackingField: 51131232
+      <ActiveSeed>k__BackingField: 0
     <Controls>k__BackingField:
       _rotationSystemType: 2
       _customRotationSystem: 
@@ -34,45 +34,33 @@ MonoBehaviour:
       <ShowGhostPiece>k__BackingField: 1
       <OverrideHandling>k__BackingField: 0
       <Handling>k__BackingField:
-        _delayedAutoShift: 0.08500000089406967
-        _automaticRepeatRate: 0
-        _softDropFactor: Infinity
-        _dasCutDelay: 0.01666666753590107
-        _doubleDropPreventionInterval: 0.01666666753590107
+        _delayedAutoShift: 0.125
+        _automaticRepeatRate: 0.05
+        _softDropFactor: 20
+        _dasCutDelay: 0
+        _doubleDropPreventionInterval: 0
         _softDropDelay: 0
+        _delayDasOn: 0
+        _diagonalLockBehavior: 0
+        _cancelDasDelayWithInput: 1
         _zeroGravitySoftDropBase: 0.02
-        <DelayDasOn>k__BackingField: 1
-        <SimultaneousDasBehavior>k__BackingField: 2
-        <DiagonalLockBehavior>k__BackingField: 0
-        <CancelDasDelayWithInput>k__BackingField: 1
+        _simultaneousDasBehavior: 1
       <ActiveRotationSystem>k__BackingField:
         DefaultTable:
           StartState: 0
           FullSpinKicks: []
-          ZeroToThree:
-          - {x: 0, y: 0}
-          ZeroToOne:
-          - {x: 0, y: 0}
-          OneToZero:
-          - {x: 0, y: 0}
-          OneToTwo:
-          - {x: 0, y: 0}
-          TwoToOne:
-          - {x: 0, y: 0}
-          TwoToThree:
-          - {x: 0, y: 0}
-          ThreeToTwo:
-          - {x: 0, y: 0}
-          ThreeToZero:
-          - {x: 0, y: 0}
-          ZeroToTwo:
-          - {x: 0, y: 0}
-          TwoToZero:
-          - {x: 0, y: 0}
-          OneToThree:
-          - {x: 0, y: 0}
-          ThreeToOne:
-          - {x: 0, y: 0}
+          ZeroToThree: []
+          ZeroToOne: []
+          OneToZero: []
+          OneToTwo: []
+          TwoToOne: []
+          TwoToThree: []
+          ThreeToTwo: []
+          ThreeToZero: []
+          ZeroToTwo: []
+          TwoToZero: []
+          OneToThree: []
+          ThreeToOne: []
     <BoardDimensions>k__BackingField:
       _boardWidth: 10
       _boardHeight: 20
@@ -108,17 +96,13 @@ MonoBehaviour:
       _countdownInterval: 0.65
       _countdownCount: 3
       <DefaultStatCounterGroup>k__BackingField:
-        _name: Sprint 40L
+        _name: Default
         _statCounterSos:
         - {fileID: 11400000, guid: 99a1507bdfe942c41a6dd7fe380ea1cb, type: 2}
         - {fileID: 11400000, guid: da01094586ea3ff42b5d0427967e84f5, type: 2}
         - {fileID: 11400000, guid: a93c75259ac95fa4c8e35e2570556598, type: 2}
         - {fileID: 11400000, guid: 5a65acaebf7418442a6506c2d5647d0d, type: 2}
-        - {fileID: 11400000, guid: 4a9886897f755cf4c9143a4f700abdf8, type: 2}
-        - {fileID: 11400000, guid: be038ea0a0ad71c4a9a49b55536e061d, type: 2}
-        - {fileID: 11400000, guid: a059b8164b4204e44b92ef546184abe2, type: 2}
         - {fileID: 11400000, guid: b8aa3efaa10821544ab1a3937865e458, type: 2}
-        - {fileID: 11400000, guid: 62d14d5b7668c504ba2065b11d6e10b6, type: 2}
         - {fileID: 11400000, guid: 2077419e4bb765a4d9bc5e3f7bbc20fa, type: 2}
         _statCounters:
         - Name: All clears action text
@@ -171,37 +155,6 @@ MonoBehaviour:
           Position: {x: -10, y: 11}
           Size: {x: 9, y: 2}
           UpdateInterval: 0
-        - Name: Holds
-          Type: 0
-          Filename: 
-          Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
-            then\n\t\treturn \"Holds: 0\"\n\tend\nend\nfunction OnHold(message)\n\treturn
-            \"Holds: \" .. Stats.Holds\nend\nSetText(\"Holds: 0\")\nSetAlignment(\"left\")\nreturn
-            {\n\t[\"HoldUsed\"] = OnHold,\n\t[\"GameStateChanged\"] = Reset\n}"
-          Position: {x: 11, y: 2}
-          Size: {x: 5, y: 1}
-          UpdateInterval: 0
-        - Name: Inputs
-          Type: 0
-          Filename: 
-          Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
-            then\n\t\treturn \"Inputs: 0\"\n\tend\nend\nfunction OnInputAction(message)\n\treturn
-            \"Inputs: \" .. Stats.KeysPressed\nend\nSetText(\"Inputs: 0\")\nSetAlignment(\"left\")\nreturn
-            {\n\t[\"InputAction\"] = OnInputAction,\n\t[\"GameStateChanged\"] = Reset\n}"
-          Position: {x: 11, y: 3}
-          Size: {x: 5, y: 1}
-          UpdateInterval: 0
-        - Name: Lines cleared
-          Type: 0
-          Filename: 
-          Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
-            then\n\t\treturn \"Lines cleared: 0\"\n\tend\nend\nfunction OnPiecePlaced(message)\n\treturn
-            \"Lines cleared: \" .. Stats.LinesCleared\nend\nSetText(\"Lines cleared:
-            0\")\nreturn {\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStateChanged\"]
-            = Reset\n}"
-          Position: {x: -10, y: 3}
-          Size: {x: 9, y: 2}
-          UpdateInterval: 0
         - Name: Pieces
           Type: 0
           Filename: 
@@ -211,21 +164,9 @@ MonoBehaviour:
             \"Pieces: \" .. piecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
             {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] =
             FormatOutput,\n\t[\"GameStateChanged\"] = Reset\n}"
-          Position: {x: -9, y: 6}
+          Position: {x: -9, y: 3}
           Size: {x: 8, y: 3}
           UpdateInterval: 0.1
-        - Name: Remaining end condition
-          Type: 0
-          Filename: 
-          Script: "function OnChange(message)\n\tif message.ConditionName == nil
-            or message.ConditionName == \"None\" or message.ConditionName == \"\"
-            then\n\t\treturn \"\"\n\tend\n\tlocal remaining = message.TotalCount
-            - message.CurrentCount\n\tif remaining < 0 then remaining = 0 end\n\treturn
-            StatUtility:FormatNumber(remaining, 0)\nend\nSetText(\"\")\nSetAlignment(\"center\")\nSetVisibility(0.4)\nreturn
-            {\n\t[\"GameEndConditionChanged\"] = OnChange\n}"
-          Position: {x: 3, y: 15}
-          Size: {x: 4, y: 4}
-          UpdateInterval: 0
         - Name: Stopwatch
           Type: 0
           Filename: 

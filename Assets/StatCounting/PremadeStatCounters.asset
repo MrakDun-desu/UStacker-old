@@ -13,8 +13,98 @@ MonoBehaviour:
   m_Name: PremadeStatCounters
   m_EditorClassIdentifier: 
   PremadeGroups:
+  - _name: Cheese Race 20L
+    _statCounterSos:
+    - {fileID: 11400000, guid: da01094586ea3ff42b5d0427967e84f5, type: 2}
+    - {fileID: 11400000, guid: a93c75259ac95fa4c8e35e2570556598, type: 2}
+    - {fileID: 11400000, guid: 5a65acaebf7418442a6506c2d5647d0d, type: 2}
+    - {fileID: 11400000, guid: a059b8164b4204e44b92ef546184abe2, type: 2}
+    - {fileID: 11400000, guid: b8aa3efaa10821544ab1a3937865e458, type: 2}
+    - {fileID: 11400000, guid: 62d14d5b7668c504ba2065b11d6e10b6, type: 2}
+    - {fileID: 11400000, guid: 2077419e4bb765a4d9bc5e3f7bbc20fa, type: 2}
+    _statCounters:
+    - Name: Back to back action text
+      Type: 0
+      Filename: 
+      Script: "function OnPiecePlaced(message)\n\tif message.CurrentBackToBack ==
+        0 or not message.WasBtbClear then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
+        2)\n\treturn \"Back to Back x\" .. message.CurrentBackToBack\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
+        {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
+      Position: {x: -10, y: 15}
+      Size: {x: 9, y: 2}
+      UpdateInterval: 0
+    - Name: Clear type action text
+      Type: 0
+      Filename: 
+      Script: "PieceTypes = {\n\t[\"t\"] = \"T\",\n\t[\"i\"] = \"I\",\n\t[\"o\"]
+        = \"O\",\n\t[\"s\"] = \"S\",\n\t[\"z\"] = \"Z\",\n\t[\"l\"] = \"L\",\n\t[\"j\"]
+        = \"J\"\n}\n\nClearCounts = {\n\t\"Single\",\n\t\"Double\",\n\t\"Triple\",\n\t\"Quad\",\n\t\"Quint\",\n\t\"Hexad\",\n\t\"Heptad\",\n\t\"Octad\",\n\t\"Nonad\",\n\t\"Decad\"\n}\n\nfunction
+        OnPiecePlaced(message)\n\tlocal output = \"\"\n\t\n\tif message.WasSpin or
+        message.WasSpinMini then\n\t\toutput = PieceTypes[message.PieceType]\n\tend\n\tif
+        output == nil then output = \"\" end\n\tif message.WasSpin then\n\t\toutput
+        = output .. \" Spin \"\n\telseif message.WasSpinMini then\n\t\toutput = output
+        .. \" Spin Mini \"\n\tend\n\n\tif message.LinesCleared <= 0 then\n\t\tif
+        output == \"\" then\n\t\t\treturn\n\t\tend\n\t\tSetVisibility(1)\n\t\tAnimateVisibility(0,
+        2)\n\t\treturn output\n\tend\n\n\tSetVisibility(1)\n\tAnimateVisibility(0,
+        2)\n\tif message.LinesCleared <= #ClearCounts then\n\t\treturn output ..
+        ClearCounts[message.LinesCleared]\n\telse\n\t\tlocal overflow = message.LinesCleared
+        - #ClearCounts\n\t\treturn output .. ClearCounts[#ClearCounts] .. overflow\n\tend\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
+        {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
+      Position: {x: -10, y: 13}
+      Size: {x: 9, y: 2}
+      UpdateInterval: 0
+    - Name: Combo action text
+      Type: 0
+      Filename: 
+      Script: "function OnPiecePlaced(message)\n\tif message.CurrentCombo == 0 then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
+        2)\n\treturn \"Combo \" .. message.CurrentCombo\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
+        {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
+      Position: {x: -10, y: 11}
+      Size: {x: 9, y: 2}
+      UpdateInterval: 0
+    - Name: Lines cleared
+      Type: 0
+      Filename: 
+      Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+        then\n\t\treturn \"Lines cleared: 0\"\n\tend\nend\nfunction OnPiecePlaced(message)\n\treturn
+        \"Lines cleared: \" .. Stats.LinesCleared\nend\nSetText(\"Lines cleared:
+        0\")\nreturn {\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStateChanged\"]
+        = Reset\n}"
+      Position: {x: -10, y: 3}
+      Size: {x: 9, y: 2}
+      UpdateInterval: 0
+    - Name: Pieces
+      Type: 0
+      Filename: 
+      Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+        then\n\t\treturn FormatOutput()\n\tend\nend\n\nfunction FormatOutput()\r\n\tlocal
+        pps = Stats.PiecesPerSecond\r\n\tlocal piecesPlaced = Stats.PiecesPlaced\r\n\treturn
+        \"Pieces: \" .. piecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
+        {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] = FormatOutput,\n\t[\"GameStateChanged\"]
+        = Reset\n}"
+      Position: {x: -9, y: 6}
+      Size: {x: 8, y: 3}
+      UpdateInterval: 0.1
+    - Name: Remaining end condition
+      Type: 0
+      Filename: 
+      Script: "function OnChange(message)\n\tif message.ConditionName == nil or message.ConditionName
+        == \"None\" or message.ConditionName == \"\" then\n\t\treturn \"\"\n\tend\n\tlocal
+        remaining = message.TotalCount - message.CurrentCount\n\tif remaining < 0
+        then remaining = 0 end\n\treturn StatUtility:FormatNumber(remaining, 0)\nend\nSetText(\"\")\nSetAlignment(\"center\")\nSetVisibility(0.4)\nreturn
+        {\n\t[\"GameEndConditionChanged\"] = OnChange\n}"
+      Position: {x: 3, y: 15}
+      Size: {x: 4, y: 4}
+      UpdateInterval: 0
+    - Name: Stopwatch
+      Type: 0
+      Filename: 
+      Script: "function OnUpdated()\n\treturn \"Time: \" .. StatUtility:GetFormattedTime()\nend\nSetText(\"Time:
+        \" .. StatUtility:FormatTime(0))\nreturn {\n\t[\"CounterUpdated\"] = OnUpdated\n}"
+      Position: {x: -9, y: 0}
+      Size: {x: 8, y: 2}
+      UpdateInterval: 0.01
   - _name: Sprint 40L
-    _gameType: {fileID: 11400000, guid: d1ef566a279ff264c88ee9c93b7c99f7, type: 2}
     _statCounterSos:
     - {fileID: 11400000, guid: 99a1507bdfe942c41a6dd7fe380ea1cb, type: 2}
     - {fileID: 11400000, guid: da01094586ea3ff42b5d0427967e84f5, type: 2}
@@ -49,30 +139,20 @@ MonoBehaviour:
     - Name: Clear type action text
       Type: 0
       Filename: 
-      Script: "function OnPiecePlaced(message)\r\n\tif message.LinesCleared == 0
-        then\r\n\t\treturn\r\n\tend\r\n\tAnimateVisibility(0, 2)\r\n\tlocal output
-        = \"\"\r\n\t\r\n\tif message.WasSpin or message.WasSpinMini then\r\n\t\tif
-        message.PieceType == \"t\" then\r\n\t\t\toutput = \"T\"\r\n\t\t\tSetColor(\"#9F03FC\")\r\n\t\telseif
-        message.PieceType == \"i\" then\r\n\t\t\toutput = \"I\"\r\n\t\t\tSetColor(\"#03fafc\")\r\n\t\telseif
-        message.PieceType == \"o\" then\r\n\t\t\toutput = \"O\"\r\n\t\t\tSetColor(\"#FCFD03\")\r\n\t\telseif
-        message.PieceType == \"s\" then\r\n\t\t\toutput = \"S\"\r\n\t\t\tSetColor(\"#03FD1D\")\r\n\t\telseif
-        message.PieceType == \"z\" then\r\n\t\t\toutput = \"Z\"\r\n\t\t\tSetColor(\"#FC0310\")\r\n\t\telseif
-        message.PieceType == \"l\" then\r\n\t\t\toutput = \"L\"\r\n\t\t\tSetColor(\"#FC9503\")\r\n\t\telseif
-        message.PieceType == \"j\" then\r\n\t\t\toutput = \"J\"\r\n\t\t\tSetColor(\"#0305fc\")\r\n\t\tend\r\n\telse\r\n\t\tSetColor(\"#fff\")\r\n\tend\r\n\r\n\tif
-        message.WasSpin then\r\n\t\toutput = output .. \" Spin \"\r\n\telseif message.WasSpinMini
-        then\r\n\t\toutput = output .. \" Spin Mini \"\r\n\tend\r\n\r\n\tif message.LinesCleared
-        == 1 then\r\n\t\treturn output .. \"Single\"\r\n\telseif message.LinesCleared
-        == 2 then\r\n\t\treturn output .. \"Double\"\r\n\telseif message.LinesCleared
-        == 3 then\r\n\t\treturn output .. \"Triple\"\r\n\telseif message.LinesCleared
-        == 4 then\r\n\t\treturn output .. \"Quad\"\r\n\telseif message.LinesCleared
-        == 5 then\r\n\t\treturn output .. \"Quint\"\r\n\telseif message.LinesCleared
-        == 6 then\r\n\t\treturn output .. \"Hexad\"\r\n\telseif message.LinesCleared
-        == 7 then\r\n\t\treturn output .. \"Heptad\"\r\n\telseif message.LinesCleared
-        == 8 then\r\n\t\treturn output .. \"Octad\"\r\n\telseif message.LinesCleared
-        == 9 then\r\n\t\treturn output .. \"Nonad\"\r\n\telseif message.LinesCleared
-        == 10 then\r\n\t\treturn output .. \"Decad\"\r\n\telse\r\n\t\tlocal overflow
-        = message.LinesCleared - 10\r\n\t\treturn output .. \"Decad + \" .. overflow\r\n\tend\r\nend\r\nSetVisibility(0)\r\nSetText(\"\")\r\nreturn
-        {\r\n\t[\"PiecePlaced\"] = OnPiecePlaced\r\n}"
+      Script: "PieceTypes = {\n\t[\"t\"] = \"T\",\n\t[\"i\"] = \"I\",\n\t[\"o\"]
+        = \"O\",\n\t[\"s\"] = \"S\",\n\t[\"z\"] = \"Z\",\n\t[\"l\"] = \"L\",\n\t[\"j\"]
+        = \"J\"\n}\n\nClearCounts = {\n\t\"Single\",\n\t\"Double\",\n\t\"Triple\",\n\t\"Quad\",\n\t\"Quint\",\n\t\"Hexad\",\n\t\"Heptad\",\n\t\"Octad\",\n\t\"Nonad\",\n\t\"Decad\"\n}\n\nfunction
+        OnPiecePlaced(message)\n\tlocal output = \"\"\n\t\n\tif message.WasSpin or
+        message.WasSpinMini then\n\t\toutput = PieceTypes[message.PieceType]\n\tend\n\tif
+        output == nil then output = \"\" end\n\tif message.WasSpin then\n\t\toutput
+        = output .. \" Spin \"\n\telseif message.WasSpinMini then\n\t\toutput = output
+        .. \" Spin Mini \"\n\tend\n\n\tif message.LinesCleared <= 0 then\n\t\tif
+        output == \"\" then\n\t\t\treturn\n\t\tend\n\t\tSetVisibility(1)\n\t\tAnimateVisibility(0,
+        2)\n\t\treturn output\n\tend\n\n\tSetVisibility(1)\n\tAnimateVisibility(0,
+        2)\n\tif message.LinesCleared <= #ClearCounts then\n\t\treturn output ..
+        ClearCounts[message.LinesCleared]\n\telse\n\t\tlocal overflow = message.LinesCleared
+        - #ClearCounts\n\t\treturn output .. ClearCounts[#ClearCounts] .. overflow\n\tend\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
+        {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
       Position: {x: -10, y: 13}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
@@ -88,143 +168,43 @@ MonoBehaviour:
     - Name: Holds
       Type: 0
       Filename: 
-      Script: "function Reset()\n\tHolds = 0\n\treturn \"Holds: 0\"\nend\nfunction
-        OnHold(message)\n\tif message.WasSuccessful then\n\t\tHolds = Holds + 1\n\tend\n\treturn
-        \"Holds: \" .. Holds\nend\nSetText(Reset())\nSetAlignment(\"left\")\nreturn
-        {\n\t[\"HoldUsed\"] = OnHold,\n\t[\"GameStarted\"] = Reset,\n\t[\"GameRestarted\"]
-        = Reset\n}"
+      Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+        then\n\t\treturn \"Holds: 0\"\n\tend\nend\nfunction OnHold(message)\n\treturn
+        \"Holds: \" .. Stats.Holds\nend\nSetText(\"Holds: 0\")\nSetAlignment(\"left\")\nreturn
+        {\n\t[\"HoldUsed\"] = OnHold,\n\t[\"GameStateChanged\"] = Reset\n}"
       Position: {x: 11, y: 2}
       Size: {x: 5, y: 1}
       UpdateInterval: 0
     - Name: Inputs
       Type: 0
       Filename: 
-      Script: "function Reset()\n\tInputs = 0\n\treturn \"Inputs: 0\"\nend\nfunction
-        OnInputAction(message)\n\tif message.KeyActionType:ToString() == \"KeyDown\"
-        then\n\t\tInputs = Inputs + 1\n\tend\n\treturn \"Inputs: \" .. Inputs\nend\nSetText(Reset())\nSetAlignment(\"left\")\nreturn
-        {\n\t[\"InputAction\"] = OnInputAction,\n\t[\"GameStarted\"] = Reset,\n\t[\"GameRestarted\"]
-        = Reset\n}"
+      Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+        then\n\t\treturn \"Inputs: 0\"\n\tend\nend\nfunction OnInputAction(message)\n\treturn
+        \"Inputs: \" .. Stats.KeysPressed\nend\nSetText(\"Inputs: 0\")\nSetAlignment(\"left\")\nreturn
+        {\n\t[\"InputAction\"] = OnInputAction,\n\t[\"GameStateChanged\"] = Reset\n}"
       Position: {x: 11, y: 3}
       Size: {x: 5, y: 1}
       UpdateInterval: 0
     - Name: Lines cleared
       Type: 0
       Filename: 
-      Script: "function Reset()\n\tLinesCleared = 0\n\treturn \"Lines cleared: 0\"\nend\nfunction
-        OnPiecePlaced(message)\n\tLinesCleared = LinesCleared + message.LinesCleared\n\treturn
-        \"Lines cleared: \" .. LinesCleared\nend\nSetText(Reset())\nreturn {\n\t[\"GameStarted\"]
-        = Reset,\n\t[\"GameRestarted\"] = Reset,\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
+      Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+        then\n\t\treturn \"Lines cleared: 0\"\n\tend\nend\nfunction OnPiecePlaced(message)\n\treturn
+        \"Lines cleared: \" .. Stats.LinesCleared\nend\nSetText(\"Lines cleared:
+        0\")\nreturn {\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStateChanged\"]
+        = Reset\n}"
       Position: {x: -10, y: 3}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Pieces
       Type: 0
       Filename: 
-      Script: "function FormatOutput()\r\n\tlocal pps = Stats.PiecesPerSecond\r\n\tlocal
-        piecesPlaced = Stats.PiecesPlaced\r\n\treturn \"Pieces: \" .. piecesPlaced
-        .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
-        {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] = FormatOutput,\r\n\t[\"GameStarted\"]
-        = FormatOutput,\r\n\t[\"GameRestarted\"] = FormatOutput\n}"
-      Position: {x: -9, y: 6}
-      Size: {x: 8, y: 3}
-      UpdateInterval: 0.1
-    - Name: Remaining end condition
-      Type: 0
-      Filename: 
-      Script: "function OnChange(message)\n\tif message.ConditionName == nil or message.ConditionName
-        == \"None\" or message.ConditionName == \"\" then\n\t\treturn \"\"\n\tend\n\tlocal
-        remaining = message.TotalCount - message.CurrentCount\n\tif remaining < 0
-        then remaining = 0 end\n\treturn StatUtility:FormatNumber(remaining, 0)\nend\nSetText(\"\")\nSetAlignment(\"center\")\nSetVisibility(0.4)\nreturn
-        {\n\t[\"GameEndConditionChanged\"] = OnChange\n}"
-      Position: {x: 3, y: 15}
-      Size: {x: 4, y: 4}
-      UpdateInterval: 0
-    - Name: Stopwatch
-      Type: 0
-      Filename: 
-      Script: "function OnUpdated()\n\treturn \"Time: \" .. StatUtility:GetFormattedTime()\nend\nSetText(\"Time:
-        \" .. StatUtility:FormatTime(0))\nreturn {\n\t[\"CounterUpdated\"] = OnUpdated\n}"
-      Position: {x: -9, y: 0}
-      Size: {x: 8, y: 2}
-      UpdateInterval: 0.01
-  - _name: Cheese Race 20L
-    _gameType: {fileID: 11400000, guid: 2eac9bfd32fcf27439d78c2ced67144e, type: 2}
-    _statCounterSos:
-    - {fileID: 11400000, guid: da01094586ea3ff42b5d0427967e84f5, type: 2}
-    - {fileID: 11400000, guid: a93c75259ac95fa4c8e35e2570556598, type: 2}
-    - {fileID: 11400000, guid: 5a65acaebf7418442a6506c2d5647d0d, type: 2}
-    - {fileID: 11400000, guid: a059b8164b4204e44b92ef546184abe2, type: 2}
-    - {fileID: 11400000, guid: b8aa3efaa10821544ab1a3937865e458, type: 2}
-    - {fileID: 11400000, guid: 62d14d5b7668c504ba2065b11d6e10b6, type: 2}
-    - {fileID: 11400000, guid: 2077419e4bb765a4d9bc5e3f7bbc20fa, type: 2}
-    _statCounters:
-    - Name: Back to back action text
-      Type: 0
-      Filename: 
-      Script: "function OnPiecePlaced(message)\n\tif message.CurrentBackToBack ==
-        0 or not message.WasBtbClear then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
-        2)\n\treturn \"Back to Back x\" .. message.CurrentBackToBack\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
-        {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 15}
-      Size: {x: 9, y: 2}
-      UpdateInterval: 0
-    - Name: Clear type action text
-      Type: 0
-      Filename: 
-      Script: "function OnPiecePlaced(message)\r\n\tif message.LinesCleared == 0
-        then\r\n\t\treturn\r\n\tend\r\n\tAnimateVisibility(0, 2)\r\n\tlocal output
-        = \"\"\r\n\t\r\n\tif message.WasSpin or message.WasSpinMini then\r\n\t\tif
-        message.PieceType == \"t\" then\r\n\t\t\toutput = \"T\"\r\n\t\t\tSetColor(\"#9F03FC\")\r\n\t\telseif
-        message.PieceType == \"i\" then\r\n\t\t\toutput = \"I\"\r\n\t\t\tSetColor(\"#03fafc\")\r\n\t\telseif
-        message.PieceType == \"o\" then\r\n\t\t\toutput = \"O\"\r\n\t\t\tSetColor(\"#FCFD03\")\r\n\t\telseif
-        message.PieceType == \"s\" then\r\n\t\t\toutput = \"S\"\r\n\t\t\tSetColor(\"#03FD1D\")\r\n\t\telseif
-        message.PieceType == \"z\" then\r\n\t\t\toutput = \"Z\"\r\n\t\t\tSetColor(\"#FC0310\")\r\n\t\telseif
-        message.PieceType == \"l\" then\r\n\t\t\toutput = \"L\"\r\n\t\t\tSetColor(\"#FC9503\")\r\n\t\telseif
-        message.PieceType == \"j\" then\r\n\t\t\toutput = \"J\"\r\n\t\t\tSetColor(\"#0305fc\")\r\n\t\tend\r\n\telse\r\n\t\tSetColor(\"#fff\")\r\n\tend\r\n\r\n\tif
-        message.WasSpin then\r\n\t\toutput = output .. \" Spin \"\r\n\telseif message.WasSpinMini
-        then\r\n\t\toutput = output .. \" Spin Mini \"\r\n\tend\r\n\r\n\tif message.LinesCleared
-        == 1 then\r\n\t\treturn output .. \"Single\"\r\n\telseif message.LinesCleared
-        == 2 then\r\n\t\treturn output .. \"Double\"\r\n\telseif message.LinesCleared
-        == 3 then\r\n\t\treturn output .. \"Triple\"\r\n\telseif message.LinesCleared
-        == 4 then\r\n\t\treturn output .. \"Quad\"\r\n\telseif message.LinesCleared
-        == 5 then\r\n\t\treturn output .. \"Quint\"\r\n\telseif message.LinesCleared
-        == 6 then\r\n\t\treturn output .. \"Hexad\"\r\n\telseif message.LinesCleared
-        == 7 then\r\n\t\treturn output .. \"Heptad\"\r\n\telseif message.LinesCleared
-        == 8 then\r\n\t\treturn output .. \"Octad\"\r\n\telseif message.LinesCleared
-        == 9 then\r\n\t\treturn output .. \"Nonad\"\r\n\telseif message.LinesCleared
-        == 10 then\r\n\t\treturn output .. \"Decad\"\r\n\telse\r\n\t\tlocal overflow
-        = message.LinesCleared - 10\r\n\t\treturn output .. \"Decad + \" .. overflow\r\n\tend\r\nend\r\nSetVisibility(0)\r\nSetText(\"\")\r\nreturn
-        {\r\n\t[\"PiecePlaced\"] = OnPiecePlaced\r\n}"
-      Position: {x: -10, y: 13}
-      Size: {x: 9, y: 2}
-      UpdateInterval: 0
-    - Name: Combo action text
-      Type: 0
-      Filename: 
-      Script: "function OnPiecePlaced(message)\n\tif message.CurrentCombo == 0 then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
-        2)\n\treturn \"Combo \" .. message.CurrentCombo\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
-        {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 11}
-      Size: {x: 9, y: 2}
-      UpdateInterval: 0
-    - Name: Lines cleared
-      Type: 0
-      Filename: 
-      Script: "function Reset()\n\tLinesCleared = 0\n\treturn \"Lines cleared: 0\"\nend\nfunction
-        OnPiecePlaced(message)\n\tLinesCleared = LinesCleared + message.LinesCleared\n\treturn
-        \"Lines cleared: \" .. LinesCleared\nend\nSetText(Reset())\nreturn {\n\t[\"GameStarted\"]
-        = Reset,\n\t[\"GameRestarted\"] = Reset,\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
-      Position: {x: -10, y: 3}
-      Size: {x: 9, y: 2}
-      UpdateInterval: 0
-    - Name: Pieces
-      Type: 0
-      Filename: 
-      Script: "function FormatOutput()\r\n\tlocal pps = Stats.PiecesPerSecond\r\n\tlocal
-        piecesPlaced = Stats.PiecesPlaced\r\n\treturn \"Pieces: \" .. piecesPlaced
-        .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
-        {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] = FormatOutput,\r\n\t[\"GameStarted\"]
-        = FormatOutput,\r\n\t[\"GameRestarted\"] = FormatOutput\n}"
+      Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+        then\n\t\treturn FormatOutput()\n\tend\nend\n\nfunction FormatOutput()\r\n\tlocal
+        pps = Stats.PiecesPerSecond\r\n\tlocal piecesPlaced = Stats.PiecesPlaced\r\n\treturn
+        \"Pieces: \" .. piecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
+        {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] = FormatOutput,\n\t[\"GameStateChanged\"]
+        = Reset\n}"
       Position: {x: -9, y: 6}
       Size: {x: 8, y: 3}
       UpdateInterval: 0.1
@@ -248,7 +228,6 @@ MonoBehaviour:
       Size: {x: 8, y: 2}
       UpdateInterval: 0.01
   - _name: Classic Marathon
-    _gameType: {fileID: 11400000, guid: 9e871d44a98d84541bd957a59c36de9e, type: 2}
     _statCounterSos:
     - {fileID: 11400000, guid: a93c75259ac95fa4c8e35e2570556598, type: 2}
     - {fileID: 11400000, guid: a9fc146114079ad4698de12de2b720a5, type: 2}
@@ -260,30 +239,20 @@ MonoBehaviour:
     - Name: Clear type action text
       Type: 0
       Filename: 
-      Script: "function OnPiecePlaced(message)\r\n\tif message.LinesCleared == 0
-        then\r\n\t\treturn\r\n\tend\r\n\tAnimateVisibility(0, 2)\r\n\tlocal output
-        = \"\"\r\n\t\r\n\tif message.WasSpin or message.WasSpinMini then\r\n\t\tif
-        message.PieceType == \"t\" then\r\n\t\t\toutput = \"T\"\r\n\t\t\tSetColor(\"#9F03FC\")\r\n\t\telseif
-        message.PieceType == \"i\" then\r\n\t\t\toutput = \"I\"\r\n\t\t\tSetColor(\"#03fafc\")\r\n\t\telseif
-        message.PieceType == \"o\" then\r\n\t\t\toutput = \"O\"\r\n\t\t\tSetColor(\"#FCFD03\")\r\n\t\telseif
-        message.PieceType == \"s\" then\r\n\t\t\toutput = \"S\"\r\n\t\t\tSetColor(\"#03FD1D\")\r\n\t\telseif
-        message.PieceType == \"z\" then\r\n\t\t\toutput = \"Z\"\r\n\t\t\tSetColor(\"#FC0310\")\r\n\t\telseif
-        message.PieceType == \"l\" then\r\n\t\t\toutput = \"L\"\r\n\t\t\tSetColor(\"#FC9503\")\r\n\t\telseif
-        message.PieceType == \"j\" then\r\n\t\t\toutput = \"J\"\r\n\t\t\tSetColor(\"#0305fc\")\r\n\t\tend\r\n\telse\r\n\t\tSetColor(\"#fff\")\r\n\tend\r\n\r\n\tif
-        message.WasSpin then\r\n\t\toutput = output .. \" Spin \"\r\n\telseif message.WasSpinMini
-        then\r\n\t\toutput = output .. \" Spin Mini \"\r\n\tend\r\n\r\n\tif message.LinesCleared
-        == 1 then\r\n\t\treturn output .. \"Single\"\r\n\telseif message.LinesCleared
-        == 2 then\r\n\t\treturn output .. \"Double\"\r\n\telseif message.LinesCleared
-        == 3 then\r\n\t\treturn output .. \"Triple\"\r\n\telseif message.LinesCleared
-        == 4 then\r\n\t\treturn output .. \"Quad\"\r\n\telseif message.LinesCleared
-        == 5 then\r\n\t\treturn output .. \"Quint\"\r\n\telseif message.LinesCleared
-        == 6 then\r\n\t\treturn output .. \"Hexad\"\r\n\telseif message.LinesCleared
-        == 7 then\r\n\t\treturn output .. \"Heptad\"\r\n\telseif message.LinesCleared
-        == 8 then\r\n\t\treturn output .. \"Octad\"\r\n\telseif message.LinesCleared
-        == 9 then\r\n\t\treturn output .. \"Nonad\"\r\n\telseif message.LinesCleared
-        == 10 then\r\n\t\treturn output .. \"Decad\"\r\n\telse\r\n\t\tlocal overflow
-        = message.LinesCleared - 10\r\n\t\treturn output .. \"Decad + \" .. overflow\r\n\tend\r\nend\r\nSetVisibility(0)\r\nSetText(\"\")\r\nreturn
-        {\r\n\t[\"PiecePlaced\"] = OnPiecePlaced\r\n}"
+      Script: "PieceTypes = {\n\t[\"t\"] = \"T\",\n\t[\"i\"] = \"I\",\n\t[\"o\"]
+        = \"O\",\n\t[\"s\"] = \"S\",\n\t[\"z\"] = \"Z\",\n\t[\"l\"] = \"L\",\n\t[\"j\"]
+        = \"J\"\n}\n\nClearCounts = {\n\t\"Single\",\n\t\"Double\",\n\t\"Triple\",\n\t\"Quad\",\n\t\"Quint\",\n\t\"Hexad\",\n\t\"Heptad\",\n\t\"Octad\",\n\t\"Nonad\",\n\t\"Decad\"\n}\n\nfunction
+        OnPiecePlaced(message)\n\tlocal output = \"\"\n\t\n\tif message.WasSpin or
+        message.WasSpinMini then\n\t\toutput = PieceTypes[message.PieceType]\n\tend\n\tif
+        output == nil then output = \"\" end\n\tif message.WasSpin then\n\t\toutput
+        = output .. \" Spin \"\n\telseif message.WasSpinMini then\n\t\toutput = output
+        .. \" Spin Mini \"\n\tend\n\n\tif message.LinesCleared <= 0 then\n\t\tif
+        output == \"\" then\n\t\t\treturn\n\t\tend\n\t\tSetVisibility(1)\n\t\tAnimateVisibility(0,
+        2)\n\t\treturn output\n\tend\n\n\tSetVisibility(1)\n\tAnimateVisibility(0,
+        2)\n\tif message.LinesCleared <= #ClearCounts then\n\t\treturn output ..
+        ClearCounts[message.LinesCleared]\n\telse\n\t\tlocal overflow = message.LinesCleared
+        - #ClearCounts\n\t\treturn output .. ClearCounts[#ClearCounts] .. overflow\n\tend\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
+        {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
       Position: {x: -10, y: 15}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
@@ -306,21 +275,23 @@ MonoBehaviour:
     - Name: Lines cleared
       Type: 0
       Filename: 
-      Script: "function Reset()\n\tLinesCleared = 0\n\treturn \"Lines cleared: 0\"\nend\nfunction
-        OnPiecePlaced(message)\n\tLinesCleared = LinesCleared + message.LinesCleared\n\treturn
-        \"Lines cleared: \" .. LinesCleared\nend\nSetText(Reset())\nreturn {\n\t[\"GameStarted\"]
-        = Reset,\n\t[\"GameRestarted\"] = Reset,\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
+      Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+        then\n\t\treturn \"Lines cleared: 0\"\n\tend\nend\nfunction OnPiecePlaced(message)\n\treturn
+        \"Lines cleared: \" .. Stats.LinesCleared\nend\nSetText(\"Lines cleared:
+        0\")\nreturn {\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStateChanged\"]
+        = Reset\n}"
       Position: {x: -10, y: 3}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Pieces
       Type: 0
       Filename: 
-      Script: "function FormatOutput()\r\n\tlocal pps = Stats.PiecesPerSecond\r\n\tlocal
-        piecesPlaced = Stats.PiecesPlaced\r\n\treturn \"Pieces: \" .. piecesPlaced
-        .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
-        {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] = FormatOutput,\r\n\t[\"GameStarted\"]
-        = FormatOutput,\r\n\t[\"GameRestarted\"] = FormatOutput\n}"
+      Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+        then\n\t\treturn FormatOutput()\n\tend\nend\n\nfunction FormatOutput()\r\n\tlocal
+        pps = Stats.PiecesPerSecond\r\n\tlocal piecesPlaced = Stats.PiecesPlaced\r\n\treturn
+        \"Pieces: \" .. piecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
+        {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] = FormatOutput,\n\t[\"GameStateChanged\"]
+        = Reset\n}"
       Position: {x: -9, y: 6}
       Size: {x: 8, y: 3}
       UpdateInterval: 0.1
@@ -343,7 +314,6 @@ MonoBehaviour:
       Size: {x: 8, y: 2}
       UpdateInterval: 0.01
   - _name: Marathon
-    _gameType: {fileID: 11400000, guid: d3eb4377728da054cb82ad5ca5528be8, type: 2}
     _statCounterSos:
     - {fileID: 11400000, guid: a93c75259ac95fa4c8e35e2570556598, type: 2}
     - {fileID: 11400000, guid: a9fc146114079ad4698de12de2b720a5, type: 2}
@@ -358,30 +328,20 @@ MonoBehaviour:
     - Name: Clear type action text
       Type: 0
       Filename: 
-      Script: "function OnPiecePlaced(message)\r\n\tif message.LinesCleared == 0
-        then\r\n\t\treturn\r\n\tend\r\n\tAnimateVisibility(0, 2)\r\n\tlocal output
-        = \"\"\r\n\t\r\n\tif message.WasSpin or message.WasSpinMini then\r\n\t\tif
-        message.PieceType == \"t\" then\r\n\t\t\toutput = \"T\"\r\n\t\t\tSetColor(\"#9F03FC\")\r\n\t\telseif
-        message.PieceType == \"i\" then\r\n\t\t\toutput = \"I\"\r\n\t\t\tSetColor(\"#03fafc\")\r\n\t\telseif
-        message.PieceType == \"o\" then\r\n\t\t\toutput = \"O\"\r\n\t\t\tSetColor(\"#FCFD03\")\r\n\t\telseif
-        message.PieceType == \"s\" then\r\n\t\t\toutput = \"S\"\r\n\t\t\tSetColor(\"#03FD1D\")\r\n\t\telseif
-        message.PieceType == \"z\" then\r\n\t\t\toutput = \"Z\"\r\n\t\t\tSetColor(\"#FC0310\")\r\n\t\telseif
-        message.PieceType == \"l\" then\r\n\t\t\toutput = \"L\"\r\n\t\t\tSetColor(\"#FC9503\")\r\n\t\telseif
-        message.PieceType == \"j\" then\r\n\t\t\toutput = \"J\"\r\n\t\t\tSetColor(\"#0305fc\")\r\n\t\tend\r\n\telse\r\n\t\tSetColor(\"#fff\")\r\n\tend\r\n\r\n\tif
-        message.WasSpin then\r\n\t\toutput = output .. \" Spin \"\r\n\telseif message.WasSpinMini
-        then\r\n\t\toutput = output .. \" Spin Mini \"\r\n\tend\r\n\r\n\tif message.LinesCleared
-        == 1 then\r\n\t\treturn output .. \"Single\"\r\n\telseif message.LinesCleared
-        == 2 then\r\n\t\treturn output .. \"Double\"\r\n\telseif message.LinesCleared
-        == 3 then\r\n\t\treturn output .. \"Triple\"\r\n\telseif message.LinesCleared
-        == 4 then\r\n\t\treturn output .. \"Quad\"\r\n\telseif message.LinesCleared
-        == 5 then\r\n\t\treturn output .. \"Quint\"\r\n\telseif message.LinesCleared
-        == 6 then\r\n\t\treturn output .. \"Hexad\"\r\n\telseif message.LinesCleared
-        == 7 then\r\n\t\treturn output .. \"Heptad\"\r\n\telseif message.LinesCleared
-        == 8 then\r\n\t\treturn output .. \"Octad\"\r\n\telseif message.LinesCleared
-        == 9 then\r\n\t\treturn output .. \"Nonad\"\r\n\telseif message.LinesCleared
-        == 10 then\r\n\t\treturn output .. \"Decad\"\r\n\telse\r\n\t\tlocal overflow
-        = message.LinesCleared - 10\r\n\t\treturn output .. \"Decad + \" .. overflow\r\n\tend\r\nend\r\nSetVisibility(0)\r\nSetText(\"\")\r\nreturn
-        {\r\n\t[\"PiecePlaced\"] = OnPiecePlaced\r\n}"
+      Script: "PieceTypes = {\n\t[\"t\"] = \"T\",\n\t[\"i\"] = \"I\",\n\t[\"o\"]
+        = \"O\",\n\t[\"s\"] = \"S\",\n\t[\"z\"] = \"Z\",\n\t[\"l\"] = \"L\",\n\t[\"j\"]
+        = \"J\"\n}\n\nClearCounts = {\n\t\"Single\",\n\t\"Double\",\n\t\"Triple\",\n\t\"Quad\",\n\t\"Quint\",\n\t\"Hexad\",\n\t\"Heptad\",\n\t\"Octad\",\n\t\"Nonad\",\n\t\"Decad\"\n}\n\nfunction
+        OnPiecePlaced(message)\n\tlocal output = \"\"\n\t\n\tif message.WasSpin or
+        message.WasSpinMini then\n\t\toutput = PieceTypes[message.PieceType]\n\tend\n\tif
+        output == nil then output = \"\" end\n\tif message.WasSpin then\n\t\toutput
+        = output .. \" Spin \"\n\telseif message.WasSpinMini then\n\t\toutput = output
+        .. \" Spin Mini \"\n\tend\n\n\tif message.LinesCleared <= 0 then\n\t\tif
+        output == \"\" then\n\t\t\treturn\n\t\tend\n\t\tSetVisibility(1)\n\t\tAnimateVisibility(0,
+        2)\n\t\treturn output\n\tend\n\n\tSetVisibility(1)\n\tAnimateVisibility(0,
+        2)\n\tif message.LinesCleared <= #ClearCounts then\n\t\treturn output ..
+        ClearCounts[message.LinesCleared]\n\telse\n\t\tlocal overflow = message.LinesCleared
+        - #ClearCounts\n\t\treturn output .. ClearCounts[#ClearCounts] .. overflow\n\tend\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
+        {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
       Position: {x: -10, y: 13}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
@@ -404,21 +364,23 @@ MonoBehaviour:
     - Name: Lines cleared
       Type: 0
       Filename: 
-      Script: "function Reset()\n\tLinesCleared = 0\n\treturn \"Lines cleared: 0\"\nend\nfunction
-        OnPiecePlaced(message)\n\tLinesCleared = LinesCleared + message.LinesCleared\n\treturn
-        \"Lines cleared: \" .. LinesCleared\nend\nSetText(Reset())\nreturn {\n\t[\"GameStarted\"]
-        = Reset,\n\t[\"GameRestarted\"] = Reset,\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
+      Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+        then\n\t\treturn \"Lines cleared: 0\"\n\tend\nend\nfunction OnPiecePlaced(message)\n\treturn
+        \"Lines cleared: \" .. Stats.LinesCleared\nend\nSetText(\"Lines cleared:
+        0\")\nreturn {\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStateChanged\"]
+        = Reset\n}"
       Position: {x: -10, y: 2}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Pieces
       Type: 0
       Filename: 
-      Script: "function FormatOutput()\r\n\tlocal pps = Stats.PiecesPerSecond\r\n\tlocal
-        piecesPlaced = Stats.PiecesPlaced\r\n\treturn \"Pieces: \" .. piecesPlaced
-        .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
-        {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] = FormatOutput,\r\n\t[\"GameStarted\"]
-        = FormatOutput,\r\n\t[\"GameRestarted\"] = FormatOutput\n}"
+      Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+        then\n\t\treturn FormatOutput()\n\tend\nend\n\nfunction FormatOutput()\r\n\tlocal
+        pps = Stats.PiecesPerSecond\r\n\tlocal piecesPlaced = Stats.PiecesPlaced\r\n\treturn
+        \"Pieces: \" .. piecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
+        {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] = FormatOutput,\n\t[\"GameStateChanged\"]
+        = Reset\n}"
       Position: {x: -9, y: 4}
       Size: {x: 8, y: 3}
       UpdateInterval: 0.1
@@ -469,7 +431,6 @@ MonoBehaviour:
       Size: {x: 9, y: 2}
       UpdateInterval: 0
   - _name: Ultra
-    _gameType: {fileID: 11400000, guid: b7f7ff470392d2d4ba48edcd7444df3d, type: 2}
     _statCounterSos:
     - {fileID: 11400000, guid: a93c75259ac95fa4c8e35e2570556598, type: 2}
     - {fileID: 11400000, guid: a059b8164b4204e44b92ef546184abe2, type: 2}
@@ -484,51 +445,43 @@ MonoBehaviour:
     - Name: Clear type action text
       Type: 0
       Filename: 
-      Script: "function OnPiecePlaced(message)\r\n\tif message.LinesCleared == 0
-        then\r\n\t\treturn\r\n\tend\r\n\tAnimateVisibility(0, 2)\r\n\tlocal output
-        = \"\"\r\n\t\r\n\tif message.WasSpin or message.WasSpinMini then\r\n\t\tif
-        message.PieceType == \"t\" then\r\n\t\t\toutput = \"T\"\r\n\t\t\tSetColor(\"#9F03FC\")\r\n\t\telseif
-        message.PieceType == \"i\" then\r\n\t\t\toutput = \"I\"\r\n\t\t\tSetColor(\"#03fafc\")\r\n\t\telseif
-        message.PieceType == \"o\" then\r\n\t\t\toutput = \"O\"\r\n\t\t\tSetColor(\"#FCFD03\")\r\n\t\telseif
-        message.PieceType == \"s\" then\r\n\t\t\toutput = \"S\"\r\n\t\t\tSetColor(\"#03FD1D\")\r\n\t\telseif
-        message.PieceType == \"z\" then\r\n\t\t\toutput = \"Z\"\r\n\t\t\tSetColor(\"#FC0310\")\r\n\t\telseif
-        message.PieceType == \"l\" then\r\n\t\t\toutput = \"L\"\r\n\t\t\tSetColor(\"#FC9503\")\r\n\t\telseif
-        message.PieceType == \"j\" then\r\n\t\t\toutput = \"J\"\r\n\t\t\tSetColor(\"#0305fc\")\r\n\t\tend\r\n\telse\r\n\t\tSetColor(\"#fff\")\r\n\tend\r\n\r\n\tif
-        message.WasSpin then\r\n\t\toutput = output .. \" Spin \"\r\n\telseif message.WasSpinMini
-        then\r\n\t\toutput = output .. \" Spin Mini \"\r\n\tend\r\n\r\n\tif message.LinesCleared
-        == 1 then\r\n\t\treturn output .. \"Single\"\r\n\telseif message.LinesCleared
-        == 2 then\r\n\t\treturn output .. \"Double\"\r\n\telseif message.LinesCleared
-        == 3 then\r\n\t\treturn output .. \"Triple\"\r\n\telseif message.LinesCleared
-        == 4 then\r\n\t\treturn output .. \"Quad\"\r\n\telseif message.LinesCleared
-        == 5 then\r\n\t\treturn output .. \"Quint\"\r\n\telseif message.LinesCleared
-        == 6 then\r\n\t\treturn output .. \"Hexad\"\r\n\telseif message.LinesCleared
-        == 7 then\r\n\t\treturn output .. \"Heptad\"\r\n\telseif message.LinesCleared
-        == 8 then\r\n\t\treturn output .. \"Octad\"\r\n\telseif message.LinesCleared
-        == 9 then\r\n\t\treturn output .. \"Nonad\"\r\n\telseif message.LinesCleared
-        == 10 then\r\n\t\treturn output .. \"Decad\"\r\n\telse\r\n\t\tlocal overflow
-        = message.LinesCleared - 10\r\n\t\treturn output .. \"Decad + \" .. overflow\r\n\tend\r\nend\r\nSetVisibility(0)\r\nSetText(\"\")\r\nreturn
-        {\r\n\t[\"PiecePlaced\"] = OnPiecePlaced\r\n}"
+      Script: "PieceTypes = {\n\t[\"t\"] = \"T\",\n\t[\"i\"] = \"I\",\n\t[\"o\"]
+        = \"O\",\n\t[\"s\"] = \"S\",\n\t[\"z\"] = \"Z\",\n\t[\"l\"] = \"L\",\n\t[\"j\"]
+        = \"J\"\n}\n\nClearCounts = {\n\t\"Single\",\n\t\"Double\",\n\t\"Triple\",\n\t\"Quad\",\n\t\"Quint\",\n\t\"Hexad\",\n\t\"Heptad\",\n\t\"Octad\",\n\t\"Nonad\",\n\t\"Decad\"\n}\n\nfunction
+        OnPiecePlaced(message)\n\tlocal output = \"\"\n\t\n\tif message.WasSpin or
+        message.WasSpinMini then\n\t\toutput = PieceTypes[message.PieceType]\n\tend\n\tif
+        output == nil then output = \"\" end\n\tif message.WasSpin then\n\t\toutput
+        = output .. \" Spin \"\n\telseif message.WasSpinMini then\n\t\toutput = output
+        .. \" Spin Mini \"\n\tend\n\n\tif message.LinesCleared <= 0 then\n\t\tif
+        output == \"\" then\n\t\t\treturn\n\t\tend\n\t\tSetVisibility(1)\n\t\tAnimateVisibility(0,
+        2)\n\t\treturn output\n\tend\n\n\tSetVisibility(1)\n\tAnimateVisibility(0,
+        2)\n\tif message.LinesCleared <= #ClearCounts then\n\t\treturn output ..
+        ClearCounts[message.LinesCleared]\n\telse\n\t\tlocal overflow = message.LinesCleared
+        - #ClearCounts\n\t\treturn output .. ClearCounts[#ClearCounts] .. overflow\n\tend\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
+        {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
       Position: {x: -10, y: 13}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Lines cleared
       Type: 0
       Filename: 
-      Script: "function Reset()\n\tLinesCleared = 0\n\treturn \"Lines cleared: 0\"\nend\nfunction
-        OnPiecePlaced(message)\n\tLinesCleared = LinesCleared + message.LinesCleared\n\treturn
-        \"Lines cleared: \" .. LinesCleared\nend\nSetText(Reset())\nreturn {\n\t[\"GameStarted\"]
-        = Reset,\n\t[\"GameRestarted\"] = Reset,\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
+      Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+        then\n\t\treturn \"Lines cleared: 0\"\n\tend\nend\nfunction OnPiecePlaced(message)\n\treturn
+        \"Lines cleared: \" .. Stats.LinesCleared\nend\nSetText(\"Lines cleared:
+        0\")\nreturn {\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStateChanged\"]
+        = Reset\n}"
       Position: {x: -10, y: 2}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
     - Name: Pieces
       Type: 0
       Filename: 
-      Script: "function FormatOutput()\r\n\tlocal pps = Stats.PiecesPerSecond\r\n\tlocal
-        piecesPlaced = Stats.PiecesPlaced\r\n\treturn \"Pieces: \" .. piecesPlaced
-        .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
-        {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] = FormatOutput,\r\n\t[\"GameStarted\"]
-        = FormatOutput,\r\n\t[\"GameRestarted\"] = FormatOutput\n}"
+      Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+        then\n\t\treturn FormatOutput()\n\tend\nend\n\nfunction FormatOutput()\r\n\tlocal
+        pps = Stats.PiecesPerSecond\r\n\tlocal piecesPlaced = Stats.PiecesPlaced\r\n\treturn
+        \"Pieces: \" .. piecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
+        {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] = FormatOutput,\n\t[\"GameStateChanged\"]
+        = Reset\n}"
       Position: {x: -9, y: 4}
       Size: {x: 8, y: 3}
       UpdateInterval: 0.1
@@ -591,7 +544,6 @@ MonoBehaviour:
       UpdateInterval: 0
   DefaultGroup:
     _name: Default
-    _gameType: {fileID: 0}
     _statCounterSos:
     - {fileID: 11400000, guid: 99a1507bdfe942c41a6dd7fe380ea1cb, type: 2}
     - {fileID: 11400000, guid: da01094586ea3ff42b5d0427967e84f5, type: 2}
@@ -622,30 +574,20 @@ MonoBehaviour:
     - Name: Clear type action text
       Type: 0
       Filename: 
-      Script: "function OnPiecePlaced(message)\r\n\tif message.LinesCleared == 0
-        then\r\n\t\treturn\r\n\tend\r\n\tAnimateVisibility(0, 2)\r\n\tlocal output
-        = \"\"\r\n\t\r\n\tif message.WasSpin or message.WasSpinMini then\r\n\t\tif
-        message.PieceType == \"t\" then\r\n\t\t\toutput = \"T\"\r\n\t\t\tSetColor(\"#9F03FC\")\r\n\t\telseif
-        message.PieceType == \"i\" then\r\n\t\t\toutput = \"I\"\r\n\t\t\tSetColor(\"#03fafc\")\r\n\t\telseif
-        message.PieceType == \"o\" then\r\n\t\t\toutput = \"O\"\r\n\t\t\tSetColor(\"#FCFD03\")\r\n\t\telseif
-        message.PieceType == \"s\" then\r\n\t\t\toutput = \"S\"\r\n\t\t\tSetColor(\"#03FD1D\")\r\n\t\telseif
-        message.PieceType == \"z\" then\r\n\t\t\toutput = \"Z\"\r\n\t\t\tSetColor(\"#FC0310\")\r\n\t\telseif
-        message.PieceType == \"l\" then\r\n\t\t\toutput = \"L\"\r\n\t\t\tSetColor(\"#FC9503\")\r\n\t\telseif
-        message.PieceType == \"j\" then\r\n\t\t\toutput = \"J\"\r\n\t\t\tSetColor(\"#0305fc\")\r\n\t\tend\r\n\telse\r\n\t\tSetColor(\"#fff\")\r\n\tend\r\n\r\n\tif
-        message.WasSpin then\r\n\t\toutput = output .. \" Spin \"\r\n\telseif message.WasSpinMini
-        then\r\n\t\toutput = output .. \" Spin Mini \"\r\n\tend\r\n\r\n\tif message.LinesCleared
-        == 1 then\r\n\t\treturn output .. \"Single\"\r\n\telseif message.LinesCleared
-        == 2 then\r\n\t\treturn output .. \"Double\"\r\n\telseif message.LinesCleared
-        == 3 then\r\n\t\treturn output .. \"Triple\"\r\n\telseif message.LinesCleared
-        == 4 then\r\n\t\treturn output .. \"Quad\"\r\n\telseif message.LinesCleared
-        == 5 then\r\n\t\treturn output .. \"Quint\"\r\n\telseif message.LinesCleared
-        == 6 then\r\n\t\treturn output .. \"Hexad\"\r\n\telseif message.LinesCleared
-        == 7 then\r\n\t\treturn output .. \"Heptad\"\r\n\telseif message.LinesCleared
-        == 8 then\r\n\t\treturn output .. \"Octad\"\r\n\telseif message.LinesCleared
-        == 9 then\r\n\t\treturn output .. \"Nonad\"\r\n\telseif message.LinesCleared
-        == 10 then\r\n\t\treturn output .. \"Decad\"\r\n\telse\r\n\t\tlocal overflow
-        = message.LinesCleared - 10\r\n\t\treturn output .. \"Decad + \" .. overflow\r\n\tend\r\nend\r\nSetVisibility(0)\r\nSetText(\"\")\r\nreturn
-        {\r\n\t[\"PiecePlaced\"] = OnPiecePlaced\r\n}"
+      Script: "PieceTypes = {\n\t[\"t\"] = \"T\",\n\t[\"i\"] = \"I\",\n\t[\"o\"]
+        = \"O\",\n\t[\"s\"] = \"S\",\n\t[\"z\"] = \"Z\",\n\t[\"l\"] = \"L\",\n\t[\"j\"]
+        = \"J\"\n}\n\nClearCounts = {\n\t\"Single\",\n\t\"Double\",\n\t\"Triple\",\n\t\"Quad\",\n\t\"Quint\",\n\t\"Hexad\",\n\t\"Heptad\",\n\t\"Octad\",\n\t\"Nonad\",\n\t\"Decad\"\n}\n\nfunction
+        OnPiecePlaced(message)\n\tlocal output = \"\"\n\t\n\tif message.WasSpin or
+        message.WasSpinMini then\n\t\toutput = PieceTypes[message.PieceType]\n\tend\n\tif
+        output == nil then output = \"\" end\n\tif message.WasSpin then\n\t\toutput
+        = output .. \" Spin \"\n\telseif message.WasSpinMini then\n\t\toutput = output
+        .. \" Spin Mini \"\n\tend\n\n\tif message.LinesCleared <= 0 then\n\t\tif
+        output == \"\" then\n\t\t\treturn\n\t\tend\n\t\tSetVisibility(1)\n\t\tAnimateVisibility(0,
+        2)\n\t\treturn output\n\tend\n\n\tSetVisibility(1)\n\tAnimateVisibility(0,
+        2)\n\tif message.LinesCleared <= #ClearCounts then\n\t\treturn output ..
+        ClearCounts[message.LinesCleared]\n\telse\n\t\tlocal overflow = message.LinesCleared
+        - #ClearCounts\n\t\treturn output .. ClearCounts[#ClearCounts] .. overflow\n\tend\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
+        {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
       Position: {x: -10, y: 13}
       Size: {x: 9, y: 2}
       UpdateInterval: 0
@@ -661,11 +603,12 @@ MonoBehaviour:
     - Name: Pieces
       Type: 0
       Filename: 
-      Script: "function FormatOutput()\r\n\tlocal pps = Stats.PiecesPerSecond\r\n\tlocal
-        piecesPlaced = Stats.PiecesPlaced\r\n\treturn \"Pieces: \" .. piecesPlaced
-        .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
-        {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] = FormatOutput,\r\n\t[\"GameStarted\"]
-        = FormatOutput,\r\n\t[\"GameRestarted\"] = FormatOutput\n}"
+      Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+        then\n\t\treturn FormatOutput()\n\tend\nend\n\nfunction FormatOutput()\r\n\tlocal
+        pps = Stats.PiecesPerSecond\r\n\tlocal piecesPlaced = Stats.PiecesPlaced\r\n\treturn
+        \"Pieces: \" .. piecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
+        {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] = FormatOutput,\n\t[\"GameStateChanged\"]
+        = Reset\n}"
       Position: {x: -9, y: 3}
       Size: {x: 8, y: 3}
       UpdateInterval: 0.1

@@ -38,8 +38,14 @@ namespace UStacker.Common
 
         public static async Task<bool> TrySetDataPathAsync(string newPath)
         {
-            if (!FileHandling.CreateDirectoriesRecursively(newPath)) 
+            try
+            {
+                FileHandling.CreateDirectoriesRecursively(newPath);
+            }
+            catch
+            {
                 return false;
+            }
 
             var taskList = new List<Task<bool>>
             {
@@ -67,7 +73,16 @@ namespace UStacker.Common
             if (!File.Exists(filename)) 
                 return true;
 
-            return await FileHandling.CopyFileAsync(filename, Path.Combine(destDir, Path.GetFileName(filename)));
+            try
+            {
+                await FileHandling.CopyFileAsync(filename, Path.Combine(destDir, Path.GetFileName(filename)));
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static async Task<bool> CopyDirIfExists(string dirname, string destDir)
@@ -79,13 +94,14 @@ namespace UStacker.Common
             try
             {
                 Directory.CreateDirectory(newParent);
+                await FileHandling.CopyDirectoryRecursivelyAsync(dirname, newParent);
             }
             catch
             {
                 return false;
             }
 
-            return await FileHandling.CopyDirectoryRecursivelyAsync(dirname, newParent);
+            return true;
         }
 
     }

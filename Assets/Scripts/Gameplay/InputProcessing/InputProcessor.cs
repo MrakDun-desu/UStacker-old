@@ -23,9 +23,8 @@ namespace UStacker.Gameplay.InputProcessing
         [SerializeField] private PieceSpawner _spawner;
         [SerializeField] private GhostPiece _ghostPiece;
         [SerializeField] private GameTimer _timer;
-        [SerializeField] private PieceContainer _pieceHolderPrefab;
+        [SerializeField] private PieceContainer _pieceHolder;
 
-        private PieceContainer _pieceHolder;
         private List<InputActionMessage> _actionList;
         private Piece _activePiece;
         private bool _controlsActive;
@@ -106,9 +105,9 @@ namespace UStacker.Gameplay.InputProcessing
 
         private SpinHandler _spinHandler;
 
-        private List<InputActionMessage> ActionList
+        public List<InputActionMessage> ActionList
         {
-            get => _actionList;
+            private get => _actionList;
             set
             {
                 _actionList = value;
@@ -120,7 +119,7 @@ namespace UStacker.Gameplay.InputProcessing
             }
         }
 
-        [field: SerializeField] public List<PiecePlacementInfo> PlacementsList { get; set; }
+        public List<double> PlacementsList { private get; set; }
         public GameSettingsSO.SettingsContainer GameSettings { private get; set; }
         public bool ReplayControlsEnabled { get; set; } = true;
 
@@ -147,12 +146,22 @@ namespace UStacker.Gameplay.InputProcessing
             }
         }
 
-        private void Awake()
+        private void OnEnable()
         {
             _mediator.Register<GravityChangedMessage>(OnGravityChanged);
             _mediator.Register<LockDelayChangedMessage>(OnLockDelayChanged);
             _mediator.Register<GameStateChangedMessage>(OnGameStateChange, 5);
+        }
 
+        private void OnDisable()
+        {
+            _mediator.Unregister<GravityChangedMessage>(OnGravityChanged);
+            _mediator.Unregister<LockDelayChangedMessage>(OnLockDelayChanged);
+            _mediator.Unregister<GameStateChangedMessage>(OnGameStateChange);
+        }
+
+        private void Awake()
+        {
             _spawnEvent = new UpdateEvent(_updateEvents, EventType.Spawn);
             _dasLeftEvent = new UpdateEvent(_updateEvents, EventType.DasLeft);
             _dasRightEvent = new UpdateEvent(_updateEvents, EventType.DasRight);
@@ -166,22 +175,12 @@ namespace UStacker.Gameplay.InputProcessing
         private void OnGameStateChange(GameStateChangedMessage message)
         {
             if (message is { PreviousState: GameState.Unset, NewState: GameState.Initializing })
-                FirstTimeInitialize();
+                Initialize();
 
             if (message.NewState == GameState.Initializing)
             {
                 DeleteActivePiece();
                 ResetProcessor();
-                if (message.IsReplay)
-                {
-                    PlacementsList = GameInitializer.Replay.PiecePlacementList;
-                    ActionList = GameInitializer.Replay.ActionList;
-                }
-                else
-                {
-                    PlacementsList = null;
-                    ActionList = null;
-                }
             }
 
             if (message is { NewState: GameState.Running, IsReplay: false })
@@ -195,14 +194,16 @@ namespace UStacker.Gameplay.InputProcessing
 
         }
 
-        private void FirstTimeInitialize()
+        private void Initialize()
         {
-            if (!GameSettings.Controls.AllowHold) return;
-            _pieceHolder = Instantiate(_pieceHolderPrefab, _board.transform);
-            _pieceHolder.transform.localPosition = new Vector3(
-                -PieceContainer.Width,
-                (int)_board.Height - PieceContainer.Height
-            );
+            _pieceHolder.gameObject.SetActive(GameSettings.Controls.AllowHold);
+            if (GameSettings.Controls.AllowHold)
+            {
+                _pieceHolder.transform.localPosition = new Vector3(
+                    -PieceContainer.WIDTH,
+                    (int)_board.Height - PieceContainer.HEIGHT
+                );
+            }
             
             _spinHandler = new SpinHandler(GameSettings.Controls.ActiveRotationSystem, GameSettings.General.AllowedSpins);
         }
@@ -295,11 +296,11 @@ namespace UStacker.Gameplay.InputProcessing
 
             if (_currentPieceIndex < PlacementsList.Count - 1)
             {
-                if (Math.Abs(_timer.CurrentTime - PlacementsList[_currentPieceIndex].PlacementTime) < 0.01)
+                if (Math.Abs(_timer.CurrentTime - PlacementsList[_currentPieceIndex]) < 0.01)
                     _currentPieceIndex++;
             }
 
-            _timer.SetTime(PlacementsList[_currentPieceIndex].PlacementTime);
+            _timer.SetTime(PlacementsList[_currentPieceIndex]);
         }
 
         public void MoveToPrevPiece()
@@ -310,7 +311,7 @@ namespace UStacker.Gameplay.InputProcessing
                 return;
             }
 
-            _timer.SetTime(PlacementsList[--_currentPieceIndex].PlacementTime);
+            _timer.SetTime(PlacementsList[--_currentPieceIndex]);
         }
 
         private void CatchUpWithTime(double time)
@@ -333,7 +334,7 @@ namespace UStacker.Gameplay.InputProcessing
         private void CatchUpWithPieces(double time)
         {
             if (_currentPieceIndex >= PlacementsList.Count - 1) return;
-            while (time > PlacementsList[_currentPieceIndex].PlacementTime)
+            while (time > PlacementsList[_currentPieceIndex])
             {
                 _currentPieceIndex++;
                 if (_currentPieceIndex >= PlacementsList.Count - 1) return;
