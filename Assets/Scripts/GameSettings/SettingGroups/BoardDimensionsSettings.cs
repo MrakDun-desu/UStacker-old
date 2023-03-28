@@ -23,13 +23,13 @@ namespace UStacker.GameSettings.SettingGroups
         public uint BoardWidth
         {
             get => _boardWidth;
-            set => _boardWidth = Math.Min(value, 200);
+            set => _boardWidth = Math.Clamp(value, 2, 200);
         }
 
         public uint BoardHeight
         {
             get => _boardHeight;
-            set => _boardHeight = Math.Min(value, 400);
+            set => _boardHeight = Math.Clamp(value, 2, 400);
         }
 
         public uint LethalHeight
@@ -41,13 +41,13 @@ namespace UStacker.GameSettings.SettingGroups
         public uint PieceSpawnHeight
         {
             get => _pieceSpawnHeight;
-            set => _pieceSpawnHeight = Math.Min(value, 410);
+            set => _pieceSpawnHeight = Math.Clamp(value, 2, 410);
         }
 
         public uint BlockCutHeight
         {
             get => _blockCutHeight;
-            set => _blockCutHeight = Math.Min(value, 410);
+            set => _blockCutHeight = Math.Clamp(value, 2, 410);
         }
 
         public uint BoardPadding

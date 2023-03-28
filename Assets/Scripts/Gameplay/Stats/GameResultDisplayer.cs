@@ -1,7 +1,6 @@
 ﻿using System;
 using UStacker.Common;
 using UStacker.Common.Extensions;
-using UStacker.Gameplay.Initialization;
 using UStacker.GameSettings.Enums;
 using TMPro;
 using UnityEngine;
@@ -118,6 +117,7 @@ namespace UStacker.Gameplay.Stats
         {
             _inputProcessor.ActionList = _displayedReplay.ActionList;
             _inputProcessor.PlacementsList = _displayedReplay.PiecePlacementList;
+            _inputProcessor.ReplayLength = _displayedReplay.GameLength;
             _musicPlayerFinder.GameType = _replayGameType.Value;
             GameStateManager.IsReplay = true;
 

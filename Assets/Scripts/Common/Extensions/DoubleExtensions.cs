@@ -4,7 +4,7 @@ namespace UStacker.Common.Extensions
 {
     public static class DoubleExtensions
     {
-        public static string FormatAsTime(this double input)
+        public static string FormatAsTime(this double input, bool showMilliseconds = true)
         {
             const char paddingChar = '0';
             const int msLength = 3;
@@ -21,16 +21,16 @@ namespace UStacker.Common.Extensions
             ms = ms.PadLeft(msLength, paddingChar);
 
             if (timeSpan is {Minutes: 0, TotalHours: < 1})
-                return $"{s}.{ms}";
+                return showMilliseconds ? $"{s}.{ms}" : s;
 
             s = s.PadLeft(sLength, paddingChar);
 
             if (timeSpan.TotalHours < 1)
-                return $"{m}:{s}.{ms}";
+                return showMilliseconds ? $"{m}:{s}.{ms}" : $"{m}:{s}";
 
             m = m.PadLeft(mLength, paddingChar);
 
-            return $"{h}:{m}:{s}.{ms}";
+            return showMilliseconds ? $"{h}:{m}:{s}.{ms}" : $"{h}:{m}:{s}";
         }
     }
 }

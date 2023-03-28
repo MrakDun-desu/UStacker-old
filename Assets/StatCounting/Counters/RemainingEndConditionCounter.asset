@@ -19,7 +19,9 @@ MonoBehaviour:
     Script: "function OnChange(message)\n\tif message.ConditionName == nil or message.ConditionName
       == \"None\" or message.ConditionName == \"\" then\n\t\treturn \"\"\n\tend\n\tlocal
       remaining = message.TotalCount - message.CurrentCount\n\tif remaining < 0 then
-      remaining = 0 end\n\treturn StatUtility:FormatNumber(remaining, 0)\nend\nSetText(\"\")\nSetAlignment(\"center\")\nSetVisibility(0.4)\nreturn
+      remaining = 0 end\n\tif message.ConditionName == \"Time\" then\n\t\treturn
+      StatUtility:FormatTime(remaining, false)\n\tend\n\treturn StatUtility:FormatNumber(remaining,
+      0)\nend\nSetText(\"\")\nSetAlignment(\"center\")\nSetVisibility(0.4)\nreturn
       {\n\t[\"GameEndConditionChanged\"] = OnChange\n}"
     Position: {x: 3, y: 16}
     Size: {x: 4, y: 4}

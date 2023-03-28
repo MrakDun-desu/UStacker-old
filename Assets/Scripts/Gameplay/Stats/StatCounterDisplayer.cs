@@ -14,6 +14,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UStacker.Common.LuaApi;
+using Logger = UStacker.Common.Logger;
 using Random = UStacker.Common.Random;
 
 namespace UStacker.Gameplay.Stats
@@ -205,6 +206,7 @@ namespace UStacker.Gameplay.Stats
                     $"Stat {_statCounter.Name} won't be displayed.\nLua error: {ex.Message}",
                     AlertType.Error
                 ));
+                Logger.Log(_statCounter.Script);
                 gameObject.SetActive(false);
                 return;
             }

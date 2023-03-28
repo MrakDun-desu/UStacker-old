@@ -72,5 +72,11 @@ namespace UStacker.Gameplay.Stats
         {
             return Convert.ToDouble(seconds).FormatAsTime();
         }
+
+        [UsedImplicitly]
+        public string FormatTime(object seconds, bool showMilliseconds)
+        {
+            return Convert.ToDouble(seconds).FormatAsTime(showMilliseconds);
+        }
     }
 }

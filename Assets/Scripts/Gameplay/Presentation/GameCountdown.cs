@@ -66,7 +66,7 @@ namespace UStacker.Gameplay.Presentation
         {
             switch (message)
             {
-                case {NewState: GameState.ResumeCountdown, IsReplay: true}:
+                case {NewState: GameState.StartCountdown or GameState.ResumeCountdown, IsReplay: true}:
                     CountdownFinished.Invoke();
                     break;
                 case {NewState: GameState.StartCountdown or GameState.ResumeCountdown}:

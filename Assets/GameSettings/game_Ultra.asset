@@ -22,7 +22,7 @@ MonoBehaviour:
       <UseCustomSeed>k__BackingField: 0
       <CustomSeed>k__BackingField: 0
       <CustomRandomizerScript>k__BackingField: 
-      <ActiveSeed>k__BackingField: 0
+      <ActiveSeed>k__BackingField: 13032450281327208164
     <Controls>k__BackingField:
       _rotationSystemType: 2
       _customRotationSystem: 
@@ -30,37 +30,109 @@ MonoBehaviour:
       <AllowHardDrop>k__BackingField: 1
       <AllowHold>k__BackingField: 1
       <AllowMoveToWall>k__BackingField: 1
+      <AllowInputBuffering>k__BackingField: 1
+      <AllowAutomaticPreSpawnRotation>k__BackingField: 1
       <UnlimitedHold>k__BackingField: 0
       <ShowGhostPiece>k__BackingField: 1
       <OverrideHandling>k__BackingField: 0
       <Handling>k__BackingField:
-        _delayedAutoShift: 0.125
-        _automaticRepeatRate: 0.05
-        _softDropFactor: 20
-        _dasCutDelay: 0
-        _doubleDropPreventionInterval: 0
-        _softDropDelay: 0
-        _delayDasOn: 0
-        _diagonalLockBehavior: 0
+        _delayedAutoShift: 0.08500000089406967
+        _automaticRepeatRate: 0
+        _dasCutDelay: 0.01666666753590107
         _cancelDasDelayWithInput: 1
+        _delayDasOn: 1
+        _simultaneousDasBehavior: 2
+        _softDropFactor: Infinity
+        _softDropDelay: 0
+        _minSoftDropGravity: 0
+        _maxSoftDropGravity: Infinity
         _zeroGravitySoftDropBase: 0.02
-        _simultaneousDasBehavior: 1
+        _doubleDropPreventionInterval: 0.01666666753590107
+        _diagonalLockBehavior: 0
+        _inputBufferingType: 0
+        _automaticPreSpawnRotation: 0
       <ActiveRotationSystem>k__BackingField:
         DefaultTable:
           StartState: 0
-          FullSpinKicks: []
-          ZeroToThree: []
-          ZeroToOne: []
-          OneToZero: []
-          OneToTwo: []
-          TwoToOne: []
-          TwoToThree: []
-          ThreeToTwo: []
-          ThreeToZero: []
-          ZeroToTwo: []
-          TwoToZero: []
-          OneToThree: []
-          ThreeToOne: []
+          FullSpinKicks:
+          - {x: -1, y: -2}
+          - {x: 1, y: -2}
+          ZeroToThree:
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 1, y: 1}
+          - {x: 0, y: -2}
+          - {x: 1, y: -2}
+          ZeroToOne:
+          - {x: 0, y: 0}
+          - {x: -1, y: 0}
+          - {x: -1, y: 1}
+          - {x: 0, y: -2}
+          - {x: -1, y: -2}
+          OneToZero:
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 1, y: -1}
+          - {x: 0, y: 2}
+          - {x: 1, y: 2}
+          OneToTwo:
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 1, y: -1}
+          - {x: 0, y: 2}
+          - {x: 1, y: 2}
+          TwoToOne:
+          - {x: 0, y: 0}
+          - {x: -1, y: 0}
+          - {x: -1, y: 1}
+          - {x: 0, y: -2}
+          - {x: -1, y: -2}
+          TwoToThree:
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 1, y: 1}
+          - {x: 0, y: -2}
+          - {x: 1, y: -2}
+          ThreeToTwo:
+          - {x: 0, y: 0}
+          - {x: -1, y: 0}
+          - {x: -1, y: -1}
+          - {x: 0, y: 2}
+          - {x: -1, y: 2}
+          ThreeToZero:
+          - {x: 0, y: 0}
+          - {x: -1, y: 0}
+          - {x: -1, y: -1}
+          - {x: 0, y: 2}
+          - {x: -1, y: 2}
+          ZeroToTwo:
+          - {x: 0, y: 0}
+          - {x: 0, y: 1}
+          - {x: 1, y: 1}
+          - {x: -1, y: 1}
+          - {x: 1, y: 0}
+          - {x: -1, y: 0}
+          TwoToZero:
+          - {x: 0, y: 0}
+          - {x: 0, y: -1}
+          - {x: -1, y: -1}
+          - {x: 1, y: -1}
+          - {x: -1, y: 0}
+          - {x: 1, y: 0}
+          OneToThree:
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 1, y: 2}
+          - {x: 1, y: 1}
+          - {x: 0, y: 2}
+          - {x: 0, y: 1}
+          ThreeToOne:
+          - {x: 0, y: 0}
+          - {x: -1, y: 0}
+          - {x: -1, y: 2}
+          - {x: -1, y: 1}
+          - {x: 0, y: 2}
+          - {x: 0, y: 1}
     <BoardDimensions>k__BackingField:
       _boardWidth: 10
       _boardHeight: 20
@@ -79,20 +151,20 @@ MonoBehaviour:
       <TopoutCondition>k__BackingField: 0
       <AllowClutchClears>k__BackingField: 1
     <Objective>k__BackingField:
-      _gameManagerType: 0
+      _gameManagerType: 1
       _customGameManager: 
       _garbageGenerationType: 0
       _customGarbageGeneratorName: 
-      _endConditionCount: 40
+      _endConditionCount: 120
       _garbageHeight: 10
-      <MainStat>k__BackingField: 1
-      <GameEndCondition>k__BackingField: 1
+      <MainStat>k__BackingField: 0
+      <GameEndCondition>k__BackingField: 5
       <CustomGarbageScript>k__BackingField: 
       <CustomGameManagerScript>k__BackingField: 
       <ToppingOutIsOkay>k__BackingField: 0
       <StartingLevel>k__BackingField: 
     <Presentation>k__BackingField:
-      _title: Custom game
+      _title: Ultra
       _countdownInterval: 0.65
       _countdownCount: 3
       <DefaultStatCounterGroup>k__BackingField:
@@ -206,9 +278,10 @@ MonoBehaviour:
           Script: "function OnChange(message)\n\tif message.ConditionName == nil
             or message.ConditionName == \"None\" or message.ConditionName == \"\"
             then\n\t\treturn \"\"\n\tend\n\tlocal remaining = message.TotalCount
-            - message.CurrentCount\n\tif remaining < 0 then remaining = 0 end\n\treturn
-            StatUtility:FormatNumber(remaining, 0)\nend\nSetText(\"\")\nSetAlignment(\"center\")\nSetVisibility(0.4)\nreturn
+            - message.CurrentCount\n\tif remaining < 0 then remaining = 0 end\n\tif
+            message.ConditionName == \"Time\" then\n\t\treturn StatUtility:FormatTime(remaining,
+            false)\n\tend\n\treturn StatUtility:FormatNumber(remaining, 0)\nend\nSetText(\"\")\nSetAlignment(\"center\")\nSetVisibility(0.4)\nreturn
             {\n\t[\"GameEndConditionChanged\"] = OnChange\n}"
-          Position: {x: 3, y: 15}
+          Position: {x: 3, y: 16}
           Size: {x: 4, y: 4}
           UpdateInterval: 0

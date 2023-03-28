@@ -15,18 +15,21 @@ namespace UStacker.GlobalSettings.Groups
         {
             writer.WriteDouble(handling.DelayedAutoShift);
             writer.WriteDouble(handling.AutomaticRepeatRate);
-            writer.WriteDouble(handling.SoftDropFactor);
-            
             writer.WriteDouble(handling.DasCutDelay);
-            writer.WriteDouble(handling.DoubleDropPreventionInterval);
-            writer.WriteDouble(handling.SoftDropDelay);
-            writer.WriteDouble(handling.ZeroGravitySoftDropBase);
-            
-            writer.WriteByte((byte)handling.DelayDasOn);
-            writer.WriteByte((byte)handling.DiagonalLockBehavior);
-            writer.WriteByte((byte)handling.SimultaneousDasBehavior);
-            
             writer.WriteBoolean(handling.CancelDasDelayWithInput);
+            writer.WriteByte((byte) handling.DelayDasOn);
+            writer.WriteByte((byte) handling.SimultaneousDasBehavior);
+
+            writer.WriteDouble(handling.SoftDropFactor);
+            writer.WriteDouble(handling.SoftDropDelay);
+            writer.WriteDouble(handling.MinSoftDropGravity);
+            writer.WriteDouble(handling.MaxSoftDropGravity);
+            writer.WriteDouble(handling.ZeroGravitySoftDropBase);
+
+            writer.WriteDouble(handling.DoubleDropPreventionInterval);
+            writer.WriteByte((byte) handling.DiagonalLockBehavior);
+            writer.WriteByte((byte) handling.InputBufferingType);
+            writer.WriteByte((byte) handling.AutomaticPreSpawnRotation);
         }
 
         [UsedImplicitly]
@@ -36,38 +39,50 @@ namespace UStacker.GlobalSettings.Groups
             {
                 DelayedAutoShift = reader.ReadDouble(),
                 AutomaticRepeatRate = reader.ReadDouble(),
-                SoftDropFactor = reader.ReadDouble(),
-                
                 DasCutDelay = reader.ReadDouble(),
-                DoubleDropPreventionInterval = reader.ReadDouble(),
+                CancelDasDelayWithInput = reader.ReadBoolean(),
+                DelayDasOn = (DelayDasOn) reader.ReadByte(),
+                SimultaneousDasBehavior = (SimultaneousDasBehavior) reader.ReadByte(),
+
+                SoftDropFactor = reader.ReadDouble(),
                 SoftDropDelay = reader.ReadDouble(),
+                MinSoftDropGravity = reader.ReadDouble(),
+                MaxSoftDropGravity = reader.ReadDouble(),
                 ZeroGravitySoftDropBase = reader.ReadDouble(),
                 
-                DelayDasOn = (DelayDasOn)reader.ReadByte(),
-                DiagonalLockBehavior = (DiagonalLockBehavior)reader.ReadByte(),
-                SimultaneousDasBehavior = (SimultaneousDasBehavior)reader.ReadByte(),
-                
-                CancelDasDelayWithInput = reader.ReadBoolean()
+                DoubleDropPreventionInterval = reader.ReadDouble(),
+                DiagonalLockBehavior = (DiagonalLockBehavior) reader.ReadByte(),
+                InputBufferingType = (InputBufferingType) reader.ReadByte(),
+                AutomaticPreSpawnRotation = (AutomaticPreSpawnRotation) reader.ReadByte()
             };
         }
     }
-    
+
     [Serializable]
     public record HandlingSettings
     {
+        // DAS related settings
         [SerializeField] private double _delayedAutoShift = .125d;
         [SerializeField] private double _automaticRepeatRate = .05d;
-        [SerializeField] private double _softDropFactor = 20d;
         [SerializeField] private double _dasCutDelay;
-        [SerializeField] private double _doubleDropPreventionInterval;
-        [SerializeField] private double _softDropDelay;
-        [SerializeField] private DelayDasOn _delayDasOn = DelayDasOn.Nothing;
-        [SerializeField] private DiagonalLockBehavior _diagonalLockBehavior = DiagonalLockBehavior.DontLock;
         [SerializeField] private bool _cancelDasDelayWithInput = true;
+        [SerializeField] private DelayDasOn _delayDasOn = DelayDasOn.Nothing;
+        [SerializeField]
+        private SimultaneousDasBehavior _simultaneousDasBehavior = SimultaneousDasBehavior.CancelBothDirections;
+        
+        // soft drop related settings
+        [SerializeField] private double _softDropFactor = 20d;
+        [SerializeField] private double _softDropDelay;
+        [SerializeField] private double _minSoftDropGravity;
+        [SerializeField] private double _maxSoftDropGravity = double.PositiveInfinity;
         [SerializeField] private double _zeroGravitySoftDropBase = 0.02;
 
+        // other settings
+        [SerializeField] private double _doubleDropPreventionInterval;
+        [SerializeField] private DiagonalLockBehavior _diagonalLockBehavior = DiagonalLockBehavior.DontLock;
+        [SerializeField] private InputBufferingType _inputBufferingType = InputBufferingType.DontBuffer;
         [SerializeField]
-        private SimultaneousDasBehavior _simultaneousDasBehavior = SimultaneousDasBehavior.CancelFirstDirection;
+        private AutomaticPreSpawnRotation _automaticPreSpawnRotation = AutomaticPreSpawnRotation.DontRotate;
 
         [JsonIgnore] private bool _isDirty;
 
@@ -77,7 +92,8 @@ namespace UStacker.GlobalSettings.Groups
             private set
             {
                 _isDirty = value;
-                Dirtied?.Invoke();
+                if (_isDirty)
+                    Dirtied?.Invoke();
             }
         }
 
@@ -90,17 +106,23 @@ namespace UStacker.GlobalSettings.Groups
 
         public void Override(HandlingSettings other)
         {
-            DelayedAutoShift = other._delayedAutoShift;
-            AutomaticRepeatRate = other._automaticRepeatRate;
-            SoftDropFactor = other._softDropFactor;
-            DasCutDelay = other._dasCutDelay;
-            DoubleDropPreventionInterval = other._doubleDropPreventionInterval;
-            SoftDropDelay = other._softDropDelay;
-            DelayDasOn = other._delayDasOn;
-            DiagonalLockBehavior = other._diagonalLockBehavior;
-            CancelDasDelayWithInput = other._cancelDasDelayWithInput;
-            ZeroGravitySoftDropBase = other._zeroGravitySoftDropBase;
-            SimultaneousDasBehavior = other._simultaneousDasBehavior;
+            DelayedAutoShift = other.DelayedAutoShift;
+            AutomaticRepeatRate = other.AutomaticRepeatRate;
+            DasCutDelay = other.DasCutDelay;
+            CancelDasDelayWithInput = other.CancelDasDelayWithInput;
+            DelayDasOn = other.DelayDasOn;
+            SimultaneousDasBehavior = other.SimultaneousDasBehavior;
+
+            SoftDropFactor = other.SoftDropFactor;
+            SoftDropDelay = other.SoftDropDelay;
+            MinSoftDropGravity = other.MinSoftDropGravity;
+            MaxSoftDropGravity = other.MaxSoftDropGravity;
+            ZeroGravitySoftDropBase = other.ZeroGravitySoftDropBase;
+
+            DoubleDropPreventionInterval = other.DoubleDropPreventionInterval;
+            DiagonalLockBehavior = other.DiagonalLockBehavior;
+            InputBufferingType = other.InputBufferingType;
+            AutomaticPreSpawnRotation = other.AutomaticPreSpawnRotation;
         }
 
         public DelayDasOn DelayDasOn
@@ -183,6 +205,36 @@ namespace UStacker.GlobalSettings.Groups
             }
         }
 
+        public double MinSoftDropGravity
+        {
+            get => _minSoftDropGravity;
+            set
+            {
+                _minSoftDropGravity = Math.Max(0, Math.Min(value, _maxSoftDropGravity));
+                IsDirty = true;
+            }
+        }
+
+        public double MaxSoftDropGravity
+        {
+            get => _maxSoftDropGravity;
+            set
+            {
+                _maxSoftDropGravity = Math.Max(0, Math.Max(value, _minSoftDropGravity));
+                IsDirty = true;
+            }
+        }
+
+        public InputBufferingType InputBufferingType
+        {
+            get => _inputBufferingType;
+            set
+            {
+                _inputBufferingType = value;
+                IsDirty = true;
+            }
+        }
+
         public double ZeroGravitySoftDropBase
         {
             get => _zeroGravitySoftDropBase;
@@ -209,6 +261,16 @@ namespace UStacker.GlobalSettings.Groups
             set
             {
                 _doubleDropPreventionInterval = Math.Max(value, 0);
+                IsDirty = true;
+            }
+        }
+        
+        public AutomaticPreSpawnRotation AutomaticPreSpawnRotation
+        {
+            get => _automaticPreSpawnRotation;
+            set
+            {
+                _automaticPreSpawnRotation = value;
                 IsDirty = true;
             }
         }

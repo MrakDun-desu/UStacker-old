@@ -30,21 +30,27 @@ MonoBehaviour:
       <AllowHardDrop>k__BackingField: 1
       <AllowHold>k__BackingField: 1
       <AllowMoveToWall>k__BackingField: 1
+      <AllowInputBuffering>k__BackingField: 1
+      <AllowAutomaticPreSpawnRotation>k__BackingField: 1
       <UnlimitedHold>k__BackingField: 0
       <ShowGhostPiece>k__BackingField: 1
       <OverrideHandling>k__BackingField: 0
       <Handling>k__BackingField:
         _delayedAutoShift: 0.08666666597127914
         _automaticRepeatRate: 0
-        _softDropFactor: Infinity
         _dasCutDelay: 0.03333333507180214
-        _doubleDropPreventionInterval: 0.01666666753590107
-        _softDropDelay: 0
-        _delayDasOn: 1
-        _diagonalLockBehavior: 0
         _cancelDasDelayWithInput: 1
-        _zeroGravitySoftDropBase: 0.02
+        _delayDasOn: 1
         _simultaneousDasBehavior: 2
+        _softDropFactor: Infinity
+        _softDropDelay: 0
+        _minSoftDropGravity: 0
+        _maxSoftDropGravity: Infinity
+        _zeroGravitySoftDropBase: 0.02
+        _doubleDropPreventionInterval: 0.01666666753590107
+        _diagonalLockBehavior: 0
+        _inputBufferingType: 0
+        _automaticPreSpawnRotation: 0
       <ActiveRotationSystem>k__BackingField:
         DefaultTable:
           StartState: 0
@@ -158,9 +164,9 @@ MonoBehaviour:
       <ToppingOutIsOkay>k__BackingField: 0
       <StartingLevel>k__BackingField: 
     <Presentation>k__BackingField:
-      _title: Custom game
-      _countdownInterval: 0.5
-      _countdownCount: 2
+      _title: Sprint 40L
+      _countdownInterval: 0.65
+      _countdownCount: 3
       <DefaultStatCounterGroup>k__BackingField:
         _name: Sprint 40L
         _statCounterSos:
@@ -274,7 +280,8 @@ MonoBehaviour:
           Script: "function OnChange(message)\n\tif message.ConditionName == nil
             or message.ConditionName == \"None\" or message.ConditionName == \"\"
             then\n\t\treturn \"\"\n\tend\n\tlocal remaining = message.TotalCount
-            - message.CurrentCount\n\tif remaining < 0 then remaining = 0 end\n\treturn
+            - message.CurrentCount\n\tif remaining < 0 then remaining = 0 end\n\tif
+            message.ConditionName == \"Time\" then\n\t\treturn StatUtility:FormatTime(remaining)\n\tend\n\treturn
             StatUtility:FormatNumber(remaining, 0)\nend\nSetText(\"\")\nSetAlignment(\"center\")\nSetVisibility(0.4)\nreturn
             {\n\t[\"GameEndConditionChanged\"] = OnChange\n}"
           Position: {x: 3, y: 15}

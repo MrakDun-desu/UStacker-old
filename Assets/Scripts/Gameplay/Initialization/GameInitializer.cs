@@ -29,16 +29,16 @@ namespace UStacker.Gameplay.Initialization
                 _gameSettings = value;
                 if (!AppSettings.GameOverrides.TryGetValue(GameType, out var overrides)) return;
                 if (overrides.CountdownCount is { } count)
-                    GameSettings.Presentation.CountdownCount = count;
+                    _gameSettings.Presentation.CountdownCount = count;
                 if (overrides.CountdownInterval is { } interval)
-                    GameSettings.Presentation.CountdownInterval = interval;
+                    _gameSettings.Presentation.CountdownInterval = interval;
                 if (overrides.StartingLevel is { } startingLevel)
-                    GameSettings.Objective.StartingLevel = startingLevel;
+                    _gameSettings.Objective.StartingLevel = startingLevel;
                 
-                GameSettings.Presentation.StatCounterGroupOverrideId = overrides.StatCounterGroupId;
+                _gameSettings.Presentation.StatCounterGroupOverrideId = overrides.StatCounterGroupId;
 
-                if (!GameSettings.Controls.OverrideHandling && _replay is null)
-                    GameSettings.Controls.Handling.Override(AppSettings.Handling);
+                if (!_gameSettings.Controls.OverrideHandling && _replay is null)
+                    _gameSettings.Controls.Handling.Override(AppSettings.Handling);
             }
         }
 

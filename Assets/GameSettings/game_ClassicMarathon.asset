@@ -15,52 +15,124 @@ MonoBehaviour:
   GameType: {fileID: 11400000, guid: 9e871d44a98d84541bd957a59c36de9e, type: 2}
   _settings:
     <General>k__BackingField:
-      _nextPieceCount: 5
-      _randomizerType: 0
+      _nextPieceCount: 1
+      _randomizerType: 3
       _customRandomizerName: 
-      <AllowedSpins>k__BackingField: 2
+      <AllowedSpins>k__BackingField: 0
       <UseCustomSeed>k__BackingField: 0
       <CustomSeed>k__BackingField: 0
       <CustomRandomizerScript>k__BackingField: 
-      <ActiveSeed>k__BackingField: 0
+      <ActiveSeed>k__BackingField: 14185558173374714676
     <Controls>k__BackingField:
-      _rotationSystemType: 2
+      _rotationSystemType: 0
       _customRotationSystem: 
-      <Allow180Spins>k__BackingField: 1
-      <AllowHardDrop>k__BackingField: 1
-      <AllowHold>k__BackingField: 1
-      <AllowMoveToWall>k__BackingField: 1
+      <Allow180Spins>k__BackingField: 0
+      <AllowHardDrop>k__BackingField: 0
+      <AllowHold>k__BackingField: 0
+      <AllowMoveToWall>k__BackingField: 0
+      <AllowInputBuffering>k__BackingField: 0
+      <AllowAutomaticPreSpawnRotation>k__BackingField: 0
       <UnlimitedHold>k__BackingField: 0
-      <ShowGhostPiece>k__BackingField: 1
-      <OverrideHandling>k__BackingField: 0
+      <ShowGhostPiece>k__BackingField: 0
+      <OverrideHandling>k__BackingField: 1
       <Handling>k__BackingField:
-        _delayedAutoShift: 0.125
-        _automaticRepeatRate: 0.05
-        _softDropFactor: 20
+        _delayedAutoShift: 0.25
+        _automaticRepeatRate: 0.1
         _dasCutDelay: 0
-        _doubleDropPreventionInterval: 0
-        _softDropDelay: 0
+        _cancelDasDelayWithInput: 0
         _delayDasOn: 0
-        _diagonalLockBehavior: 0
-        _cancelDasDelayWithInput: 1
+        _simultaneousDasBehavior: 0
+        _softDropFactor: 2
+        _softDropDelay: 0
+        _minSoftDropGravity: 0
+        _maxSoftDropGravity: Infinity
         _zeroGravitySoftDropBase: 0.02
-        _simultaneousDasBehavior: 1
+        _doubleDropPreventionInterval: 0
+        _diagonalLockBehavior: 0
+        _inputBufferingType: 0
+        _automaticPreSpawnRotation: 0
       <ActiveRotationSystem>k__BackingField:
         DefaultTable:
           StartState: 0
-          FullSpinKicks: []
-          ZeroToThree: []
-          ZeroToOne: []
-          OneToZero: []
-          OneToTwo: []
-          TwoToOne: []
-          TwoToThree: []
-          ThreeToTwo: []
-          ThreeToZero: []
-          ZeroToTwo: []
-          TwoToZero: []
-          OneToThree: []
-          ThreeToOne: []
+          FullSpinKicks:
+          - {x: -1, y: -2}
+          - {x: 1, y: -2}
+          ZeroToThree:
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 1, y: 1}
+          - {x: 0, y: -2}
+          - {x: 1, y: -2}
+          ZeroToOne:
+          - {x: 0, y: 0}
+          - {x: -1, y: 0}
+          - {x: -1, y: 1}
+          - {x: 0, y: -2}
+          - {x: -1, y: -2}
+          OneToZero:
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 1, y: -1}
+          - {x: 0, y: 2}
+          - {x: 1, y: 2}
+          OneToTwo:
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 1, y: -1}
+          - {x: 0, y: 2}
+          - {x: 1, y: 2}
+          TwoToOne:
+          - {x: 0, y: 0}
+          - {x: -1, y: 0}
+          - {x: -1, y: 1}
+          - {x: 0, y: -2}
+          - {x: -1, y: -2}
+          TwoToThree:
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 1, y: 1}
+          - {x: 0, y: -2}
+          - {x: 1, y: -2}
+          ThreeToTwo:
+          - {x: 0, y: 0}
+          - {x: -1, y: 0}
+          - {x: -1, y: -1}
+          - {x: 0, y: 2}
+          - {x: -1, y: 2}
+          ThreeToZero:
+          - {x: 0, y: 0}
+          - {x: -1, y: 0}
+          - {x: -1, y: -1}
+          - {x: 0, y: 2}
+          - {x: -1, y: 2}
+          ZeroToTwo:
+          - {x: 0, y: 0}
+          - {x: 0, y: 1}
+          - {x: 1, y: 1}
+          - {x: -1, y: 1}
+          - {x: 1, y: 0}
+          - {x: -1, y: 0}
+          TwoToZero:
+          - {x: 0, y: 0}
+          - {x: 0, y: -1}
+          - {x: -1, y: -1}
+          - {x: 1, y: -1}
+          - {x: -1, y: 0}
+          - {x: 1, y: 0}
+          OneToThree:
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 1, y: 2}
+          - {x: 1, y: 1}
+          - {x: 0, y: 2}
+          - {x: 0, y: 1}
+          ThreeToOne:
+          - {x: 0, y: 0}
+          - {x: -1, y: 0}
+          - {x: -1, y: 2}
+          - {x: -1, y: 1}
+          - {x: 0, y: 2}
+          - {x: 0, y: 1}
     <BoardDimensions>k__BackingField:
       _boardWidth: 10
       _boardHeight: 20
@@ -70,29 +142,29 @@ MonoBehaviour:
       _boardPadding: 4
     <Gravity>k__BackingField:
       _defaultGravity: 0.02
-      _defaultLockDelay: 0.5
+      _defaultLockDelay: 0
       _piecePlacementDelay: 0
-      _lineClearDelay: 0
-      _hardLockAmount: 5
+      _lineClearDelay: 0.5
+      _hardLockAmount: 10
       <LockDelayType>k__BackingField: 1
-      <HardLockType>k__BackingField: 0
+      <HardLockType>k__BackingField: 1
       <TopoutCondition>k__BackingField: 0
-      <AllowClutchClears>k__BackingField: 1
+      <AllowClutchClears>k__BackingField: 0
     <Objective>k__BackingField:
-      _gameManagerType: 0
+      _gameManagerType: 3
       _customGameManager: 
       _garbageGenerationType: 0
       _customGarbageGeneratorName: 
-      _endConditionCount: 40
-      _garbageHeight: 10
-      <MainStat>k__BackingField: 1
-      <GameEndCondition>k__BackingField: 1
+      _endConditionCount: 0
+      _garbageHeight: 0
+      <MainStat>k__BackingField: 0
+      <GameEndCondition>k__BackingField: 0
       <CustomGarbageScript>k__BackingField: 
       <CustomGameManagerScript>k__BackingField: 
-      <ToppingOutIsOkay>k__BackingField: 0
-      <StartingLevel>k__BackingField: 
+      <ToppingOutIsOkay>k__BackingField: 1
+      <StartingLevel>k__BackingField: 0
     <Presentation>k__BackingField:
-      _title: Custom game
+      _title: Classic Marathon
       _countdownInterval: 0.65
       _countdownCount: 3
       <DefaultStatCounterGroup>k__BackingField:

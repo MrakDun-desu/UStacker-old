@@ -26,6 +26,10 @@ namespace UStacker.GameSettings.SettingGroups
         public bool AllowHold { get; set; } = true;
         [field: SerializeField] 
         public bool AllowMoveToWall { get; set; } = true;
+        [field: SerializeField] 
+        public bool AllowInputBuffering { get; set; } = true;
+        [field: SerializeField]
+        public bool AllowAutomaticPreSpawnRotation { get; set; } = true;
         [field: SerializeField]
         public bool UnlimitedHold { get; set; }
         [field: SerializeField]

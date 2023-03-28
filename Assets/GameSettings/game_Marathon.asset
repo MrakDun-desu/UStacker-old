@@ -30,21 +30,27 @@ MonoBehaviour:
       <AllowHardDrop>k__BackingField: 1
       <AllowHold>k__BackingField: 1
       <AllowMoveToWall>k__BackingField: 1
+      <AllowInputBuffering>k__BackingField: 1
+      <AllowAutomaticPreSpawnRotation>k__BackingField: 1
       <UnlimitedHold>k__BackingField: 0
       <ShowGhostPiece>k__BackingField: 1
       <OverrideHandling>k__BackingField: 0
       <Handling>k__BackingField:
         _delayedAutoShift: 0.125
         _automaticRepeatRate: 0.05
-        _softDropFactor: 20
         _dasCutDelay: 0
-        _doubleDropPreventionInterval: 0
-        _softDropDelay: 0
-        _delayDasOn: 0
-        _diagonalLockBehavior: 0
         _cancelDasDelayWithInput: 1
-        _zeroGravitySoftDropBase: 0.02
+        _delayDasOn: 0
         _simultaneousDasBehavior: 1
+        _softDropFactor: 20
+        _softDropDelay: 0
+        _minSoftDropGravity: 0
+        _maxSoftDropGravity: Infinity
+        _zeroGravitySoftDropBase: 0.02
+        _doubleDropPreventionInterval: 0
+        _diagonalLockBehavior: 0
+        _inputBufferingType: 0
+        _automaticPreSpawnRotation: 0
       <ActiveRotationSystem>k__BackingField:
         DefaultTable:
           StartState: 0
@@ -79,20 +85,20 @@ MonoBehaviour:
       <TopoutCondition>k__BackingField: 0
       <AllowClutchClears>k__BackingField: 1
     <Objective>k__BackingField:
-      _gameManagerType: 0
+      _gameManagerType: 2
       _customGameManager: 
       _garbageGenerationType: 0
       _customGarbageGeneratorName: 
       _endConditionCount: 40
-      _garbageHeight: 10
-      <MainStat>k__BackingField: 1
-      <GameEndCondition>k__BackingField: 1
+      _garbageHeight: 0
+      <MainStat>k__BackingField: 0
+      <GameEndCondition>k__BackingField: 0
       <CustomGarbageScript>k__BackingField: 
       <CustomGameManagerScript>k__BackingField: 
-      <ToppingOutIsOkay>k__BackingField: 0
-      <StartingLevel>k__BackingField: 
+      <ToppingOutIsOkay>k__BackingField: 1
+      <StartingLevel>k__BackingField: 0
     <Presentation>k__BackingField:
-      _title: Custom game
+      _title: Marathon
       _countdownInterval: 0.65
       _countdownCount: 3
       <DefaultStatCounterGroup>k__BackingField:

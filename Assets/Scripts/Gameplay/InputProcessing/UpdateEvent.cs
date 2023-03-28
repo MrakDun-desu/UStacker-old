@@ -43,7 +43,7 @@ namespace UStacker.Gameplay.InputProcessing
             if (ReferenceEquals(this, other)) return 0;
             if (ReferenceEquals(null, other)) return 1;
             var output = _time.CompareTo(other._time);
-            return output == 0 ? -_priority.CompareTo(other._priority) : output;
+            return output == 0 ? _priority.CompareTo(other._priority) : output;
         }
     }
 }

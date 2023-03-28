@@ -235,14 +235,20 @@ namespace UStacker.Gameplay
             _inputProcessor.HandlePreSpawnBufferedInputs(spawnTime, out var cancelSpawn);
 
             if (cancelSpawn) return;
-
+            
             _warningPiece.SetPiece(_previews.GetFirstPiece());
 
             var nextPiece = AppSettings.Sound.HearNextPieces ? _previews.GetFirstPiece()?.Type : string.Empty;
 
             _mediator.Send(new PieceSpawnedMessage(piece.Type, nextPiece, spawnTime));
 
-            if (!_board.CanPlace(piece))
+            if (_board.CanPlace(piece)) return;
+            if (GameSettings.Controls.AllowAutomaticPreSpawnRotation)
+            {
+                if (!_inputProcessor.TryAutomaticPreSpawnRotation(spawnTime))
+                    CantSpawn.Invoke(spawnTime);
+            }
+            else
                 CantSpawn.Invoke(spawnTime);
         }
 

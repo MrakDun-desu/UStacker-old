@@ -105,6 +105,8 @@ namespace UStacker.Gameplay.InputProcessing
 
         private SpinHandler _spinHandler;
 
+        public double ReplayLength { get; set; }
+        
         public List<InputActionMessage> ActionList
         {
             private get => _actionList;
@@ -216,8 +218,43 @@ namespace UStacker.Gameplay.InputProcessing
                 HandleInputAction(new InputActionMessage(ActionType.MoveRight, KeyActionType.KeyDown, _timer.CurrentTime));
         }
 
+        public bool TryAutomaticPreSpawnRotation(double time)
+        {
+            switch (_handling.AutomaticPreSpawnRotation)
+            {
+                case AutomaticPreSpawnRotation.DontRotate:
+                    return false;
+                case AutomaticPreSpawnRotation.RotateClockwise:
+                    RotateKeyDown(time, RotateDirection.Clockwise);
+                    if (_board.CanPlace(ActivePiece))
+                        return true;
+                    RotateKeyDown(time, RotateDirection.OneEighty);
+                    if (_board.CanPlace(ActivePiece))
+                        return true;
+                    RotateKeyDown(time, RotateDirection.Counterclockwise);
+                    return _board.CanPlace(ActivePiece);
+                case AutomaticPreSpawnRotation.RotateCounterclockwise:
+                    RotateKeyDown(time, RotateDirection.Counterclockwise);
+                    if (_board.CanPlace(ActivePiece))
+                        return true;
+                    RotateKeyDown(time, RotateDirection.OneEighty);
+                    if (_board.CanPlace(ActivePiece))
+                        return true;
+                    RotateKeyDown(time, RotateDirection.Clockwise);
+                    return _board.CanPlace(ActivePiece);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+        
         public void HandlePreSpawnBufferedInputs(double time, out bool cancelSpawn)
         {
+            if (!GameSettings.Controls.AllowInputBuffering)
+            {
+                cancelSpawn = false;
+                return;
+            }
+            
             cancelSpawn = false;
             if (_bufferedHold)
             {
@@ -271,7 +308,7 @@ namespace UStacker.Gameplay.InputProcessing
 
         public void MoveFiveSecondsForward()
         {
-            _timer.SetTime(Math.Min(_timer.CurrentTime + 5, GameInitializer.Replay.GameLength));
+            _timer.SetTime(Math.Min(_timer.CurrentTime + 5, ReplayLength));
         }
 
         public void MoveFiveSecondsBackward()
@@ -281,7 +318,7 @@ namespace UStacker.Gameplay.InputProcessing
 
         public void MoveTenthSecondForward()
         {
-            _timer.SetTime(Math.Min(_timer.CurrentTime + 0.1, GameInitializer.Replay.GameLength));
+            _timer.SetTime(Math.Min(_timer.CurrentTime + 0.1, ReplayLength));
         }
 
         public void MoveTenthSecondBackward()
@@ -590,8 +627,17 @@ namespace UStacker.Gameplay.InputProcessing
 
                     break;
                 case ActionType.Hold:
-                    if (message.KeyActionType == KeyActionType.KeyDown)
-                        HoldKeyDown(message.Time);
+                    switch (message.KeyActionType)
+                    {
+                        case KeyActionType.KeyUp:
+                            HoldKeyUp();
+                            break;
+                        case KeyActionType.KeyDown:
+                            HoldKeyDown(message.Time);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                     break;
                 case ActionType.Harddrop:
                     if (message.KeyActionType == KeyActionType.KeyDown)
@@ -614,14 +660,20 @@ namespace UStacker.Gameplay.InputProcessing
                 case ActionType.RotateCW:
                     if (message.KeyActionType == KeyActionType.KeyDown)
                         RotateKeyDown(message.Time, RotateDirection.Clockwise);
+                    else
+                        RotateKeyUp();
                     break;
                 case ActionType.RotateCCW:
                     if (message.KeyActionType == KeyActionType.KeyDown)
                         RotateKeyDown(message.Time, RotateDirection.Counterclockwise);
+                    else
+                        RotateKeyUp();
                     break;
                 case ActionType.Rotate180:
                     if (message.KeyActionType == KeyActionType.KeyDown)
                         RotateKeyDown(message.Time, RotateDirection.OneEighty);
+                    else
+                        RotateKeyUp();
                     break;
                 case ActionType.MoveToLeftWall:
                     if (message.KeyActionType == KeyActionType.KeyDown)
@@ -760,7 +812,7 @@ namespace UStacker.Gameplay.InputProcessing
                  _holdingRightStart < actionTime)) return;
 
             _softdropEvent.Time = actionTime + _handling.SoftDropDelay;
-            _dropEvent.Time = actionTime;
+            _dropEvent.Time = Math.Min(actionTime, _softdropEvent.Time);
         }
 
         private void HardDropKeyDown(double actionTime)
@@ -776,9 +828,14 @@ namespace UStacker.Gameplay.InputProcessing
 
         private void RotateKeyDown(double actionTime, RotateDirection direction)
         {
+            if (_handling.InputBufferingType == InputBufferingType.BufferKeydownDuringSpawn)
+                _bufferedRotation = direction;
+            
             if (_pieceIsNull)
             {
-                _bufferedRotation = direction;
+                if (_handling.InputBufferingType == InputBufferingType.BufferKeypressDuringDelay)
+                    _bufferedRotation = direction;
+                
                 return;
             }
 
@@ -839,11 +896,21 @@ namespace UStacker.Gameplay.InputProcessing
             UpdatePiecePlacementVars(actionTime);
         }
 
+        private void RotateKeyUp()
+        {
+            if (_handling.InputBufferingType == InputBufferingType.BufferKeydownDuringSpawn)
+                _bufferedRotation = null;
+        }
+
         private void HoldKeyDown(double actionTime)
         {
+            if (_handling.InputBufferingType == InputBufferingType.BufferKeydownDuringSpawn)
+                _bufferedHold = true;
+        
             if (_pieceIsNull)
             {
-                _bufferedHold = true;
+                if (_handling.InputBufferingType == InputBufferingType.BufferKeypressDuringDelay)
+                    _bufferedHold = true;
                 return;
             }
 
@@ -871,6 +938,12 @@ namespace UStacker.Gameplay.InputProcessing
                     : actionTime;
             _usedHold = true;
             StopLockdown(true);
+        }
+
+        private void HoldKeyUp()
+        {
+            if (_handling.InputBufferingType == InputBufferingType.BufferKeydownDuringSpawn)
+                _bufferedHold = false;
         }
 
         private void MoveToRightWallKeyDown(double actionTime)
@@ -1111,8 +1184,17 @@ namespace UStacker.Gameplay.InputProcessing
         private void HandleSoftDrop()
         {
             _softDropActive = true;
-            var usedGravity = _normalGravity <= 0 ? _handling.ZeroGravitySoftDropBase : _normalGravity;
-            _currentGravity = usedGravity * _handling.SoftDropFactor;
+            var softdropGravity = _normalGravity <= 0 ? _handling.ZeroGravitySoftDropBase : _normalGravity;
+            
+            // try to use normal softdrop gravity
+            softdropGravity *= _handling.SoftDropFactor;
+            // if softdrop gravity is smaller than min, use min, but never less than normal
+            var minSoftdropGravity = Math.Max(_handling.MinSoftDropGravity, _normalGravity);
+            // if softdrop gravity is larger than max, use max, but never less than normal
+            var maxSoftdropGravity = Math.Max(_handling.MaxSoftDropGravity, _normalGravity);
+            
+            _currentGravity = Math.Clamp(softdropGravity, minSoftdropGravity, maxSoftdropGravity);
+                
             _dropTime = ComputeDroptimeFromGravity();
             _dropEvent.Time = _softdropEvent.Time + _dropTime;
             _softdropEvent.Time = double.PositiveInfinity;
