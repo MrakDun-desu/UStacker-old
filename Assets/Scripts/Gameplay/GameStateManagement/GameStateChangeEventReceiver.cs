@@ -31,6 +31,7 @@ namespace UStacker.Gameplay.GameStateManagement
 
         private void OnDestroy()
         {
+            OnDeactivated();
             Deactivated -= OnDeactivated;
             Activated -= OnActivated;
         }

@@ -29,18 +29,7 @@ namespace UStacker.Multiplayer.Settings
             {
                 _settings = value;
                 SettingsStatic = value;
-                if (_settings is null)
-                    return;
-                    
-                _settings.GameSettings.Controls.ActiveRotationSystem =
-                _settings.GameSettings.Controls.RotationSystemType switch
-                {
-                    RotationSystemType.SRS => _srsRotationSystemSo.RotationSystem,
-                    RotationSystemType.SRSPlus => _srsPlusRotationSystemSo.RotationSystem,
-                    RotationSystemType.None => new RotationSystem(),
-                    RotationSystemType.Custom => _settings.GameSettings.Controls.ActiveRotationSystem,
-                    _ => new RotationSystem()
-                };
+                LoadSettingsRotationSystem();
             }
         }
 
@@ -96,13 +85,35 @@ namespace UStacker.Multiplayer.Settings
             AlertDisplayer.ShowAlert(new Alert("Settings saved!", AlertType.Success));
         }
 
+        private void LoadSettingsRotationSystem()
+        {
+            if (_settings is null)
+                return;
+            
+            _settings.GameSettings.Controls.ActiveRotationSystem =
+            _settings.GameSettings.Controls.RotationSystemType switch
+            {
+                RotationSystemType.SRS => _srsRotationSystemSo.RotationSystem,
+                RotationSystemType.SRSPlus => _srsPlusRotationSystemSo.RotationSystem,
+                RotationSystemType.None => new RotationSystem(),
+                RotationSystemType.Custom => _settings.GameSettings.Controls.ActiveRotationSystem,
+                _ => new RotationSystem()
+            };
+        }
+
         [ServerRpc(RequireOwnership = false)]
         private void RequestSettings(NetworkConnection sender = null)
         {
             SettingsSynchronized = false;
+            // first we null the rotation system so we don't need to send needless data
             if (Settings.GameSettings.Controls.RotationSystemType != RotationSystemType.Custom)
                 Settings.GameSettings.Controls.ActiveRotationSystem = null;
             SendSettingsToClients(sender, Settings);
+            
+            // then after sending settings to clients, we load the rotation system
+            // back up so it's correct at the server's side
+            LoadSettingsRotationSystem();
+            SettingsSynchronized = true;
         }
 
         [ServerRpc(RequireOwnership = false)]

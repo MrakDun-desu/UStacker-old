@@ -15847,7 +15847,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 1778203873}
   _networkObjectCache: {fileID: 1778203873}
   _startGameButton: {fileID: 1356182115}
-  _multiplayerBoardPrefab: {fileID: 5786435755554944848, guid: 0b0ced2702dd6a94cb36a6194442fefc, type: 3}
+  _multiplayerBoardPrefab: {fileID: 3706972166064847357, guid: 0b0ced2702dd6a94cb36a6194442fefc, type: 3}
   _lobbyCanvas: {fileID: 340380119}
   _chatTransform: {fileID: 2018708539}
   _chatParent: {fileID: 1534204318}

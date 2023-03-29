@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 using UStacker.Common.Extensions;
 using UStacker.Gameplay.Blocks;
@@ -31,96 +30,43 @@ namespace UStacker.Gameplay
         [SerializeField] private GarbageLayer _garbageLayerPrefab;
         [SerializeField] private RectTransform _statsCanvasTransform;
 
-        [Tooltip("Zoom percentage change with one scroll unit")]
-        [Range(0, 1)]
-        [SerializeField]
-        private float _boardZoomFactor = .05f;
-
-        [Range(0.00001f, 1)][SerializeField] private float _minimumBoardScale = 0.1f;
-
         [SerializeField] private UnityEvent<double> ToppedOut;
 
         private readonly List<ClearableBlock[]> Blocks = new();
-        
+
         public IEnumerable<Vector3> BlockPositions =>
             Blocks.SelectMany(tf => tf.Select(block => block.transform.position));
 
         private bool _backToBackActive;
         private bool _comboActive;
         private uint _currentBackToBack;
-
         private uint _currentCombo;
 
-        private Camera _camera;
-        private Vector3 _dragStartPosition;
-        private Vector3 _dragStartTransformPosition;
         private ObjectPool<ClearableBlock> _garbageBlockPool;
-
         private ObjectPool<GarbageLayer> _garbageLayerPool;
-        private uint _height;
-        private uint _width;
-
         private GarbageLayer _lastGarbageLayer;
-        private Vector3 _offset;
+        private IGarbageGenerator _garbageGenerator;
 
         private float _warningPieceTreshhold;
-
-        private IGarbageGenerator _garbageGenerator;
 
         public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots =>
             Blocks
                 .Select(line => line.Select(block => block is not null).ToList().AsReadOnly())
                 .ToList().AsReadOnly();
 
-        public uint Width
-        {
-            get => _width;
-            private set
-            {
-                _width = value;
-                var mytransform = transform;
-                var myPos = mytransform.position;
-                mytransform.position =
-                    new Vector3(-value * .5f * mytransform.localScale.x + _offset.x, myPos.y, myPos.z);
-            }
-        }
-
-        public uint Height
-        {
-            get => _height;
-            private set
-            {
-                _height = value;
-                var mytransform = transform;
-                var myPos = mytransform.position;
-                mytransform.position =
-                    new Vector3(myPos.x, -value * .5f * mytransform.localScale.y + _offset.y, myPos.z);
-            }
-        }
-
+        public uint Width { get; private set; }
+        public uint Height { get; private set; }
         public uint GarbageHeight { get; private set; }
         public uint LethalHeight { get; private set; }
-        private Vector3 Up => transform.up * transform.localScale.y;
-
-        private Vector2 CurrentOffset => new(
-            transform.position.x + Width * .5f * transform.localScale.x,
-            transform.position.y + Height * .5f * transform.localScale.y
-        );
 
         private void Awake()
         {
-            _offset = AppSettings.Gameplay.BoardOffset;
-            _camera = Camera.main;
-            transform.position += _offset;
-
-            ChangeBoardZoom(AppSettings.Gameplay.BoardZoom);
             ChangeVisibility(AppSettings.Gameplay.BoardVisibility);
             _warningPieceTreshhold = AppSettings.Gameplay.WarningPieceTreshhold;
 
             InitializeGarbagePools();
-            
+
             BoardVisibilityApplier.VisibilityChanged += ChangeVisibility;
-            BoardZoomApplier.BoardZoomChanged += ChangeBoardZoom;
             WarningPieceTreshholdApplier.TreshholdChanged += ChangeWarningPieceTreshhold;
         }
 
@@ -136,12 +82,6 @@ namespace UStacker.Gameplay
             _mediator.Unregister<SeedSetMessage>(OnSeedSet);
         }
 
-        private void Update()
-        {
-            HandleBoardZooming();
-            HandleBoardDrag();
-        }
-
         private void OnDestroy()
         {
             _garbageLayerPool?.Dispose();
@@ -150,7 +90,6 @@ namespace UStacker.Gameplay
                 gen.Dispose();
 
             BoardVisibilityApplier.VisibilityChanged -= ChangeVisibility;
-            BoardZoomApplier.BoardZoomChanged -= ChangeBoardZoom;
             WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
         }
 
@@ -165,7 +104,7 @@ namespace UStacker.Gameplay
                 Initialize();
             }
         }
-        
+
         public event Action LinesCleared;
 
         private void OnSeedSet(SeedSetMessage message)
@@ -192,15 +131,15 @@ namespace UStacker.Gameplay
         private void InitializeDimensions()
         {
             var boardDimensions = GameSettings.BoardDimensions;
-            Width = boardDimensions.BoardWidth;
-            Height = boardDimensions.BoardHeight;
-            LethalHeight = boardDimensions.LethalHeight;
             _backgroundRenderer.transform.localScale = new Vector3(
                 boardDimensions.BoardWidth,
                 boardDimensions.BoardHeight,
                 1
             );
 
+            Width = boardDimensions.BoardWidth;
+            Height = boardDimensions.BoardHeight;
+            LethalHeight = boardDimensions.LethalHeight;
             _statsCanvasTransform.sizeDelta =
                 new Vector2(boardDimensions.BoardWidth + 200f, boardDimensions.BoardHeight + 200f);
         }
@@ -212,7 +151,7 @@ namespace UStacker.Gameplay
                 gen.Dispose();
                 _garbageGenerator = null;
             }
-            
+
             if (GameSettings.Objective.GarbageGenerationType == GarbageGenerationType.None)
                 return;
 
@@ -281,9 +220,7 @@ namespace UStacker.Gameplay
 
         private void HandleWarningPiece()
         {
-            var blockCount = Blocks.Count;
-            var lethalHeight = LethalHeight;
-            if (blockCount + _warningPieceTreshhold >= lethalHeight)
+            if (Blocks.Count + _warningPieceTreshhold >= LethalHeight)
                 _warningPiece.MakeVisible();
             else
                 _warningPiece.MakeInvisible();
@@ -292,51 +229,6 @@ namespace UStacker.Gameplay
         private void ChangeVisibility(float newAlpha)
         {
             _backgroundRenderer.color = _backgroundRenderer.color.WithAlpha(newAlpha);
-        }
-
-        private void HandleBoardZooming()
-        {
-            const float ONE_SCROLL_UNIT = 1 / 120f;
-
-            if (!AppSettings.Gameplay.CtrlScrollToChangeBoardZoom) return;
-
-            if (!Keyboard.current.ctrlKey.isPressed) return;
-
-            var mouseScroll = Mouse.current.scroll.ReadValue().y * ONE_SCROLL_UNIT;
-            var newScale = transform.localScale.x + mouseScroll * _boardZoomFactor;
-            var newZoom = newScale < _minimumBoardScale ? _minimumBoardScale : newScale;
-            ChangeBoardZoom(newZoom);
-            AppSettings.Gameplay.BoardZoom = newZoom;
-            AppSettings.Gameplay.BoardOffset = CurrentOffset;
-        }
-
-        private void HandleBoardDrag()
-        {
-            if (!AppSettings.Gameplay.DragMiddleButtonToRepositionBoard) return;
-
-            var mouse = Mouse.current;
-            var middleButton = mouse.middleButton;
-            if (middleButton.wasPressedThisFrame)
-            {
-                _dragStartPosition = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
-                _dragStartTransformPosition = transform.position;
-            }
-            else if (middleButton.isPressed)
-            {
-                var currentPosition = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
-                var positionDifference = currentPosition - _dragStartPosition;
-                transform.position = _dragStartTransformPosition + positionDifference;
-                AppSettings.Gameplay.BoardOffset = CurrentOffset;
-                _offset = CurrentOffset;
-            }
-        }
-
-        private void ChangeBoardZoom(float zoom)
-        {
-            if (Mathf.Abs(zoom - transform.localScale.x) < .01f) return;
-            var mytransform = transform;
-            mytransform.localScale = new Vector3(zoom, zoom, 1);
-            mytransform.position = new Vector3(-zoom * .5f * Width, -zoom * .5f * Height, 1);
         }
 
         private void ClearLine(int lineNumber)
@@ -357,12 +249,14 @@ namespace UStacker.Gameplay
 
             slots = Slots;
             for (var y = lineNumber; y < Blocks.Count; y++)
-                for (var x = 0; x < Blocks[y].Length; x++)
-                {
-                    if (!slots[y][x]) continue;
+            for (var x = 0; x < Blocks[y].Length; x++)
+            {
+                if (!slots[y][x]) continue;
 
-                    Blocks[y][x].transform.position -= Up;
-                }
+                var blockTransform = Blocks[y][x].transform;
+                var selfTransform = transform;
+                blockTransform.position -= selfTransform.up * selfTransform.lossyScale.y;
+            }
         }
 
         private void CheckAndClearLines(out uint linesCleared, out uint garbageLinesCleared)
@@ -483,7 +377,8 @@ namespace UStacker.Gameplay
             Blocks[blockPos.y][blockPos.x] = block;
         }
 
-        public bool Place(Piece piece, double placementTime, int totalRotation, Vector2Int totalMovement, SpinResult lastSpinResult)
+        public bool Place(Piece piece, double placementTime, int totalRotation, Vector2Int totalMovement,
+            SpinResult lastSpinResult)
         {
             if (!CanPlace(piece)) return false;
             lastSpinResult ??= new SpinResult();
@@ -596,16 +491,18 @@ namespace UStacker.Gameplay
                 return;
 
             _lastGarbageLayer = newGarbageLayer;
-            GarbageHeight += (uint)height;
+            GarbageHeight += (uint) height;
 
             var activeSlots = Slots;
             for (var y = 0; y < Blocks.Count; y++)
-                for (var x = 0; x < Blocks[y].Length; x++)
-                {
-                    if (!activeSlots[y][x]) continue;
+            for (var x = 0; x < Blocks[y].Length; x++)
+            {
+                if (!activeSlots[y][x]) continue;
 
-                    Blocks[y][x].transform.position += Up * height;
-                }
+                var blockTransform = Blocks[y][x].transform;
+                var selfTransform = transform;
+                blockTransform.position -= selfTransform.up * selfTransform.lossyScale.y;
+            }
 
             for (var i = 0; i < height; i++)
                 Blocks.Insert(0, new ClearableBlock[Width]);
@@ -613,6 +510,17 @@ namespace UStacker.Gameplay
             foreach (var block in newGarbageLayer.Blocks) Place(block);
 
             newGarbageLayer.TriggerBlocksAdded();
+        }
+
+        // for future use
+        [ContextMenu("Rotate by 30 deg")]
+        private void RotateBy30()
+        {
+            var up = transform.lossyScale.y * transform.up;
+            var right = transform.lossyScale.x * transform.right;
+            
+            transform.RotateAround(transform.position + (Width * .5f * right) + (Height * .5f * up),
+                Vector3.forward, 30f);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace UStacker.GlobalSettings.Groups
             {
                 if (value is { } uintVal)
                 {
-                    _countdownCount = Math.Clamp(uintVal, 2u, 10u);
+                    _countdownCount = Math.Clamp(uintVal, 1u, 10u);
                     return;
                 }
 

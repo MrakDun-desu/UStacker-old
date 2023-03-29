@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Pool;
 using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Initialization;
 using UStacker.GameSettings;
@@ -51,6 +49,9 @@ namespace UStacker.Multiplayer
         public void Initialize(Player ownerPlayer, GameSettingsSO.SettingsContainer settings)
         {
             GameSettings = settings;
+            _playerNameLabel.rectTransform.sizeDelta = new Vector2(
+                _gameSettings.BoardDimensions.BoardWidth,
+                _playerNameLabel.rectTransform.sizeDelta.y);
             OwnerPlayer = ownerPlayer;
         }
 

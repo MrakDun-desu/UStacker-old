@@ -18,6 +18,7 @@ namespace UStacker.Gameplay.Stats
         [SerializeField] private GameStateManager _stateManager;
         [SerializeField] private ReplayController _replayController;
         [SerializeField] private InputProcessor _inputProcessor;
+        [SerializeField] private GameRecorder _gameRecorder;
         [SerializeField] private MusicPlayerFinder _musicPlayerFinder;
 
         [Space]
@@ -53,7 +54,7 @@ namespace UStacker.Gameplay.Stats
 
         private GameReplay _displayedReplay;
 
-        public GameReplay DisplayedReplay
+        private GameReplay DisplayedReplay
         {
             get => _displayedReplay;
             set
@@ -113,6 +114,12 @@ namespace UStacker.Gameplay.Stats
             }
         }
 
+        private void OnEnable()
+        {
+            if (_gameRecorder.Replay is not null)
+                DisplayedReplay = _gameRecorder.Replay;
+        }
+        
         public void ShowReplay()
         {
             _inputProcessor.ActionList = _displayedReplay.ActionList;

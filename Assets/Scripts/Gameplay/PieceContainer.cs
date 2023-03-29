@@ -22,8 +22,6 @@ namespace UStacker.Gameplay
             }
         }
 
-        public string PieceType => _piece.Type;
-
         public void MarkUsed()
         {
             if (_pieceIsNull)

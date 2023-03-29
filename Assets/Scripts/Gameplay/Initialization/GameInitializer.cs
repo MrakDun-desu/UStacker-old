@@ -16,7 +16,7 @@ namespace UStacker.Gameplay.Initialization
         [SerializeField] private RotationSystemSO _srsRotationSystemSo;
         [SerializeField] private RotationSystemSO _srsPlusRotationSystemSo;
         [SerializeField] private InputProcessor _inputProcessor;
-        [SerializeField] private GameStateManager _stateManager;
+        [SerializeField] private GameRecorder _recorder;
 
         private static GameSettingsSO.SettingsContainer _gameSettings;
         private static GameReplay _replay;
@@ -73,7 +73,7 @@ namespace UStacker.Gameplay.Initialization
             };
 
             _playerFinder.GameType = GameType;
-            _stateManager.GameType = GameType;
+            _recorder.GameType = GameType;
             foreach (var dependantObject in _gameSettingsDependencies)
             {
                 var dependencies = dependantObject.GetComponents<IGameSettingsDependency>();

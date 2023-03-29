@@ -11,7 +11,6 @@ namespace UStacker.Gameplay.Presentation
     [RequireComponent(typeof(TMP_Text))]
     public class GameCountdown : MonoBehaviour, IGameSettingsDependency
     {
-        [SerializeField] private TMP_Text _gameTitle;
         [SerializeField] private TMP_Text _countdownText;
         [SerializeField] private string _noCountdownMessage = "Ready";
         [SerializeField] private string _lastMessage = "Start!";
@@ -53,7 +52,6 @@ namespace UStacker.Gameplay.Presentation
 
         private void Initialize()
         {
-            _gameTitle.text = GameSettings.Presentation.Title;
             _interval = GameSettings.Presentation.CountdownInterval;
             _count = GameSettings.Presentation.CountdownCount;
 

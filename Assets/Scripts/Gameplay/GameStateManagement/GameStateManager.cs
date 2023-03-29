@@ -1,41 +1,24 @@
 using System;
-using System.Collections;
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Enums;
 using UStacker.Gameplay.Initialization;
-using UStacker.Gameplay.Stats;
 using UStacker.Gameplay.Timing;
 using UStacker.GameSettings;
 using UStacker.GlobalSettings;
-using Logger = UStacker.Common.Logger;
 
 namespace UStacker.Gameplay.GameStateManagement
 {
     public class GameStateManager : MonoBehaviour, IGameSettingsDependency
     {
         [SerializeField] private GameTimer _timer;
-        [SerializeField] private StatCounterManager _statCounterManager;
-        [SerializeField] private GameRecorder _gameRecorder;
-        [SerializeField] private GameResultDisplayer _resultDisplayer;
         [SerializeField] private Mediator _mediator;
-        [SerializeField] private GameObject _crashCanvas;
-        [SerializeField] private TMP_Text _crashMessage;
-        [SerializeField] private TMP_Text _crashCountdown;
-        [SerializeField] private Button _exitButton;
 
         private readonly GameReplay Replay = new();
-        private GameSettingsSO.SettingsContainer _replaySettings;
-        private GameSettingsSO.SettingsContainer _settings;
 
         private GameState _currentState = GameState.Unset;
         private GameState _previousState;
-
-        public string GameType { get; set; }
         
         private GameState CurrentState
         {
@@ -49,15 +32,7 @@ namespace UStacker.Gameplay.GameStateManagement
 
         public static bool IsReplay { get; set; }
 
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            private get => _settings;
-            set
-            {
-                _settings = value;
-                _replaySettings = value with { };
-            }
-        }
+        public GameSettingsSO.SettingsContainer GameSettings { get; set; }
 
         public void InitializeGame()
         {
@@ -189,27 +164,6 @@ namespace UStacker.Gameplay.GameStateManagement
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            if (!IsReplay)
-            {
-                _gameRecorder.ActionList.Sort((a, b) => a.Time.CompareTo(b.Time));
-                _gameRecorder.PiecePlacementTimes.Sort();
-                Replay.GameType = GameType;
-                Replay.GameSettings = _replaySettings;
-                Replay.ActionList.Clear();
-                Replay.PiecePlacementList.Clear();
-                Replay.ActionList.AddRange(_gameRecorder.ActionList);
-                Replay.PiecePlacementList.AddRange(_gameRecorder.PiecePlacementTimes);
-                Replay.Stats = _statCounterManager.Stats;
-                Replay.GameLength = endTime;
-                Replay.TimeStamp = DateTime.UtcNow;
-
-                _resultDisplayer.DisplayedReplay = Replay;
-
-                if (AppSettings.Gameplay.AutosaveReplaysOnDisk)
-                    Replay.Save();
-            }
-
             _mediator.Send(new GameStateChangedMessage(
                 _currentState, GameState.Ended, endTime, IsReplay));
         }
@@ -223,28 +177,7 @@ namespace UStacker.Gameplay.GameStateManagement
                 _mediator.Send(new GameStateChangedMessage(
                     _currentState, GameState.Ended, Replay.GameLength, IsReplay));
             else
-                Debug.LogWarning("Trying to end game from");
-        }
-
-        private void CrashGame(GameCrashedMessage message)
-        {
-            Logger.Log("CRASH: " + message.CrashMessage);
-            StartCoroutine(CrashGameCor(message.CrashMessage));
-        }
-
-        private IEnumerator CrashGameCor(string crashMessage)
-        {
-            _crashCanvas.SetActive(true);
-            _exitButton.Select();
-
-            for (var countdown = 20; countdown > 0; countdown--)
-            {
-                _crashMessage.text = crashMessage;
-                _crashCountdown.text = $"Exiting in {countdown}...";
-                yield return new WaitForSeconds(1);
-            }
-
-            SceneManager.LoadScene("Scene_Menu_Main");
+                Debug.LogWarning("Trying to end replay from invalid state " + CurrentState);
         }
 
         public void TogglePause(InputAction.CallbackContext ctx)
@@ -264,22 +197,13 @@ namespace UStacker.Gameplay.GameStateManagement
             InitializeGame();
         }
 
-        private void OnSeedSet(SeedSetMessage message)
-        {
-            _replaySettings.General.ActiveSeed = message.Seed;
-        }
-
         private void OnEnable()
         {
-            _mediator.Register<GameCrashedMessage>(CrashGame);
-            _mediator.Register<SeedSetMessage>(OnSeedSet);
             _mediator.Register<GameStateChangedMessage>(UpdateGameState, 10);
         }
 
         private void OnDisable()
         {
-            _mediator.Unregister<GameCrashedMessage>(CrashGame);
-            _mediator.Unregister<SeedSetMessage>(OnSeedSet);
             _mediator.Unregister<GameStateChangedMessage>(UpdateGameState);
         }
 
@@ -290,7 +214,6 @@ namespace UStacker.Gameplay.GameStateManagement
 
         private void Awake()
         {
-            _exitButton.onClick.AddListener(() => SceneManager.LoadScene("Scene_Menu_Main"));
             AppSettings.Gameplay.PauseSingleplayerGamesOutOfFocusChanged += OnPauseSettingChange;
             OnPauseSettingChange(AppSettings.Gameplay.PauseSingleplayerGamesOutOfFocus);
         }

@@ -35,7 +35,7 @@ namespace UStacker.Gameplay.Pieces
         private void Awake()
         {
             _blockPool = new ObjectPool<BlockBase>(
-                () => Instantiate(_blockPrefab, transform, true),
+                () => Instantiate(_blockPrefab, transform),
                 block => block.Visibility = AppSettings.Gameplay.GridVisibility,
                 block => block.Visibility = 0,
                 block => Destroy(block.gameObject),

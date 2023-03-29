@@ -16,13 +16,13 @@ MonoBehaviour:
   _settings:
     <General>k__BackingField:
       _nextPieceCount: 5
-      _randomizerType: 0
+      _randomizerType: 1
       _customRandomizerName: 
       <AllowedSpins>k__BackingField: 2
       <UseCustomSeed>k__BackingField: 0
       <CustomSeed>k__BackingField: 0
       <CustomRandomizerScript>k__BackingField: 
-      <ActiveSeed>k__BackingField: 16688664036304051815
+      <ActiveSeed>k__BackingField: 5828665724025883712
     <Controls>k__BackingField:
       _rotationSystemType: 2
       _customRotationSystem: 
@@ -36,9 +36,9 @@ MonoBehaviour:
       <ShowGhostPiece>k__BackingField: 1
       <OverrideHandling>k__BackingField: 0
       <Handling>k__BackingField:
-        _delayedAutoShift: 0.08666666597127914
+        _delayedAutoShift: 0.08500000089406967
         _automaticRepeatRate: 0
-        _dasCutDelay: 0.03333333507180214
+        _dasCutDelay: 0.01666666753590107
         _cancelDasDelayWithInput: 1
         _delayDasOn: 1
         _simultaneousDasBehavior: 2
@@ -165,8 +165,8 @@ MonoBehaviour:
       <StartingLevel>k__BackingField: 
     <Presentation>k__BackingField:
       _title: Sprint 40L
-      _countdownInterval: 0.65
-      _countdownCount: 3
+      _countdownInterval: 0.5
+      _countdownCount: 1
       <DefaultStatCounterGroup>k__BackingField:
         _name: Sprint 40L
         _statCounterSos:
@@ -281,8 +281,8 @@ MonoBehaviour:
             or message.ConditionName == \"None\" or message.ConditionName == \"\"
             then\n\t\treturn \"\"\n\tend\n\tlocal remaining = message.TotalCount
             - message.CurrentCount\n\tif remaining < 0 then remaining = 0 end\n\tif
-            message.ConditionName == \"Time\" then\n\t\treturn StatUtility:FormatTime(remaining)\n\tend\n\treturn
-            StatUtility:FormatNumber(remaining, 0)\nend\nSetText(\"\")\nSetAlignment(\"center\")\nSetVisibility(0.4)\nreturn
+            message.ConditionName == \"Time\" then\n\t\treturn StatUtility:FormatTime(remaining,
+            false)\n\tend\n\treturn StatUtility:FormatNumber(remaining, 0)\nend\nSetText(\"\")\nSetAlignment(\"center\")\nSetVisibility(0.4)\nreturn
             {\n\t[\"GameEndConditionChanged\"] = OnChange\n}"
           Position: {x: 3, y: 15}
           Size: {x: 4, y: 4}
