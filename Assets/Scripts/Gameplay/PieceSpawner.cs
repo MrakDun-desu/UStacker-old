@@ -57,7 +57,7 @@ namespace UStacker.Gameplay
 
         private void OnEnable()
         {
-            _mediator.Register<GameStateChangedMessage>(OnGameStateChange);
+            _mediator.Register<GameStateChangedMessage>(OnGameStateChange, 1);
             _mediator.Register<SeedSetMessage>(OnSeedSet);
         }
 
@@ -210,7 +210,7 @@ namespace UStacker.Gameplay
             _inputProcessor.HandlePreSpawnBufferedInputs(spawnTime, out var cancelSpawn);
 
             if (cancelSpawn) return;
-            
+
             _warningPiece.SetPiece(_previews.GetFirstPiece());
 
             var nextPiece = AppSettings.Sound.HearNextPieces ? _previews.GetFirstPiece()?.Type : string.Empty;

@@ -2,7 +2,6 @@
 using System.Net;
 using FishNet;
 using FishNet.Transporting;
-using ParrelSync;
 using UnityEngine;
 
 namespace UStacker.Multiplayer.Initialization
@@ -36,16 +35,12 @@ namespace UStacker.Multiplayer.Initialization
                     InstanceFinder.ClientManager.StartConnection();
                     break;
                 case MultiplayerInitType.LocalClient:
-                    if (ClonesManager.IsClone())
-                    {
-                        InstanceFinder.ClientManager.StartConnection();
-                    }
-                    else
-                    {
-                        _networkDiscovery.ServerDiscovered += OnServerDiscovered;
-                        _networkDiscovery.StartSearchingForServers();
-                    }
-                    
+#if UNITY_EDITOR
+                    InstanceFinder.ClientManager.StartConnection();
+#else
+                    _networkDiscovery.ServerDiscovered += OnServerDiscovered;
+                    _networkDiscovery.StartSearchingForServers();
+#endif
                     _searchingForGameCanvas.SetActive(true);
                     InstanceFinder.ClientManager.OnClientConnectionState += OnClientStateChanged;
                     break;

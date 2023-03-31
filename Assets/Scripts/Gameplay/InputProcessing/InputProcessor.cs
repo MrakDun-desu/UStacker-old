@@ -63,10 +63,10 @@ namespace UStacker.Gameplay.InputProcessing
         private bool _pieceIsNull = true;
         private bool _usedHold;
 
+        private readonly List<ActionType> _heldActions = new();
+
         private bool _holdingLeft => _holdingLeftStart < double.PositiveInfinity;
         private bool _holdingRight => _holdingRightStart < double.PositiveInfinity;
-        private bool _bufferedLeft;
-        private bool _bufferedRight;
 
         private double _hardLockAmountInternal;
 
@@ -152,7 +152,7 @@ namespace UStacker.Gameplay.InputProcessing
         {
             _mediator.Register<GravityChangedMessage>(OnGravityChanged);
             _mediator.Register<LockDelayChangedMessage>(OnLockDelayChanged);
-            _mediator.Register<GameStateChangedMessage>(OnGameStateChange, 5);
+            _mediator.Register<GameStateChangedMessage>(OnGameStateChange);
         }
 
         private void OnDisable()
@@ -212,10 +212,13 @@ namespace UStacker.Gameplay.InputProcessing
 
         private void HandlePauseBufferedInputs()
         {
-            if (_bufferedLeft && !_isReplaying)
-                HandleInputAction(new InputActionMessage(ActionType.MoveLeft, KeyActionType.KeyDown, _timer.CurrentTime));
-            if (_bufferedRight && !_isReplaying)
-                HandleInputAction(new InputActionMessage(ActionType.MoveRight, KeyActionType.KeyDown, _timer.CurrentTime));
+            if (_isReplaying)
+                return;
+
+            var functionTime = _timer.CurrentTime;
+            
+            foreach (var actionType in _heldActions)
+                HandleInputAction(new InputActionMessage(actionType, KeyActionType.KeyDown, functionTime));
         }
 
         public bool TryAutomaticPreSpawnRotation(double time)
@@ -411,8 +414,6 @@ namespace UStacker.Gameplay.InputProcessing
 
         private void ResetProcessor()
         {
-            _bufferedLeft = false;
-            _bufferedRight = false;
             _holdingSoftDrop = false;
             _softDropActive = false;
             _holdingLeftStart = double.PositiveInfinity;
@@ -970,52 +971,37 @@ namespace UStacker.Gameplay.InputProcessing
 
         private void HandleKeyEvent(InputAction.CallbackContext ctx, ActionType actionType)
         {
-            KeyActionType? keyActionType = ctx switch
+            KeyActionType? keyActionTypeGuess = ctx switch
             {
                 { performed: true } => KeyActionType.KeyDown,
                 { canceled: true } => KeyActionType.KeyUp,
                 _ => null
             };
+            
+            if (keyActionTypeGuess is not { } keyActionType) return;
+
+            if (keyActionType == KeyActionType.KeyDown && !_heldActions.Contains(actionType))
+                _heldActions.Add(actionType);
+            else
+                _heldActions.Remove(actionType);
+            
             if (!_controlsActive && keyActionType == KeyActionType.KeyDown) return;
-            if (keyActionType is null) return;
 
             var actionTime = ctx.time - (Time.realtimeSinceStartupAsDouble - _timer.CurrentTime);
             var actionMessage = new InputActionMessage(
                 actionType,
-                (KeyActionType)keyActionType,
+                keyActionType,
                 actionTime);
             HandleInputAction(actionMessage);
         }
 
         public void OnMovePieceLeft(InputAction.CallbackContext ctx)
         {
-            switch (ctx)
-            {
-                case { performed: true }:
-                    _bufferedLeft = true;
-                    _bufferedRight = false;
-                    break;
-                case { canceled: true }:
-                    _bufferedLeft = false;
-                    break;
-            }
-
             HandleKeyEvent(ctx, ActionType.MoveLeft);
         }
 
         public void OnMovePieceRight(InputAction.CallbackContext ctx)
         {
-            switch (ctx)
-            {
-                case { performed: true }:
-                    _bufferedRight = true;
-                    _bufferedLeft = false;
-                    break;
-                case { canceled: true }:
-                    _bufferedRight = false;
-                    break;
-            }
-
             HandleKeyEvent(ctx, ActionType.MoveRight);
         }
 

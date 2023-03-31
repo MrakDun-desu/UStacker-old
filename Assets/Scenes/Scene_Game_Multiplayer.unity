@@ -12354,6 +12354,11 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!20 &1422062717 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 6203196271649829682, guid: 22e2929c6f4097c4dad92ffc1bd1d6e1, type: 3}
+  m_PrefabInstance: {fileID: 1422062714}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1434359407
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16532,6 +16537,14 @@ PrefabInstance:
     - target: {fileID: 7198592304762667749, guid: 0ed263f4373fd7f469bdb84de977e4ba, type: 3}
       propertyPath: m_Name
       value: BackgroundCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8290584842433092627, guid: 0ed263f4373fd7f469bdb84de977e4ba, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1422062717}
+    - target: {fileID: 8290584842433092627, guid: 0ed263f4373fd7f469bdb84de977e4ba, type: 3}
+      propertyPath: m_RenderMode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8290584842433092627, guid: 0ed263f4373fd7f469bdb84de977e4ba, type: 3}
       propertyPath: m_SortingOrder

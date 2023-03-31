@@ -22,7 +22,6 @@ namespace UStacker.GlobalSettings.Appliers
         private float _heightToWidthRatio = 9f / 16f;
         private float _lastFrameRatio;
         private RectTransform _myTransform;
-        private float _textureWidth;
         private VideoPlayer _videoPlayer;
         private float _widthToHeightRatio = 16f / 9f;
 
@@ -96,7 +95,6 @@ namespace UStacker.GlobalSettings.Appliers
 
             if (newTexture is null) return;
 
-            _textureWidth = newTexture.width;
             _widthToHeightRatio = (float) newTexture.width / newTexture.height;
             _heightToWidthRatio = (float) newTexture.height / newTexture.width;
 
