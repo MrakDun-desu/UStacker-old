@@ -21,6 +21,7 @@ namespace UStacker.Gameplay.Pieces
         private ObjectPool<BlockBase> _blockPool;
         private string _currentPieceType = "";
         private bool _isEnabled = true;
+        private bool _awake;
         private GameSettingsSO.SettingsContainer _settings;
 
         private float _visibility;
@@ -42,6 +43,7 @@ namespace UStacker.Gameplay.Pieces
             set
             {
                 _settings = value;
+                Awake();
                 Initialize();
             }
         }
@@ -51,6 +53,10 @@ namespace UStacker.Gameplay.Pieces
 
         private void Awake()
         {
+            if (_awake)
+                return;
+
+            _awake = true;
             _blockPool = new ObjectPool<BlockBase>(
                 CreateBlock,
                 block => block.Visibility = Visibility,

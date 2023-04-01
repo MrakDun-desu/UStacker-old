@@ -48,6 +48,7 @@ namespace UStacker.Gameplay
         private IGarbageGenerator _garbageGenerator;
 
         private float _warningPieceTreshhold;
+        private bool _awake;
 
         public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots =>
             Blocks
@@ -58,9 +59,28 @@ namespace UStacker.Gameplay
         public uint Height { get; private set; }
         public uint GarbageHeight { get; private set; }
         public uint LethalHeight { get; private set; }
+        
+        private GameSettingsSO.SettingsContainer _gameSettings;
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            private get => _gameSettings;
+            set
+            {
+                _gameSettings = value;
+                Awake();
+                Initialize();
+            }
+        }
+
+        public event Action LinesCleared;
 
         private void Awake()
         {
+            if (_awake)
+                return;
+
+            _awake = true;
             ChangeVisibility(AppSettings.Gameplay.BoardVisibility);
             _warningPieceTreshhold = AppSettings.Gameplay.WarningPieceTreshhold;
 
@@ -92,20 +112,6 @@ namespace UStacker.Gameplay
             BoardVisibilityApplier.VisibilityChanged -= ChangeVisibility;
             WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
         }
-
-        private GameSettingsSO.SettingsContainer _gameSettings;
-
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            private get => _gameSettings;
-            set
-            {
-                _gameSettings = value;
-                Initialize();
-            }
-        }
-
-        public event Action LinesCleared;
 
         private void OnSeedSet(SeedSetMessage message)
         {

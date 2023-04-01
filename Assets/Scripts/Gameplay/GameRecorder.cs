@@ -65,10 +65,6 @@ namespace UStacker.Gameplay
         }
         private void RecordReplay(double endTime)
         {
-            // sorting shouldn't be needed here, but doing it just in case
-            ActionList.Sort((a, b) => a.Time.CompareTo(b.Time));
-            PiecePlacementTimes.Sort();
-
             Replay ??= new GameReplay();
             Replay.GameType = GameType;
             Replay.GameSettings = _replaySettings;

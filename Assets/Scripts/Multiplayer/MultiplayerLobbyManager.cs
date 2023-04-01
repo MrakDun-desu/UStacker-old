@@ -41,14 +41,13 @@ namespace UStacker.Multiplayer
 
         private void GetBoard(MultiplayerBoard board)
         {
-            board.Activate();
             _boardsOrganizer.AddBoard(board);
         }
 
         private void ReleaseBoard(MultiplayerBoard board)
         {
-            board.Deactivate();
             _boardsOrganizer.RemoveBoard(board);
+            board.gameObject.SetActive(false);
         }
 
         private void DestroyBoard(MultiplayerBoard board)
@@ -107,7 +106,25 @@ namespace UStacker.Multiplayer
             }
 
             GameInProgress = true;
+
+            var generalSettings = MultiplayerSettingsManager.SettingsStatic.GameSettings.General;
+            if (generalSettings.UseCustomSeed)
+                SetGameSeed(generalSettings.ActiveSeed);
+            else
+            {
+                var seed1 = (ulong) ((long) Random.Range(int.MinValue, int.MaxValue) + int.MaxValue);
+                var seed2 = (ulong) ((long) Random.Range(int.MinValue, int.MaxValue) + int.MaxValue);
+                SetGameSeed(seed1 + (seed2 << 32));
+            }
+            
             StartGameCountdown();
+        }
+
+        [ObserversRpc(RunLocally = true)]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void SetGameSeed(ulong newSeed)
+        {
+            MultiplayerSettingsManager.SettingsStatic.GameSettings.General.ActiveSeed = newSeed;
         }
 
         [TargetRpc]
@@ -156,9 +173,10 @@ namespace UStacker.Multiplayer
             {
                 var newBoard = _boardsPool.Get();
                 newBoard.Initialize(player, gameSettings);
+                newBoard.gameObject.SetActive(true);
             }
         }
-
+        
         [ContextMenu("End game manually")]
         [Server]
         public void EndGame()

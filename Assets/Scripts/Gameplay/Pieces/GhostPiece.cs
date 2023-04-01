@@ -21,6 +21,7 @@ namespace UStacker.Gameplay.Pieces
         private Piece _activePiece;
         private ObjectPool<BlockBase> _blockPool;
         private bool _colorGhostPiece;
+        private bool _awake;
         private Color _currentColor = _defaultColor;
         private GameSettingsSO.SettingsContainer _settings;
         
@@ -33,7 +34,8 @@ namespace UStacker.Gameplay.Pieces
         {
             set
             {
-                 _settings = value;   
+                 _settings = value;
+                 Awake();
                  Initialize();
             }
         }
@@ -70,6 +72,10 @@ namespace UStacker.Gameplay.Pieces
 
         private void Awake()
         {
+            if (_awake)
+                return;
+
+            _awake = true;
             _blockPool = new ObjectPool<BlockBase>(
                 CreateBlock,
                 block => block.Visibility = AppSettings.Gameplay.GhostPieceVisibility,

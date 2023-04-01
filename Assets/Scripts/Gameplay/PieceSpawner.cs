@@ -32,9 +32,9 @@ namespace UStacker.Gameplay
         private readonly List<PieceContainer> _activePreviews = new();
         private ObjectPool<PieceContainer> _previewsPool;
         private PiecePreviews _previews;
-        private IRandomizer _randomizer { get; set; }
-
+        private bool _awake;
         private GameSettingsSO.SettingsContainer _gameSettings;
+        private IRandomizer _randomizer;
 
         public GameSettingsSO.SettingsContainer GameSettings
         {
@@ -42,12 +42,17 @@ namespace UStacker.Gameplay
             set
             {
                 _gameSettings = value;
+                Awake();
                 Initialize();
             }
         }
 
         private void Awake()
         {
+            if (_awake)
+                return;
+
+            _awake = true;
             _previewsPool = new ObjectPool<PieceContainer>(
                 () => Instantiate(_pieceContainerPrefab, _board.transform),
                 preview => preview.gameObject.SetActive(true),
@@ -69,6 +74,7 @@ namespace UStacker.Gameplay
 
         private void OnSeedSet(SeedSetMessage message)
         {
+            Debug.Log("Seed set to: " + message.Seed);
             _randomizer?.Reset(message.Seed);
         }
 
@@ -128,8 +134,8 @@ namespace UStacker.Gameplay
             {
                 var pieceContainer = _previewsPool.Get();
                 pieceContainer.transform.localPosition = new Vector3(
-                    (int) _board.Width,
-                    (int) _board.Height - PieceContainer.HEIGHT * (_activePreviews.Count + 1)
+                    (int) GameSettings.BoardDimensions.BoardWidth,
+                    (int) GameSettings.BoardDimensions.BoardHeight - PieceContainer.HEIGHT * (_activePreviews.Count + 1)
                 );
                 _activePreviews.Add(pieceContainer);
             }
@@ -152,7 +158,6 @@ namespace UStacker.Gameplay
                 }
 
                 var nextPiece = _piecePools[nextPieceType].Get();
-                nextPiece.SetBoard(_board);
                 _previews.AddPiece(nextPiece);
             }
 

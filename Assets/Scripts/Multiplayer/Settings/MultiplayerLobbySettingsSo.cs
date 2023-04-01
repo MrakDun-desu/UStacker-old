@@ -8,6 +8,7 @@ namespace UStacker.Multiplayer.Settings
     {
         public event Action SettingsReloaded;
 
+        [SerializeField]
         private SettingsContainer _settings = new();
         
         public SettingsContainer Settings

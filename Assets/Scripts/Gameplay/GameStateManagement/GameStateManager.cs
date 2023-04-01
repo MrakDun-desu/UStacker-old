@@ -15,8 +15,7 @@ namespace UStacker.Gameplay.GameStateManagement
         [SerializeField] private GameTimer _timer;
         [SerializeField] private Mediator _mediator;
 
-        private readonly GameReplay Replay = new();
-
+        private readonly GameReplay _replay = new();
         private GameState _currentState = GameState.Unset;
         private GameState _previousState;
         
@@ -175,7 +174,7 @@ namespace UStacker.Gameplay.GameStateManagement
 
             if (CurrentState is GameState.Running or GameState.Paused)
                 _mediator.Send(new GameStateChangedMessage(
-                    _currentState, GameState.Ended, Replay.GameLength, IsReplay));
+                    _currentState, GameState.Ended, _replay.GameLength, IsReplay));
             else
                 Debug.LogWarning("Trying to end replay from invalid state " + CurrentState);
         }

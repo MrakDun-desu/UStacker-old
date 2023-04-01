@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UStacker.Gameplay.GameStateManagement;
 using UStacker.Gameplay.InputProcessing;
@@ -12,7 +11,6 @@ namespace UStacker.Gameplay.Initialization
     public class GameInitializer : MonoBehaviour
     {
         [SerializeField] private MusicPlayerFinder _playerFinder;
-        [SerializeField] private GameObject[] _gameSettingsDependencies = Array.Empty<GameObject>();
         [SerializeField] private RotationSystemSO _srsRotationSystemSo;
         [SerializeField] private RotationSystemSO _srsPlusRotationSystemSo;
         [SerializeField] private InputProcessor _inputProcessor;
@@ -55,6 +53,13 @@ namespace UStacker.Gameplay.Initialization
 
         public static string GameType { get; set; }
 
+        private IGameSettingsDependency[] _gameSettingsDependencies;
+
+        private void Awake()
+        {
+            _gameSettingsDependencies = GetComponentsInChildren<IGameSettingsDependency>();
+        }
+
         private void Start()
         {
             if (Replay is not null)
@@ -74,12 +79,8 @@ namespace UStacker.Gameplay.Initialization
 
             _playerFinder.GameType = GameType;
             _recorder.GameType = GameType;
-            foreach (var dependantObject in _gameSettingsDependencies)
-            {
-                var dependencies = dependantObject.GetComponents<IGameSettingsDependency>();
-                foreach (var dependency in dependencies)
-                    dependency.GameSettings = GameSettings;
-            }
+            foreach (var dependency in _gameSettingsDependencies)
+                dependency.GameSettings = GameSettings;
             
             GameStateChangeEventReceiver.Activate();
         }

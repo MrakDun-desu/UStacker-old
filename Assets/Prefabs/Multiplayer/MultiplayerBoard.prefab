@@ -422,26 +422,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _events:
-  - _name: Replay or game initializing
-    PreviousState: 1
-    NewState: 2
-    WorkInReplay: 1
-    WorkInGame: 1
-    OnStateChanged:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 8683573926585369265}
-          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-          m_MethodName: set_enabled
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Gameplay
-            m_BoolArgument: 1
-          m_CallState: 2
   - _name: Replay initializing
     PreviousState: 1
     NewState: 2
@@ -491,9 +471,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 8683573926585369265}
-          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-          m_MethodName: set_enabled
-          m_Mode: 6
+          m_TargetAssemblyTypeName: UnityEngine.InputSystem.PlayerInput, Unity.InputSystem
+          m_MethodName: SwitchCurrentActionMap
+          m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -566,53 +546,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!1 &2322140277897087841
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5085866709087885788}
-  - component: {fileID: 382736703342966539}
-  m_Layer: 0
-  m_Name: Recorder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5085866709087885788
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2322140277897087841}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1071916091330097133}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &382736703342966539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2322140277897087841}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62f94062effd46ac9d217fe7905e6689, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _mediator: {fileID: 1156640910637068209}
-  _statCounterManager: {fileID: 4895817894828493423}
-  _resultDisplayer: {fileID: 0}
 --- !u!1 &2384360728207727978
 GameObject:
   m_ObjectHideFlags: 0
@@ -629,7 +562,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1071916091330097133
 Transform:
   m_ObjectHideFlags: 0
@@ -649,8 +582,6 @@ Transform:
   - {fileID: 6722705061003391112}
   - {fileID: 6144170074722108464}
   - {fileID: 1919125162309748897}
-  - {fileID: 5085866709087885788}
-  - {fileID: 1116690760063100692}
   - {fileID: 85126909321783099}
   - {fileID: 8582300889750097659}
   - {fileID: 5405158971336701219}
@@ -670,19 +601,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mediator: {fileID: 1156640910637068209}
-  _gameSettingsDependencies:
-  - {fileID: 5405158971336701221}
-  - {fileID: 5405158970798955434}
-  - {fileID: 2263453064223197828}
-  - {fileID: 3088197304298284246}
-  - {fileID: 7995148360892650997}
-  - {fileID: 4483089581576417200}
-  - {fileID: 6470712972931692570}
-  - {fileID: 446293201156260369}
-  - {fileID: 3088197305758396925}
-  - {fileID: 2509880891717588123}
-  - {fileID: 8299929003507603972}
-  - {fileID: 2322140277897087841}
   _playerNameLabel: {fileID: 8471496448084170384}
 --- !u!1 &2509880891717588123
 GameObject:
@@ -766,149 +684,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!1 &2797994570857115910
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1116690760063100692}
-  - component: {fileID: 7538231937159463637}
-  - component: {fileID: 409204648819319763}
-  m_Layer: 0
-  m_Name: MusicPlayerFinder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1116690760063100692
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2797994570857115910}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1071916091330097133}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7538231937159463637
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2797994570857115910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e395a11e845459b852163219dfd8bae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &409204648819319763
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2797994570857115910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 157551fac8fb40778b127725f7551e62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _events:
-  - _name: On initialize
-    PreviousState: 1
-    NewState: 2
-    WorkInReplay: 0
-    WorkInGame: 1
-    OnStateChanged:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 7538231937159463637}
-          m_TargetAssemblyTypeName: UStacker.GlobalSettings.Music.MusicPlayerFinder,
-            UStacker.GlobalSettings
-          m_MethodName: Quieten
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - _name: On lose
-    PreviousState: 1
-    NewState: 6
-    WorkInReplay: 1
-    WorkInGame: 1
-    OnStateChanged:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 7538231937159463637}
-          m_TargetAssemblyTypeName: UStacker.GlobalSettings.Music.MusicPlayerFinder,
-            UStacker.GlobalSettings
-          m_MethodName: StopPlaying
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - _name: On end
-    PreviousState: 1
-    NewState: 5
-    WorkInReplay: 1
-    WorkInGame: 1
-    OnStateChanged:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 7538231937159463637}
-          m_TargetAssemblyTypeName: UStacker.GlobalSettings.Music.MusicPlayerFinder,
-            UStacker.GlobalSettings
-          m_MethodName: StopPlaying
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - _name: On start
-    PreviousState: 7
-    NewState: 3
-    WorkInReplay: 0
-    WorkInGame: 1
-    OnStateChanged:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 7538231937159463637}
-          m_TargetAssemblyTypeName: UStacker.GlobalSettings.Music.MusicPlayerFinder,
-            UStacker.GlobalSettings
-          m_MethodName: PlayGameTrackByType
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  _mediator: {fileID: 1156640910637068209}
 --- !u!1 &4483089581576417200
 GameObject:
   m_ObjectHideFlags: 0
@@ -1927,11 +1702,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2298653031307401567, guid: 2f074c1b499404a4d9b3d2cb324281e7, type: 3}
   m_PrefabInstance: {fileID: 1214652685691109357}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3088197304298284246 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4179387976789465915, guid: 2f074c1b499404a4d9b3d2cb324281e7, type: 3}
-  m_PrefabInstance: {fileID: 1214652685691109357}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3088197305758396925 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4179387977175895568, guid: 2f074c1b499404a4d9b3d2cb324281e7, type: 3}
@@ -1987,7 +1757,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6142171401998666887, guid: 2f074c1b499404a4d9b3d2cb324281e7, type: 3}
   m_PrefabInstance: {fileID: 1214652685691109357}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3088197304298284246}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43b9098caa904b08847c723a223ab18f, type: 3}
@@ -1996,11 +1766,6 @@ MonoBehaviour:
 --- !u!223 &5145621212736612268 stripped
 Canvas:
   m_CorrespondingSourceObject: {fileID: 6319600398146918465, guid: 2f074c1b499404a4d9b3d2cb324281e7, type: 3}
-  m_PrefabInstance: {fileID: 1214652685691109357}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &5405158970798955434 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6618509541588558919, guid: 2f074c1b499404a4d9b3d2cb324281e7, type: 3}
   m_PrefabInstance: {fileID: 1214652685691109357}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &5405158971336701219 stripped
@@ -2013,17 +1778,12 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6618509543202458313, guid: 2f074c1b499404a4d9b3d2cb324281e7, type: 3}
   m_PrefabInstance: {fileID: 1214652685691109357}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5405158971336701221}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e22a6a7319fdc0743955941190a49075, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &5405158971336701221 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6618509543202458312, guid: 2f074c1b499404a4d9b3d2cb324281e7, type: 3}
-  m_PrefabInstance: {fileID: 1214652685691109357}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5784215133161626654
 PrefabInstance:
   m_ObjectHideFlags: 0

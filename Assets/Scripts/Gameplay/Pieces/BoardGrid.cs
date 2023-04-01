@@ -21,6 +21,7 @@ namespace UStacker.Gameplay.Pieces
         private ObjectPool<BlockBase> _blockPool;
 
         private GameSettingsSO.SettingsContainer _gameSettings;
+        private bool _awake;
 
         public GameSettingsSO.SettingsContainer GameSettings
         {
@@ -28,12 +29,17 @@ namespace UStacker.Gameplay.Pieces
             set
             {
                 _gameSettings = value;
+                Awake();
                 Initialize();
             }
         }
 
         private void Awake()
         {
+            if (_awake)
+                return;
+
+            _awake = true;
             _blockPool = new ObjectPool<BlockBase>(
                 () => Instantiate(_blockPrefab, transform),
                 block => block.Visibility = AppSettings.Gameplay.GridVisibility,

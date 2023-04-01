@@ -25,6 +25,7 @@ namespace UStacker.Gameplay.Stats
         public ReadonlyStatContainer Stats;
 
         private GameSettingsSO.SettingsContainer _gameSettings;
+        private bool _awake;
 
         public GameSettingsSO.SettingsContainer GameSettings
         {
@@ -32,13 +33,14 @@ namespace UStacker.Gameplay.Stats
             set
             {
                 _gameSettings = value;
+                Awake();
                 Initialize();
             }
         }
 
         private StatUtility _statUtility;
         private ObjectPool<StatCounterDisplayer> _displayerPool;
-        private List<StatCounterDisplayer> _activeDisplayers = new();
+        private readonly List<StatCounterDisplayer> _activeDisplayers = new();
 
         private StatCounterDisplayer CreateDisplayer()
         {
@@ -49,6 +51,10 @@ namespace UStacker.Gameplay.Stats
 
         private void Awake()
         {
+            if (_awake)
+                return;
+
+            _awake = true;
             _statUtility = new StatUtility(_timer);
             Stats = new ReadonlyStatContainer(_stats);
 
@@ -110,7 +116,7 @@ namespace UStacker.Gameplay.Stats
             foreach (var displayer in _activeDisplayers)
                 _displayerPool.Release(displayer);
             
-            _displayerPool.Clear();
+            _activeDisplayers.Clear();
 
             var counterGroup = GameSettings.Presentation.DefaultStatCounterGroup;
 

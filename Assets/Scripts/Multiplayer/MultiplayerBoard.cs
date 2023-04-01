@@ -1,16 +1,19 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Enums;
+using UStacker.Gameplay.GameStateManagement;
 using UStacker.Gameplay.Initialization;
 using UStacker.GameSettings;
+using UStacker.Multiplayer.Enums;
 
 namespace UStacker.Multiplayer
 {
     public class MultiplayerBoard : MonoBehaviour
     {
         [SerializeField] private Mediator _mediator;
-        [SerializeField] private GameObject[] _gameSettingsDependencies;
         [SerializeField] private TMP_Text _playerNameLabel;
 
         public Mediator Mediator => _mediator;
@@ -26,44 +29,45 @@ namespace UStacker.Multiplayer
             }
         }
 
-        private IGameSettingsDependency[] _dependantComponents;
+        private IGameSettingsDependency[] _dependantComponents = Array.Empty<IGameSettingsDependency>();
 
         private GameSettingsSO.SettingsContainer _gameSettings;
         private GameSettingsSO.SettingsContainer GameSettings
         {
             get => _gameSettings;
-            set
-            {
-                _gameSettings = value;
-                foreach (var dependency in _dependantComponents)
-                    dependency.GameSettings = GameSettings;
-            }
+            set => _gameSettings = value;
         }
-        
+
         private void Awake()
         {
-            _dependantComponents =
-                _gameSettingsDependencies.SelectMany(obj => obj.GetComponents<IGameSettingsDependency>()).ToArray();
+            if (_dependantComponents.Length == 0)
+                _dependantComponents = GetComponentsInChildren<IGameSettingsDependency>();
         }
 
         public void Initialize(Player ownerPlayer, GameSettingsSO.SettingsContainer settings)
         {
             GameSettings = settings;
-            _playerNameLabel.rectTransform.sizeDelta = new Vector2(
-                _gameSettings.BoardDimensions.BoardWidth,
-                _playerNameLabel.rectTransform.sizeDelta.y);
             OwnerPlayer = ownerPlayer;
         }
 
-        public void Deactivate()
+        private void OnDisable()
         {
-            Mediator.Clear();
-            gameObject.SetActive(false);
+            _mediator.Clear();
+            GameStateChangeEventReceiver.Deactivate();
         }
 
-        public void Activate()
+        private void OnEnable()
         {
-            gameObject.SetActive(true);
+            foreach (var dependency in _dependantComponents)
+                dependency.GameSettings = GameSettings;
+            GameStateChangeEventReceiver.Activate();
+            _mediator.Register<GameStateChangedMessage>(OnGameStateChanged, 10);
+        }
+
+        private void OnGameStateChanged(GameStateChangedMessage message)
+        {
+            if (message.NewState == GameState.Initializing)
+                _mediator.Send(new SeedSetMessage(GameSettings.General.ActiveSeed));
         }
     }
 }
