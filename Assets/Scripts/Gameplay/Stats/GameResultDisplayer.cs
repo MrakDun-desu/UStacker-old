@@ -126,7 +126,7 @@ namespace UStacker.Gameplay.Stats
             _inputProcessor.PlacementsList = _displayedReplay.PiecePlacementList;
             _inputProcessor.ReplayLength = _displayedReplay.GameLength;
             _musicPlayerFinder.GameType = _replayGameType.Value;
-            GameStateManager.IsReplay = true;
+            _stateManager.IsReplay = true;
 
             _replayController.SetReplay(DisplayedReplay);
             _stateManager.InitializeGame();
@@ -137,7 +137,7 @@ namespace UStacker.Gameplay.Stats
             _inputProcessor.ActionList = null;
             _inputProcessor.PlacementsList = null;
             _musicPlayerFinder.GameType = _displayedReplay.GameType ?? _replayGameType.Value;
-            GameStateManager.IsReplay = false;
+            _stateManager.IsReplay = false;
             _stateManager.InitializeGame();
         }
     }

@@ -57,7 +57,7 @@ namespace UStacker.Gameplay
                 () => Instantiate(_pieceContainerPrefab, _board.transform),
                 preview => preview.gameObject.SetActive(true),
                 preview => preview.gameObject.SetActive(false),
-                preview => Destroy(preview.gameObject), true, 6, 10);
+                preview => Destroy(preview.gameObject), true, 5, 6);
         }
 
         private void OnEnable()
@@ -74,7 +74,6 @@ namespace UStacker.Gameplay
 
         private void OnSeedSet(SeedSetMessage message)
         {
-            Debug.Log("Seed set to: " + message.Seed);
             _randomizer?.Reset(message.Seed);
         }
 
@@ -140,6 +139,7 @@ namespace UStacker.Gameplay
                 _activePreviews.Add(pieceContainer);
             }
 
+            _activePreviews.Reverse();
             _previews = new PiecePreviews(_activePreviews);
         }
 

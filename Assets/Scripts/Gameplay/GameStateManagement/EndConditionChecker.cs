@@ -17,7 +17,6 @@ namespace UStacker.Gameplay.GameStateManagement
         [SerializeField] private Mediator _mediator;
         [SerializeField] private StatCounterManager _statCounterManager;
         public UnityEvent<double> GameEnded;
-        
 
         public GameSettingsSO.SettingsContainer GameSettings { get; set; }
 

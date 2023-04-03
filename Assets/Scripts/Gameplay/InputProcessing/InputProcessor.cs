@@ -25,6 +25,9 @@ namespace UStacker.Gameplay.InputProcessing
         [SerializeField] private GameTimer _timer;
         [SerializeField] private PieceContainer _pieceHolder;
 
+        public event Action<double> ProcessorUpdated;
+        public event Action<InputActionMessage> InputHandled;
+        
         private List<InputActionMessage> _actionList;
         private Piece _activePiece;
         private bool _controlsActive;
@@ -101,11 +104,12 @@ namespace UStacker.Gameplay.InputProcessing
         private bool _isHardLocking => _hardLockAmount < double.PositiveInfinity;
         private bool _isLocking => _lockdownEvent.Time < double.PositiveInfinity;
 
-        private HandlingSettings _handling => GameSettings.Controls.Handling;
+        private HandlingSettings _handling => OverrideHandling ?? GameSettings.Controls.Handling;
 
         private SpinHandler _spinHandler;
 
         public double ReplayLength { get; set; }
+        public HandlingSettings OverrideHandling { get; set; }
         
         public List<InputActionMessage> ActionList
         {
@@ -593,9 +597,10 @@ namespace UStacker.Gameplay.InputProcessing
 
         #region Input event handling
 
-        private void HandleInputAction(InputActionMessage message)
+        public void HandleInputAction(InputActionMessage message)
         {
             _mediator.Send(message);
+            InputHandled?.Invoke(message);
             Update(message.Time, false);
             switch (message.ActionType)
             {
@@ -1058,8 +1063,11 @@ namespace UStacker.Gameplay.InputProcessing
         {
             var functionTime = _timer.CurrentTime;
             HandlePieceLockdownAnimation(functionTime);
-            if (_timer.IsRunning)
-                Update(functionTime, true);
+            
+            if (!_timer.IsRunning) return;
+            
+            Update(functionTime, true);
+            ProcessorUpdated?.Invoke(functionTime);
         }
 
         public void Update(double time, bool catchUpWithTime)

@@ -56,7 +56,7 @@ namespace UStacker.Gameplay.Timing
             _stopwatch.Reset();
         }
 
-        public void SetTime(double value)
+        public void SetTime(double value, bool repressSfx = true)
         {
             var oldTimeScale = TimeScale;
             var wasRunning = _stopwatch.IsRunning;
@@ -82,7 +82,7 @@ namespace UStacker.Gameplay.Timing
             _offset = value;
             TimeScale = oldTimeScale;
             
-            _sfxPlayer.RepressSfx = true;
+            _sfxPlayer.RepressSfx = repressSfx;
             _inputProcessor.Update(CurrentTime, true);
             _sfxPlayer.RepressSfx = false;
         }

@@ -1,4 +1,4 @@
-﻿namespace UStacker.Multiplayer.Enums
+﻿namespace UStacker.Gameplay.Enums
 {
     public enum BoardDetailLevel : byte
     {

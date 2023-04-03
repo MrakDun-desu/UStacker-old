@@ -6,7 +6,6 @@ using UStacker.Gameplay.Enums;
 using UStacker.Gameplay.Initialization;
 using UStacker.Gameplay.Timing;
 using UStacker.GameSettings;
-using UStacker.GlobalSettings;
 
 namespace UStacker.Gameplay.GameStateManagement
 {
@@ -15,7 +14,6 @@ namespace UStacker.Gameplay.GameStateManagement
         [SerializeField] private GameTimer _timer;
         [SerializeField] private Mediator _mediator;
 
-        private readonly GameReplay _replay = new();
         private GameState _currentState = GameState.Unset;
         private GameState _previousState;
         
@@ -29,7 +27,7 @@ namespace UStacker.Gameplay.GameStateManagement
             }
         }
 
-        public static bool IsReplay { get; set; }
+        public bool IsReplay { get; set; }
 
         public GameSettingsSO.SettingsContainer GameSettings { get; set; }
 
@@ -167,14 +165,14 @@ namespace UStacker.Gameplay.GameStateManagement
                 _currentState, GameState.Ended, endTime, IsReplay));
         }
 
-        public void EndReplay()
+        public void EndReplay(double endTime)
         {
             if (!IsReplay)
                 return;
 
             if (CurrentState is GameState.Running or GameState.Paused)
                 _mediator.Send(new GameStateChangedMessage(
-                    _currentState, GameState.Ended, _replay.GameLength, IsReplay));
+                    _currentState, GameState.Ended, endTime, IsReplay));
             else
                 Debug.LogWarning("Trying to end replay from invalid state " + CurrentState);
         }
@@ -191,11 +189,6 @@ namespace UStacker.Gameplay.GameStateManagement
                 InitializeGame();
         }
 
-        private void Start()
-        {
-            InitializeGame();
-        }
-
         private void OnEnable()
         {
             _mediator.Register<GameStateChangedMessage>(UpdateGameState, 10);
@@ -209,32 +202,6 @@ namespace UStacker.Gameplay.GameStateManagement
         private void UpdateGameState(GameStateChangedMessage message)
         {
             CurrentState = message.NewState;
-        }
-
-        private void Awake()
-        {
-            AppSettings.Gameplay.PauseSingleplayerGamesOutOfFocusChanged += OnPauseSettingChange;
-            OnPauseSettingChange(AppSettings.Gameplay.PauseSingleplayerGamesOutOfFocus);
-        }
-
-        private void OnDestroy()
-        {
-            AppSettings.Gameplay.PauseSingleplayerGamesOutOfFocusChanged -= OnPauseSettingChange;
-            Application.focusChanged -= OnFocusChanged;
-        }
-
-        private void OnPauseSettingChange(bool pauseGameOnFocusLoss)
-        {
-            if (pauseGameOnFocusLoss)
-                Application.focusChanged += OnFocusChanged;
-            else
-                Application.focusChanged -= OnFocusChanged;
-        }
-
-        private void OnFocusChanged(bool hasFocus)
-        {
-            if (!hasFocus && CurrentState is GameState.Running or GameState.Initializing)
-                TogglePause();
         }
     }
 }

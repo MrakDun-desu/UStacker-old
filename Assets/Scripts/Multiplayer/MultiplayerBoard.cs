@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Linq;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Enums;
 using UStacker.Gameplay.GameStateManagement;
 using UStacker.Gameplay.Initialization;
+using UStacker.Gameplay.InputProcessing;
+using UStacker.Gameplay.Timing;
 using UStacker.GameSettings;
-using UStacker.Multiplayer.Enums;
 
 namespace UStacker.Multiplayer
 {
@@ -15,14 +16,21 @@ namespace UStacker.Multiplayer
     {
         [SerializeField] private Mediator _mediator;
         [SerializeField] private TMP_Text _playerNameLabel;
+        [SerializeField] private InputProcessor _inputProcessor;
+        [SerializeField] private GameTimer _timer;
+        [SerializeField] private GameStateManager _stateManager;
 
-        public Mediator Mediator => _mediator;
+        public event Action<double> ProcessorUpdated;
+        public event Action<InputActionMessage> InputHandled;
 
+        private InputActionMessage? _lastSentInput;
+        private bool _waitingForInput => _lastSentInput is not null;
         private Player _ownerPlayer;
-        private Player OwnerPlayer
+
+        public Player OwnerPlayer
         {
             get => _ownerPlayer;
-            set
+            private set
             {
                 _ownerPlayer = value;
                 _playerNameLabel.text = _ownerPlayer.DisplayName;
@@ -31,23 +39,52 @@ namespace UStacker.Multiplayer
 
         private IGameSettingsDependency[] _dependantComponents = Array.Empty<IGameSettingsDependency>();
 
-        private GameSettingsSO.SettingsContainer _gameSettings;
-        private GameSettingsSO.SettingsContainer GameSettings
-        {
-            get => _gameSettings;
-            set => _gameSettings = value;
-        }
+        private GameSettingsSO.SettingsContainer GameSettings { get; set; }
 
         private void Awake()
         {
-            if (_dependantComponents.Length == 0)
-                _dependantComponents = GetComponentsInChildren<IGameSettingsDependency>();
+            _inputProcessor.ProcessorUpdated += OnProcessorUpdated;
+            _inputProcessor.InputHandled += OnInputHandled;
+        }
+
+        private void OnDestroy()
+        {
+            _inputProcessor.ProcessorUpdated -= OnProcessorUpdated;
+            _inputProcessor.InputHandled -= OnInputHandled;
+        }
+
+        private void OnProcessorUpdated(double updateTime)
+        {
+            if (Player.LocalPlayer != OwnerPlayer || _waitingForInput)
+                return;
+            
+            ProcessorUpdated?.Invoke(updateTime);
+        }
+        
+        private void OnInputHandled(InputActionMessage message)
+        {
+            if (Player.LocalPlayer != OwnerPlayer)
+                return;
+
+            _lastSentInput = message;
+            InputHandled?.Invoke(message);
         }
 
         public void Initialize(Player ownerPlayer, GameSettingsSO.SettingsContainer settings)
         {
+            if (_dependantComponents.Length == 0)
+                _dependantComponents = GetComponentsInChildren<IGameSettingsDependency>(true);
+
             GameSettings = settings;
             OwnerPlayer = ownerPlayer;
+
+            _inputProcessor.OverrideHandling = !GameSettings.Controls.OverrideHandling ? OwnerPlayer.Handling : null;
+
+            _stateManager.IsReplay = Player.LocalPlayer != OwnerPlayer;
+            _lastSentInput = null;
+            
+            foreach (var dependency in _dependantComponents)
+                dependency.GameSettings = GameSettings;
         }
 
         private void OnDisable()
@@ -58,10 +95,15 @@ namespace UStacker.Multiplayer
 
         private void OnEnable()
         {
-            foreach (var dependency in _dependantComponents)
-                dependency.GameSettings = GameSettings;
             GameStateChangeEventReceiver.Activate();
             _mediator.Register<GameStateChangedMessage>(OnGameStateChanged, 10);
+            StartCoroutine(ScheduleGameStart());
+        }
+
+        private IEnumerator ScheduleGameStart()
+        {
+            yield return new WaitForEndOfFrame();
+            _stateManager.InitializeGame();
         }
 
         private void OnGameStateChanged(GameStateChangedMessage message)
@@ -69,5 +111,55 @@ namespace UStacker.Multiplayer
             if (message.NewState == GameState.Initializing)
                 _mediator.Send(new SeedSetMessage(GameSettings.General.ActiveSeed));
         }
+
+        public void SetDetailLevel(BoardDetailLevel detailLevel)
+        {
+            // TODO 
+            switch (detailLevel)
+            {
+                case BoardDetailLevel.Basic:
+                    break;
+                case BoardDetailLevel.Medium:
+                    break;
+                case BoardDetailLevel.Full:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(detailLevel), detailLevel, null);
+            }
+        }
+
+        public void StopWaitingForInput(InputActionMessage message)
+        {
+            if (_lastSentInput is not { } input)
+                return;
+            
+            if (message.Equals(input))
+                _lastSentInput = null;
+        }
+
+        public void HandleInput(InputActionMessage message)
+        {
+            _inputProcessor.HandleInputAction(message);
+        }
+
+        public void UpdateTime(double time)
+        {
+            if (time > _timer.CurrentTime)
+                _timer.SetTime(time);
+        }
+
+        public void RegisterMediatorMessage<TMessage>(Action<TMessage, int> action)
+            where TMessage : IMessage
+        {
+            _mediator.Register<TMessage>(message => OnCustomMessageReceived(message, action));
+        }
+
+        private void OnCustomMessageReceived<TMessage>(TMessage message, Action<TMessage, int> action)
+            where TMessage : IMessage
+        {
+            action.Invoke(message, _ownerPlayer.OwnerId);
+        }
+        
+        
     }
 }

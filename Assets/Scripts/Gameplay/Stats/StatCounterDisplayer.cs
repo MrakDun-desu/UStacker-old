@@ -50,6 +50,7 @@ namespace UStacker.Gameplay.Stats
         private LuaFunction _updateFunction;
         private Random _random;
 
+        private Coroutine _updateRoutine;
 
         private void Awake()
         {
@@ -269,8 +270,6 @@ namespace UStacker.Gameplay.Stats
             
             if (events[UPDATED_KEY] is not LuaFunction updateFunc) return;
             _updateFunction = updateFunc;
-
-            StartCoroutine(UpdateCor());
         }
 
 
@@ -286,12 +285,21 @@ namespace UStacker.Gameplay.Stats
 
         private void OnEnable()
         {
+            if (_updateFunction is not null)
+                _updateRoutine = StartCoroutine(UpdateCor());
+            
             if (_mediator != null)
                 _mediator.Register<SeedSetMessage>(OnSeedSet);
         }
 
         private void OnDisable()
         {
+            if (_updateRoutine is not null)
+            {
+                StopCoroutine(_updateRoutine);
+                _updateRoutine = null;
+            }
+            
             _mediator.Register<SeedSetMessage>(OnSeedSet);
         }
 
@@ -365,6 +373,9 @@ namespace UStacker.Gameplay.Stats
         {
             _luaState?.Dispose();
             _updateFunction?.Dispose();
+
+            _luaState = null;
+            _updateFunction = null;
         }
     }
 }

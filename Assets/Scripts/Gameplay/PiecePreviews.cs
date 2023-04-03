@@ -11,7 +11,6 @@ namespace UStacker.Gameplay
         public PiecePreviews(List<PieceContainer> containers)
         {
             _containers = containers;
-            _containers.Sort((x, y) => x.transform.position.y > y.transform.position.y ? 1 : -1);
         }
 
         public Piece AddPiece(Piece newPiece)

@@ -13,6 +13,8 @@ namespace UStacker.Multiplayer
 {
     public class MultiplayerLobbyManager : NetworkBehaviour
     {
+        [SerializeField] private MultiplayerGameManager _gameManager;
+        [SerializeField] private SettingsDependenciesFiller _dependenciesFiller;
         [SerializeField] private Button _startGameButton;
         [SerializeField] private MultiplayerBoard _multiplayerBoardPrefab;
         [SerializeField] private GameObject _lobbyCanvas;
@@ -165,15 +167,15 @@ namespace UStacker.Multiplayer
             _chatTransform.SetParent(_chatIngameParent);
 
             var gameSettings = MultiplayerSettingsManager.SettingsStatic.GameSettings;
-            _boardsOrganizer.BoardSize = new Vector2Int(
-                (int)gameSettings.BoardDimensions.BoardWidth,
-                (int)gameSettings.BoardDimensions.BoardHeight
-            );
+            
+            _dependenciesFiller.SetGameSettings(gameSettings);
+            
             foreach (var player in Player.ActivePlayers)
             {
                 var newBoard = _boardsPool.Get();
                 newBoard.Initialize(player, gameSettings);
                 newBoard.gameObject.SetActive(true);
+                _gameManager.AddBoard(newBoard);
             }
         }
         

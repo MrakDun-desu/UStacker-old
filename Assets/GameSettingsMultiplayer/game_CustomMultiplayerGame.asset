@@ -22,7 +22,7 @@ MonoBehaviour:
       <UseCustomSeed>k__BackingField: 0
       <CustomSeed>k__BackingField: 0
       <CustomRandomizerScript>k__BackingField: 
-      <ActiveSeed>k__BackingField: 0
+      <ActiveSeed>k__BackingField: 15057331982907330580
     <Controls>k__BackingField:
       _rotationSystemType: 2
       _customRotationSystem: 
@@ -30,21 +30,27 @@ MonoBehaviour:
       <AllowHardDrop>k__BackingField: 1
       <AllowHold>k__BackingField: 1
       <AllowMoveToWall>k__BackingField: 1
+      <AllowInputBuffering>k__BackingField: 1
+      <AllowAutomaticPreSpawnRotation>k__BackingField: 1
       <UnlimitedHold>k__BackingField: 0
       <ShowGhostPiece>k__BackingField: 1
       <OverrideHandling>k__BackingField: 0
       <Handling>k__BackingField:
-        _delayedAutoShift: 0.125
-        _automaticRepeatRate: 0.05
-        _softDropFactor: 20
-        _dasCutDelay: 0
-        _doubleDropPreventionInterval: 0
-        _softDropDelay: 0
-        _delayDasOn: 0
-        _diagonalLockBehavior: 0
+        _delayedAutoShift: 0.08500000089406967
+        _automaticRepeatRate: 0
+        _dasCutDelay: 0.01666666753590107
         _cancelDasDelayWithInput: 1
+        _delayDasOn: 1
+        _simultaneousDasBehavior: 2
+        _softDropFactor: Infinity
+        _softDropDelay: 0
+        _minSoftDropGravity: 0
+        _maxSoftDropGravity: Infinity
         _zeroGravitySoftDropBase: 0.02
-        _simultaneousDasBehavior: 1
+        _doubleDropPreventionInterval: 0.01666666753590107
+        _diagonalLockBehavior: 0
+        _inputBufferingType: 0
+        _automaticPreSpawnRotation: 0
       <ActiveRotationSystem>k__BackingField:
         DefaultTable:
           StartState: 0
@@ -133,7 +139,7 @@ MonoBehaviour:
       _lethalHeight: 20
       _pieceSpawnHeight: 21
       _blockCutHeight: 40
-      _boardPadding: 4
+      _boardPadding: 6
     <Gravity>k__BackingField:
       _defaultGravity: 0.02
       _defaultLockDelay: 0.5
@@ -149,10 +155,10 @@ MonoBehaviour:
       _customGameManager: 
       _garbageGenerationType: 0
       _customGarbageGeneratorName: 
-      _endConditionCount: 40
-      _garbageHeight: 10
+      _endConditionCount: 0
+      _garbageHeight: 0
       <MainStat>k__BackingField: 1
-      <GameEndCondition>k__BackingField: 1
+      <GameEndCondition>k__BackingField: 0
       <CustomGarbageScript>k__BackingField: 
       <CustomGameManagerScript>k__BackingField: 
       <ToppingOutIsOkay>k__BackingField: 0
@@ -165,14 +171,12 @@ MonoBehaviour:
         _name: Multiplayer Game
         _statCounterSos:
         - {fileID: 11400000, guid: a93c75259ac95fa4c8e35e2570556598, type: 2}
-        - {fileID: 11400000, guid: a059b8164b4204e44b92ef546184abe2, type: 2}
-        - {fileID: 11400000, guid: b8aa3efaa10821544ab1a3937865e458, type: 2}
-        - {fileID: 11400000, guid: 7df7f198474b5174297ea76a062840b6, type: 2}
-        - {fileID: 11400000, guid: 2077419e4bb765a4d9bc5e3f7bbc20fa, type: 2}
         - {fileID: 11400000, guid: 99a1507bdfe942c41a6dd7fe380ea1cb, type: 2}
         - {fileID: 11400000, guid: da01094586ea3ff42b5d0427967e84f5, type: 2}
         - {fileID: 11400000, guid: 5a65acaebf7418442a6506c2d5647d0d, type: 2}
-        - {fileID: 11400000, guid: 62d14d5b7668c504ba2065b11d6e10b6, type: 2}
+        - {fileID: 11400000, guid: 2077419e4bb765a4d9bc5e3f7bbc20fa, type: 2}
+        - {fileID: 11400000, guid: a059b8164b4204e44b92ef546184abe2, type: 2}
+        - {fileID: 11400000, guid: b8aa3efaa10821544ab1a3937865e458, type: 2}
         _statCounters:
         - Name: Clear type action text
           Type: 0
@@ -217,16 +221,6 @@ MonoBehaviour:
           Position: {x: -9, y: 4}
           Size: {x: 8, y: 3}
           UpdateInterval: 0.1
-        - Name: Score
-          Type: 0
-          Filename: 
-          Script: "function OnUpdated()\n\tlocal spp = Stats.Score / Stats.PiecesPlaced\n\treturn
-            \"Score: \" .. Stats.Score .. \"\\n\" .. StatUtility:FormatNumber(spp,
-            0) .. \" per piece\"\nend\nSetText(\"Score: 0\\n0 per piece\")\nreturn
-            {\n\t[\"ScoreChanged\"] = OnUpdated,\n\t[\"PiecePlaced\"] = OnUpdated\n}"
-          Position: {x: -10, y: 7}
-          Size: {x: 9, y: 3}
-          UpdateInterval: 0
         - Name: Stopwatch
           Type: 0
           Filename: 
@@ -265,16 +259,4 @@ MonoBehaviour:
             {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
           Position: {x: -10, y: 11}
           Size: {x: 9, y: 2}
-          UpdateInterval: 0
-        - Name: Remaining end condition
-          Type: 0
-          Filename: 
-          Script: "function OnChange(message)\n\tif message.ConditionName == nil
-            or message.ConditionName == \"None\" or message.ConditionName == \"\"
-            then\n\t\treturn \"\"\n\tend\n\tlocal remaining = message.TotalCount
-            - message.CurrentCount\n\tif remaining < 0 then remaining = 0 end\n\treturn
-            StatUtility:FormatNumber(remaining, 0)\nend\nSetText(\"\")\nSetAlignment(\"center\")\nSetVisibility(0.4)\nreturn
-            {\n\t[\"GameEndConditionChanged\"] = OnChange\n}"
-          Position: {x: 3, y: 15}
-          Size: {x: 4, y: 4}
           UpdateInterval: 0

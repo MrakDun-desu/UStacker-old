@@ -7,7 +7,7 @@ namespace UStacker.Gameplay.Communication
 {
     public class MessageCollection : IEnumerable<Delegate>
     {
-        public List<MessageWithPriority> Messages { get; } = new();
+        private List<MessageWithPriority> Messages { get; } = new();
 
         public void Add(Delegate message, uint priority)
         {
@@ -22,8 +22,6 @@ namespace UStacker.Gameplay.Communication
             Messages.Add(newMessage);
         }
 
-        public void Add(MessageWithPriority message) => Add(message.Message, message.Priority);
-
         public void Remove(Delegate message)
         {
             for (var i = 0; i < Messages.Count; i++)
@@ -33,16 +31,7 @@ namespace UStacker.Gameplay.Communication
             }
         }
 
-        public void Clear()
-        {
-            Messages.Clear();
-        }
-
-        public int Count => Messages.Count;
-
-        public Delegate this[int key] => Messages[key].Message;
-
-        public class MessageWithPriority
+        private class MessageWithPriority
         {
             public uint Priority { get; }
             public Delegate Message { get; }

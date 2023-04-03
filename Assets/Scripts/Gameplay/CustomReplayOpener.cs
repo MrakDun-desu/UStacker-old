@@ -8,7 +8,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-using UStacker.Gameplay.GameStateManagement;
 
 namespace UStacker.Gameplay
 {
@@ -46,7 +45,6 @@ namespace UStacker.Gameplay
 
             GameInitializer.Replay = replay;
             GameInitializer.GameType = _replayGameType.Value;
-            GameStateManager.IsReplay = true;
             SceneManager.LoadScene("Scene_Game_Singleplayer");
         }
     }

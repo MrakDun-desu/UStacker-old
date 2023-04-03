@@ -108,6 +108,7 @@ namespace UStacker.Multiplayer.Settings
             // first we null the rotation system so we don't need to send needless data
             if (Settings.GameSettings.Controls.RotationSystemType != RotationSystemType.Custom)
                 Settings.GameSettings.Controls.ActiveRotationSystem = null;
+
             SendSettingsToClients(sender, Settings);
             
             // then after sending settings to clients, we load the rotation system

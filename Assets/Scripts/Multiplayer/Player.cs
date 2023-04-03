@@ -138,8 +138,11 @@ namespace UStacker.Multiplayer
         
         // disabled unused parameters because FishNet needs to have all of them for OnChange methods
         // ReSharper disable UnusedParameter.Local
-        private void OnDisplayNameChange(string _prevName, string newName, bool _asServer) =>
+        private void OnDisplayNameChange(string _prevName, string newName, bool _asServer)
+        {
+            name = newName;
             DisplayNameChanged?.Invoke(newName);
+        }
 
         private void OnSpectateChange(bool _prevVal, bool newVal, bool _asServer) => SpectateChanged?.Invoke(newVal);
 

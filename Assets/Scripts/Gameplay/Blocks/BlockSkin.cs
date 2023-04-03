@@ -236,7 +236,7 @@ namespace UStacker.Gameplay.Blocks
 
         private void ResetRotation()
         {
-            transform.localRotation = Quaternion.Euler(Vector3.zero);
+            transform.rotation = Board.transform.rotation;
         }
 
         private void ChangeColor(Color color)

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UStacker.Gameplay.GameStateManagement;
 using UStacker.Gameplay.InputProcessing;
@@ -15,6 +16,7 @@ namespace UStacker.Gameplay.Initialization
         [SerializeField] private RotationSystemSO _srsPlusRotationSystemSo;
         [SerializeField] private InputProcessor _inputProcessor;
         [SerializeField] private GameRecorder _recorder;
+        [SerializeField] private GameStateManager _stateManager;
 
         private static GameSettingsSO.SettingsContainer _gameSettings;
         private static GameReplay _replay;
@@ -62,7 +64,9 @@ namespace UStacker.Gameplay.Initialization
 
         private void Start()
         {
-            if (Replay is not null)
+            var isReplay = Replay is not null;
+            _stateManager.IsReplay = isReplay;
+            if (isReplay)
             {
                 _inputProcessor.PlacementsList = Replay.PiecePlacementList;
                 _inputProcessor.ActionList = Replay.ActionList;
@@ -83,6 +87,14 @@ namespace UStacker.Gameplay.Initialization
                 dependency.GameSettings = GameSettings;
             
             GameStateChangeEventReceiver.Activate();
+
+            StartCoroutine(ScheduleGameStart());
+        }
+
+        private IEnumerator ScheduleGameStart()
+        {
+            yield return new WaitForEndOfFrame();
+            _stateManager.InitializeGame();
         }
 
         private void OnDestroy()

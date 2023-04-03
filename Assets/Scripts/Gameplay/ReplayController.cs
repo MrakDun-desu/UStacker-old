@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UStacker.Common.Extensions;
 using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Enums;
+using UStacker.Gameplay.GameStateManagement;
 using UStacker.Gameplay.InputProcessing;
 using UStacker.Gameplay.Timing;
 
@@ -14,6 +15,7 @@ namespace UStacker.Gameplay
     public class ReplayController : MonoBehaviour
     {
         [SerializeField] private Mediator _mediator;
+        [SerializeField] private GameStateManager _stateManager;
         [Header("Controlled objects")]
         [SerializeField] private GameTimer _timer;
         [SerializeField] private InputProcessor _inputProcessor;
@@ -21,6 +23,7 @@ namespace UStacker.Gameplay
         [Header("Controls")]
         [SerializeField] private Slider _timeSlider;
         [SerializeField] private Image _pauseImage;
+        [SerializeField] private Button _endReplayButton;
         [SerializeField] private Button _nextPieceButton;
         [SerializeField] private Button _prevPieceButton;
         [SerializeField] private Button _tenthSecondForwardButton;
@@ -34,9 +37,13 @@ namespace UStacker.Gameplay
         [SerializeField] private Sprite _pauseSprite;
         [SerializeField] private Sprite _playSprite;
 
+        private double _replayLength;
+
         private void Awake()
         {
             _timeSlider.onValueChanged.AddListener(OnTimeSet);
+            
+            _endReplayButton.onClick.AddListener(() => _stateManager.EndReplay(_replayLength));
             _nextPieceButton.onClick.AddListener(_inputProcessor.MoveToNextPiece);
             _prevPieceButton.onClick.AddListener(_inputProcessor.MoveToPrevPiece);
             _tenthSecondForwardButton.onClick.AddListener(_inputProcessor.MoveTenthSecondForward);
@@ -89,6 +96,7 @@ namespace UStacker.Gameplay
         public void SetReplay(GameReplay replay)
         {
             _timeSlider.SetValueWithoutNotify(0);
+            _replayLength = replay.GameLength;
             _timeSlider.maxValue = (float) replay.GameLength - float.Epsilon;
         }
     }
