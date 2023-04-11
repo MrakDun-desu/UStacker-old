@@ -22,7 +22,7 @@ MonoBehaviour:
       <UseCustomSeed>k__BackingField: 0
       <CustomSeed>k__BackingField: 0
       <CustomRandomizerScript>k__BackingField: 
-      <ActiveSeed>k__BackingField: 5828665724025883712
+      <ActiveSeed>k__BackingField: 5461952342148806951
     <Controls>k__BackingField:
       _rotationSystemType: 2
       _customRotationSystem: 
@@ -36,7 +36,7 @@ MonoBehaviour:
       <ShowGhostPiece>k__BackingField: 1
       <OverrideHandling>k__BackingField: 0
       <Handling>k__BackingField:
-        _delayedAutoShift: 0.08500000089406967
+        _delayedAutoShift: 0.09
         _automaticRepeatRate: 0
         _dasCutDelay: 0.01666666753590107
         _cancelDasDelayWithInput: 1
@@ -139,7 +139,6 @@ MonoBehaviour:
       _lethalHeight: 20
       _pieceSpawnHeight: 21
       _blockCutHeight: 40
-      _boardPadding: 4
     <Gravity>k__BackingField:
       _defaultGravity: 0.02
       _defaultLockDelay: 0.5
@@ -167,6 +166,7 @@ MonoBehaviour:
       _title: Sprint 40L
       _countdownInterval: 0.5
       _countdownCount: 1
+      _gamePadding: 5
       <DefaultStatCounterGroup>k__BackingField:
         _name: Sprint 40L
         _statCounterSos:

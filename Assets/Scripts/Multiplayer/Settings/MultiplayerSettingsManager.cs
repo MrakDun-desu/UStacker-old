@@ -18,9 +18,8 @@ namespace UStacker.Multiplayer.Settings
         [SerializeField] private MultiplayerLobbySettingsSo _lobbySettings;
         [SerializeField] private RotationSystemSO _srsRotationSystemSo;
         [SerializeField] private RotationSystemSO _srsPlusRotationSystemSo;
-        
-        [SerializeField]
-        private MultiplayerGameSettings _settings;
+
+        [SerializeField] private MultiplayerGameSettings _settings;
 
         private MultiplayerGameSettings Settings
         {
@@ -29,16 +28,19 @@ namespace UStacker.Multiplayer.Settings
             {
                 _settings = value;
                 SettingsStatic = value;
-                LoadSettingsRotationSystem();
+                if (_settings is null)
+                    return;
+
+                _lobbySettings.Settings = _settings.LobbySettings;
+                _gameSettings.Settings = _settings.GameSettings;
+
+                if (IsServer)
+                    LoadSettingsRotationSystem();
             }
         }
 
         // static for easy usage by other scripts
         public static MultiplayerGameSettings SettingsStatic { get; private set; }
-
-        public static bool SettingsSynchronized { get; private set; }
-
-        private Player _localPlayer;
 
         private void Awake()
         {
@@ -49,23 +51,21 @@ namespace UStacker.Multiplayer.Settings
         {
             base.OnStartServer();
             Settings = new MultiplayerGameSettings(_lobbySettings.Settings, _gameSettings.Settings);
-            SettingsSynchronized = true;
         }
 
         private void OnDestroy()
         {
             Settings = null;
-            SettingsSynchronized = false;
         }
 
         public override void OnStartClient()
         {
             base.OnStartClient();
-            _localPlayer = Player.LocalPlayer;
-            _hostSettings.SetActive(_localPlayer.HasHostPrivileges);
-            _saveSettingsButton.gameObject.SetActive(_localPlayer.HasHostPrivileges);
-            _playerSettings.SetActive(!_localPlayer.HasHostPrivileges);
-            
+            var localPlayer = Player.LocalPlayer;
+            _hostSettings.SetActive(localPlayer.HasHostPrivileges);
+            _saveSettingsButton.gameObject.SetActive(localPlayer.HasHostPrivileges);
+            _playerSettings.SetActive(!localPlayer.HasHostPrivileges);
+
             // if we're not the host, we need to get the current settings from the server
             if (!IsHost)
                 RequestSettings();
@@ -74,79 +74,62 @@ namespace UStacker.Multiplayer.Settings
         [Client]
         private void OnSaveButtonClicked()
         {
-            if (_localPlayer is null || !_localPlayer.HasHostPrivileges)
+            if (Player.LocalPlayer is null || !Player.LocalPlayer.HasHostPrivileges)
             {
                 AlertDisplayer.ShowAlert(new Alert("Permission denied!", AlertType.Warning));
                 return;
             }
+
             _startGameButton.interactable = false;
-            SettingsSynchronized = false;
             SynchronizeSettings(Settings);
-            AlertDisplayer.ShowAlert(new Alert("Settings saved!", AlertType.Success));
         }
 
+        // ReSharper disable once UnusedParameter.Local
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        [TargetRpc]
+        private void ConfirmSettingsSynchronized(NetworkConnection _target = null)
+        {
+            AlertDisplayer.ShowAlert(new Alert("Settings saved!", AlertType.Success));
+            _startGameButton.interactable = true;
+        }
+
+        [Server]
         private void LoadSettingsRotationSystem()
         {
-            if (_settings is null)
-                return;
-            
             _settings.GameSettings.Controls.ActiveRotationSystem =
-            _settings.GameSettings.Controls.RotationSystemType switch
-            {
-                RotationSystemType.SRS => _srsRotationSystemSo.RotationSystem,
-                RotationSystemType.SRSPlus => _srsPlusRotationSystemSo.RotationSystem,
-                RotationSystemType.None => new RotationSystem(),
-                RotationSystemType.Custom => _settings.GameSettings.Controls.ActiveRotationSystem,
-                _ => new RotationSystem()
-            };
+                _settings.GameSettings.Controls.RotationSystemType switch
+                {
+                    RotationSystemType.SRS => _srsRotationSystemSo.RotationSystem,
+                    RotationSystemType.SRSPlus => _srsPlusRotationSystemSo.RotationSystem,
+                    RotationSystemType.None => new RotationSystem(),
+                    RotationSystemType.Custom => _settings.GameSettings.Controls.ActiveRotationSystem,
+                    _ => new RotationSystem()
+                };
         }
 
         [ServerRpc(RequireOwnership = false)]
         private void RequestSettings(NetworkConnection sender = null)
         {
-            SettingsSynchronized = false;
-            // first we null the rotation system so we don't need to send needless data
-            if (Settings.GameSettings.Controls.RotationSystemType != RotationSystemType.Custom)
-                Settings.GameSettings.Controls.ActiveRotationSystem = null;
-
             SendSettingsToClients(sender, Settings);
-            
-            // then after sending settings to clients, we load the rotation system
-            // back up so it's correct at the server's side
-            LoadSettingsRotationSystem();
-            SettingsSynchronized = true;
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void SynchronizeSettings(MultiplayerGameSettings settings, NetworkConnection sender = null)
+        private void SynchronizeSettings(MultiplayerGameSettings settings, NetworkConnection sender = null)
         {
             if (sender is null || !Player.ConnectedPlayers[sender.ClientId].HasHostPrivileges)
                 return;
 
             Settings = settings;
-            
-            Settings.GameSettings.Controls.ActiveRotationSystem =
-            Settings.GameSettings.Controls.RotationSystemType switch
-            {
-                RotationSystemType.SRS => _srsRotationSystemSo.RotationSystem,
-                RotationSystemType.SRSPlus => _srsPlusRotationSystemSo.RotationSystem,
-                RotationSystemType.None => new RotationSystem(),
-                RotationSystemType.Custom => Settings.GameSettings.Controls.ActiveRotationSystem,
-                _ => new RotationSystem()
-            };
-            _lobbySettings.Settings = Settings.LobbySettings;
-            _gameSettings.Settings = Settings.GameSettings;
             SendSettingsToClients(null, Settings);
-            SettingsSynchronized = true;
+            ConfirmSettingsSynchronized(sender);
         }
 
-        [ObserversRpc][TargetRpc]
+        [ObserversRpc]
+        [TargetRpc]
         // ReSharper disable once UnusedParameter.Local
         private void SendSettingsToClients(NetworkConnection _target, MultiplayerGameSettings settings)
         {
             Settings = settings;
-            _lobbySettings.Settings = Settings.LobbySettings;
-            _gameSettings.Settings = Settings.GameSettings;
         }
     }
 }

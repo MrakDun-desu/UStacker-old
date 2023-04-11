@@ -30,21 +30,27 @@ MonoBehaviour:
       <AllowHardDrop>k__BackingField: 1
       <AllowHold>k__BackingField: 1
       <AllowMoveToWall>k__BackingField: 1
+      <AllowInputBuffering>k__BackingField: 1
+      <AllowAutomaticPreSpawnRotation>k__BackingField: 1
       <UnlimitedHold>k__BackingField: 0
       <ShowGhostPiece>k__BackingField: 1
       <OverrideHandling>k__BackingField: 0
       <Handling>k__BackingField:
         _delayedAutoShift: 0.125
         _automaticRepeatRate: 0.05
-        _softDropFactor: 20
         _dasCutDelay: 0
-        _doubleDropPreventionInterval: 0
-        _softDropDelay: 0
-        _delayDasOn: 0
-        _diagonalLockBehavior: 0
         _cancelDasDelayWithInput: 1
-        _zeroGravitySoftDropBase: 0.02
+        _delayDasOn: 0
         _simultaneousDasBehavior: 1
+        _softDropFactor: 20
+        _softDropDelay: 0
+        _minSoftDropGravity: 0
+        _maxSoftDropGravity: Infinity
+        _zeroGravitySoftDropBase: 0.02
+        _doubleDropPreventionInterval: 0
+        _diagonalLockBehavior: 0
+        _inputBufferingType: 0
+        _automaticPreSpawnRotation: 0
       <ActiveRotationSystem>k__BackingField:
         DefaultTable:
           StartState: 0
@@ -67,7 +73,6 @@ MonoBehaviour:
       _lethalHeight: 20
       _pieceSpawnHeight: 21
       _blockCutHeight: 40
-      _boardPadding: 4
     <Gravity>k__BackingField:
       _defaultGravity: 0.02
       _defaultLockDelay: 0.5
@@ -95,6 +100,7 @@ MonoBehaviour:
       _title: Custom game
       _countdownInterval: 0.65
       _countdownCount: 3
+      _gamePadding: 5
       <DefaultStatCounterGroup>k__BackingField:
         _name: Default
         _statCounterSos:

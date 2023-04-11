@@ -12,6 +12,7 @@ namespace UStacker.GameSettings.SettingGroups
         [SerializeField] private string _title = "Custom game";
         [SerializeField] private float _countdownInterval = .65f;
         [SerializeField] private uint _countdownCount = 3;
+        [SerializeField] private uint _gamePadding = 3;
 
         public string Title
         {
@@ -37,6 +38,12 @@ namespace UStacker.GameSettings.SettingGroups
         {
             get => _countdownCount;
             set => _countdownCount = Math.Clamp(value, 1, 10);
+        }
+
+        public uint GamePadding
+        {
+            get => _gamePadding;
+            set => _gamePadding = Math.Min(value, 50);
         }
 
         [field: SerializeField] public StatCounterGroup DefaultStatCounterGroup { get; set; } = new();

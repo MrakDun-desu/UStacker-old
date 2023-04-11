@@ -253,6 +253,11 @@ namespace UStacker.Gameplay.InputProcessing
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        public void AddActionToList(InputActionMessage message)
+        {
+            _actionList.Add(message);
+        }
         
         public void HandlePreSpawnBufferedInputs(double time, out bool cancelSpawn)
         {
@@ -447,6 +452,8 @@ namespace UStacker.Gameplay.InputProcessing
             _lockdownEvent.Time = double.PositiveInfinity;
             _hardLockdownEvent.Time = double.PositiveInfinity;
             _dropEvent.Time = _dropTime;
+            
+            _actionList?.Clear();
         }
 
         private void MovePiece(
@@ -597,7 +604,7 @@ namespace UStacker.Gameplay.InputProcessing
 
         #region Input event handling
 
-        public void HandleInputAction(InputActionMessage message)
+        private void HandleInputAction(InputActionMessage message)
         {
             _mediator.Send(message);
             InputHandled?.Invoke(message);

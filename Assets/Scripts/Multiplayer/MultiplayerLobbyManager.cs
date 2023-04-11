@@ -1,72 +1,42 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Linq;
 using FishNet.Connection;
 using FishNet.Object;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Pool;
 using UnityEngine.UI;
 using UStacker.Common.Alerts;
 using UStacker.Multiplayer.Settings;
+using Random = UnityEngine.Random;
 
 namespace UStacker.Multiplayer
 {
     public class MultiplayerLobbyManager : NetworkBehaviour
     {
         [SerializeField] private MultiplayerGameManager _gameManager;
-        [SerializeField] private SettingsDependenciesFiller _dependenciesFiller;
         [SerializeField] private Button _startGameButton;
-        [SerializeField] private MultiplayerBoard _multiplayerBoardPrefab;
         [SerializeField] private GameObject _lobbyCanvas;
         [SerializeField] private RectTransform _chatTransform;
         [SerializeField] private RectTransform _chatParent;
         [SerializeField] private RectTransform _chatIngameParent;
-        [SerializeField] private MultiplayerBoardsOrganizer _boardsOrganizer;
         [SerializeField] private GameObject _startGameCountdown;
         [SerializeField] private TMP_Text _countdownLabel;
-        [Range(0, 1)] [SerializeField] private float _startGameCountdownInterval = 0.7f;
         [Range(1, 10)] [SerializeField] private int _startGameCountdownCount = 3;
 
-        private ObjectPool<MultiplayerBoard> _boardsPool;
-        private Player _localPlayer;
+        private bool _matchStarting;
 
         private static MultiplayerLobbySettingsSo.SettingsContainer _lobbySettings =>
             MultiplayerSettingsManager.SettingsStatic.LobbySettings;
 
-        public static bool GameInProgress { get; private set; }
-
-        private MultiplayerBoard CreateBoard()
-        {
-            var newBoard = Instantiate(_multiplayerBoardPrefab, _boardsOrganizer.transform, true);
-            return newBoard;
-        }
-
-        private void GetBoard(MultiplayerBoard board)
-        {
-            _boardsOrganizer.AddBoard(board);
-        }
-
-        private void ReleaseBoard(MultiplayerBoard board)
-        {
-            _boardsOrganizer.RemoveBoard(board);
-            board.gameObject.SetActive(false);
-        }
-
-        private void DestroyBoard(MultiplayerBoard board)
-        {
-            _boardsOrganizer.RemoveBoard(board);
-            Destroy(board.gameObject);
-        }
-
         private void Awake()
         {
-            _boardsPool = new ObjectPool<MultiplayerBoard>(CreateBoard, GetBoard, ReleaseBoard, DestroyBoard,
-                true, 10, 2000); // max size is the same as maximum players
+            _gameManager.GameStateChanged += OnGameStateChanged;
         }
 
         private void OnDestroy()
         {
-            _boardsPool.Dispose();
+            _gameManager.GameStateChanged -= OnGameStateChanged;
         }
 
         public override void OnStartClient()
@@ -89,15 +59,9 @@ namespace UStacker.Multiplayer
             if (sender is null || !Player.ConnectedPlayers[sender.ClientId].HasHostPrivileges)
                 return; // don't need to show alert since the sender shouldn't even be trying this
 
-            if (GameInProgress)
+            if (_gameManager.CurrentGameState != MultiplayerGameState.Off || _matchStarting)
             {
                 GameStartDeclined(sender, "Game is already starting or in progress");
-                return;
-            }
-
-            if (!MultiplayerSettingsManager.SettingsSynchronized)
-            {
-                GameStartDeclined(sender, "Game settings aren't synchronized");
                 return;
             }
 
@@ -107,18 +71,17 @@ namespace UStacker.Multiplayer
                 return;
             }
 
-            GameInProgress = true;
+            _matchStarting = true;
 
             var generalSettings = MultiplayerSettingsManager.SettingsStatic.GameSettings.General;
-            if (generalSettings.UseCustomSeed)
-                SetGameSeed(generalSettings.ActiveSeed);
-            else
+            if (!generalSettings.UseCustomSeed)
             {
                 var seed1 = (ulong) ((long) Random.Range(int.MinValue, int.MaxValue) + int.MaxValue);
                 var seed2 = (ulong) ((long) Random.Range(int.MinValue, int.MaxValue) + int.MaxValue);
                 SetGameSeed(seed1 + (seed2 << 32));
             }
-            
+
+            _gameManager.ClearReadyPlayers();
             StartGameCountdown();
         }
 
@@ -151,42 +114,35 @@ namespace UStacker.Multiplayer
             for (var countdownLeft = _startGameCountdownCount; countdownLeft >= 0; countdownLeft--)
             {
                 _countdownLabel.text = countdownLeft > 0
-                    ? $"Game starting in {countdownLeft}"
+                    ? $"Game starting in {countdownLeft}..."
                     : "Game starting!";
 
-                yield return new WaitForSeconds(_startGameCountdownInterval);
+                yield return new WaitForSeconds(1);
             }
 
             _startGameCountdown.SetActive(false);
-            StartGame();
+            
+            _gameManager.InitializeGame();
         }
 
-        private void StartGame()
+        private void OnGameStateChanged(MultiplayerGameState previousState, MultiplayerGameState newState)
         {
-            _lobbyCanvas.SetActive(false);
-            _chatTransform.SetParent(_chatIngameParent);
-
-            var gameSettings = MultiplayerSettingsManager.SettingsStatic.GameSettings;
-            
-            _dependenciesFiller.SetGameSettings(gameSettings);
-            
-            foreach (var player in Player.ActivePlayers)
+            switch (newState)
             {
-                var newBoard = _boardsPool.Get();
-                newBoard.Initialize(player, gameSettings);
-                newBoard.gameObject.SetActive(true);
-                _gameManager.AddBoard(newBoard);
+                case MultiplayerGameState.Off:
+                    _lobbyCanvas.SetActive(true);
+                    _chatTransform.SetParent(_chatParent);
+                    break;
+                case MultiplayerGameState.Initializing:
+                    _lobbyCanvas.SetActive(false);
+                    _chatTransform.SetParent(_chatIngameParent);
+                    _matchStarting = false;
+                    break;
+                case MultiplayerGameState.Running:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
             }
-        }
-        
-        [ContextMenu("End game manually")]
-        [Server]
-        public void EndGame()
-        {
-            _lobbyCanvas.SetActive(true);
-            _chatTransform.SetParent(_chatParent);
-
-            GameInProgress = false;
         }
     }
 }

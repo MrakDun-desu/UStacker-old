@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UStacker.Gameplay.Communication;
@@ -7,8 +7,10 @@ using UStacker.Gameplay.Enums;
 using UStacker.Gameplay.GameStateManagement;
 using UStacker.Gameplay.Initialization;
 using UStacker.Gameplay.InputProcessing;
+using UStacker.Gameplay.Presentation;
 using UStacker.Gameplay.Timing;
 using UStacker.GameSettings;
+using UStacker.GlobalSettings.Groups;
 
 namespace UStacker.Multiplayer
 {
@@ -25,19 +27,22 @@ namespace UStacker.Multiplayer
 
         private InputActionMessage? _lastSentInput;
         private bool _waitingForInput => _lastSentInput is not null;
-        private Player _ownerPlayer;
+        private int _ownerId;
 
-        public Player OwnerPlayer
+        public int OwnerId
         {
-            get => _ownerPlayer;
+            get => _ownerId;
             private set
             {
-                _ownerPlayer = value;
-                _playerNameLabel.text = _ownerPlayer.DisplayName;
+                _ownerId = value;
+                _playerNameLabel.text = Player.ConnectedPlayers[_ownerId].DisplayName;
             }
         }
+        
+        public bool GameStarted { get; private set; }
 
-        private IGameSettingsDependency[] _dependantComponents = Array.Empty<IGameSettingsDependency>();
+        private IGameSettingsDependency[] _settingsDependencies = Array.Empty<IGameSettingsDependency>();
+        private IDetailLevelDependency[] _detailLevelDependencies = Array.Empty<IDetailLevelDependency>();
 
         private GameSettingsSO.SettingsContainer GameSettings { get; set; }
 
@@ -55,7 +60,7 @@ namespace UStacker.Multiplayer
 
         private void OnProcessorUpdated(double updateTime)
         {
-            if (Player.LocalPlayer != OwnerPlayer || _waitingForInput)
+            if (Player.LocalPlayer.OwnerId != OwnerId || _waitingForInput)
                 return;
             
             ProcessorUpdated?.Invoke(updateTime);
@@ -63,27 +68,34 @@ namespace UStacker.Multiplayer
         
         private void OnInputHandled(InputActionMessage message)
         {
-            if (Player.LocalPlayer != OwnerPlayer)
+            if (Player.LocalPlayer.OwnerId != OwnerId)
                 return;
 
             _lastSentInput = message;
             InputHandled?.Invoke(message);
         }
 
-        public void Initialize(Player ownerPlayer, GameSettingsSO.SettingsContainer settings)
+        public void Initialize(int ownerId, GameSettingsSO.SettingsContainer settings, HandlingSettings handling)
         {
-            if (_dependantComponents.Length == 0)
-                _dependantComponents = GetComponentsInChildren<IGameSettingsDependency>(true);
+            // we have to do this here because it's called before awake
+            if (_settingsDependencies.Length == 0)
+                _settingsDependencies = GetComponentsInChildren<IGameSettingsDependency>(true);
 
+            if (_detailLevelDependencies.Length == 0)
+                _detailLevelDependencies = GetComponentsInChildren<IDetailLevelDependency>(true);
+
+            GameStarted = false;
             GameSettings = settings;
-            OwnerPlayer = ownerPlayer;
+            OwnerId = ownerId;
+            _inputProcessor.OverrideHandling = handling;
 
-            _inputProcessor.OverrideHandling = !GameSettings.Controls.OverrideHandling ? OwnerPlayer.Handling : null;
-
-            _stateManager.IsReplay = Player.LocalPlayer != OwnerPlayer;
+            var isReplaying = Player.LocalPlayer.OwnerId != OwnerId;
+            _stateManager.IsReplay = isReplaying;
+            _inputProcessor.ActionList = isReplaying ? new List<InputActionMessage>() : null;
+            _inputProcessor.PlacementsList = isReplaying ? new List<double>() : null;
             _lastSentInput = null;
             
-            foreach (var dependency in _dependantComponents)
+            foreach (var dependency in _settingsDependencies)
                 dependency.GameSettings = GameSettings;
         }
 
@@ -97,13 +109,17 @@ namespace UStacker.Multiplayer
         {
             GameStateChangeEventReceiver.Activate();
             _mediator.Register<GameStateChangedMessage>(OnGameStateChanged, 10);
-            StartCoroutine(ScheduleGameStart());
         }
 
-        private IEnumerator ScheduleGameStart()
+        public void InitializeGame()
         {
-            yield return new WaitForEndOfFrame();
-            _stateManager.InitializeGame();
+            _stateManager.InitializeGame(false);
+        }
+
+        public void StartGameCountdown()
+        {
+            _stateManager.StartCountdown();
+            GameStarted = true;
         }
 
         private void OnGameStateChanged(GameStateChangedMessage message)
@@ -114,18 +130,8 @@ namespace UStacker.Multiplayer
 
         public void SetDetailLevel(BoardDetailLevel detailLevel)
         {
-            // TODO 
-            switch (detailLevel)
-            {
-                case BoardDetailLevel.Basic:
-                    break;
-                case BoardDetailLevel.Medium:
-                    break;
-                case BoardDetailLevel.Full:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(detailLevel), detailLevel, null);
-            }
+            foreach (var dependency in _detailLevelDependencies)
+                dependency.DetailLevel = detailLevel;
         }
 
         public void StopWaitingForInput(InputActionMessage message)
@@ -139,27 +145,20 @@ namespace UStacker.Multiplayer
 
         public void HandleInput(InputActionMessage message)
         {
-            _inputProcessor.HandleInputAction(message);
+            _inputProcessor.AddActionToList(message);
         }
 
         public void UpdateTime(double time)
         {
-            if (time > _timer.CurrentTime)
-                _timer.SetTime(time);
+            _timer.TweenTimeForward(time);
         }
 
-        public void RegisterMediatorMessage<TMessage>(Action<TMessage, int> action)
+        public void RegisterOnMediator<TMessage>(Action<TMessage, int> action)
             where TMessage : IMessage
         {
-            _mediator.Register<TMessage>(message => OnCustomMessageReceived(message, action));
-        }
+            void HandleMessage(TMessage message) => action.Invoke(message, _ownerId);
 
-        private void OnCustomMessageReceived<TMessage>(TMessage message, Action<TMessage, int> action)
-            where TMessage : IMessage
-        {
-            action.Invoke(message, _ownerPlayer.OwnerId);
+            _mediator.Register<TMessage>(HandleMessage);
         }
-        
-        
     }
 }

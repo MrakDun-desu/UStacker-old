@@ -139,7 +139,6 @@ MonoBehaviour:
       _lethalHeight: 20
       _pieceSpawnHeight: 21
       _blockCutHeight: 40
-      _boardPadding: 4
     <Gravity>k__BackingField:
       _defaultGravity: 0.02
       _defaultLockDelay: 0.5
@@ -167,6 +166,7 @@ MonoBehaviour:
       _title: Ultra
       _countdownInterval: 0.65
       _countdownCount: 3
+      _gamePadding: 5
       <DefaultStatCounterGroup>k__BackingField:
         _name: Ultra
         _statCounterSos:

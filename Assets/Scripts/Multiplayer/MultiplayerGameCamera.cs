@@ -1,31 +1,32 @@
 ﻿using UnityEngine;
+using UStacker.Gameplay;
 using UStacker.Gameplay.Initialization;
 using UStacker.GameSettings;
 
-namespace UStacker.Gameplay.Presentation
+namespace UStacker.Multiplayer
 {
-    public class GameCamera : MonoBehaviour, IGameSettingsDependency
+    public class MultiplayerGameCamera : MonoBehaviour, IGameSettingsDependency
     {
         [SerializeField] private Camera _camera;
 
-        private Vector2 _boardSize;
+        private Vector2 _gameSize;
         private float _gamePadding;
         private bool _settingsSet;
-        private float _boardAspectRatio;
+        private float _gameAspectRatio;
         
         public GameSettingsSO.SettingsContainer GameSettings
         {
             set
             {
                 _settingsSet = true;
-                _boardSize = new Vector2(value.BoardDimensions.BoardWidth, value.BoardDimensions.BoardHeight);
+                _gameSize = new Vector2(value.BoardDimensions.BoardWidth * 2, value.BoardDimensions.BoardHeight);
                 _gamePadding = value.Presentation.GamePadding;
                 if (value.Controls.AllowHold)
-                    _boardSize.x += PieceContainer.WIDTH;
+                    _gameSize.x += PieceContainer.WIDTH * 2;
                 if (value.General.NextPieceCount > 0)
-                    _boardSize.x += PieceContainer.WIDTH;
+                    _gameSize.x += PieceContainer.WIDTH * 2;
 
-                _boardAspectRatio = _boardSize.x / _boardSize.y;
+                _gameAspectRatio = _gameSize.x / _gameSize.y;
             }
         }
 
@@ -36,11 +37,11 @@ namespace UStacker.Gameplay.Presentation
             
             var cameraAspectRatio = _camera.pixelWidth / (float)_camera.pixelHeight;
             
-            if (_boardAspectRatio <= cameraAspectRatio)
-                 _camera.orthographicSize = _boardSize.y * .5f + _gamePadding;
+            if (_gameAspectRatio <= cameraAspectRatio)
+                 _camera.orthographicSize = _gameSize.y * .5f + _gamePadding;
             else
             {
-                var targetWidth = _boardSize.x + _gamePadding * 2f;
+                var targetWidth = _gameSize.x + _gamePadding * 2f;
                 var cameraHeight = targetWidth / cameraAspectRatio;
                 _camera.orthographicSize = cameraHeight * .5f;
             }

@@ -16,7 +16,7 @@ namespace UStacker.Gameplay.GameStateManagement
 
         private GameState _currentState = GameState.Unset;
         private GameState _previousState;
-        
+
         private GameState CurrentState
         {
             get => _currentState;
@@ -31,12 +31,24 @@ namespace UStacker.Gameplay.GameStateManagement
 
         public GameSettingsSO.SettingsContainer GameSettings { get; set; }
 
-        public void InitializeGame()
+        public void InitializeGame(bool startCountdown = true)
         {
             _mediator.Send(new GameStateChangedMessage(
                 _currentState,
                 GameState.Initializing,
                 0, IsReplay));
+            if (startCountdown)
+                StartCountdown();
+        }
+
+        public void StartCountdown()
+        {
+            if (CurrentState != GameState.Initializing)
+            {
+                Debug.LogWarning("Trying to start countdown from invalid state " + CurrentState);
+                return;
+            }
+
             _mediator.Send(new GameStateChangedMessage(
                 GameState.Initializing,
                 GameState.StartCountdown,
@@ -77,11 +89,9 @@ namespace UStacker.Gameplay.GameStateManagement
             {
                 case GameState.Unset or
                     GameState.Any or
-                    GameState.Lost:
+                    GameState.Lost or
+                    GameState.Ended:
                     Debug.LogWarning("Trying to toggle pause in invalid state " + CurrentState);
-                    return;
-                case GameState.Ended:
-                    // in ended we can't pause, but we don't want do throw an error because we might try
                     return;
                 case GameState.Paused:
                     switch (_previousState)
@@ -161,6 +171,7 @@ namespace UStacker.Gameplay.GameStateManagement
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
             _mediator.Send(new GameStateChangedMessage(
                 _currentState, GameState.Ended, endTime, IsReplay));
         }
@@ -179,7 +190,12 @@ namespace UStacker.Gameplay.GameStateManagement
 
         public void TogglePause(InputAction.CallbackContext ctx)
         {
-            if (ctx.performed)
+            if (ctx.performed && 
+                CurrentState is GameState.Paused 
+                    or GameState.Running 
+                    or GameState.StartCountdown
+                    or GameState.ResumeCountdown
+                    or GameState.Initializing)
                 TogglePause();
         }
 

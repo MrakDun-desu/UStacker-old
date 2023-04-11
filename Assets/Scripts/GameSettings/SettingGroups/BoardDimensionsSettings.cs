@@ -17,8 +17,6 @@ namespace UStacker.GameSettings.SettingGroups
         private uint _pieceSpawnHeight = 21;
         [SerializeField]
         private uint _blockCutHeight = 40;
-        [SerializeField]
-        private uint _boardPadding = 4;
 
         public uint BoardWidth
         {
@@ -48,12 +46,6 @@ namespace UStacker.GameSettings.SettingGroups
         {
             get => _blockCutHeight;
             set => _blockCutHeight = Math.Clamp(value, 2, 410);
-        }
-
-        public uint BoardPadding
-        {
-            get => _boardPadding;
-            set => _boardPadding = Math.Min(value, 50);
         }
     }
 }

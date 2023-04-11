@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UStacker.Gameplay;
 using UStacker.Gameplay.Enums;
@@ -15,82 +16,104 @@ namespace UStacker.Multiplayer
         {
             set
             {
-                _basicBoardSize = new Vector2(value.BoardDimensions.BoardWidth, value.BoardDimensions.BoardHeight);
-                _fullBoardSize = _basicBoardSize;
-                _usedPadding = new Vector2(_multiplayerBoardPadding, _multiplayerBoardPadding);
+                _boardSize = new Vector2(value.BoardDimensions.BoardWidth, value.BoardDimensions.BoardHeight);
+                _fullPadding = new Vector2(_multiplayerBoardPadding, _multiplayerBoardPadding);
+                _basicPadding = _fullPadding;
                 if (value.Controls.AllowHold)
-                    _usedPadding.x += PieceContainer.WIDTH;
+                    _fullPadding.x += PieceContainer.WIDTH;
                 if (value.General.NextPieceCount > 1)
-                    _usedPadding.x += PieceContainer.WIDTH;
+                    _fullPadding.x += PieceContainer.WIDTH;
             }
         }
 
         private readonly List<MultiplayerBoard> _boards = new();
         private MultiplayerBoard _mainBoard;
-        private Vector2 _basicBoardSize;
-        private Vector2 _fullBoardSize;
-        private Vector2 _usedPadding;
+        private Vector2 _boardSize;
+        private Vector2 _fullPadding;
+        private Vector2 _basicPadding;
 
-        private void SetMainBoard(MultiplayerBoard board)
+        public void SetMainBoard(MultiplayerBoard board)
         {
-            if (!_boards.Contains(board)) return;
-            
+            if (_mainBoard is not null)
+                _boards.Add(_mainBoard);
+                
             _mainBoard = board;
-            _boards.Remove(board);
-            _boards.Insert(0, board);
+            _mainBoard.SetDetailLevel(BoardDetailLevel.Full);
             Reorganize();
         }
 
-        private void UnsetMainBoard()
+        public void UnsetMainBoard(bool reorganize = true)
         {
             if (_mainBoard is null)
                 return;
 
+            _boards.Add(_mainBoard);
             _mainBoard = null;
-            Reorganize();
+            if (reorganize)
+                Reorganize();
         }
         
         public void AddBoard(MultiplayerBoard newBoard)
         {
             _boards.Add(newBoard);
-            Reorganize();
         }
 
         public void RemoveBoard(MultiplayerBoard board)
         {
+            if (_mainBoard == board)
+                UnsetMainBoard(false);
+            
             _boards.Remove(board);
             Reorganize();
         }
 
-        private void Reorganize()
+        public void Reorganize()
         {
-            switch (_boards.Count)
+            var boardCount = _boards.Count + (_mainBoard is not null ? 1 : 0);
+            var boardDetailLevel = boardCount switch
             {
-                case 2:
-                    var startingPosition = new Vector2(-_fullBoardSize.x - _usedPadding.x * .5f,
-                        _fullBoardSize.y * -.5f);
-                    for (var i = 0; i < _boards.Count; i++)
-                    {
-                        var board = _boards[i];
-                        board.SetDetailLevel(BoardDetailLevel.Full);
-                        var positionAddition = i * Vector2.right * (_fullBoardSize.x + _usedPadding.x);
+                <= 2 => BoardDetailLevel.Full,
+                <= 8 => BoardDetailLevel.Medium,
+                _ => BoardDetailLevel.Basic
+            };
+            
+            foreach (var board in _boards)
+                board.SetDetailLevel(boardDetailLevel);
 
-                        board.transform.position = startingPosition + positionAddition;
+            var currentPosition = new Vector2(-_boardSize.x - _fullPadding.x * .5f,
+                _boardSize.y * -.5f);
+
+            var maxX = _boardSize.x + _fullPadding.x * .5f;
+            
+            if (_mainBoard is not null)
+            {
+                _mainBoard.transform.position = currentPosition;
+                currentPosition.x += _boardSize.x + _fullPadding.x;
+            }
+
+            var positionAddition = boardDetailLevel == BoardDetailLevel.Basic
+                ? _boardSize + _basicPadding
+                : _boardSize + _fullPadding;
+
+            switch (boardDetailLevel)
+            {
+                case BoardDetailLevel.Basic:
+                case BoardDetailLevel.Medium:
+                    if (_boards.Count <= 4)
+                    {
+                        
                     }
                     break;
-                case <= 8:
+                case BoardDetailLevel.Full:
+                    // if detail level is full, we don't need to make more rows
                     foreach (var board in _boards)
-                        board.SetDetailLevel(BoardDetailLevel.Medium);
-                    
-                    // TODO
+                    {
+                        board.transform.position = currentPosition;
+                        currentPosition.x += positionAddition.x;
+                    }
                     break;
                 default:
-                    foreach (var board in _boards)
-                        board.SetDetailLevel(BoardDetailLevel.Basic);
-                    
-                    // TODO
-                    break;
-                
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

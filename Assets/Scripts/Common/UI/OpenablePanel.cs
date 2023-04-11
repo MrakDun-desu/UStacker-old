@@ -31,7 +31,7 @@ namespace UStacker.Common.UI
             gameObject.SetActive(true);
             _currentTween?.Kill();
 
-            _currentTween = DOTween.To(GetPosX, SetPosX, _openedX, _tweenDuration).OnKill(() => _currentTween = null);
+            _currentTween = DOTween.To(GetPosX, SetPosX, _openedX, _tweenDuration).OnKill(NullTween);
             _panelOpened = true;
         }
 
@@ -42,7 +42,7 @@ namespace UStacker.Common.UI
             _currentTween?.Kill();
 
             _currentTween = DOTween.To(GetPosX, SetPosX, _closedX, _tweenDuration)
-                .OnComplete(() => gameObject.SetActive(false)).OnKill(() => _currentTween = null);
+                .OnComplete(DeactivateGameObject).OnKill(NullTween);
             _panelOpened = false;
         }
 
@@ -56,5 +56,8 @@ namespace UStacker.Common.UI
             var position = _controlledTransform.anchoredPosition;
             _controlledTransform.anchoredPosition = new Vector2(value, position.y);
         }
+
+        private void DeactivateGameObject() => gameObject.SetActive(false);
+        private void NullTween() => _currentTween = null;
     }
 }

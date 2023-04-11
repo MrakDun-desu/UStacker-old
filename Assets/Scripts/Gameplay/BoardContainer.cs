@@ -121,7 +121,7 @@ namespace UStacker.Gameplay
 
         private void ChangeBoardZoom(float zoom)
         {
-            if (Mathf.Abs(zoom - transform.localScale.x) < .01f) return;
+            if (Mathf.Abs(zoom - transform.localScale.x) < float.Epsilon) return;
             var mytransform = transform;
             mytransform.localScale = new Vector3(zoom, zoom, 1);
             mytransform.position = new Vector3(-zoom * .5f * Width, -zoom * .5f * Height, 1);

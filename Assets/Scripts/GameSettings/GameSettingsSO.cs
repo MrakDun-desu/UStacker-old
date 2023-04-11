@@ -24,6 +24,9 @@ namespace UStacker.GameSettings
             get => _settings;
             set
             {
+                if (value == _settings)
+                    return;
+                
                 _settings = value;
                 SettingsReloaded?.Invoke();
             }

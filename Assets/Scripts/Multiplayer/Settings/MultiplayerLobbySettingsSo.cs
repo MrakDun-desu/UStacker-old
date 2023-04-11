@@ -16,8 +16,11 @@ namespace UStacker.Multiplayer.Settings
             get => _settings;
             set
             {
-                 _settings = value;   
-                 SettingsReloaded?.Invoke();
+                if (value == _settings)
+                    return;
+                
+                _settings = value;   
+                SettingsReloaded?.Invoke();
             }
         }
 
