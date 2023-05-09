@@ -1,12 +1,15 @@
-﻿using JetBrains.Annotations;
+
+/************************************
+PieceSpawnedMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using JetBrains.Annotations;
 
 namespace UStacker.Gameplay.Communication
 {
     public readonly struct PieceSpawnedMessage : IMidgameMessage
     {
         public readonly string NextPiece;
-        [UsedImplicitly]
-        public readonly string SpawnedPiece;
+        [UsedImplicitly] public readonly string SpawnedPiece;
         public double Time { get; }
 
         public PieceSpawnedMessage(string spawnedPiece, string nextPiece, double time)
@@ -17,3 +20,6 @@ namespace UStacker.Gameplay.Communication
         }
     }
 }
+/************************************
+end PieceSpawnedMessage.cs
+*************************************/

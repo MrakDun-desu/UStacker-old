@@ -1,18 +1,26 @@
-﻿using UStacker.GlobalSettings.Changers;
+
+/************************************
+GameSettingsManager.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using UStacker.GlobalSettings.Changers;
 
 namespace UStacker.GameSettings
 {
+    // TODO rename to better represent functionality
     public class GameSettingsManager : MonoBehaviour
     {
         [SerializeField] private Button _openGameButton;
         [SerializeField] private GameSettingsOverrideChanger _overrideChanger;
         [SerializeField] private MusicOptionChanger _musicOptionChanger;
-        [FormerlySerializedAs("_statCountingGroupChanger")] [SerializeField] private StatCounterGroupOverrideChanger _statCounterGroupOverrideChanger;
+
+        [FormerlySerializedAs("_statCountingGroupChanger")] [SerializeField]
+        private StatCounterGroupOverrideChanger _statCounterGroupOverrideChanger;
+
         [SerializeField] private GameObject _startingLevelChanger;
         [SerializeField] private TMP_Text _gameTitle;
         [SerializeField] private TMP_Text _gameDescription;
@@ -32,3 +40,6 @@ namespace UStacker.GameSettings
         }
     }
 }
+/************************************
+end GameSettingsManager.cs
+*************************************/

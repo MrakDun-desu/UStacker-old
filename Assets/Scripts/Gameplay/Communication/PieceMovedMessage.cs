@@ -1,11 +1,14 @@
-﻿using JetBrains.Annotations;
+
+/************************************
+PieceMovedMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using JetBrains.Annotations;
 
 namespace UStacker.Gameplay.Communication
 {
     public readonly struct PieceMovedMessage : IMidgameMessage
     {
-        [UsedImplicitly]
-        public readonly bool HitWall;
+        [UsedImplicitly] public readonly bool HitWall;
         public readonly bool WasHardDrop;
         public readonly bool WasSoftDrop;
         public readonly int X;
@@ -23,3 +26,6 @@ namespace UStacker.Gameplay.Communication
         }
     }
 }
+/************************************
+end PieceMovedMessage.cs
+*************************************/

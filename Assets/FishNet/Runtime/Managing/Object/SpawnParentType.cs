@@ -6,5 +6,4 @@
         NetworkObject = 1,
         NetworkBehaviour = 2
     }
-
 }

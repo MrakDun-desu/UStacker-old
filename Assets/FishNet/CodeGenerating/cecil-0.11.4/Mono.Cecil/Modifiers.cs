@@ -9,104 +9,77 @@
 //
 
 using System;
-
 using MD = MonoFN.Cecil.Metadata;
 
-namespace MonoFN.Cecil {
+namespace MonoFN.Cecil
+{
+    public interface IModifierType
+    {
+        TypeReference ModifierType { get; }
+        TypeReference ElementType { get; }
+    }
 
-	public interface IModifierType {
-		TypeReference ModifierType { get; }
-		TypeReference ElementType { get; }
-	}
+    public sealed class OptionalModifierType : TypeSpecification, IModifierType
+    {
+        public OptionalModifierType(TypeReference modifierType, TypeReference type)
+            : base(type)
+        {
+            if (modifierType == null)
+                throw new ArgumentNullException(Mixin.Argument.modifierType.ToString());
+            Mixin.CheckType(type);
+            ModifierType = modifierType;
+            etype = MD.ElementType.CModOpt;
+        }
 
-	public sealed class OptionalModifierType : TypeSpecification, IModifierType {
+        public override string Name => base.Name + Suffix;
 
-		TypeReference modifier_type;
+        public override string FullName => base.FullName + Suffix;
 
-		public TypeReference ModifierType {
-			get { return modifier_type; }
-			set { modifier_type = value; }
-		}
+        private string Suffix => " modopt(" + ModifierType + ")";
 
-		public override string Name {
-			get { return base.Name + Suffix; }
-		}
+        public override bool IsValueType
+        {
+            get => false;
+            set => throw new InvalidOperationException();
+        }
 
-		public override string FullName {
-			get { return base.FullName + Suffix; }
-		}
+        public override bool IsOptionalModifier => true;
 
-		string Suffix {
-			get { return " modopt(" + modifier_type + ")"; }
-		}
+        public override bool ContainsGenericParameter =>
+            ModifierType.ContainsGenericParameter || base.ContainsGenericParameter;
 
-		public override bool IsValueType {
-			get { return false; }
-			set { throw new InvalidOperationException (); }
-		}
+        public TypeReference ModifierType { get; set; }
+    }
 
-		public override bool IsOptionalModifier {
-			get { return true; }
-		}
+    public sealed class RequiredModifierType : TypeSpecification, IModifierType
+    {
+        public RequiredModifierType(TypeReference modifierType, TypeReference type)
+            : base(type)
+        {
+            if (modifierType == null)
+                throw new ArgumentNullException(Mixin.Argument.modifierType.ToString());
+            Mixin.CheckType(type);
+            ModifierType = modifierType;
+            etype = MD.ElementType.CModReqD;
+        }
 
-		public override bool ContainsGenericParameter {
-			get { return modifier_type.ContainsGenericParameter || base.ContainsGenericParameter; }
-		}
+        public override string Name => base.Name + Suffix;
 
-		public OptionalModifierType (TypeReference modifierType, TypeReference type)
-			: base (type)
-		{
-			if (modifierType == null)
-				throw new ArgumentNullException (Mixin.Argument.modifierType.ToString ());
-			Mixin.CheckType (type);
-			this.modifier_type = modifierType;
-			this.etype = MD.ElementType.CModOpt;
-		}
-	}
+        public override string FullName => base.FullName + Suffix;
 
-	public sealed class RequiredModifierType : TypeSpecification, IModifierType {
+        private string Suffix => " modreq(" + ModifierType + ")";
 
-		TypeReference modifier_type;
+        public override bool IsValueType
+        {
+            get => false;
+            set => throw new InvalidOperationException();
+        }
 
-		public TypeReference ModifierType {
-			get { return modifier_type; }
-			set { modifier_type = value; }
-		}
+        public override bool IsRequiredModifier => true;
 
-		public override string Name {
-			get { return base.Name + Suffix; }
-		}
+        public override bool ContainsGenericParameter =>
+            ModifierType.ContainsGenericParameter || base.ContainsGenericParameter;
 
-		public override string FullName {
-			get { return base.FullName + Suffix; }
-		}
-
-		string Suffix {
-			get { return " modreq(" + modifier_type + ")"; }
-		}
-
-		public override bool IsValueType {
-			get { return false; }
-			set { throw new InvalidOperationException (); }
-		}
-
-		public override bool IsRequiredModifier {
-			get { return true; }
-		}
-
-		public override bool ContainsGenericParameter {
-			get { return modifier_type.ContainsGenericParameter || base.ContainsGenericParameter; }
-		}
-
-		public RequiredModifierType (TypeReference modifierType, TypeReference type)
-			: base (type)
-		{
-			if (modifierType == null)
-				throw new ArgumentNullException (Mixin.Argument.modifierType.ToString ());
-			Mixin.CheckType (type);
-			this.modifier_type = modifierType;
-			this.etype = MD.ElementType.CModReqD;
-		}
-
-	}
+        public TypeReference ModifierType { get; set; }
+    }
 }

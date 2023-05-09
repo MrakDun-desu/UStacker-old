@@ -47,7 +47,6 @@ namespace FishNet.Component.Prediction
 
 public static class RigidbodyStateSerializers
 {
-
     public static void WriteRigidbodyState(this Writer writer, RigidbodyState value)
     {
         writer.WriteUInt32(value.LocalTick, AutoPackType.Unpacked);
@@ -63,7 +62,7 @@ public static class RigidbodyStateSerializers
 
     public static RigidbodyState ReadRigidbodyState(this Reader reader)
     {
-        RigidbodyState state = new RigidbodyState()
+        var state = new RigidbodyState
         {
             LocalTick = reader.ReadUInt32(AutoPackType.Unpacked),
             Position = reader.ReadVector3(),
@@ -97,12 +96,12 @@ public static class RigidbodyStateSerializers
 
     public static Rigidbody2DState ReadRigidbody2DState(this Reader reader)
     {
-        Rigidbody2DState state = new Rigidbody2DState()
+        var state = new Rigidbody2DState
         {
             LocalTick = reader.ReadUInt32(AutoPackType.Unpacked),
             Position = reader.ReadVector3(),
             Rotation = reader.ReadQuaternion(),
-            Simulated = reader.ReadBoolean(),
+            Simulated = reader.ReadBoolean()
         };
 
         if (state.Simulated)
@@ -113,7 +112,4 @@ public static class RigidbodyStateSerializers
 
         return state;
     }
-
-
 }
-

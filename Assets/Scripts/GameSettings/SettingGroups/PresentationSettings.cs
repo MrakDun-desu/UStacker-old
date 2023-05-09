@@ -1,3 +1,7 @@
+
+/************************************
+PresentationSettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -13,6 +17,8 @@ namespace UStacker.GameSettings.SettingGroups
         [SerializeField] private float _countdownInterval = .65f;
         [SerializeField] private uint _countdownCount = 3;
         [SerializeField] private uint _gamePadding = 3;
+
+        [field: SerializeField] public StatCounterGroup DefaultStatCounterGroup { get; set; } = new();
 
         public string Title
         {
@@ -46,8 +52,9 @@ namespace UStacker.GameSettings.SettingGroups
             set => _gamePadding = Math.Min(value, 50);
         }
 
-        [field: SerializeField] public StatCounterGroup DefaultStatCounterGroup { get; set; } = new();
-
         [JsonIgnore] public Guid? StatCounterGroupOverrideId { get; set; }
     }
 }
+/************************************
+end PresentationSettings.cs
+*************************************/

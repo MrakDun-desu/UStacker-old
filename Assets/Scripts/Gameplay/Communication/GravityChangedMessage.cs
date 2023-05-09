@@ -1,3 +1,7 @@
+
+/************************************
+GravityChangedMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 
 namespace UStacker.Gameplay.Communication
@@ -6,12 +10,16 @@ namespace UStacker.Gameplay.Communication
     public readonly struct GravityChangedMessage : IMidgameMessage
     {
         public readonly double Gravity;
-        public double Time { get; }
 
         public GravityChangedMessage(double gravity, double time)
         {
             Time = time;
             Gravity = gravity;
         }
+
+        public double Time { get; }
     }
 }
+/************************************
+end GravityChangedMessage.cs
+*************************************/

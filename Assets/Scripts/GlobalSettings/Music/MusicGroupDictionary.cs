@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+MusicGroupDictionary.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using UStacker.Common;
 
@@ -9,3 +13,6 @@ namespace UStacker.GlobalSettings.Music
     {
     }
 }
+/************************************
+end MusicGroupDictionary.cs
+*************************************/

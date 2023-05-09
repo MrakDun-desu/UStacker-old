@@ -40,7 +40,8 @@ namespace DG.Tweening
             if (Mathf.Approximately(speed, 0)) speed = 1;
             if (axis == null || axis == Vector3.zero) axis = Vector3.forward;
 
-            var t = DOTween.To(SpiralPlugin.Get(), () => target.localPosition, x => target.localPosition = x, (Vector3) axis, duration)
+            var t = DOTween.To(SpiralPlugin.Get(), () => target.localPosition, x => target.localPosition = x,
+                    (Vector3) axis, duration)
                 .SetTarget(target);
 
             t.plugOptions.mode = mode;
@@ -72,7 +73,8 @@ namespace DG.Tweening
             if (Mathf.Approximately(speed, 0)) speed = 1;
             if (axis == null || axis == Vector3.zero) axis = Vector3.forward;
 
-            TweenerCore<Vector3, Vector3, SpiralOptions> t = DOTween.To(SpiralPlugin.Get(), () => target.position, target.MovePosition, (Vector3)axis, duration)
+            TweenerCore<Vector3, Vector3, SpiralOptions> t =
+ DOTween.To(SpiralPlugin.Get(), () => target.position, target.MovePosition, (Vector3)axis, duration)
                 .SetTarget(target);
 
             t.plugOptions.mode = mode;

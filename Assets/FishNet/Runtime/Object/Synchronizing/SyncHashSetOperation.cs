@@ -1,5 +1,4 @@
-﻿
-using FishNet.Documenting;
+﻿using FishNet.Documenting;
 
 namespace FishNet.Object.Synchronizing
 {
@@ -7,25 +6,29 @@ namespace FishNet.Object.Synchronizing
     public enum SyncHashSetOperation : byte
     {
         /// <summary>
-        /// An item is added to the collection.
+        ///     An item is added to the collection.
         /// </summary>
         Add,
+
         /// <summary>
-        /// An item is removed from the collection.
+        ///     An item is removed from the collection.
         /// </summary>
         Remove,
+
         /// <summary>
-        /// Collection is cleared.
+        ///     Collection is cleared.
         /// </summary>
         Clear,
+
         /// <summary>
-        /// All operations for the tick have been processed. This only occurs on clients as the server is unable to be aware of when the user is done modifying the list.
+        ///     All operations for the tick have been processed. This only occurs on clients as the server is unable to be aware of
+        ///     when the user is done modifying the list.
         /// </summary>
         Complete,
-        /// <summary>
-        /// An item has been updated within the collection. This is generally used when modifying data within a container.
-        /// </summary>
-        Update,
-    }
 
+        /// <summary>
+        ///     An item has been updated within the collection. This is generally used when modifying data within a container.
+        /// </summary>
+        Update
+    }
 }

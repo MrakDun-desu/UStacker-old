@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+ReadOnlyAttribute.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 
 namespace UStacker.Common.Attributes
 {
@@ -6,3 +10,6 @@ namespace UStacker.Common.Attributes
     {
     }
 }
+/************************************
+end ReadOnlyAttribute.cs
+*************************************/

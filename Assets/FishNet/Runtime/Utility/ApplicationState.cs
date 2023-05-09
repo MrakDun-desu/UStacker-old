@@ -1,10 +1,7 @@
-﻿using FishNet.Utility.Constant;
-using System.Runtime.CompilerServices;
-using UnityEngine;
+﻿using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-
 
 
 namespace FishNet.Utility
@@ -14,7 +11,6 @@ namespace FishNet.Utility
 #endif
     public static class ApplicationState
     {
-
 #if !UNITY_EDITOR
         /// <summary>
         /// True if application is quitting.
@@ -42,8 +38,7 @@ namespace FishNet.Utility
 #if UNITY_EDITOR
             if (!EditorApplication.isPlayingOrWillChangePlaymode && EditorApplication.isPlaying)
                 return true;
-            else
-                return false;
+            return false;
 #else
             return _isQuitting;
 #endif
@@ -57,8 +52,5 @@ namespace FishNet.Utility
             return Application.isPlaying;
 #endif
         }
-
     }
-
-
 }

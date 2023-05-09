@@ -1,3 +1,7 @@
+
+/************************************
+LevelChangedMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 
 namespace UStacker.Gameplay.Communication
@@ -6,7 +10,6 @@ namespace UStacker.Gameplay.Communication
     public readonly struct LevelChangedMessage : IMidgameMessage
     {
         public readonly string Level;
-        public double Time { get; }
 
         public LevelChangedMessage(string level, double time)
         {
@@ -14,5 +17,9 @@ namespace UStacker.Gameplay.Communication
             Level = level;
         }
 
+        public double Time { get; }
     }
 }
+/************************************
+end LevelChangedMessage.cs
+*************************************/

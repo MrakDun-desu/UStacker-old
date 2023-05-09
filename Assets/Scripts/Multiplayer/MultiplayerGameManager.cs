@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+MultiplayerGameManager.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +21,11 @@ namespace UStacker.Multiplayer
         [SerializeField] private MultiplayerBoardsOrganizer _boardsOrganizer;
         [SerializeField] private SettingsDependenciesFiller _dependenciesFiller;
         [SerializeField] private MultiplayerBoard _multiplayerBoardPrefab;
-        
+
         private readonly Dictionary<int, MultiplayerBoard> _activeBoards = new();
         private readonly List<int> _readyPlayers = new();
 
-        public event Action<MultiplayerGameState, MultiplayerGameState> GameStateChanged;
+        private ObjectPool<MultiplayerBoard> _boardsPool;
 
         private MultiplayerGameState _currentGameState = MultiplayerGameState.Off;
 
@@ -35,8 +39,6 @@ namespace UStacker.Multiplayer
             }
         }
 
-        private ObjectPool<MultiplayerBoard> _boardsPool;
-
         private void Awake()
         {
             _boardsPool = new ObjectPool<MultiplayerBoard>(CreateBoard, null, ReleaseBoard, DestroyBoard,
@@ -48,8 +50,10 @@ namespace UStacker.Multiplayer
             _boardsPool.Dispose();
         }
 
+        public event Action<MultiplayerGameState, MultiplayerGameState> GameStateChanged;
+
         #region Boards pool
-        
+
         private MultiplayerBoard CreateBoard()
         {
             var newBoard = Instantiate(_multiplayerBoardPrefab, _boardsOrganizer.transform, true);
@@ -68,9 +72,8 @@ namespace UStacker.Multiplayer
             Destroy(board.gameObject);
         }
 
-
         #endregion
-        
+
         #region Game state management
 
         public void ClearReadyPlayers()
@@ -83,7 +86,7 @@ namespace UStacker.Multiplayer
         {
             if (sender is null)
                 return;
-            
+
             _readyPlayers.Add(sender.ClientId);
             var allPlayersReady = _activeBoards.Values.All(board => _readyPlayers.Contains(board.OwnerId));
 
@@ -106,9 +109,9 @@ namespace UStacker.Multiplayer
         public void InitializeGame()
         {
             var gameSettings = MultiplayerSettingsManager.SettingsStatic.GameSettings;
-            
+
             _dependenciesFiller.SetGameSettings(gameSettings);
-            
+
             foreach (var player in Player.ActivePlayers)
             {
                 var newBoard = _boardsPool.Get();
@@ -121,7 +124,7 @@ namespace UStacker.Multiplayer
                 else
                     _boardsOrganizer.AddBoard(newBoard);
             }
-            
+
             _boardsOrganizer.Reorganize();
             CurrentGameState = MultiplayerGameState.Initializing;
             StartCoroutine(SetReadyCor());
@@ -138,29 +141,25 @@ namespace UStacker.Multiplayer
         [ContextMenu("End game manually")]
         private void EndGame()
         {
-            foreach (var board in _activeBoards.Values)
-            {
-                
-                _boardsPool.Release(board);
-            }
-            
+            foreach (var board in _activeBoards.Values) _boardsPool.Release(board);
+
             _activeBoards.Clear();
             CurrentGameState = MultiplayerGameState.Off;
         }
-        
+
         private void AddBoard(MultiplayerBoard board)
         {
             var boardId = board.OwnerId;
             _activeBoards[boardId] = board;
 
             if (boardId != LocalConnection.ClientId) return;
-        
+
             board.InputHandled += OnInputHandledClient;
             board.ProcessorUpdated += OnProcessorUpdatedClient;
         }
 
         #endregion
-        
+
         #region Input and time sync
 
         private void OnProcessorUpdatedClient(double updateTime)
@@ -170,7 +169,8 @@ namespace UStacker.Multiplayer
 
         [ServerRpc(RequireOwnership = false)]
         // ReSharper disable once UnusedParameter.Local
-        private void OnProcessorUpdated(double updateTime, Channel channel = Channel.Unreliable, NetworkConnection sender = null)
+        private void OnProcessorUpdated(double updateTime, Channel channel = Channel.Unreliable,
+            NetworkConnection sender = null)
         {
             if (sender is null)
                 return;
@@ -188,7 +188,7 @@ namespace UStacker.Multiplayer
             var board = _activeBoards[playerId];
             if (!board.GameStarted)
                 board.StartGameCountdown();
-                
+
             board.UpdateTime(updateTime);
         }
 
@@ -202,7 +202,7 @@ namespace UStacker.Multiplayer
         {
             if (sender is null)
                 return;
-            
+
             HandleRemoteInput(message, sender.ClientId);
         }
 
@@ -211,7 +211,7 @@ namespace UStacker.Multiplayer
         {
             if (!_activeBoards.TryGetValue(playerId, out var board))
                 return;
-            
+
             if (playerId == LocalConnection.ClientId)
             {
                 // if the local board receives this message, it means that server got the input
@@ -219,13 +219,16 @@ namespace UStacker.Multiplayer
                 board.StopWaitingForInput(message);
                 return;
             }
-            
+
             if (!board.GameStarted)
                 board.StartGameCountdown();
-            
+
             board.HandleInput(message);
         }
-        
+
         #endregion
     }
 }
+/************************************
+end MultiplayerGameManager.cs
+*************************************/

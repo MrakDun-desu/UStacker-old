@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+SingleplayerGameAsset.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 
 namespace UStacker.GameSettings
 {
@@ -10,3 +14,6 @@ namespace UStacker.GameSettings
         public string GameDescription;
     }
 }
+/************************************
+end SingleplayerGameAsset.cs
+*************************************/

@@ -1,80 +1,31 @@
-﻿using FishNet.Connection; //remove on 2023/01/01 move to correct folder.
+﻿using System;
+using System.Collections.Generic;
 using FishNet.Object;
 using FishNet.Observing;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+//remove on 2023/01/01 move to correct folder.
 
 namespace FishNet.Managing.Observing
 {
     /// <summary>
-    /// Additional options for managing the observer system.
+    ///     Additional options for managing the observer system.
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("FishNet/Manager/ObserverManager")]
     public sealed class ObserverManager : MonoBehaviour
     {
         #region Internal.
+
         /// <summary>
-        /// Current index to use for level of detail based on tick.
+        ///     Current index to use for level of detail based on tick.
         /// </summary>
         internal byte LevelOfDetailIndex { get; private set; }
-        #endregion
 
-        #region Serialized.
-        /// <summary>
-        /// 
-        /// </summary>
-        [Tooltip("True to use the NetworkLOD system.")]
-        [SerializeField]
-        private bool _useNetworkLod;
-        /// <summary>
-        /// Distance for each level of detal.
-        /// </summary>
-        internal List<float> LevelOfDetailDistances => (_useNetworkLod) ? _levelOfDetailDistances : _singleLevelOfDetailDistances;
-        [Tooltip("Distance for each level of detal.")]
-        [SerializeField]
-        private List<float> _levelOfDetailDistances = new List<float>();
-        /// <summary>
-        /// Returned when network LOD is off. Value contained is one level of detail with max distance.
-        /// </summary>
-        private List<float> _singleLevelOfDetailDistances = new List<float>() { float.MaxValue };
-        /// <summary>
-        /// 
-        /// </summary>
-        [Tooltip("True to update visibility for clientHost based on if they are an observer or not.")]
-        [FormerlySerializedAs("_setHostVisibility")]
-        [SerializeField]
-        private bool _updateHostVisibility = true;
-        /// <summary>
-        /// True to update visibility for clientHost based on if they are an observer or not.
-        /// </summary>
-        public bool UpdateHostVisibility
-        {
-            get => _updateHostVisibility;
-            private set => _updateHostVisibility = value;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        [Tooltip("Default observer conditions for networked objects.")]
-        [SerializeField]
-        private List<ObserverCondition> _defaultConditions = new List<ObserverCondition>();
-        #endregion
-
-        #region Private.
-        /// <summary>
-        /// NetworkManager on object.
-        /// </summary>
-        private NetworkManager _networkManager;
-        /// <summary>
-        /// Intervals for each level of detail.
-        /// </summary>
-        private uint[] _levelOfDetailIntervals;
         #endregion
 
         /// <summary>
-        /// Initializes this script for use.
+        ///     Initializes this script for use.
         /// </summary>
         /// <param name="manager"></param>
         internal void InitializeOnce_Internal(NetworkManager manager)
@@ -85,7 +36,7 @@ namespace FishNet.Managing.Observing
         }
 
         /// <summary>
-        /// Sets a new value for UpdateHostVisibility.
+        ///     Sets a new value for UpdateHostVisibility.
         /// </summary>
         /// <param name="value">New value.</param>
         /// <param name="updateType">Which objects to update.</param>
@@ -105,8 +56,8 @@ namespace FishNet.Managing.Observing
              * with the setting and also update renderers. */
             if (_networkManager.IsServer && HostVisibilityUpdateContains(updateType, HostVisibilityUpdateTypes.Spawned))
             {
-                NetworkConnection clientConn = _networkManager.ClientManager.Connection;
-                foreach (NetworkObject n in _networkManager.ServerManager.Objects.Spawned.Values)
+                var clientConn = _networkManager.ClientManager.Connection;
+                foreach (var n in _networkManager.ServerManager.Objects.Spawned.Values)
                 {
                     n.NetworkObserver.SetUpdateHostVisibility(value);
 
@@ -123,15 +74,15 @@ namespace FishNet.Managing.Observing
         }
 
         /// <summary>
-        /// Adds default observer conditions to nob and returns the NetworkObserver used.
+        ///     Adds default observer conditions to nob and returns the NetworkObserver used.
         /// </summary>
         internal NetworkObserver AddDefaultConditions(NetworkObject nob)
         {
-            bool isGlobal = (nob.IsGlobal && !nob.IsSceneObject);
+            var isGlobal = nob.IsGlobal && !nob.IsSceneObject;
             bool obsAdded;
 
             NetworkObserver result;
-            if (!nob.TryGetComponent<NetworkObserver>(out result))
+            if (!nob.TryGetComponent(out result))
             {
                 obsAdded = true;
                 result = nob.gameObject.AddComponent<NetworkObserver>();
@@ -193,10 +144,10 @@ namespace FishNet.Managing.Observing
 
             void AddMissing(NetworkObserver networkObserver)
             {
-                int count = _defaultConditions.Count;
-                for (int i = 0; i < count; i++)
+                var count = _defaultConditions.Count;
+                for (var i = 0; i < count; i++)
                 {
-                    ObserverCondition oc = _defaultConditions[i];
+                    var oc = _defaultConditions[i];
                     if (!networkObserver.ObserverConditionsInternal.Contains(oc))
                         networkObserver.ObserverConditionsInternal.Add(oc);
                 }
@@ -206,7 +157,7 @@ namespace FishNet.Managing.Observing
         }
 
         /// <summary>
-        /// Gets the tick interval to use for a lod level.
+        ///     Gets the tick interval to use for a lod level.
         /// </summary>
         /// <param name="lodLevel"></param>
         /// <returns></returns>
@@ -215,21 +166,21 @@ namespace FishNet.Managing.Observing
             if (LevelOfDetailIndex == 0)
                 return 1;
 
-            return (byte)System.Math.Pow(2, lodLevel);
+            return (byte) Math.Pow(2, lodLevel);
         }
 
         /// <summary>
-        /// Calculates and sets the current level of detail index for the tick.
+        ///     Calculates and sets the current level of detail index for the tick.
         /// </summary>
         internal void CalculateLevelOfDetail(uint tick)
         {
-            int count = LevelOfDetailDistances.Count;
-            for (int i = (count - 1); i > 0; i--)
+            var count = LevelOfDetailDistances.Count;
+            for (var i = count - 1; i > 0; i--)
             {
-                uint interval = _levelOfDetailIntervals[i];
+                var interval = _levelOfDetailIntervals[i];
                 if (tick % interval == 0)
                 {
-                    LevelOfDetailIndex = (byte)i;
+                    LevelOfDetailIndex = (byte) i;
                     return;
                 }
             }
@@ -239,7 +190,7 @@ namespace FishNet.Managing.Observing
         }
 
         /// <summary>
-        /// Validates that level of detail intervals are proper.
+        ///     Validates that level of detail intervals are proper.
         /// </summary>
         private void ValidateLevelOfDetails()
         {
@@ -251,33 +202,39 @@ namespace FishNet.Managing.Observing
             {
                 if (_networkManager != null)
                 {
-                    _networkManager.LogWarning("Level of detail distances contains no entries. NetworkLOD has been disabled.");
+                    _networkManager.LogWarning(
+                        "Level of detail distances contains no entries. NetworkLOD has been disabled.");
                     _useNetworkLod = false;
                 }
+
                 return;
             }
 
             //Make sure every distance is larger than the last.
-            float lastDistance = float.MinValue;
-            foreach (float dist in _levelOfDetailDistances)
+            var lastDistance = float.MinValue;
+            foreach (var dist in _levelOfDetailDistances)
             {
                 if (dist <= 0f || dist <= lastDistance)
                 {
                     if (_networkManager != null)
                     {
-                        _networkManager.LogError($"Level of detail distances must be greater than 0f, and each distance larger than the previous. NetworkLOD has been disabled.");
+                        _networkManager.LogError(
+                            "Level of detail distances must be greater than 0f, and each distance larger than the previous. NetworkLOD has been disabled.");
                         _useNetworkLod = false;
                     }
+
                     return;
                 }
+
                 lastDistance = dist;
             }
 
-            int maxEntries = 8;
+            var maxEntries = 8;
             //Too many distances.
             if (_levelOfDetailDistances.Count > maxEntries)
             {
-                _networkManager?.LogWarning("There can be a maximum of 8 level of detail distances. Entries beyond this quantity have been discarded.");
+                _networkManager?.LogWarning(
+                    "There can be a maximum of 8 level of detail distances. Entries beyond this quantity have been discarded.");
                 while (_levelOfDetailDistances.Count > maxEntries)
                     _levelOfDetailDistances.RemoveAt(_levelOfDetailDistances.Count - 1);
             }
@@ -285,16 +242,72 @@ namespace FishNet.Managing.Observing
             //Build intervals.
             if (Application.isPlaying)
             {
-                int count = _levelOfDetailDistances.Count;
+                var count = _levelOfDetailDistances.Count;
                 _levelOfDetailIntervals = new uint[count];
-                for (int i = (count - 1); i > 0; i--)
+                for (var i = count - 1; i > 0; i--)
                 {
-                    uint power = (uint)Mathf.Pow(2, i);
+                    var power = (uint) Mathf.Pow(2, i);
                     _levelOfDetailIntervals[i] = power;
                 }
             }
         }
 
-    }
+        #region Serialized.
 
+        /// <summary>
+        /// </summary>
+        [Tooltip("True to use the NetworkLOD system.")] [SerializeField]
+        private bool _useNetworkLod;
+
+        /// <summary>
+        ///     Distance for each level of detal.
+        /// </summary>
+        internal List<float> LevelOfDetailDistances =>
+            _useNetworkLod ? _levelOfDetailDistances : _singleLevelOfDetailDistances;
+
+        [Tooltip("Distance for each level of detal.")] [SerializeField]
+        private List<float> _levelOfDetailDistances = new();
+
+        /// <summary>
+        ///     Returned when network LOD is off. Value contained is one level of detail with max distance.
+        /// </summary>
+        private readonly List<float> _singleLevelOfDetailDistances = new() {float.MaxValue};
+
+        /// <summary>
+        /// </summary>
+        [Tooltip("True to update visibility for clientHost based on if they are an observer or not.")]
+        [FormerlySerializedAs("_setHostVisibility")]
+        [SerializeField]
+        private bool _updateHostVisibility = true;
+
+        /// <summary>
+        ///     True to update visibility for clientHost based on if they are an observer or not.
+        /// </summary>
+        public bool UpdateHostVisibility
+        {
+            get => _updateHostVisibility;
+            private set => _updateHostVisibility = value;
+        }
+
+        /// <summary>
+        /// </summary>
+        [Tooltip("Default observer conditions for networked objects.")] [SerializeField]
+        private List<ObserverCondition> _defaultConditions = new();
+
+        #endregion
+
+        #region Private.
+
+        /// <summary>
+        ///     NetworkManager on object.
+        /// </summary>
+        private NetworkManager _networkManager;
+
+        /// <summary>
+        ///     Intervals for each level of detail.
+        /// </summary>
+        private uint[] _levelOfDetailIntervals;
+
+        #endregion
+    }
 }

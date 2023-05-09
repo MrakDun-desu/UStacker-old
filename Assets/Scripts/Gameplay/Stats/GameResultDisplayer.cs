@@ -1,11 +1,15 @@
-﻿using System;
-using UStacker.Common;
-using UStacker.Common.Extensions;
-using UStacker.GameSettings.Enums;
+
+/************************************
+GameResultDisplayer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using TMPro;
 using UnityEngine;
+using UStacker.Common;
+using UStacker.Common.Extensions;
 using UStacker.Gameplay.GameStateManagement;
 using UStacker.Gameplay.InputProcessing;
+using UStacker.GameSettings.Enums;
 using UStacker.GlobalSettings.Music;
 
 namespace UStacker.Gameplay.Stats
@@ -21,8 +25,8 @@ namespace UStacker.Gameplay.Stats
         [SerializeField] private GameRecorder _gameRecorder;
         [SerializeField] private MusicPlayerFinder _musicPlayerFinder;
 
-        [Space]
-        [SerializeField] private GameResultStatDisplayer _scoreText;
+        [Space] [SerializeField] private GameResultStatDisplayer _scoreText;
+
         [SerializeField] private GameResultStatDisplayer _timeText;
         [SerializeField] private GameResultStatDisplayer _levelText;
         [SerializeField] private GameResultStatDisplayer _linesText;
@@ -52,83 +56,72 @@ namespace UStacker.Gameplay.Stats
         [SerializeField] private GameResultStatDisplayer _keysPerSecondText;
         [SerializeField] private GameResultStatDisplayer _linesPerMinuteText;
 
-        private GameReplay _displayedReplay;
-
-        private GameReplay DisplayedReplay
+        public void DisplayReplay()
         {
-            get => _displayedReplay;
-            set
+            var displayedReplay = _gameRecorder.Replay;
+
+            var stats = displayedReplay.Stats;
+            _mainStatText.text = displayedReplay.GameSettings.Objective.MainStat switch
             {
-                _displayedReplay = value;
+                MainStat.Score => stats.Score.ToString(),
+                MainStat.Time => displayedReplay.GameLength.FormatAsTime(),
+                MainStat.LinesCleared => stats.LinesCleared.ToString(),
+                MainStat.GarbageLinesCleared => stats.GarbageLinesCleared.ToString(),
+                MainStat.PiecesUsed => stats.PiecesPlaced.ToString(),
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
-                var stats = _displayedReplay.Stats;
-                _mainStatText.text = _displayedReplay.GameSettings.Objective.MainStat switch
-                {
-                    MainStat.Score => stats.Score.ToString(),
-                    MainStat.Time => _displayedReplay.GameLength.FormatAsTime(),
-                    MainStat.LinesCleared => stats.LinesCleared.ToString(),
-                    MainStat.GarbageLinesCleared => stats.GarbageLinesCleared.ToString(),
-                    MainStat.PiecesUsed => stats.PiecesPlaced.ToString(),
-                    _ => throw new ArgumentOutOfRangeException()
-                };
+            _mainStatTitle.text = displayedReplay.GameSettings.Objective.MainStat switch
+            {
+                MainStat.Score => "Final score",
+                MainStat.Time => "Final time",
+                MainStat.LinesCleared => "Lines cleared",
+                MainStat.GarbageLinesCleared => "Garbage lines cleared",
+                MainStat.PiecesUsed => "Pieces used",
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
-                _mainStatTitle.text = _displayedReplay.GameSettings.Objective.MainStat switch
-                {
-                    MainStat.Score => "Final score",
-                    MainStat.Time => "Final time",
-                    MainStat.LinesCleared => "Lines cleared",
-                    MainStat.GarbageLinesCleared => "Garbage lines cleared",
-                    MainStat.PiecesUsed => "Pieces used",
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-
-                _scoreText.DisplayStat("Score", stats.Score);
-                _timeText.DisplayStat("Time", _displayedReplay.GameLength, true);
-                _levelText.DisplayStat("Final level", stats.Level);
-                _linesText.DisplayStat("Lines cleared", stats.LinesCleared);
-                _piecesPlacedText.DisplayStat("Pieces placed", stats.PiecesPlaced);
-                _keysPressedText.DisplayStat("Keys pressed", stats.KeysPressed);
-                _singlesText.DisplayStat("Singles", stats.Singles);
-                _doublesText.DisplayStat("Doubles", stats.Doubles);
-                _triplesText.DisplayStat("Triples", stats.Triples);
-                _quadsText.DisplayStat("Quads", stats.Quads);
-                _spinsText.DisplayStat("Spins", stats.Spins);
-                _miniSpinsText.DisplayStat("Mini spins", stats.MiniSpins);
-                _spinSinglesText.DisplayStat("Spin singles", stats.SpinSingles);
-                _spinDoublesText.DisplayStat("Spin doubles", stats.SpinDoubles);
-                _spinTriplesText.DisplayStat("Spin triples", stats.SpinTriples);
-                _spinQuadsText.DisplayStat("Spin quads", stats.SpinQuads);
-                _miniSpinSinglesText.DisplayStat("Mini spin singles", stats.MiniSpinSingles);
-                _miniSpinDoublesText.DisplayStat("Mini spin doubles", stats.MiniSpinDoubles);
-                _miniSpinTriplesText.DisplayStat("Mini spin triples", stats.MiniSpinTriples);
-                _miniSpinQuadsText.DisplayStat("Mini spin quads", stats.MiniSpinQuads);
-                _longestComboText.DisplayStat("Longest combo", stats.LongestCombo);
-                _longestBackToBackText.DisplayStat("Longest back to back", stats.LongestBackToBack);
-                _allClearsText.DisplayStat("All clears", stats.AllClears);
-                _holdsText.DisplayStat("Holds used", stats.Holds);
-                _garbageLinesClearedText.DisplayStat("Garbage lines cleared", stats.GarbageLinesCleared);
-                _piecesPerSecondText.DisplayStat("Pieces per second", stats.PiecesPerSecond);
-                _keysPerPieceText.DisplayStat("Keys per piece", stats.KeysPerPiece);
-                _keysPerSecondText.DisplayStat("Keys per second", stats.KeysPerSecond);
-                _linesPerMinuteText.DisplayStat("Lines per minute", stats.LinesPerMinute);
-            }
+            _scoreText.DisplayStat("Score", stats.Score);
+            _timeText.DisplayStat("Time", displayedReplay.GameLength, true);
+            _levelText.DisplayStat("Final level", stats.Level);
+            _linesText.DisplayStat("Lines cleared", stats.LinesCleared);
+            _piecesPlacedText.DisplayStat("Pieces placed", stats.PiecesPlaced);
+            _keysPressedText.DisplayStat("Keys pressed", stats.KeysPressed);
+            _singlesText.DisplayStat("Singles", stats.Singles);
+            _doublesText.DisplayStat("Doubles", stats.Doubles);
+            _triplesText.DisplayStat("Triples", stats.Triples);
+            _quadsText.DisplayStat("Quads", stats.Quads);
+            _spinsText.DisplayStat("Spins", stats.Spins);
+            _miniSpinsText.DisplayStat("Mini spins", stats.MiniSpins);
+            _spinSinglesText.DisplayStat("Spin singles", stats.SpinSingles);
+            _spinDoublesText.DisplayStat("Spin doubles", stats.SpinDoubles);
+            _spinTriplesText.DisplayStat("Spin triples", stats.SpinTriples);
+            _spinQuadsText.DisplayStat("Spin quads", stats.SpinQuads);
+            _miniSpinSinglesText.DisplayStat("Mini spin singles", stats.MiniSpinSingles);
+            _miniSpinDoublesText.DisplayStat("Mini spin doubles", stats.MiniSpinDoubles);
+            _miniSpinTriplesText.DisplayStat("Mini spin triples", stats.MiniSpinTriples);
+            _miniSpinQuadsText.DisplayStat("Mini spin quads", stats.MiniSpinQuads);
+            _longestComboText.DisplayStat("Longest combo", stats.LongestCombo);
+            _longestBackToBackText.DisplayStat("Longest back to back", stats.LongestBackToBack);
+            _allClearsText.DisplayStat("All clears", stats.AllClears);
+            _holdsText.DisplayStat("Holds used", stats.Holds);
+            _garbageLinesClearedText.DisplayStat("Garbage lines cleared", stats.GarbageLinesCleared);
+            _piecesPerSecondText.DisplayStat("Pieces per second", stats.PiecesPerSecond);
+            _keysPerPieceText.DisplayStat("Keys per piece", stats.KeysPerPiece);
+            _keysPerSecondText.DisplayStat("Keys per second", stats.KeysPerSecond);
+            _linesPerMinuteText.DisplayStat("Lines per minute", stats.LinesPerMinute);
         }
 
-        private void OnEnable()
-        {
-            if (_gameRecorder.Replay is not null)
-                DisplayedReplay = _gameRecorder.Replay;
-        }
-        
         public void ShowReplay()
         {
-            _inputProcessor.ActionList = _displayedReplay.ActionList;
-            _inputProcessor.PlacementsList = _displayedReplay.PiecePlacementList;
-            _inputProcessor.ReplayLength = _displayedReplay.GameLength;
+            var displayedReplay = _gameRecorder.Replay;
+            _inputProcessor.ActionList = displayedReplay.ActionList;
+            _inputProcessor.PlacementsList = displayedReplay.PiecePlacementList;
+            _inputProcessor.ReplayLength = displayedReplay.GameLength;
             _musicPlayerFinder.GameType = _replayGameType.Value;
             _stateManager.IsReplay = true;
 
-            _replayController.SetReplay(DisplayedReplay);
+            _replayController.SetReplay(displayedReplay);
             _stateManager.InitializeGame();
         }
 
@@ -136,9 +129,12 @@ namespace UStacker.Gameplay.Stats
         {
             _inputProcessor.ActionList = null;
             _inputProcessor.PlacementsList = null;
-            _musicPlayerFinder.GameType = _displayedReplay.GameType ?? _replayGameType.Value;
+            _musicPlayerFinder.GameType = _gameRecorder.Replay.GameType ?? _replayGameType.Value;
             _stateManager.IsReplay = false;
             _stateManager.InitializeGame();
         }
     }
 }
+/************************************
+end GameResultDisplayer.cs
+*************************************/

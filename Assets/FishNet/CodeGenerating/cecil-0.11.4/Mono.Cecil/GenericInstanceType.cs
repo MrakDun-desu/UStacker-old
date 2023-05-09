@@ -8,68 +8,66 @@
 // Licensed under the MIT/X11 license.
 //
 
-using MonoFN.Collections.Generic;
 using System;
 using System.Text;
 using System.Threading;
+using MonoFN.Collections.Generic;
 using MD = MonoFN.Cecil.Metadata;
 
-namespace MonoFN.Cecil {
+namespace MonoFN.Cecil
+{
+    public sealed class GenericInstanceType : TypeSpecification, IGenericInstance, IGenericContext
+    {
+        private Collection<TypeReference> arguments;
 
-	public sealed class GenericInstanceType : TypeSpecification, IGenericInstance, IGenericContext {
+        public GenericInstanceType(TypeReference type)
+            : base(type)
+        {
+            IsValueType = type.IsValueType;
+            etype = MD.ElementType.GenericInst;
+        }
 
-		Collection<TypeReference> arguments;
+        internal GenericInstanceType(TypeReference type, int arity)
+            : this(type)
+        {
+            arguments = new Collection<TypeReference>(arity);
+        }
 
-		public bool HasGenericArguments {
-			get { return !arguments.IsNullOrEmpty (); }
-		}
+        public override TypeReference DeclaringType
+        {
+            get => ElementType.DeclaringType;
+            set => throw new NotSupportedException();
+        }
 
-		public Collection<TypeReference> GenericArguments {
-			get {
-				if (arguments == null)
-					Interlocked.CompareExchange (ref arguments, new Collection<TypeReference> (), null);
+        public override string FullName
+        {
+            get
+            {
+                var name = new StringBuilder();
+                name.Append(base.FullName);
+                this.GenericInstanceFullName(name);
+                return name.ToString();
+            }
+        }
 
-				return arguments;
-			}
-		}
+        public override bool IsGenericInstance => true;
 
-		public override TypeReference DeclaringType {
-			get { return ElementType.DeclaringType; }
-			set { throw new NotSupportedException (); }
-		}
+        public override bool ContainsGenericParameter =>
+            this.ContainsGenericParameter() || base.ContainsGenericParameter;
 
-		public override string FullName {
-			get {
-				var name = new StringBuilder ();
-				name.Append (base.FullName);
-				this.GenericInstanceFullName (name);
-				return name.ToString ();
-			}
-		}
+        IGenericParameterProvider IGenericContext.Type => ElementType;
 
-		public override bool IsGenericInstance {
-			get { return true; }
-		}
+        public bool HasGenericArguments => !arguments.IsNullOrEmpty();
 
-		public override bool ContainsGenericParameter {
-			get { return this.ContainsGenericParameter () || base.ContainsGenericParameter; }
-		}
+        public Collection<TypeReference> GenericArguments
+        {
+            get
+            {
+                if (arguments == null)
+                    Interlocked.CompareExchange(ref arguments, new Collection<TypeReference>(), null);
 
-		IGenericParameterProvider IGenericContext.Type {
-			get { return ElementType; }
-		}
-
-		public GenericInstanceType (TypeReference type)
-			: base (type)
-		{
-			base.IsValueType = type.IsValueType;
-			this.etype = MD.ElementType.GenericInst;
-		}
-
-		internal GenericInstanceType (TypeReference type, int arity)
-			: this (type)
-		{
-			this.arguments = new Collection<TypeReference> (arity);
-		}
-	}
+                return arguments;
+            }
+        }
+    }
 }

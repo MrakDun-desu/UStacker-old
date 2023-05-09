@@ -1,5 +1,4 @@
-﻿
-namespace FishNet.Object.Prediction
+﻿namespace FishNet.Object.Prediction
 {
     public interface IReplicateData
     {
@@ -14,5 +13,4 @@ namespace FishNet.Object.Prediction
         void SetTick(uint value);
         void Dispose();
     }
-
 }

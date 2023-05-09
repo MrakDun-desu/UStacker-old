@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+GameReplay.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -24,8 +28,8 @@ namespace UStacker.Gameplay
         public DateTime TimeStamp { get; set; }
         public StatContainer Stats { get; set; }
         public GameSettingsSO.SettingsContainer GameSettings { get; set; }
-        public List<InputActionMessage> ActionList { get; set; } = new();
-        public List<double> PiecePlacementList { get; set; } = new();
+        public List<InputActionMessage> ActionList { get; } = new();
+        public List<double> PiecePlacementList { get; } = new();
 
         public void Save()
         {
@@ -39,9 +43,9 @@ namespace UStacker.Gameplay
                 _ => throw new ArgumentOutOfRangeException()
             };
             var filename = AppSettings.Gameplay.ReplayNamingFormat
-                .Replace("{GameType}", GameType)
-                .Replace("{MainStat}", mainStat) +
-                TimeStamp.ToLocalTime().ToString(CultureInfo.InvariantCulture) + ".bsrep";
+                               .Replace("{GameType}", GameType)
+                               .Replace("{MainStat}", mainStat) +
+                           TimeStamp.ToLocalTime().ToString(CultureInfo.InvariantCulture) + ".bsrep";
 
             var invalidChars = new List<char>();
             invalidChars.AddRange(Path.GetInvalidPathChars());
@@ -63,7 +67,7 @@ namespace UStacker.Gameplay
                 return;
             }
 
-            for (var i = 0; ; i++)
+            for (var i = 0;; i++)
             {
                 var actualSavePath = savePath + $"_{i}";
                 if (File.Exists(actualSavePath)) continue;
@@ -96,7 +100,8 @@ namespace UStacker.Gameplay
 
             try
             {
-                output.Item2 = JsonConvert.DeserializeObject<GameReplay>(replayJson, StaticSettings.ReplaySerializerSettings);
+                output.Item2 =
+                    JsonConvert.DeserializeObject<GameReplay>(replayJson, StaticSettings.ReplaySerializerSettings);
             }
             catch
             {
@@ -108,3 +113,6 @@ namespace UStacker.Gameplay
         }
     }
 }
+/************************************
+end GameReplay.cs
+*************************************/

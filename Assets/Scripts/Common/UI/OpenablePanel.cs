@@ -1,4 +1,8 @@
-﻿using DG.Tweening;
+
+/************************************
+OpenablePanel.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using UnityEngine;
@@ -57,7 +61,17 @@ namespace UStacker.Common.UI
             _controlledTransform.anchoredPosition = new Vector2(value, position.y);
         }
 
-        private void DeactivateGameObject() => gameObject.SetActive(false);
-        private void NullTween() => _currentTween = null;
+        private void DeactivateGameObject()
+        {
+            gameObject.SetActive(false);
+        }
+
+        private void NullTween()
+        {
+            _currentTween = null;
+        }
     }
 }
+/************************************
+end OpenablePanel.cs
+*************************************/

@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+MultiplayerBoardsOrganizer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UStacker.Gameplay;
@@ -11,7 +15,13 @@ namespace UStacker.Multiplayer
     public class MultiplayerBoardsOrganizer : MonoBehaviour, IGameSettingsDependency
     {
         [SerializeField] private float _multiplayerBoardPadding = 2f;
-        
+
+        private readonly List<MultiplayerBoard> _boards = new();
+        private Vector2 _basicPadding;
+        private Vector2 _boardSize;
+        private Vector2 _fullPadding;
+        private MultiplayerBoard _mainBoard;
+
         public GameSettingsSO.SettingsContainer GameSettings
         {
             set
@@ -26,17 +36,11 @@ namespace UStacker.Multiplayer
             }
         }
 
-        private readonly List<MultiplayerBoard> _boards = new();
-        private MultiplayerBoard _mainBoard;
-        private Vector2 _boardSize;
-        private Vector2 _fullPadding;
-        private Vector2 _basicPadding;
-
         public void SetMainBoard(MultiplayerBoard board)
         {
             if (_mainBoard is not null)
                 _boards.Add(_mainBoard);
-                
+
             _mainBoard = board;
             _mainBoard.SetDetailLevel(BoardDetailLevel.Full);
             Reorganize();
@@ -52,7 +56,7 @@ namespace UStacker.Multiplayer
             if (reorganize)
                 Reorganize();
         }
-        
+
         public void AddBoard(MultiplayerBoard newBoard)
         {
             _boards.Add(newBoard);
@@ -62,7 +66,7 @@ namespace UStacker.Multiplayer
         {
             if (_mainBoard == board)
                 UnsetMainBoard(false);
-            
+
             _boards.Remove(board);
             Reorganize();
         }
@@ -76,7 +80,7 @@ namespace UStacker.Multiplayer
                 <= 8 => BoardDetailLevel.Medium,
                 _ => BoardDetailLevel.Basic
             };
-            
+
             foreach (var board in _boards)
                 board.SetDetailLevel(boardDetailLevel);
 
@@ -84,7 +88,7 @@ namespace UStacker.Multiplayer
                 _boardSize.y * -.5f);
 
             var maxX = _boardSize.x + _fullPadding.x * .5f;
-            
+
             if (_mainBoard is not null)
             {
                 _mainBoard.transform.position = currentPosition;
@@ -101,8 +105,8 @@ namespace UStacker.Multiplayer
                 case BoardDetailLevel.Medium:
                     if (_boards.Count <= 4)
                     {
-                        
                     }
+
                     break;
                 case BoardDetailLevel.Full:
                     // if detail level is full, we don't need to make more rows
@@ -111,6 +115,7 @@ namespace UStacker.Multiplayer
                         board.transform.position = currentPosition;
                         currentPosition.x += positionAddition.x;
                     }
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -118,3 +123,6 @@ namespace UStacker.Multiplayer
         }
     }
 }
+/************************************
+end MultiplayerBoardsOrganizer.cs
+*************************************/

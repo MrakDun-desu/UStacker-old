@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+
+/************************************
+FileHandling.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -11,44 +15,6 @@ namespace UStacker.Common
 {
     public static class FileHandling
     {
-        #region Valid extension collections
-
-        private static readonly string[] ValidTextureExtensions =
-        {
-            "jpg",
-            "jpeg",
-            "png"
-        };
-
-        private static readonly string[] ValidVideoExtensions =
-        {
-            "avi",
-            "dv",
-            "m4v",
-            "mov",
-            "mp4", // definitely works
-            "mpg",
-            "mpeg",
-            "ogv",
-            "vp8",
-            "wmv"
-        };
-
-        private static readonly string[] ValidAudioExtensions =
-        {
-            "mp3",
-            "ogg",
-            "wav",
-            "aiff",
-            "aif",
-            "mod",
-            "it",
-            "s3m",
-            "xm"
-        };
-
-        #endregion
-
         public static async Task<Texture2D> LoadTextureFromUrlAsync(string path, bool isFile = true)
         {
             if (isFile && GetFileType(path) != FileType.Texture) return null;
@@ -176,7 +142,7 @@ namespace UStacker.Common
 
             return Encoding.UTF8.GetString(outputStream.ToArray());
         }
-        
+
         public static string Unzip(byte[] bytes)
         {
             using var sourceStream = new MemoryStream(bytes);
@@ -218,7 +184,7 @@ namespace UStacker.Common
         public static async Task CopyFileAsync(string source, string destination)
         {
             if (!File.Exists(source)) return;
-            
+
             await using var sourceReader = File.OpenRead(source);
             await using var destinationWriter = File.Create(destination);
             await sourceReader.CopyToAsync(destinationWriter);
@@ -232,6 +198,44 @@ namespace UStacker.Common
             CreateDirectoriesRecursively(Path.GetDirectoryName(path));
             Directory.CreateDirectory(path);
         }
+
+        #region Valid extension collections
+
+        private static readonly string[] ValidTextureExtensions =
+        {
+            "jpg",
+            "jpeg",
+            "png"
+        };
+
+        private static readonly string[] ValidVideoExtensions =
+        {
+            "avi",
+            "dv",
+            "m4v",
+            "mov",
+            "mp4", // definitely works
+            "mpg",
+            "mpeg",
+            "ogv",
+            "vp8",
+            "wmv"
+        };
+
+        private static readonly string[] ValidAudioExtensions =
+        {
+            "mp3",
+            "ogg",
+            "wav",
+            "aiff",
+            "aif",
+            "mod",
+            "it",
+            "s3m",
+            "xm"
+        };
+
+        #endregion
     }
 
 
@@ -243,3 +247,6 @@ namespace UStacker.Common
         Invalid
     }
 }
+/************************************
+end FileHandling.cs
+*************************************/

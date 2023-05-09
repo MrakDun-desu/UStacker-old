@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+StatCountingSettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using UStacker.GlobalSettings.StatCounting;
 
@@ -10,3 +14,6 @@ namespace UStacker.GlobalSettings.Groups
         public Dictionary<Guid, StatCounterGroup> StatCounterGroups { get; set; } = new();
     }
 }
+/************************************
+end StatCountingSettings.cs
+*************************************/

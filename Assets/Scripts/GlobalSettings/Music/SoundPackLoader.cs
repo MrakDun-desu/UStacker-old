@@ -1,12 +1,16 @@
+
+/************************************
+SoundPackLoader.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using UStacker.Common;
-using UStacker.Common.Alerts;
 using Newtonsoft.Json;
 using UnityEngine;
+using UStacker.Common;
+using UStacker.Common.Alerts;
 
 namespace UStacker.GlobalSettings.Music
 {
@@ -37,16 +41,8 @@ namespace UStacker.GlobalSettings.Music
             SoundEffects.Clear();
             SoundEffectsScript = "";
             if (Path.GetFileName(path).Equals(DEFAULT_PATH))
-            {
                 if (!Directory.Exists(path))
-                {
                     Directory.CreateDirectory(path);
-                }
-                SoundPackChanged?.Invoke();
-                if (showAlert)
-                    AlertDisplayer.ShowAlert(defaultAlert);
-                return;
-            }
 
             if (!Directory.Exists(path))
             {
@@ -55,9 +51,11 @@ namespace UStacker.GlobalSettings.Music
                     AlertDisplayer.ShowAlert(defaultAlert);
                 return;
             }
+
             var taskList = new List<Task>
             {
-                LoadSoundEffectsAsync(Path.Combine(path, CustomizationFilenames.SoundEffects)), LoadMusicAsync(Path.Combine(path, CustomizationFilenames.Music))
+                LoadSoundEffectsAsync(Path.Combine(path, CustomizationFilenames.SoundEffects)),
+                LoadMusicAsync(Path.Combine(path, CustomizationFilenames.Music))
             };
 
             await Task.WhenAll(taskList);
@@ -97,7 +95,9 @@ namespace UStacker.GlobalSettings.Music
                 return;
 
             var musicConfStr = await File.ReadAllTextAsync(confPath);
-            var musicConf = JsonConvert.DeserializeObject<MusicConfiguration>(musicConfStr, StaticSettings.DefaultSerializerSettings);
+            var musicConf =
+                JsonConvert.DeserializeObject<MusicConfiguration>(musicConfStr,
+                    StaticSettings.DefaultSerializerSettings);
 
             MusicPlayer.Instance.Configuration.Rewrite(musicConf);
         }
@@ -122,3 +122,6 @@ namespace UStacker.GlobalSettings.Music
         }
     }
 }
+/************************************
+end SoundPackLoader.cs
+*************************************/

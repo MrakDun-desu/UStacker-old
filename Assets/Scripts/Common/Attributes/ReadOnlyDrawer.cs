@@ -1,4 +1,8 @@
-﻿#if UNITY_EDITOR
+
+/************************************
+ReadOnlyDrawer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
@@ -23,3 +27,6 @@ namespace UStacker.Common.Attributes
     }
 }
 #endif
+/************************************
+end ReadOnlyDrawer.cs
+*************************************/

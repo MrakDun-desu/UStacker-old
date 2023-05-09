@@ -1,4 +1,8 @@
-﻿using System.Drawing;
+
+/************************************
+CreateColor.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Drawing;
 using Color = UnityEngine.Color;
 
 namespace UStacker.Common
@@ -24,3 +28,6 @@ namespace UStacker.Common
         }
     }
 }
+/************************************
+end CreateColor.cs
+*************************************/

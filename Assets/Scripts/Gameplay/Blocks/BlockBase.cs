@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+
+/************************************
+BlockBase.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections.Generic;
 using System.Linq;
-using UStacker.Gameplay.Pieces;
-using UStacker.GlobalSettings.BlockSkins;
 using UnityEngine;
 using UnityEngine.Pool;
+using UStacker.Gameplay.Pieces;
+using UStacker.GlobalSettings.BlockSkins;
 
 namespace UStacker.Gameplay.Blocks
 {
@@ -11,16 +15,16 @@ namespace UStacker.Gameplay.Blocks
     {
         [SerializeField] private BlockSkin _blockSkinPrefab;
         [SerializeField] protected GameObject _skinsParent;
-        private readonly List<BlockSkin> _currentSkins = new();
+        [SerializeField] private List<BlockSkin> _currentSkins = new();
+
+        [field: SerializeField] public uint BlockNumber { get; set; }
         private IBlockCollection _blockCollection;
 
         private string _collectionType;
         private BlockSkin[] _defaultSkins;
         private ObjectPool<BlockSkin> _skinsPool;
-        private float _visibility = 1;
         private bool _usingDefault = true;
-
-        [field: SerializeField] public uint BlockNumber { get; set; }
+        private float _visibility = 1;
 
         public float Visibility
         {
@@ -53,8 +57,8 @@ namespace UStacker.Gameplay.Blocks
                 OnSkinCreate,
                 OnSkinGet,
                 OnSkinRelease,
-                skin => Destroy(skin.gameObject));
-            
+                OnSkinDestroy);
+
             SkinLoader.SkinChanged += UpdateBlockSkin;
         }
 
@@ -70,7 +74,10 @@ namespace UStacker.Gameplay.Blocks
             SkinLoader.SkinChanged -= UpdateBlockSkin;
         }
 
-        private BlockSkin OnSkinCreate() => Instantiate(_blockSkinPrefab);
+        private BlockSkin OnSkinCreate()
+        {
+            return Instantiate(_blockSkinPrefab);
+        }
 
         private static void OnSkinRelease(BlockSkin skin)
         {
@@ -83,9 +90,13 @@ namespace UStacker.Gameplay.Blocks
             skin.Visibility = Visibility;
         }
 
+        private static void OnSkinDestroy(BlockSkin skin)
+        {
+            Destroy(skin.gameObject);
+        }
+
         protected virtual void UpdateBlockSkin()
         {
-            
             if (!TryGetSkins(out var newSkins))
             {
                 if (!_usingDefault)
@@ -135,6 +146,7 @@ namespace UStacker.Gameplay.Blocks
             var skinsExisted = _currentSkins.Count <= 0;
             foreach (var skin in _currentSkins)
                 _skinsPool.Release(skin);
+
             _currentSkins.Clear();
 
             if (skinsExisted || forceDestroyOld)
@@ -173,3 +185,6 @@ namespace UStacker.Gameplay.Blocks
         }
     }
 }
+/************************************
+end BlockBase.cs
+*************************************/

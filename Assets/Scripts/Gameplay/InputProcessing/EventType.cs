@@ -1,4 +1,8 @@
-﻿namespace UStacker.Gameplay.InputProcessing
+
+/************************************
+EventType.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.Gameplay.InputProcessing
 {
     public enum EventType : byte
     {
@@ -12,3 +16,6 @@
         Spawn
     }
 }
+/************************************
+end EventType.cs
+*************************************/

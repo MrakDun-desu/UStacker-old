@@ -1,4 +1,8 @@
-﻿namespace UStacker.GameSettings.Enums
+
+/************************************
+GameManagerType.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.GameSettings.Enums
 {
     public enum GameManagerType
     {
@@ -9,3 +13,6 @@
         Custom = 4
     }
 }
+/************************************
+end GameManagerType.cs
+*************************************/

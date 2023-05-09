@@ -1,12 +1,17 @@
-﻿using System;
+
+/************************************
+StatCounterChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using UStacker.GlobalSettings.StatCounting;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UStacker.Common;
+using UStacker.Common.Alerts;
+using UStacker.GlobalSettings.StatCounting;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -27,6 +32,7 @@ namespace UStacker.GlobalSettings.Changers
 
         private StatCounterRecord _value;
         private RectTransform _selfTransform => (RectTransform) transform;
+
         public StatCounterRecord Value
         {
             get => _value;
@@ -36,14 +42,14 @@ namespace UStacker.GlobalSettings.Changers
                 RefreshValue();
             }
         }
-        
-        public event Action<StatCounterChanger> Removed;
-        public event Action<float> SizeChanged;
 
         private void Start()
         {
             AddListenersToFields();
         }
+
+        public event Action<StatCounterChanger> Removed;
+        public event Action<float> SizeChanged;
 
         private void ChangeSize(float sizeDelta)
         {
@@ -65,7 +71,7 @@ namespace UStacker.GlobalSettings.Changers
                 {
                     _typeDropdown.options.Add(new TMP_Dropdown.OptionData(counterName));
                     if (counterName.Equals(Value.Name) ||
-                        counterName.Equals("Custom") && Value.Type == StatCounterType.Custom)
+                        (counterName.Equals("Custom") && Value.Type == StatCounterType.Custom))
                         _typeDropdown.SetValueWithoutNotify(i);
                     i++;
                 }
@@ -108,7 +114,7 @@ namespace UStacker.GlobalSettings.Changers
         {
             _typeDropdown.onValueChanged.AddListener(OnTypePicked);
             _nameField.onValueChanged.AddListener(OnNameChanged);
-            _filenameField.onValueChanged.AddListener(OnFilenameChanged);
+            _filenameField.onEndEdit.AddListener(OnFilenameChanged);
             _posXField.onValueChanged.AddListener(OnPosXChanged);
             _posYField.onValueChanged.AddListener(OnPosYChanged);
             _sizeXField.onValueChanged.AddListener(OnSizeXChanged);
@@ -137,7 +143,7 @@ namespace UStacker.GlobalSettings.Changers
                     Value.Name = "";
                     Value.Filename = "";
                     Value.Script = "";
-                    Value.Position = new Vector2();
+                    Value.Position = new Vector2(-6, 0);
                     Value.Size = new Vector2(5, 1);
                     Value.UpdateInterval = 0;
                     break;
@@ -160,9 +166,31 @@ namespace UStacker.GlobalSettings.Changers
 
             var scriptFilePath = Path.Combine(PersistentPaths.StatCounters, Value.Filename);
             if (!File.Exists(scriptFilePath))
+            {
+                AlertDisplayer.ShowAlert(new Alert(
+                    "Stat counter file not found!",
+                    $"Custom stat counter file with name {Value.Filename} couldn't be found.",
+                    AlertType.Warning));
                 return;
+            }
 
-            Value.Script = File.ReadAllText(scriptFilePath);
+            try
+            {
+                Value.Script = File.ReadAllText(scriptFilePath);
+            }
+            catch
+            {
+                AlertDisplayer.ShowAlert(new Alert(
+                    "Stat counter file couldn't be loaded!",
+                    $"Custom stat counter file with name {Value.Filename} couldn't be loaded.",
+                    AlertType.Warning));
+                return;
+            }
+
+            AlertDisplayer.ShowAlert(new Alert(
+                "Stat counter loaded!",
+                $"Custom stat counter with name {Value.Filename} has been loaded.",
+                AlertType.Success));
         }
 
         private void OnPosXChanged(string newValue)
@@ -173,6 +201,7 @@ namespace UStacker.GlobalSettings.Changers
                 _posXField.SetTextWithoutNotify(_value.Position.x.ToString(CultureInfo.InvariantCulture));
                 return;
             }
+
             _value.Position.x = converted;
         }
 
@@ -184,6 +213,7 @@ namespace UStacker.GlobalSettings.Changers
                 _posYField.SetTextWithoutNotify(_value.Position.y.ToString(CultureInfo.InvariantCulture));
                 return;
             }
+
             _value.Position.y = converted;
         }
 
@@ -195,6 +225,7 @@ namespace UStacker.GlobalSettings.Changers
                 _sizeXField.SetTextWithoutNotify(_value.Size.x.ToString(CultureInfo.InvariantCulture));
                 return;
             }
+
             _value.Size.x = converted;
         }
 
@@ -206,6 +237,7 @@ namespace UStacker.GlobalSettings.Changers
                 _sizeYField.SetTextWithoutNotify(_value.Size.y.ToString(CultureInfo.InvariantCulture));
                 return;
             }
+
             _value.Size.y = converted;
         }
 
@@ -217,8 +249,12 @@ namespace UStacker.GlobalSettings.Changers
                 _updateIntervalField.SetTextWithoutNotify(_value.UpdateInterval.ToString(CultureInfo.InvariantCulture));
                 return;
             }
+
             _value.UpdateInterval = Mathf.Max(converted, 0f);
             _updateIntervalField.SetTextWithoutNotify(_value.UpdateInterval.ToString(CultureInfo.InvariantCulture));
         }
     }
 }
+/************************************
+end StatCounterChanger.cs
+*************************************/

@@ -1,43 +1,38 @@
-﻿
-using FishNet.Configuring;
-using System.IO;
-using UnityEngine;
-using System.Xml.Serialization;
-
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using FishNet.Editing.PrefabCollectionGenerator;
 using UnityEditor.Compilation;
 using UnityEditor.Build.Reporting;
-using UnityEditor;
-using UnityEditor.Build;
 #endif
 
 namespace FishNet.Configuring
 {
-
-
     public class CodeStripping
-    
+
     {
+        private static object _compilationContext;
 
         /// <summary>
-        /// True if making a release build for client.
+        ///     True if making a release build for client.
         /// </summary>
-        public static bool ReleasingForClient => (Configuration.Configurations.CodeStripping.IsBuilding && !Configuration.Configurations.CodeStripping.IsHeadless && !Configuration.Configurations.CodeStripping.IsDevelopment);
+        public static bool ReleasingForClient => Configuration.Configurations.CodeStripping.IsBuilding &&
+                                                 !Configuration.Configurations.CodeStripping.IsHeadless &&
+                                                 !Configuration.Configurations.CodeStripping.IsDevelopment;
+
         /// <summary>
-        /// True if making a release build for server.
+        ///     True if making a release build for server.
         /// </summary>
-        public static bool ReleasingForServer => (Configuration.Configurations.CodeStripping.IsBuilding && Configuration.Configurations.CodeStripping.IsHeadless && !Configuration.Configurations.CodeStripping.IsDevelopment);
+        public static bool ReleasingForServer => Configuration.Configurations.CodeStripping.IsBuilding &&
+                                                 Configuration.Configurations.CodeStripping.IsHeadless &&
+                                                 !Configuration.Configurations.CodeStripping.IsDevelopment;
+
         /// <summary>
-        /// Returns if to remove server logic.
+        ///     Returns if to remove server logic.
         /// </summary>
         /// <returns></returns>
         public static bool RemoveServerLogic
         {
             get
             {
-                
-
                 /* This is to protect non pro users from enabling this
                  * without the extra logic code.  */
 #pragma warning disable CS0162 // Unreachable code detected
@@ -45,15 +40,14 @@ namespace FishNet.Configuring
 #pragma warning restore CS0162 // Unreachable code detected
             }
         }
+
         /// <summary>
-        /// True if building and stripping is enabled.
+        ///     True if building and stripping is enabled.
         /// </summary>
         public static bool StripBuild
         {
             get
             {
-                
-
                 /* This is to protect non pro users from enabling this
                  * without the extra logic code.  */
 #pragma warning disable CS0162 // Unreachable code detected
@@ -61,12 +55,13 @@ namespace FishNet.Configuring
 #pragma warning restore CS0162 // Unreachable code detected
             }
         }
-        /// <summary>
-        /// Technique to strip methods.
-        /// </summary>
-        public static StrippingTypes StrippingType => (StrippingTypes)Configuration.Configurations.CodeStripping.StrippingType;
 
-        private static object _compilationContext;
+        /// <summary>
+        ///     Technique to strip methods.
+        /// </summary>
+        public static StrippingTypes StrippingType =>
+            (StrippingTypes) Configuration.Configurations.CodeStripping.StrippingType;
+
         public int callbackOrder => 0;
 #if UNITY_EDITOR
 
@@ -76,9 +71,8 @@ namespace FishNet.Configuring
             Generator.GenerateFull();
             CompilationPipeline.compilationStarted += CompilationPipelineOnCompilationStarted;
             CompilationPipeline.compilationFinished += CompilationPipelineOnCompilationFinished;
-
-            
         }
+
         /* Solution for builds ending with errors and not triggering OnPostprocessBuild.
         * Link: https://gamedev.stackexchange.com/questions/181611/custom-build-failure-callback
         */
@@ -102,17 +96,13 @@ namespace FishNet.Configuring
 
         private void BuildingEnded()
         {
-            
-
             Generator.IgnorePostProcess = false;
         }
 
         public void OnPostprocessBuild(BuildReport report)
         {
-            
-                BuildingEnded();
+            BuildingEnded();
         }
 #endif
     }
-
 }

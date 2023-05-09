@@ -1,5 +1,9 @@
-﻿using UStacker.Gameplay.Pieces;
+
+/************************************
+PieceContainer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
+using UStacker.Gameplay.Pieces;
 
 namespace UStacker.Gameplay
 {
@@ -64,3 +68,6 @@ namespace UStacker.Gameplay
         }
     }
 }
+/************************************
+end PieceContainer.cs
+*************************************/

@@ -1,14 +1,12 @@
-﻿using FishNet.Documenting;
+﻿using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using FishNet.Documenting;
 using FishNet.Object.Helping;
-using FishNet.Object.Synchronizing;
 using FishNet.Object.Synchronizing.Internal;
 using FishNet.Serializing;
 using FishNet.Serializing.Helping;
 using FishNet.Transporting;
-using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using UnityEngine;
 
 namespace FishNet.Object.Synchronizing
 {
@@ -16,62 +14,25 @@ namespace FishNet.Object.Synchronizing
     [StructLayout(LayoutKind.Auto, CharSet = CharSet.Auto)]
     public class SyncVar<T> : SyncBase
     {
-        #region Types.
-        /// <summary>
-        /// Information needed to invoke a callback.
-        /// </summary>
-        private struct CachedOnChange
-        {
-            internal readonly T Previous;
-            internal readonly T Next;
-
-            public CachedOnChange(T previous, T next)
-            {
-                Previous = previous;
-                Next = next;
-            }
-        }
-        #endregion
-
-        #region Public.
-        /// <summary>
-        /// Called when the SyncDictionary changes.
-        /// </summary>
-        public event Action<T, T, bool> OnChange;
-        #endregion
-
-        #region Private.
-        /// <summary>
-        /// Server OnChange event waiting for start callbacks.
-        /// </summary>
-        private CachedOnChange? _serverOnChange;
-        /// <summary>
-        /// Client OnChange event waiting for start callbacks.
-        /// </summary>
-        private CachedOnChange? _clientOnChange;
-        /// <summary>
-        /// Value before the network is initialized on the containing object.
-        /// </summary>
-        private T _initialValue;
-        /// <summary>
-        /// Previous value on the client.
-        /// </summary>
-        private T _previousClientValue;
-        /// <summary>
-        /// Current value on the server, or client.
-        /// </summary>
-        private T _value;
-        #endregion
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public SyncVar(NetworkBehaviour nb, uint syncIndex, WritePermission writePermission, ReadPermission readPermission, float sendRate, Channel channel, T value)
+        public SyncVar(NetworkBehaviour nb, uint syncIndex, WritePermission writePermission,
+            ReadPermission readPermission, float sendRate, Channel channel, T value)
         {
             SetInitialValues(value);
-            base.InitializeInstance(nb, syncIndex, writePermission, readPermission, sendRate, channel, false);
+            InitializeInstance(nb, syncIndex, writePermission, readPermission, sendRate, channel, false);
         }
 
+        #region Public.
+
         /// <summary>
-        /// Called when the SyncType has been registered, but not yet initialized over the network.
+        ///     Called when the SyncDictionary changes.
+        /// </summary>
+        public event Action<T, T, bool> OnChange;
+
+        #endregion
+
+        /// <summary>
+        ///     Called when the SyncType has been registered, but not yet initialized over the network.
         /// </summary>
         protected override void Registered()
         {
@@ -80,7 +41,7 @@ namespace FishNet.Object.Synchronizing
         }
 
         /// <summary>
-        /// Sets initial values to next.
+        ///     Sets initial values to next.
         /// </summary>
         /// <param name="next"></param>
         private void SetInitialValues(T next)
@@ -88,8 +49,9 @@ namespace FishNet.Object.Synchronizing
             _initialValue = next;
             UpdateValues(next);
         }
+
         /// <summary>
-        /// Sets current and previous values.
+        ///     Sets current and previous values.
         /// </summary>
         /// <param name="next"></param>
         private void UpdateValues(T next)
@@ -97,8 +59,9 @@ namespace FishNet.Object.Synchronizing
             _previousClientValue = next;
             _value = next;
         }
+
         /// <summary>
-        /// Sets current value and marks the SyncVar dirty when able to. Returns if able to set value.
+        ///     Sets current value and marks the SyncVar dirty when able to. Returns if able to set value.
         /// </summary>
         /// <param name="calledByUser">True if SetValue was called in response to user code. False if from automated code.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -113,7 +76,7 @@ namespace FishNet.Object.Synchronizing
              * even if the owning class of this was just spawned. This is because
              * the unity cycle will fire awake on the object soon as it's spawned, 
              * completing awake, and the user would set the value after. */
-            if (!base.IsRegistered)
+            if (!IsRegistered)
                 return;
 
             /* If not client or server then set skipChecks
@@ -121,40 +84,40 @@ namespace FishNet.Object.Synchronizing
              * value before object is initialized. This is allowed
              * but checks cannot be processed because they would otherwise
              * stop setting the value. */
-            bool isNetworkInitialized = base.IsNetworkInitialized;
+            var isNetworkInitialized = IsNetworkInitialized;
 
             //Object is deinitializing.
-            if (isNetworkInitialized && CodegenHelper.NetworkObject_Deinitializing(this.NetworkBehaviour))
+            if (isNetworkInitialized && CodegenHelper.NetworkObject_Deinitializing(NetworkBehaviour))
                 return;
 
             //If being set by user code.
             if (calledByUser)
             {
-                if (!base.CanNetworkSetValues(true))
+                if (!CanNetworkSetValues())
                     return;
 
                 /* We will only be this far if the network is not active yet,
                  * server is active, or client has setting permissions. 
                  * We only need to set asServerInvoke to false if the network
                  * is initialized and the server is not active. */
-                bool asServerInvoke = (!isNetworkInitialized || base.NetworkBehaviour.IsServer);
+                var asServerInvoke = !isNetworkInitialized || NetworkBehaviour.IsServer;
 
                 /* If the network has not been network initialized then
                  * Value is expected to be set on server and client since
                  * it's being set before the object is initialized. */
                 if (!isNetworkInitialized)
                 {
-                    T prev = _value;
+                    var prev = _value;
                     UpdateValues(nextValue);
                     //Still call invoke because change will be cached for when the network initializes.
                     InvokeOnChange(prev, _value, calledByUser);
                 }
                 else
                 {
-                    if (Comparers.EqualityCompare<T>(this._value, nextValue))
+                    if (Comparers.EqualityCompare(_value, nextValue))
                         return;
 
-                    T prev = _value;
+                    var prev = _value;
                     _value = nextValue;
                     InvokeOnChange(prev, _value, asServerInvoke);
                 }
@@ -168,10 +131,10 @@ namespace FishNet.Object.Synchronizing
                  * but this has been changed because clients may want
                  * to update values locally while occasionally
                  * letting the syncvar adjust their side. */
-                T prev = _previousClientValue;
+                var prev = _previousClientValue;
                 /* If also server do not update value.
                  * Server side has say of the current value. */
-                if (!base.NetworkManager.IsServer)
+                if (!NetworkManager.IsServer)
                     UpdateValues(nextValue);
                 else
                     _previousClientValue = nextValue;
@@ -192,25 +155,25 @@ namespace FishNet.Object.Synchronizing
                     return;
 
                 if (asServer)
-                    base.Dirty();
+                    Dirty();
             }
         }
 
         /// <summary>
-        /// Invokes OnChanged callback.
+        ///     Invokes OnChanged callback.
         /// </summary>
         private void InvokeOnChange(T prev, T next, bool asServer)
         {
             if (asServer)
             {
-                if (base.NetworkBehaviour.OnStartServerCalled)
+                if (NetworkBehaviour.OnStartServerCalled)
                     OnChange?.Invoke(prev, next, asServer);
                 else
                     _serverOnChange = new CachedOnChange(prev, next);
             }
             else
             {
-                if (base.NetworkBehaviour.OnStartClientCalled)
+                if (NetworkBehaviour.OnStartClientCalled)
                     OnChange?.Invoke(prev, next, asServer);
                 else
                     _clientOnChange = new CachedOnChange(prev, next);
@@ -219,7 +182,7 @@ namespace FishNet.Object.Synchronizing
 
 
         /// <summary>
-        /// Called after OnStartXXXX has occurred.
+        ///     Called after OnStartXXXX has occurred.
         /// </summary>
         /// <param name="asServer">True if OnStartServer was called, false if OnStartClient.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -229,7 +192,7 @@ namespace FishNet.Object.Synchronizing
 
             if (OnChange != null)
             {
-                CachedOnChange? change = (asServer) ? _serverOnChange : _clientOnChange;
+                var change = asServer ? _serverOnChange : _clientOnChange;
                 if (change != null)
                     InvokeOnChange(change.Value.Previous, change.Value.Next, asServer);
             }
@@ -241,21 +204,22 @@ namespace FishNet.Object.Synchronizing
         }
 
         /// <summary>
-        /// Writes current value.
+        ///     Writes current value.
         /// </summary>
         /// <param name="resetSyncTick">True to set the next time data may sync.</param>
         public override void WriteDelta(PooledWriter writer, bool resetSyncTick = true)
         {
             base.WriteDelta(writer, resetSyncTick);
-            writer.Write<T>(_value);
+            writer.Write(_value);
         }
 
         /// <summary>
-        /// Writes current value if not initialized value.
-        /// </summary>m>
+        ///     Writes current value if not initialized value.
+        /// </summary>
+        /// m>
         public override void WriteFull(PooledWriter obj0)
         {
-            if (Comparers.EqualityCompare<T>(_initialValue, _value))
+            if (Comparers.EqualityCompare(_initialValue, _value))
                 return;
             /* SyncVars only hold latest value, so just
              * write current delta. */
@@ -266,14 +230,17 @@ namespace FishNet.Object.Synchronizing
         //public override void Read(PooledReader reader) { }
 
         /// <summary>
-        /// Gets current value.
+        ///     Gets current value.
         /// </summary>
         /// <param name="calledByUser"></param>
         /// <returns></returns>
-        public T GetValue(bool calledByUser) => (calledByUser) ? _value : _previousClientValue;
+        public T GetValue(bool calledByUser)
+        {
+            return calledByUser ? _value : _previousClientValue;
+        }
 
         /// <summary>
-        /// Resets to initialized values.
+        ///     Resets to initialized values.
         /// </summary>
         public override void Reset()
         {
@@ -281,7 +248,53 @@ namespace FishNet.Object.Synchronizing
             _value = _initialValue;
             _previousClientValue = _initialValue;
         }
+
+        #region Types.
+
+        /// <summary>
+        ///     Information needed to invoke a callback.
+        /// </summary>
+        private struct CachedOnChange
+        {
+            internal readonly T Previous;
+            internal readonly T Next;
+
+            public CachedOnChange(T previous, T next)
+            {
+                Previous = previous;
+                Next = next;
+            }
+        }
+
+        #endregion
+
+        #region Private.
+
+        /// <summary>
+        ///     Server OnChange event waiting for start callbacks.
+        /// </summary>
+        private CachedOnChange? _serverOnChange;
+
+        /// <summary>
+        ///     Client OnChange event waiting for start callbacks.
+        /// </summary>
+        private CachedOnChange? _clientOnChange;
+
+        /// <summary>
+        ///     Value before the network is initialized on the containing object.
+        /// </summary>
+        private T _initialValue;
+
+        /// <summary>
+        ///     Previous value on the client.
+        /// </summary>
+        private T _previousClientValue;
+
+        /// <summary>
+        ///     Current value on the server, or client.
+        /// </summary>
+        private T _value;
+
+        #endregion
     }
 }
-
-

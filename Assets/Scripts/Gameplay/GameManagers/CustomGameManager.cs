@@ -1,11 +1,15 @@
-﻿using System;
-using UStacker.Gameplay.Communication;
+
+/************************************
+CustomGameManager.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using NLua;
 using NLua.Exceptions;
 using UnityEngine;
 using UnityEngine.Events;
 using UStacker.Common.Alerts;
 using UStacker.Common.LuaApi;
+using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Enums;
 using UStacker.Gameplay.Timing;
 using Random = UStacker.Common.Random;
@@ -16,15 +20,20 @@ namespace UStacker.Gameplay.GameManagers
     {
         private const string STARTING_LEVEL_NAME = "StartingLevel";
         private const string BOARD_INTERFACE_NAME = "Board";
+        private double? _currentMessageTime;
+        private long _currentScore;
         private Lua _luaState;
         private Mediator _mediator;
+        private Random _random;
         private uint _startingLevel;
+        private GameTimer _timer;
         private UnityEvent<double> EndEvent;
         private UnityEvent<double> LoseEvent;
-        private double? _currentMessageTime;
-        private GameTimer _timer;
-        private Random _random;
-        private long _currentScore;
+
+        public void Dispose()
+        {
+            _luaState?.Dispose();
+        }
 
         public void Initialize(string startingLevel, Mediator mediator)
         {
@@ -49,7 +58,7 @@ namespace UStacker.Gameplay.GameManagers
         {
             if (message.NewState is not GameState.Initializing)
                 return;
-            
+
             ResetState();
         }
 
@@ -59,11 +68,11 @@ namespace UStacker.Gameplay.GameManagers
         }
 
         public void CustomInitialize(
-            Board board, 
-            GameTimer timer, 
-            string script, 
+            Board board,
+            GameTimer timer,
+            string script,
             UnityEvent<double> endEvent,
-            UnityEvent<double> loseEvent, 
+            UnityEvent<double> loseEvent,
             ulong seed)
         {
             _timer = timer;
@@ -214,10 +223,8 @@ namespace UStacker.Gameplay.GameManagers
         }
 
         #endregion
-
-        public void Dispose()
-        {
-            _luaState?.Dispose();
-        }
     }
 }
+/************************************
+end CustomGameManager.cs
+*************************************/

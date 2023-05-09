@@ -1,3 +1,7 @@
+
+/************************************
+StringExtensions.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -28,7 +32,7 @@ namespace UStacker.Common.Extensions
         {
             switch (input.ToLower())
             {
-                case "" :
+                case "":
                     output = 0;
                     return true;
                 case "inf":
@@ -48,7 +52,7 @@ namespace UStacker.Common.Extensions
         {
             switch (input.ToLower())
             {
-                case "" :
+                case "":
                     output = 0;
                     return true;
                 case "inf":
@@ -82,3 +86,6 @@ namespace UStacker.Common.Extensions
         }
     }
 }
+/************************************
+end StringExtensions.cs
+*************************************/

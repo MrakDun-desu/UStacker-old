@@ -1,4 +1,8 @@
-﻿namespace UStacker.Gameplay.Communication
+
+/************************************
+GameCrashedMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.Gameplay.Communication
 {
     public readonly struct GameCrashedMessage : IMessage
     {
@@ -10,3 +14,6 @@
         }
     }
 }
+/************************************
+end GameCrashedMessage.cs
+*************************************/

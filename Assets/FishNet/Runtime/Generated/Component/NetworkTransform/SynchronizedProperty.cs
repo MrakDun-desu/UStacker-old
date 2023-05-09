@@ -1,6 +1,5 @@
 ﻿namespace FishNet.Component.Transforming
 {
-
     public enum SynchronizedProperty : byte
     {
         None = 0,
@@ -9,5 +8,4 @@
         Rotation = 4,
         Scale = 8
     }
-
 }

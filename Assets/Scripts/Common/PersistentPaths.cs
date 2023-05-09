@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+
+/************************************
+PersistentPaths.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +12,7 @@ namespace UStacker.Common
 {
     public static class PersistentPaths
     {
+        private const string DATA_PATH_KEY = "DataPath";
         public static string GlobalSettings => Path.Combine(DataPath, "appSettings.json");
 
         public static string DebugLogs => Path.Combine(DataPath, "logs.txt");
@@ -27,12 +32,11 @@ namespace UStacker.Common
         public static string Skins => Path.Combine(StyleCustomization, "skins");
         public static string SoundPacks => Path.Combine(StyleCustomization, "soundPacks");
 
-        private const string DATA_PATH_KEY = "DataPath";
         public static string DataPath
         {
             get => PlayerPrefs.HasKey(DATA_PATH_KEY)
-                    ? PlayerPrefs.GetString(DATA_PATH_KEY)
-                    : Application.persistentDataPath;
+                ? PlayerPrefs.GetString(DATA_PATH_KEY)
+                : Application.persistentDataPath;
             private set => PlayerPrefs.SetString(DATA_PATH_KEY, value);
         }
 
@@ -56,7 +60,7 @@ namespace UStacker.Common
                 CopyDirIfExists(StatCounters, newPath),
                 CopyDirIfExists(Replays, newPath),
                 CopyDirIfExists(RulesCustomization, newPath),
-                CopyDirIfExists(StyleCustomization, newPath),
+                CopyDirIfExists(StyleCustomization, newPath)
             };
 
             await Task.WhenAll(taskList);
@@ -70,7 +74,7 @@ namespace UStacker.Common
 
         private static async Task<bool> CopyFileIfExists(string filename, string destDir)
         {
-            if (!File.Exists(filename)) 
+            if (!File.Exists(filename))
                 return true;
 
             try
@@ -87,7 +91,7 @@ namespace UStacker.Common
 
         private static async Task<bool> CopyDirIfExists(string dirname, string destDir)
         {
-            if (!Directory.Exists(dirname)) 
+            if (!Directory.Exists(dirname))
                 return true;
 
             var newParent = Path.Combine(destDir, Path.GetFileName(dirname));
@@ -103,6 +107,8 @@ namespace UStacker.Common
 
             return true;
         }
-
     }
 }
+/************************************
+end PersistentPaths.cs
+*************************************/

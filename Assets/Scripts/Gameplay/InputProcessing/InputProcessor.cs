@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+InputProcessor.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -25,53 +29,52 @@ namespace UStacker.Gameplay.InputProcessing
         [SerializeField] private GameTimer _timer;
         [SerializeField] private PieceContainer _pieceHolder;
 
-        public event Action<double> ProcessorUpdated;
-        public event Action<InputActionMessage> InputHandled;
-        
-        private List<InputActionMessage> _actionList;
-        private Piece _activePiece;
-        private bool _controlsActive;
+        private readonly List<ActionType> _heldActions = new();
 
         private readonly List<UpdateEvent> _updateEvents = new();
+
+        private List<InputActionMessage> _actionList;
+        private Piece _activePiece;
         private UpdateEvent _arrEvent;
+        private bool _controlsActive;
+        private int _currentActionIndex;
+        private double _currentGravity;
+        private int _currentPieceIndex;
+        private Vector2Int _currentPieceMovement;
+        private int _currentPieceRotation;
+        private double _dasDelay;
         private UpdateEvent _dasLeftEvent;
         private UpdateEvent _dasRightEvent;
-        private UpdateEvent _dropEvent;
-        private UpdateEvent _softdropEvent;
-        private UpdateEvent _lockdownEvent;
-        private UpdateEvent _spawnEvent;
-        private UpdateEvent _hardLockdownEvent;
-
-        private bool _bufferedHold;
-        private RotateDirection? _bufferedRotation;
-        private int _currentActionIndex;
-        private int _currentPieceIndex;
-        private double _currentGravity;
-        private double _dasDelay;
         private Vector2Int _dasStatus = Vector2Int.zero;
         private double _dropDisabledUntil;
+        private UpdateEvent _dropEvent;
         private double _dropTime;
+
+        private double _hardLockAmountInternal;
+        private UpdateEvent _hardLockdownEvent;
         private double _holdingLeftStart = double.PositiveInfinity;
         private double _holdingRightStart = double.PositiveInfinity;
         private bool _holdingSoftDrop;
-        private bool _softDropActive;
+
+        private bool _initialHold;
+        private RotateDirection? _initialRotation;
         private bool _isReplaying;
         private SpinResult _lastSpinResult;
-        private int _currentPieceRotation;
-        private Vector2Int _currentPieceMovement;
         private bool _lastWasRotation;
         private double _lockDelay;
+        private UpdateEvent _lockdownEvent;
         private int _lowestPosition;
         private double _normalGravity;
         private bool _pieceIsNull = true;
-        private bool _usedHold;
+        private bool _softDropActive;
+        private UpdateEvent _softdropEvent;
+        private UpdateEvent _spawnEvent;
 
-        private readonly List<ActionType> _heldActions = new();
+        private SpinHandler _spinHandler;
+        private bool _usedHold;
 
         private bool _holdingLeft => _holdingLeftStart < double.PositiveInfinity;
         private bool _holdingRight => _holdingRightStart < double.PositiveInfinity;
-
-        private double _hardLockAmountInternal;
 
         private double _hardLockAmount
         {
@@ -106,11 +109,9 @@ namespace UStacker.Gameplay.InputProcessing
 
         private HandlingSettings _handling => OverrideHandling ?? GameSettings.Controls.Handling;
 
-        private SpinHandler _spinHandler;
-
         public double ReplayLength { get; set; }
         public HandlingSettings OverrideHandling { get; set; }
-        
+
         public List<InputActionMessage> ActionList
         {
             private get => _actionList;
@@ -126,7 +127,6 @@ namespace UStacker.Gameplay.InputProcessing
         }
 
         public List<double> PlacementsList { private get; set; }
-        public GameSettingsSO.SettingsContainer GameSettings { private get; set; }
         public bool ReplayControlsEnabled { get; set; } = true;
 
 
@@ -152,6 +152,18 @@ namespace UStacker.Gameplay.InputProcessing
             }
         }
 
+        private void Awake()
+        {
+            _spawnEvent = new UpdateEvent(_updateEvents, EventType.Spawn);
+            _dasLeftEvent = new UpdateEvent(_updateEvents, EventType.DasLeft);
+            _dasRightEvent = new UpdateEvent(_updateEvents, EventType.DasRight);
+            _arrEvent = new UpdateEvent(_updateEvents, EventType.ArrMovement);
+            _dropEvent = new UpdateEvent(_updateEvents, EventType.Drop);
+            _softdropEvent = new UpdateEvent(_updateEvents, EventType.Softdrop);
+            _lockdownEvent = new UpdateEvent(_updateEvents, EventType.Lockdown);
+            _hardLockdownEvent = new UpdateEvent(_updateEvents, EventType.HardLockdown);
+        }
+
         private void OnEnable()
         {
             _mediator.Register<GravityChangedMessage>(OnGravityChanged);
@@ -166,21 +178,14 @@ namespace UStacker.Gameplay.InputProcessing
             _mediator.Unregister<GameStateChangedMessage>(OnGameStateChange);
         }
 
-        private void Awake()
-        {
-            _spawnEvent = new UpdateEvent(_updateEvents, EventType.Spawn);
-            _dasLeftEvent = new UpdateEvent(_updateEvents, EventType.DasLeft);
-            _dasRightEvent = new UpdateEvent(_updateEvents, EventType.DasRight);
-            _arrEvent = new UpdateEvent(_updateEvents, EventType.ArrMovement);
-            _dropEvent = new UpdateEvent(_updateEvents, EventType.Drop);
-            _softdropEvent = new UpdateEvent(_updateEvents, EventType.Softdrop);
-            _lockdownEvent = new UpdateEvent(_updateEvents, EventType.Lockdown);
-            _hardLockdownEvent = new UpdateEvent(_updateEvents, EventType.HardLockdown);
-        }
+        public GameSettingsSO.SettingsContainer GameSettings { private get; set; }
+
+        public event Action<double> ProcessorUpdated;
+        public event Action<InputActionMessage> InputHandled;
 
         private void OnGameStateChange(GameStateChangedMessage message)
         {
-            if (message is { PreviousState: GameState.Unset, NewState: GameState.Initializing })
+            if (message is {PreviousState: GameState.Unset, NewState: GameState.Initializing})
                 Initialize();
 
             if (message.NewState == GameState.Initializing)
@@ -189,29 +194,27 @@ namespace UStacker.Gameplay.InputProcessing
                 ResetProcessor();
             }
 
-            if (message is { NewState: GameState.Running, IsReplay: false })
+            if (message is {NewState: GameState.Running, IsReplay: false})
             {
                 _controlsActive = true;
                 HandlePauseBufferedInputs();
             }
 
-            if (message is { PreviousState: GameState.Running })
+            if (message is {PreviousState: GameState.Running})
                 _controlsActive = false;
-
         }
 
         private void Initialize()
         {
             _pieceHolder.gameObject.SetActive(GameSettings.Controls.AllowHold);
             if (GameSettings.Controls.AllowHold)
-            {
                 _pieceHolder.transform.localPosition = new Vector3(
                     -PieceContainer.WIDTH,
-                    (int)_board.Height - PieceContainer.HEIGHT
+                    (int) _board.Height - PieceContainer.HEIGHT
                 );
-            }
-            
-            _spinHandler = new SpinHandler(GameSettings.Controls.ActiveRotationSystem, GameSettings.General.AllowedSpins);
+
+            _spinHandler = new SpinHandler(GameSettings.Controls.ActiveRotationSystem,
+                GameSettings.General.AllowedSpins);
         }
 
         private void HandlePauseBufferedInputs()
@@ -220,34 +223,42 @@ namespace UStacker.Gameplay.InputProcessing
                 return;
 
             var functionTime = _timer.CurrentTime;
-            
+
             foreach (var actionType in _heldActions)
                 HandleInputAction(new InputActionMessage(actionType, KeyActionType.KeyDown, functionTime));
         }
 
         public bool TryAutomaticPreSpawnRotation(double time)
         {
-            switch (_handling.AutomaticPreSpawnRotation)
+            switch (_handling.AutomaticInitialRotation)
             {
-                case AutomaticPreSpawnRotation.DontRotate:
+                case AutomaticInitialRotation.Disabled:
                     return false;
-                case AutomaticPreSpawnRotation.RotateClockwise:
-                    RotateKeyDown(time, RotateDirection.Clockwise);
+                case AutomaticInitialRotation.RotateClockwise:
+                    RotateKeyDown(time, RotateDirection.Clockwise, true);
                     if (_board.CanPlace(ActivePiece))
                         return true;
-                    RotateKeyDown(time, RotateDirection.OneEighty);
-                    if (_board.CanPlace(ActivePiece))
-                        return true;
-                    RotateKeyDown(time, RotateDirection.Counterclockwise);
+                    if (GameSettings.Controls.Allow180Rotations)
+                    {
+                        RotateKeyDown(time, RotateDirection.OneEighty, true);
+                        if (_board.CanPlace(ActivePiece))
+                            return true;
+                    }
+
+                    RotateKeyDown(time, RotateDirection.Counterclockwise, true);
                     return _board.CanPlace(ActivePiece);
-                case AutomaticPreSpawnRotation.RotateCounterclockwise:
-                    RotateKeyDown(time, RotateDirection.Counterclockwise);
+                case AutomaticInitialRotation.RotateCounterclockwise:
+                    RotateKeyDown(time, RotateDirection.Counterclockwise, true);
                     if (_board.CanPlace(ActivePiece))
                         return true;
-                    RotateKeyDown(time, RotateDirection.OneEighty);
-                    if (_board.CanPlace(ActivePiece))
-                        return true;
-                    RotateKeyDown(time, RotateDirection.Clockwise);
+                    if (GameSettings.Controls.Allow180Rotations)
+                    {
+                        RotateKeyDown(time, RotateDirection.OneEighty, true);
+                        if (_board.CanPlace(ActivePiece))
+                            return true;
+                    }
+
+                    RotateKeyDown(time, RotateDirection.Clockwise, true);
                     return _board.CanPlace(ActivePiece);
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -256,30 +267,28 @@ namespace UStacker.Gameplay.InputProcessing
 
         public void AddActionToList(InputActionMessage message)
         {
-            _actionList.Add(message);
+            ActionList.Add(message);
         }
-        
-        public void HandlePreSpawnBufferedInputs(double time, out bool cancelSpawn)
+
+        public void HandleInitialRotation(double time)
         {
-            if (!GameSettings.Controls.AllowInputBuffering)
+            if (!GameSettings.Controls.AllowInitialActions || !_handling.UseInitialRotations ||
+                _initialRotation is not { } direction)
+                return;
+
+            RotateKeyDown(time, direction, true);
+        }
+
+        public void HandleInitialHold(double time, out bool cancelSpawn)
+        {
+            if (!GameSettings.Controls.AllowInitialActions || !_initialHold || !_handling.UseInitialHold)
             {
                 cancelSpawn = false;
                 return;
             }
-            
-            cancelSpawn = false;
-            if (_bufferedHold)
-            {
-                _bufferedHold = false;
-                cancelSpawn = true;
-                HoldKeyDown(time);
-            }
 
-            if (_bufferedRotation is { } direction)
-            {
-                _bufferedRotation = null;
-                RotateKeyDown(time, direction);
-            }
+            cancelSpawn = true;
+            HoldKeyDown(time, false);
         }
 
         public void MoveFiveSecondsForward(InputAction.CallbackContext ctx)
@@ -344,10 +353,8 @@ namespace UStacker.Gameplay.InputProcessing
                 return;
 
             if (_currentPieceIndex < PlacementsList.Count - 1)
-            {
                 if (Math.Abs(_timer.CurrentTime - PlacementsList[_currentPieceIndex]) < 0.01)
                     _currentPieceIndex++;
-            }
 
             _timer.SetTime(PlacementsList[_currentPieceIndex]);
         }
@@ -439,8 +446,8 @@ namespace UStacker.Gameplay.InputProcessing
             _dasDelay = 0;
             _currentActionIndex = 0;
             _currentPieceIndex = 0;
-            _bufferedHold = false;
-            _bufferedRotation = null;
+            _initialHold = false;
+            _initialRotation = null;
             _lastWasRotation = false;
             _usedHold = false;
 
@@ -452,8 +459,6 @@ namespace UStacker.Gameplay.InputProcessing
             _lockdownEvent.Time = double.PositiveInfinity;
             _hardLockdownEvent.Time = double.PositiveInfinity;
             _dropEvent.Time = _dropTime;
-            
-            _actionList?.Clear();
         }
 
         private void MovePiece(
@@ -484,9 +489,9 @@ namespace UStacker.Gameplay.InputProcessing
                     if (!isRotation)
                     {
                         if (moveVector.x > 0)
-                            moveVector.x += (int)_hardLockAmount;
+                            moveVector.x += (int) _hardLockAmount;
                         else
-                            moveVector.x -= (int)_hardLockAmount;
+                            moveVector.x -= (int) _hardLockAmount;
                     }
                 }
             }
@@ -496,13 +501,7 @@ namespace UStacker.Gameplay.InputProcessing
                 double.IsPositiveInfinity(_dropEvent.Time) &&
                 !_board.CanPlace(ActivePiece, Vector2Int.down);
 
-            var pieceTransform = ActivePiece.transform;
-            var piecePosition = pieceTransform.localPosition;
-            piecePosition = new Vector3(
-                piecePosition.x + moveVector.x,
-                piecePosition.y + moveVector.y,
-                piecePosition.z);
-            pieceTransform.localPosition = piecePosition;
+            ActivePiece.Move(moveVector);
             _currentPieceMovement += moveVector;
 
             if (sendMessage)
@@ -572,13 +571,11 @@ namespace UStacker.Gameplay.InputProcessing
         private void UpdatePiecePlacementVars(double updateTime)
         {
             if (_isHardLocking)
-            {
                 if (GameSettings.Gravity.HardLockType == HardLockType.LimitedInputs)
                 {
                     _hardLockAmount -= 1;
                     if (_hardLockAmount <= 0) HandlePiecePlacement(updateTime);
                 }
-            }
 
             if (!_isLocking) return;
 
@@ -589,12 +586,12 @@ namespace UStacker.Gameplay.InputProcessing
         private void ChangeActivePieceRotationState(int value)
         {
             _currentPieceRotation += value;
-            var newState = (int)ActivePiece.RotationState + value;
+            var newState = (int) ActivePiece.RotationState + value;
             while (newState < 0) newState += 360;
 
             newState -= newState % 90;
 
-            ActivePiece.RotationState = (RotationState)(newState % 360);
+            ActivePiece.RotationState = (RotationState) (newState % 360);
         }
 
         private double ComputeDroptimeFromGravity()
@@ -646,11 +643,12 @@ namespace UStacker.Gameplay.InputProcessing
                             HoldKeyUp();
                             break;
                         case KeyActionType.KeyDown:
-                            HoldKeyDown(message.Time);
+                            HoldKeyDown(message.Time, true);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
+
                     break;
                 case ActionType.Harddrop:
                     if (message.KeyActionType == KeyActionType.KeyDown)
@@ -839,16 +837,16 @@ namespace UStacker.Gameplay.InputProcessing
             HandlePiecePlacement(actionTime, true);
         }
 
-        private void RotateKeyDown(double actionTime, RotateDirection direction)
+        private void RotateKeyDown(double actionTime, RotateDirection direction, bool firstKickOnly = false)
         {
-            if (_handling.InputBufferingType == InputBufferingType.BufferKeydownDuringSpawn)
-                _bufferedRotation = direction;
-            
+            if (_handling.InitialActionsType == InitialActionsType.RegisterKeydownDuringSpawn)
+                _initialRotation = direction;
+
             if (_pieceIsNull)
             {
-                if (_handling.InputBufferingType == InputBufferingType.BufferKeypressDuringDelay)
-                    _bufferedRotation = direction;
-                
+                if (_handling.InitialActionsType == InitialActionsType.RegisterKeypressDuringDelay)
+                    _initialRotation = direction;
+
                 return;
             }
 
@@ -866,10 +864,12 @@ namespace UStacker.Gameplay.InputProcessing
             };
 
             ActivePiece.Rotate(rotationAngle);
+
             if (!_spinHandler.TryKick(
                     ActivePiece,
                     _board,
                     direction,
+                    firstKickOnly,
                     out _lastSpinResult))
             {
                 ActivePiece.Rotate(-rotationAngle);
@@ -911,21 +911,21 @@ namespace UStacker.Gameplay.InputProcessing
 
         private void RotateKeyUp()
         {
-            if (_handling.InputBufferingType == InputBufferingType.BufferKeydownDuringSpawn)
-                _bufferedRotation = null;
+            if (_handling.InitialActionsType == InitialActionsType.RegisterKeydownDuringSpawn)
+                _initialRotation = null;
         }
 
-        private void HoldKeyDown(double actionTime)
+        private void HoldKeyDown(double actionTime, bool spawnWithInitial)
         {
-            if (_handling.InputBufferingType == InputBufferingType.BufferKeydownDuringSpawn)
-                _bufferedHold = true;
-        
             if (_pieceIsNull)
             {
-                if (_handling.InputBufferingType == InputBufferingType.BufferKeypressDuringDelay)
-                    _bufferedHold = true;
+                if (_handling.InitialActionsType == InitialActionsType.RegisterKeypressDuringDelay)
+                    _initialHold = true;
                 return;
             }
+
+            if (_handling.InitialActionsType == InitialActionsType.RegisterKeydownDuringSpawn)
+                _initialHold = true;
 
             if (_usedHold && !GameSettings.Controls.UnlimitedHold)
             {
@@ -940,9 +940,9 @@ namespace UStacker.Gameplay.InputProcessing
                 _pieceHolder.MarkUsed();
 
             if (newPiece == null)
-                _spawner.SpawnPiece(actionTime);
+                _spawner.SpawnPiece(actionTime, spawnWithInitial);
             else
-                _spawner.SpawnPiece(newPiece, actionTime);
+                _spawner.SpawnPiece(newPiece, actionTime, spawnWithInitial);
 
             _dropEvent.Time = actionTime + _dropTime;
             if (_dasStatus != Vector2Int.zero && _board.CanPlace(ActivePiece, _dasStatus))
@@ -955,8 +955,8 @@ namespace UStacker.Gameplay.InputProcessing
 
         private void HoldKeyUp()
         {
-            if (_handling.InputBufferingType == InputBufferingType.BufferKeydownDuringSpawn)
-                _bufferedHold = false;
+            if (_handling.InitialActionsType == InitialActionsType.RegisterKeydownDuringSpawn)
+                _initialHold = false;
         }
 
         private void MoveToRightWallKeyDown(double actionTime)
@@ -985,18 +985,18 @@ namespace UStacker.Gameplay.InputProcessing
         {
             KeyActionType? keyActionTypeGuess = ctx switch
             {
-                { performed: true } => KeyActionType.KeyDown,
-                { canceled: true } => KeyActionType.KeyUp,
+                {performed: true} => KeyActionType.KeyDown,
+                {canceled: true} => KeyActionType.KeyUp,
                 _ => null
             };
-            
+
             if (keyActionTypeGuess is not { } keyActionType) return;
 
             if (keyActionType == KeyActionType.KeyDown && !_heldActions.Contains(actionType))
                 _heldActions.Add(actionType);
             else
                 _heldActions.Remove(actionType);
-            
+
             if (!_controlsActive && keyActionType == KeyActionType.KeyDown) return;
 
             var actionTime = ctx.time - (Time.realtimeSinceStartupAsDouble - _timer.CurrentTime);
@@ -1040,7 +1040,7 @@ namespace UStacker.Gameplay.InputProcessing
 
         public void OnRotate180(InputAction.CallbackContext ctx)
         {
-            if (GameSettings.Controls.Allow180Spins)
+            if (GameSettings.Controls.Allow180Rotations)
                 HandleKeyEvent(ctx, ActionType.Rotate180);
         }
 
@@ -1070,9 +1070,9 @@ namespace UStacker.Gameplay.InputProcessing
         {
             var functionTime = _timer.CurrentTime;
             HandlePieceLockdownAnimation(functionTime);
-            
+
             if (!_timer.IsRunning) return;
-            
+
             Update(functionTime, true);
             ProcessorUpdated?.Invoke(functionTime);
         }
@@ -1118,7 +1118,6 @@ namespace UStacker.Gameplay.InputProcessing
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-
             }
         }
 
@@ -1186,16 +1185,16 @@ namespace UStacker.Gameplay.InputProcessing
         {
             _softDropActive = true;
             var softdropGravity = _normalGravity <= 0 ? _handling.ZeroGravitySoftDropBase : _normalGravity;
-            
+
             // try to use normal softdrop gravity
             softdropGravity *= _handling.SoftDropFactor;
             // if softdrop gravity is smaller than min, use min, but never less than normal
             var minSoftdropGravity = Math.Max(_handling.MinSoftDropGravity, _normalGravity);
             // if softdrop gravity is larger than max, use max, but never less than normal
             var maxSoftdropGravity = Math.Max(_handling.MaxSoftDropGravity, _normalGravity);
-            
+
             _currentGravity = Math.Clamp(softdropGravity, minSoftdropGravity, maxSoftdropGravity);
-                
+
             _dropTime = ComputeDroptimeFromGravity();
             _dropEvent.Time = _softdropEvent.Time + _dropTime;
             _softdropEvent.Time = double.PositiveInfinity;
@@ -1244,9 +1243,11 @@ namespace UStacker.Gameplay.InputProcessing
                     _dasDelay = _arrEvent.Time;
             }
             else if (_dasStatus != Vector2Int.zero && _board.CanPlace(ActivePiece, _dasStatus))
+            {
                 _arrEvent.Time = _arrEvent.Time < double.PositiveInfinity
                     ? Math.Max(_arrEvent.Time, spawnTime)
                     : spawnTime;
+            }
 
             _spawnEvent.Time = double.PositiveInfinity;
         }
@@ -1257,7 +1258,7 @@ namespace UStacker.Gameplay.InputProcessing
 
             var lockProgress = (_lockdownEvent.Time - functionStartTime) / _lockDelay;
 
-            ActivePiece.SetVisibility(Mathf.Lerp(1f, .5f, (float)lockProgress));
+            ActivePiece.SetVisibility(Mathf.Lerp(1f, .5f, (float) lockProgress));
         }
 
         private void StartLockdown(double lockStart)
@@ -1304,3 +1305,6 @@ namespace UStacker.Gameplay.InputProcessing
         #endregion
     }
 }
+/************************************
+end InputProcessor.cs
+*************************************/

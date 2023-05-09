@@ -24,6 +24,7 @@ namespace DG.Tweening
         ///     be
         /// </summary>
         Default,
+
         /// <summary>Applies the skew scaled by the size of the text-span: the max skew/displacement will be the given skew factor</summary>
         AsMaxSkewFactor
     }
@@ -41,7 +42,8 @@ namespace DG.Tweening
         /// </summary>
         /// <param name="endValue">The end value to reach</param>
         /// <param name="duration">The duration of the tween</param>
-        public static TweenerCore<Color, Color, ColorOptions> DOColor(this TMP_Text target, Color endValue, float duration)
+        public static TweenerCore<Color, Color, ColorOptions> DOColor(this TMP_Text target, Color endValue,
+            float duration)
         {
             var t = DOTween.To(() => target.color, x => target.color = x, endValue, duration);
             t.SetTarget(target);
@@ -54,7 +56,8 @@ namespace DG.Tweening
         /// </summary>
         /// <param name="endValue">The end value to reach</param>
         /// <param name="duration">The duration of the tween</param>
-        public static TweenerCore<Color, Color, ColorOptions> DOFaceColor(this TMP_Text target, Color32 endValue, float duration)
+        public static TweenerCore<Color, Color, ColorOptions> DOFaceColor(this TMP_Text target, Color32 endValue,
+            float duration)
         {
             var t = DOTween.To(() => target.faceColor, x => target.faceColor = x, endValue, duration);
             t.SetTarget(target);
@@ -67,7 +70,8 @@ namespace DG.Tweening
         /// </summary>
         /// <param name="endValue">The end value to reach</param>
         /// <param name="duration">The duration of the tween</param>
-        public static TweenerCore<Color, Color, ColorOptions> DOOutlineColor(this TMP_Text target, Color32 endValue, float duration)
+        public static TweenerCore<Color, Color, ColorOptions> DOOutlineColor(this TMP_Text target, Color32 endValue,
+            float duration)
         {
             var t = DOTween.To(() => target.outlineColor, x => target.outlineColor = x, endValue, duration);
             t.SetTarget(target);
@@ -81,7 +85,8 @@ namespace DG.Tweening
         /// <param name="endValue">The end value to reach</param>
         /// <param name="duration">The duration of the tween</param>
         /// <param name="useSharedMaterial">If TRUE will use the fontSharedMaterial instead than the fontMaterial</param>
-        public static TweenerCore<Color, Color, ColorOptions> DOGlowColor(this TMP_Text target, Color endValue, float duration, bool useSharedMaterial = false)
+        public static TweenerCore<Color, Color, ColorOptions> DOGlowColor(this TMP_Text target, Color endValue,
+            float duration, bool useSharedMaterial = false)
         {
             var t = useSharedMaterial
                 ? target.fontSharedMaterial.DOColor(endValue, "_GlowColor", duration)
@@ -96,7 +101,8 @@ namespace DG.Tweening
         /// </summary>
         /// <param name="endValue">The end value to reach</param>
         /// <param name="duration">The duration of the tween</param>
-        public static TweenerCore<Color, Color, ColorOptions> DOFade(this TMP_Text target, float endValue, float duration)
+        public static TweenerCore<Color, Color, ColorOptions> DOFade(this TMP_Text target, float endValue,
+            float duration)
         {
             var t = DOTween.ToAlpha(() => target.color, x => target.color = x, endValue, duration);
             t.SetTarget(target);
@@ -109,7 +115,8 @@ namespace DG.Tweening
         /// </summary>
         /// <param name="endValue">The end value to reach</param>
         /// <param name="duration">The duration of the tween</param>
-        public static TweenerCore<Color, Color, ColorOptions> DOFaceFade(this TMP_Text target, float endValue, float duration)
+        public static TweenerCore<Color, Color, ColorOptions> DOFaceFade(this TMP_Text target, float endValue,
+            float duration)
         {
             var t = DOTween.ToAlpha(() => target.faceColor, x => target.faceColor = x, endValue, duration);
             t.SetTarget(target);
@@ -126,7 +133,8 @@ namespace DG.Tweening
         /// </summary>
         /// <param name="endValue">The end value to reach</param>
         /// <param name="duration">The duration of the tween</param>
-        public static TweenerCore<Vector3, Vector3, VectorOptions> DOScale(this TMP_Text target, float endValue, float duration)
+        public static TweenerCore<Vector3, Vector3, VectorOptions> DOScale(this TMP_Text target, float endValue,
+            float duration)
         {
             var trans = target.transform;
             var endValueV3 = new Vector3(endValue, endValue, endValue);
@@ -144,7 +152,8 @@ namespace DG.Tweening
         /// <param name="addThousandsSeparator">If TRUE (default) also adds thousands separators</param>
         /// <param name="culture">The <see cref="CultureInfo" /> to use (InvariantCulture if NULL)</param>
         public static TweenerCore<int, int, NoOptions> DOCounter(
-            this TMP_Text target, int fromValue, int endValue, float duration, bool addThousandsSeparator = true, CultureInfo culture = null
+            this TMP_Text target, int fromValue, int endValue, float duration, bool addThousandsSeparator = true,
+            CultureInfo culture = null
         )
         {
             var v = fromValue;
@@ -166,7 +175,8 @@ namespace DG.Tweening
         /// </summary>
         /// <param name="endValue">The end value to reach</param>
         /// <param name="duration">The duration of the tween</param>
-        public static TweenerCore<float, float, FloatOptions> DOFontSize(this TMP_Text target, float endValue, float duration)
+        public static TweenerCore<float, float, FloatOptions> DOFontSize(this TMP_Text target, float endValue,
+            float duration)
         {
             var t = DOTween.To(() => target.fontSize, x => target.fontSize = x, endValue, duration);
             t.SetTarget(target);
@@ -179,9 +189,11 @@ namespace DG.Tweening
         /// </summary>
         /// <param name="endValue">The end value to reach</param>
         /// <param name="duration">The duration of the tween</param>
-        public static TweenerCore<int, int, NoOptions> DOMaxVisibleCharacters(this TMP_Text target, int endValue, float duration)
+        public static TweenerCore<int, int, NoOptions> DOMaxVisibleCharacters(this TMP_Text target, int endValue,
+            float duration)
         {
-            var t = DOTween.To(() => target.maxVisibleCharacters, x => target.maxVisibleCharacters = x, endValue, duration);
+            var t = DOTween.To(() => target.maxVisibleCharacters, x => target.maxVisibleCharacters = x, endValue,
+                duration);
             t.SetTarget(target);
             return t;
         }
@@ -203,7 +215,8 @@ namespace DG.Tweening
         ///     results with more characters.
         ///     Leave it to NULL (default) to use default ones
         /// </param>
-        public static TweenerCore<string, string, StringOptions> DOText(this TMP_Text target, string endValue, float duration, bool richTextEnabled = true,
+        public static TweenerCore<string, string, StringOptions> DOText(this TMP_Text target, string endValue,
+            float duration, bool richTextEnabled = true,
             ScrambleMode scrambleMode = ScrambleMode.None, string scrambleChars = null)
         {
             var t = DOTween.To(() => target.text, x => target.text = x, endValue, duration);
@@ -260,25 +273,26 @@ namespace DG.Tweening
                 Debugger.LogError("DOTweenTMPAnimator target can't be null");
                 return;
             }
+
             if (!target.gameObject.activeInHierarchy)
             {
                 Debugger.LogError("You can't create a DOTweenTMPAnimator if its target is disabled");
                 return;
             }
+
             // Verify that there's no other animators for the same target, and in case dispose them
             if (_targetToAnimator.ContainsKey(target))
             {
                 if (Debugger.logPriority >= 2)
-                {
                     Debugger.Log(string.Format(
                         "A DOTweenTMPAnimator for \"{0}\" already exists: disposing it because you can't have more than one DOTweenTMPAnimator" +
                         " for the same TextMesh Pro object. If you have tweens running on the disposed DOTweenTMPAnimator you should kill them manually",
                         target
                     ));
-                }
                 _targetToAnimator[target].Dispose();
                 _targetToAnimator.Remove(target);
             }
+
             //
             this.target = target;
             _targetToAnimator.Add(target, this);
@@ -289,6 +303,7 @@ namespace DG.Tweening
 
         /// <summary><see cref="TMP_Text" /> that this animator is linked to</summary>
         public TMP_Text target { get; private set; }
+
         public TMP_TextInfo textInfo { get; private set; }
 
         /// <summary>
@@ -330,6 +345,7 @@ namespace DG.Tweening
                 _charTransforms.RemoveRange(totChars, totCurrent - totChars);
                 totCurrent = totChars;
             }
+
             for (var i = 0; i < totCurrent; ++i)
             {
                 var c = _charTransforms[i];
@@ -337,7 +353,9 @@ namespace DG.Tweening
                 c.Refresh(textInfo, _cachedMeshInfos);
                 _charTransforms[i] = c;
             }
-            for (var i = totCurrent; i < totChars; ++i) _charTransforms.Add(new CharTransform(i, textInfo, _cachedMeshInfos));
+
+            for (var i = totCurrent; i < totChars; ++i)
+                _charTransforms.Add(new CharTransform(i, textInfo, _cachedMeshInfos));
             _ignoreTextChangedEvent = false;
         }
 
@@ -347,7 +365,8 @@ namespace DG.Tweening
         public void Reset()
         {
             var totCurrent = _charTransforms.Count;
-            for (var i = 0; i < totCurrent; ++i) _charTransforms[i].ResetAll(target, textInfo.meshInfo, _cachedMeshInfos);
+            for (var i = 0; i < totCurrent; ++i)
+                _charTransforms[i].ResetAll(target, textInfo.meshInfo, _cachedMeshInfos);
         }
 
         private void OnTextChanged(Object obj)
@@ -363,26 +382,28 @@ namespace DG.Tweening
                 Debugger.LogError(string.Format("CharIndex {0} doesn't exist", charIndex));
                 return false;
             }
+
             if (!textInfo.characterInfo[charIndex].isVisible)
             {
                 if (Debugger.logPriority > 1)
                 {
                     if (isTween)
-                    {
                         Debugger.Log(string.Format(
                             "CharIndex {0} isn't visible, ignoring it and returning an empty tween (TextMesh Pro will behave weirdly if invisible chars are included in the animation)",
                             charIndex
                         ));
-                    }
                     else
                         Debugger.Log(string.Format("CharIndex {0} isn't visible, ignoring it", charIndex));
                 }
+
                 return false;
             }
+
             return true;
         }
 
-        private bool ValidateSpan(int fromCharIndex, int toCharIndex, out int firstVisibleCharIndex, out int lastVisibleCharIndex)
+        private bool ValidateSpan(int fromCharIndex, int toCharIndex, out int firstVisibleCharIndex,
+            out int lastVisibleCharIndex)
         {
             firstVisibleCharIndex = -1; // First visible/existing charIndex from given index
             lastVisibleCharIndex = -1; // Last visible/existing charIndex backwards from given index
@@ -395,6 +416,7 @@ namespace DG.Tweening
                 firstVisibleCharIndex = i;
                 break;
             }
+
             if (firstVisibleCharIndex == -1) return false;
             for (var i = toCharIndex; i > firstVisibleCharIndex - 1; --i)
             {
@@ -402,6 +424,7 @@ namespace DG.Tweening
                 lastVisibleCharIndex = i;
                 break;
             }
+
             if (lastVisibleCharIndex == -1) return false;
             return true;
         }
@@ -535,7 +558,8 @@ namespace DG.Tweening
                 if (apply) target.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
             }
 
-            public void UpdateGeometry(TMP_Text target, Vector3 offset, Quaternion rotation, Vector3 scale, TMP_MeshInfo[] cachedMeshInfos, bool apply = true)
+            public void UpdateGeometry(TMP_Text target, Vector3 offset, Quaternion rotation, Vector3 scale,
+                TMP_MeshInfo[] cachedMeshInfos, bool apply = true)
             {
                 this.offset = offset;
                 this.rotation = rotation;
@@ -546,23 +570,31 @@ namespace DG.Tweening
                 var destinationVertices = _meshInfo.vertices;
                 var cachedVertices = cachedMeshInfos[_matIndex].vertices;
                 destinationVertices[_firstVertexIndex] = cachedVertices[_firstVertexIndex + 0] - _charMidBaselineOffset;
-                destinationVertices[_firstVertexIndex + 1] = cachedVertices[_firstVertexIndex + 1] - _charMidBaselineOffset;
-                destinationVertices[_firstVertexIndex + 2] = cachedVertices[_firstVertexIndex + 2] - _charMidBaselineOffset;
-                destinationVertices[_firstVertexIndex + 3] = cachedVertices[_firstVertexIndex + 3] - _charMidBaselineOffset;
+                destinationVertices[_firstVertexIndex + 1] =
+                    cachedVertices[_firstVertexIndex + 1] - _charMidBaselineOffset;
+                destinationVertices[_firstVertexIndex + 2] =
+                    cachedVertices[_firstVertexIndex + 2] - _charMidBaselineOffset;
+                destinationVertices[_firstVertexIndex + 3] =
+                    cachedVertices[_firstVertexIndex + 3] - _charMidBaselineOffset;
                 var matrix = Matrix4x4.TRS(this.offset, this.rotation, this.scale);
                 destinationVertices[_firstVertexIndex]
-                    = matrix.MultiplyPoint3x4(destinationVertices[_firstVertexIndex + 0]) + _charMidBaselineOffset + _bottomLeftShift;
+                    = matrix.MultiplyPoint3x4(destinationVertices[_firstVertexIndex + 0]) + _charMidBaselineOffset +
+                      _bottomLeftShift;
                 destinationVertices[_firstVertexIndex + 1]
-                    = matrix.MultiplyPoint3x4(destinationVertices[_firstVertexIndex + 1]) + _charMidBaselineOffset + _topLeftShift;
+                    = matrix.MultiplyPoint3x4(destinationVertices[_firstVertexIndex + 1]) + _charMidBaselineOffset +
+                      _topLeftShift;
                 destinationVertices[_firstVertexIndex + 2]
-                    = matrix.MultiplyPoint3x4(destinationVertices[_firstVertexIndex + 2]) + _charMidBaselineOffset + _topRightShift;
+                    = matrix.MultiplyPoint3x4(destinationVertices[_firstVertexIndex + 2]) + _charMidBaselineOffset +
+                      _topRightShift;
                 destinationVertices[_firstVertexIndex + 3]
-                    = matrix.MultiplyPoint3x4(destinationVertices[_firstVertexIndex + 3]) + _charMidBaselineOffset + _bottomRightShift;
+                    = matrix.MultiplyPoint3x4(destinationVertices[_firstVertexIndex + 3]) + _charMidBaselineOffset +
+                      _bottomRightShift;
                 _meshInfo.mesh.vertices = _meshInfo.vertices;
                 target.UpdateGeometry(_meshInfo.mesh, _matIndex);
             }
 
-            public void ShiftVertices(TMP_Text target, Vector3 topLeftShift, Vector3 topRightShift, Vector3 bottomLeftShift, Vector3 bottomRightShift)
+            public void ShiftVertices(TMP_Text target, Vector3 topLeftShift, Vector3 topRightShift,
+                Vector3 bottomLeftShift, Vector3 bottomRightShift)
             {
                 _topLeftShift += topLeftShift;
                 _topRightShift += topRightShift;
@@ -571,8 +603,10 @@ namespace DG.Tweening
                 var destinationVertices = _meshInfo.vertices;
                 destinationVertices[_firstVertexIndex] = destinationVertices[_firstVertexIndex] + _bottomLeftShift;
                 destinationVertices[_firstVertexIndex + 1] = destinationVertices[_firstVertexIndex + 1] + _topLeftShift;
-                destinationVertices[_firstVertexIndex + 2] = destinationVertices[_firstVertexIndex + 2] + _topRightShift;
-                destinationVertices[_firstVertexIndex + 3] = destinationVertices[_firstVertexIndex + 3] + _bottomRightShift;
+                destinationVertices[_firstVertexIndex + 2] =
+                    destinationVertices[_firstVertexIndex + 2] + _topRightShift;
+                destinationVertices[_firstVertexIndex + 3] =
+                    destinationVertices[_firstVertexIndex + 3] + _bottomRightShift;
                 _meshInfo.mesh.vertices = _meshInfo.vertices;
                 target.UpdateGeometry(_meshInfo.mesh, _matIndex);
             }
@@ -582,8 +616,10 @@ namespace DG.Tweening
                 var destinationVertices = _meshInfo.vertices;
                 destinationVertices[_firstVertexIndex] = destinationVertices[_firstVertexIndex] - _bottomLeftShift;
                 destinationVertices[_firstVertexIndex + 1] = destinationVertices[_firstVertexIndex + 1] - _topLeftShift;
-                destinationVertices[_firstVertexIndex + 2] = destinationVertices[_firstVertexIndex + 2] - _topRightShift;
-                destinationVertices[_firstVertexIndex + 3] = destinationVertices[_firstVertexIndex + 3] - _bottomRightShift;
+                destinationVertices[_firstVertexIndex + 2] =
+                    destinationVertices[_firstVertexIndex + 2] - _topRightShift;
+                destinationVertices[_firstVertexIndex + 3] =
+                    destinationVertices[_firstVertexIndex + 3] - _bottomRightShift;
                 _meshInfo.mesh.vertices = _meshInfo.vertices;
                 target.UpdateGeometry(_meshInfo.mesh, _matIndex);
                 _topLeftShift = _topRightShift = _bottomLeftShift = _bottomRightShift = Vector3.zero;
@@ -635,11 +671,11 @@ namespace DG.Tweening
                 var ratio = spanH / spanW;
                 skewFactor *= ratio;
             }
+
             float offsetY = 0;
             var prevCharVertices = new CharVertices();
             float prevCharSkew = 0;
             if (skewRight)
-            {
                 for (var i = firstVisibleCharIndex; i < lastVisibleCharIndex + 1; ++i)
                 {
                     if (!_charTransforms[i].isVisible) continue;
@@ -652,12 +688,11 @@ namespace DG.Tweening
                         offsetY += prevCharSkew + prevCharSkew * charsDist / prevCharW;
                         SetCharOffset(i, new Vector3(0, _charTransforms[i].offset.y + offsetY, 0));
                     }
+
                     prevCharVertices = v;
                     prevCharSkew = skew;
                 }
-            }
             else
-            {
                 for (var i = lastVisibleCharIndex; i > firstVisibleCharIndex - 1; --i)
                 {
                     if (!_charTransforms[i].isVisible) continue;
@@ -670,10 +705,10 @@ namespace DG.Tweening
                         offsetY += prevCharSkew + prevCharSkew * charsDist / prevCharW;
                         SetCharOffset(i, new Vector3(0, _charTransforms[i].offset.y + offsetY, 0));
                     }
+
                     prevCharVertices = v;
                     prevCharSkew = skew;
                 }
-            }
         }
 
         #endregion
@@ -789,7 +824,8 @@ namespace DG.Tweening
         /// <param name="topRightShift">Top right offset</param>
         /// <param name="bottomLeftShift">Bottom left offset</param>
         /// <param name="bottomRightShift">Bottom right offset</param>
-        public void ShiftCharVertices(int charIndex, Vector3 topLeftShift, Vector3 topRightShift, Vector3 bottomLeftShift, Vector3 bottomRightShift)
+        public void ShiftCharVertices(int charIndex, Vector3 topLeftShift, Vector3 topRightShift,
+            Vector3 bottomLeftShift, Vector3 bottomRightShift)
         {
             if (!ValidateChar(charIndex)) return;
             var c = _charTransforms[charIndex];
@@ -865,7 +901,8 @@ namespace DG.Tweening
         public TweenerCore<Color, Color, ColorOptions> DOFadeChar(int charIndex, float endValue, float duration)
         {
             if (!ValidateChar(charIndex)) return null;
-            var t = DOTween.ToAlpha(() => _charTransforms[charIndex].GetColor(textInfo.meshInfo), x => { _charTransforms[charIndex].UpdateAlpha(target, x, textInfo.meshInfo); }, endValue,
+            var t = DOTween.ToAlpha(() => _charTransforms[charIndex].GetColor(textInfo.meshInfo),
+                x => { _charTransforms[charIndex].UpdateAlpha(target, x, textInfo.meshInfo); }, endValue,
                 duration);
             return t;
         }
@@ -880,7 +917,8 @@ namespace DG.Tweening
         public TweenerCore<Color, Color, ColorOptions> DOColorChar(int charIndex, Color endValue, float duration)
         {
             if (!ValidateChar(charIndex)) return null;
-            var t = DOTween.To(() => _charTransforms[charIndex].GetColor(textInfo.meshInfo), x => { _charTransforms[charIndex].UpdateColor(target, x, textInfo.meshInfo); }, endValue, duration);
+            var t = DOTween.To(() => _charTransforms[charIndex].GetColor(textInfo.meshInfo),
+                x => { _charTransforms[charIndex].UpdateColor(target, x, textInfo.meshInfo); }, endValue, duration);
             return t;
         }
 
@@ -891,7 +929,8 @@ namespace DG.Tweening
         /// <param name="charIndex">The index of the character to tween (will throw an error if it doesn't exist)</param>
         /// <param name="endValue">The end value to reach</param>
         /// <param name="duration">The duration of the tween</param>
-        public TweenerCore<Vector3, Vector3, VectorOptions> DOOffsetChar(int charIndex, Vector3 endValue, float duration)
+        public TweenerCore<Vector3, Vector3, VectorOptions> DOOffsetChar(int charIndex, Vector3 endValue,
+            float duration)
         {
             if (!ValidateChar(charIndex)) return null;
             var t = DOTween.To(() => _charTransforms[charIndex].offset, x =>
@@ -911,7 +950,8 @@ namespace DG.Tweening
         /// <param name="endValue">The end value to reach</param>
         /// <param name="duration">The duration of the tween</param>
         /// <param name="mode">Rotation mode</param>
-        public TweenerCore<Quaternion, Vector3, QuaternionOptions> DORotateChar(int charIndex, Vector3 endValue, float duration, RotateMode mode = RotateMode.Fast)
+        public TweenerCore<Quaternion, Vector3, QuaternionOptions> DORotateChar(int charIndex, Vector3 endValue,
+            float duration, RotateMode mode = RotateMode.Fast)
         {
             if (!ValidateChar(charIndex)) return null;
             var t = DOTween.To(() => _charTransforms[charIndex].rotation, x =>
@@ -968,14 +1008,17 @@ namespace DG.Tweening
         ///     1 creates a full oscillation between the punch offset and the opposite offset,
         ///     while 0 oscillates only between the punch offset and the start offset
         /// </param>
-        public Tweener DOPunchCharOffset(int charIndex, Vector3 punch, float duration, int vibrato = 10, float elasticity = 1)
+        public Tweener DOPunchCharOffset(int charIndex, Vector3 punch, float duration, int vibrato = 10,
+            float elasticity = 1)
         {
             if (!ValidateChar(charIndex)) return null;
             if (duration <= 0)
             {
-                if (Debugger.logPriority > 0) Debug.LogWarning("Duration can't be 0, returning NULL without creating a tween");
+                if (Debugger.logPriority > 0)
+                    Debug.LogWarning("Duration can't be 0, returning NULL without creating a tween");
                 return null;
             }
+
             return DOTween.Punch(() => _charTransforms[charIndex].offset, x =>
             {
                 var charT = _charTransforms[charIndex];
@@ -997,14 +1040,17 @@ namespace DG.Tweening
         ///     1 creates a full oscillation between the punch rotation and the opposite rotation,
         ///     while 0 oscillates only between the punch rotation and the start rotation
         /// </param>
-        public Tweener DOPunchCharRotation(int charIndex, Vector3 punch, float duration, int vibrato = 10, float elasticity = 1)
+        public Tweener DOPunchCharRotation(int charIndex, Vector3 punch, float duration, int vibrato = 10,
+            float elasticity = 1)
         {
             if (!ValidateChar(charIndex)) return null;
             if (duration <= 0)
             {
-                if (Debugger.logPriority > 0) Debug.LogWarning("Duration can't be 0, returning NULL without creating a tween");
+                if (Debugger.logPriority > 0)
+                    Debug.LogWarning("Duration can't be 0, returning NULL without creating a tween");
                 return null;
             }
+
             return DOTween.Punch(() => _charTransforms[charIndex].rotation.eulerAngles, x =>
             {
                 var charT = _charTransforms[charIndex];
@@ -1026,7 +1072,8 @@ namespace DG.Tweening
         ///     1 creates a full oscillation between the punch scale and the opposite scale,
         ///     while 0 oscillates only between the punch scale and the start scale
         /// </param>
-        public Tweener DOPunchCharScale(int charIndex, float punch, float duration, int vibrato = 10, float elasticity = 1)
+        public Tweener DOPunchCharScale(int charIndex, float punch, float duration, int vibrato = 10,
+            float elasticity = 1)
         {
             return DOPunchCharScale(charIndex, new Vector3(punch, punch, punch), duration, vibrato, elasticity);
         }
@@ -1044,14 +1091,17 @@ namespace DG.Tweening
         ///     1 creates a full oscillation between the punch scale and the opposite scale,
         ///     while 0 oscillates only between the punch scale and the start scale
         /// </param>
-        public Tweener DOPunchCharScale(int charIndex, Vector3 punch, float duration, int vibrato = 10, float elasticity = 1)
+        public Tweener DOPunchCharScale(int charIndex, Vector3 punch, float duration, int vibrato = 10,
+            float elasticity = 1)
         {
             if (!ValidateChar(charIndex)) return null;
             if (duration <= 0)
             {
-                if (Debugger.logPriority > 0) Debug.LogWarning("Duration can't be 0, returning NULL without creating a tween");
+                if (Debugger.logPriority > 0)
+                    Debug.LogWarning("Duration can't be 0, returning NULL without creating a tween");
                 return null;
             }
+
             return DOTween.Punch(() => _charTransforms[charIndex].scale, x =>
             {
                 var charT = _charTransforms[charIndex];
@@ -1073,9 +1123,11 @@ namespace DG.Tweening
         ///     If TRUE the shake will automatically fadeOut smoothly within the tween's duration, otherwise it
         ///     will not
         /// </param>
-        public Tweener DOShakeCharOffset(int charIndex, float duration, float strength, int vibrato = 10, float randomness = 90, bool fadeOut = true)
+        public Tweener DOShakeCharOffset(int charIndex, float duration, float strength, int vibrato = 10,
+            float randomness = 90, bool fadeOut = true)
         {
-            return DOShakeCharOffset(charIndex, duration, new Vector3(strength, strength, strength), vibrato, randomness, fadeOut);
+            return DOShakeCharOffset(charIndex, duration, new Vector3(strength, strength, strength), vibrato,
+                randomness, fadeOut);
         }
 
         /// <summary>Shakes a character's offset with the given values.</summary>
@@ -1091,14 +1143,17 @@ namespace DG.Tweening
         ///     If TRUE the shake will automatically fadeOut smoothly within the tween's duration, otherwise it
         ///     will not
         /// </param>
-        public Tweener DOShakeCharOffset(int charIndex, float duration, Vector3 strength, int vibrato = 10, float randomness = 90, bool fadeOut = true)
+        public Tweener DOShakeCharOffset(int charIndex, float duration, Vector3 strength, int vibrato = 10,
+            float randomness = 90, bool fadeOut = true)
         {
             if (!ValidateChar(charIndex)) return null;
             if (duration <= 0)
             {
-                if (Debugger.logPriority > 0) Debug.LogWarning("Duration can't be 0, returning NULL without creating a tween");
+                if (Debugger.logPriority > 0)
+                    Debug.LogWarning("Duration can't be 0, returning NULL without creating a tween");
                 return null;
             }
+
             return DOTween.Shake(() => _charTransforms[charIndex].offset, x =>
             {
                 var charT = _charTransforms[charIndex];
@@ -1120,14 +1175,17 @@ namespace DG.Tweening
         ///     If TRUE the shake will automatically fadeOut smoothly within the tween's duration, otherwise it
         ///     will not
         /// </param>
-        public Tweener DOShakeCharRotation(int charIndex, float duration, Vector3 strength, int vibrato = 10, float randomness = 90, bool fadeOut = true)
+        public Tweener DOShakeCharRotation(int charIndex, float duration, Vector3 strength, int vibrato = 10,
+            float randomness = 90, bool fadeOut = true)
         {
             if (!ValidateChar(charIndex)) return null;
             if (duration <= 0)
             {
-                if (Debugger.logPriority > 0) Debug.LogWarning("Duration can't be 0, returning NULL without creating a tween");
+                if (Debugger.logPriority > 0)
+                    Debug.LogWarning("Duration can't be 0, returning NULL without creating a tween");
                 return null;
             }
+
             return DOTween.Shake(() => _charTransforms[charIndex].rotation.eulerAngles, x =>
             {
                 var charT = _charTransforms[charIndex];
@@ -1149,9 +1207,11 @@ namespace DG.Tweening
         ///     If TRUE the shake will automatically fadeOut smoothly within the tween's duration, otherwise it
         ///     will not
         /// </param>
-        public Tweener DOShakeCharScale(int charIndex, float duration, float strength, int vibrato = 10, float randomness = 90, bool fadeOut = true)
+        public Tweener DOShakeCharScale(int charIndex, float duration, float strength, int vibrato = 10,
+            float randomness = 90, bool fadeOut = true)
         {
-            return DOShakeCharScale(charIndex, duration, new Vector3(strength, strength, strength), vibrato, randomness, fadeOut);
+            return DOShakeCharScale(charIndex, duration, new Vector3(strength, strength, strength), vibrato, randomness,
+                fadeOut);
         }
 
         /// <summary>Shakes a character's scale with the given values.</summary>
@@ -1167,14 +1227,17 @@ namespace DG.Tweening
         ///     If TRUE the shake will automatically fadeOut smoothly within the tween's duration, otherwise it
         ///     will not
         /// </param>
-        public Tweener DOShakeCharScale(int charIndex, float duration, Vector3 strength, int vibrato = 10, float randomness = 90, bool fadeOut = true)
+        public Tweener DOShakeCharScale(int charIndex, float duration, Vector3 strength, int vibrato = 10,
+            float randomness = 90, bool fadeOut = true)
         {
             if (!ValidateChar(charIndex)) return null;
             if (duration <= 0)
             {
-                if (Debugger.logPriority > 0) Debug.LogWarning("Duration can't be 0, returning NULL without creating a tween");
+                if (Debugger.logPriority > 0)
+                    Debug.LogWarning("Duration can't be 0, returning NULL without creating a tween");
                 return null;
             }
+
             return DOTween.Shake(() => _charTransforms[charIndex].scale, x =>
             {
                 var charT = _charTransforms[charIndex];

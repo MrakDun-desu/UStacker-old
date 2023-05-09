@@ -1,3 +1,7 @@
+
+/************************************
+CustomizationSettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 
 namespace UStacker.GlobalSettings.Groups
@@ -12,3 +16,6 @@ namespace UStacker.GlobalSettings.Groups
         public string BackgroundFolder { get; set; } = "";
     }
 }
+/************************************
+end CustomizationSettings.cs
+*************************************/

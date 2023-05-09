@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+
+/************************************
+PersistentDataPathChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UStacker.Common.Alerts;
@@ -29,3 +33,6 @@ namespace UStacker.Common
         }
     }
 }
+/************************************
+end PersistentDataPathChanger.cs
+*************************************/

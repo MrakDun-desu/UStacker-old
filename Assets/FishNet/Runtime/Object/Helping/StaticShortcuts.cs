@@ -1,11 +1,9 @@
-﻿
-namespace FishNet.Object.Helping
+﻿namespace FishNet.Object.Helping
 {
-
     public static class CodegenHelper
     {
         /// <summary>
-        /// Returns if a NetworkObject is deinitializing.
+        ///     Returns if a NetworkObject is deinitializing.
         /// </summary>
         /// <param name="nb"></param>
         /// <returns></returns>
@@ -18,7 +16,7 @@ namespace FishNet.Object.Helping
         }
 
         /// <summary>
-        /// Returns if running as server.
+        ///     Returns if running as server.
         /// </summary>
         /// <param name="nb"></param>
         /// <returns></returns>
@@ -31,7 +29,7 @@ namespace FishNet.Object.Helping
         }
 
         /// <summary>
-        /// Returns if running as client.
+        ///     Returns if running as client.
         /// </summary>
         /// <param name="nb"></param>
         /// <returns></returns>
@@ -42,8 +40,5 @@ namespace FishNet.Object.Helping
 
             return nb.IsClient;
         }
-
     }
-
-
 }

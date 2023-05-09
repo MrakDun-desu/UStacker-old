@@ -1,3 +1,7 @@
+
+/************************************
+PiecePlacedMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -7,23 +11,21 @@ namespace UStacker.Gameplay.Communication
     [Serializable]
     public readonly struct PiecePlacedMessage : IMidgameMessage
     {
-        public readonly uint LinesCleared;
-        public readonly uint CurrentCombo;
+        public readonly Vector2Int[] BlockPositions;
+        public readonly bool BrokenBackToBack;
+        public readonly bool BrokenCombo;
         public readonly uint CurrentBackToBack;
+        public readonly uint CurrentCombo;
+        public readonly uint GarbageLinesCleared;
+        public readonly uint LinesCleared;
         public readonly string PieceType;
+        public readonly Vector2Int TotalMovement;
+        public readonly int TotalRotation;
         public readonly bool WasAllClear;
         public readonly bool WasSpin;
         public readonly bool WasSpinMini;
         [UsedImplicitly] public readonly bool WasSpinMiniRaw;
         [UsedImplicitly] public readonly bool WasSpinRaw;
-        public readonly bool BrokenCombo;
-        public readonly bool BrokenBackToBack;
-        public double Time { get; }
-        public readonly uint GarbageLinesCleared;
-        public readonly int TotalRotation;
-        public readonly Vector2Int TotalMovement;
-        public readonly Vector2Int[] BlockPositions;
-        public bool WasBtbClear => WasSpin || WasSpinMini || LinesCleared > 3;
 
         public PiecePlacedMessage(uint linesCleared, uint garbageLinesCleared, uint currentCombo,
             uint currentBackToBack, string pieceType, bool wasAllClear, bool wasSpin, bool wasSpinMini, bool wasSpinRaw,
@@ -47,5 +49,11 @@ namespace UStacker.Gameplay.Communication
             TotalMovement = totalMovement;
             BlockPositions = blockPositions;
         }
+
+        public bool WasBtbClear => WasSpin || WasSpinMini || LinesCleared > 3;
+        public double Time { get; }
     }
 }
+/************************************
+end PiecePlacedMessage.cs
+*************************************/

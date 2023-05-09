@@ -1,10 +1,14 @@
+
+/************************************
+Background.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections.Generic;
-using UStacker.Common.Extensions;
-using UStacker.GlobalSettings.Backgrounds;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using UStacker.Common.Extensions;
+using UStacker.GlobalSettings.Backgrounds;
 using Random = UnityEngine.Random;
 
 namespace UStacker.GlobalSettings.Appliers
@@ -12,7 +16,6 @@ namespace UStacker.GlobalSettings.Appliers
     [RequireComponent(typeof(RawImage), typeof(VideoPlayer))]
     public class Background : MonoBehaviour
     {
-
         private const float REFERENCE_HEIGHT = 1080f;
         [SerializeField] private string _backgroundName;
         [SerializeField] private List<BackgroundRecord> _defaultBackgrounds;
@@ -66,11 +69,11 @@ namespace UStacker.GlobalSettings.Appliers
 
         private void OnBackgroundChanged()
         {
+            const string defaultBackgroundName = "default";
             if (string.IsNullOrEmpty(_backgroundName)) return;
             if (!BackgroundPackLoader.Backgrounds.TryGetValue(_backgroundName, out var newBackgrounds))
-            {
-                if (!BackgroundPackLoader.Backgrounds.TryGetValue("default", out newBackgrounds)) newBackgrounds = _defaultBackgrounds;
-            }
+                if (!BackgroundPackLoader.Backgrounds.TryGetValue(defaultBackgroundName, out newBackgrounds))
+                    newBackgrounds = _defaultBackgrounds;
 
             if (newBackgrounds.Count == 0) return;
 
@@ -119,3 +122,6 @@ namespace UStacker.GlobalSettings.Appliers
         }
     }
 }
+/************************************
+end Background.cs
+*************************************/

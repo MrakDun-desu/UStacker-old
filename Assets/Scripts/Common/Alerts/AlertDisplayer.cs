@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+AlertDisplayer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 using UnityEngine.Pool;
 
 namespace UStacker.Common.Alerts
@@ -10,13 +14,6 @@ namespace UStacker.Common.Alerts
 
         private ObjectPool<AlertController> _alertsPool;
 
-        private AlertController CreateAlert()
-        {
-            var newAlert = Instantiate(_alertPrefab, _alertsParent);
-            newAlert.SourcePool = _alertsPool;
-            return newAlert;
-        }
-        
         protected override void Awake()
         {
             base.Awake();
@@ -30,6 +27,13 @@ namespace UStacker.Common.Alerts
         private void OnDestroy()
         {
             _alertsPool.Dispose();
+        }
+
+        private AlertController CreateAlert()
+        {
+            var newAlert = Instantiate(_alertPrefab, _alertsParent);
+            newAlert.SourcePool = _alertsPool;
+            return newAlert;
         }
 
         public static void ShowAlert(Alert alert, bool log = true)
@@ -50,11 +54,17 @@ namespace UStacker.Common.Alerts
         {
             ShowAlert(new Alert("Example", "This is an example alert", AlertType.Info), false);
         }
-        
+
         [ContextMenu("Show example alert with long text")]
         public void ShowLongExample()
         {
-            ShowAlert(new Alert("Example", "hello there, my dear lad. How are you doing today? I've been trying to ask you about your business. I sure hope you've been doing well and that no harm has came to you, as it would be quite unfortunate if it did", AlertType.Info), false);
+            ShowAlert(
+                new Alert("Example",
+                    "hello there, my dear lad. How are you doing today? I've been trying to ask you about your business. I sure hope you've been doing well and that no harm has came to you, as it would be quite unfortunate if it did",
+                    AlertType.Info), false);
         }
     }
 }
+/************************************
+end AlertDisplayer.cs
+*************************************/

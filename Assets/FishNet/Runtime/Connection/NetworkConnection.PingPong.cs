@@ -1,53 +1,27 @@
-﻿using FishNet.Managing;
+﻿using System;
 using FishNet.Managing.Timing;
-using System;
-using UnityEngine;
 
 namespace FishNet.Connection
 {
-
     /// <summary>
-    /// A container for a connected client used to perform actions on and gather information for the declared client.
+    ///     A container for a connected client used to perform actions on and gather information for the declared client.
     /// </summary>
     public partial class NetworkConnection : IEquatable<NetworkConnection>
     {
-#pragma warning disable CS0414
-        #region Private.
         /// <summary>
-        /// Last tick this connection sent a ping.
-        /// </summary>
-        private uint _lastPingTick;
-        /// <summary>
-        /// Number of times client has excessively sent a ping.
-        /// </summary>
-        private float _excessivePingCount;
-        /// <summary>
-        /// Ticks expected between each ping.
-        /// </summary>
-        private uint _requiredPingTicks;
-        #endregion
-
-        #region Const.
-        /// <summary>
-        /// Number of times a ping may occur excessively before server will punish connection.
-        /// </summary>
-        private const byte EXCESSIVE_PING_LIMIT = 10;
-        #endregion
-#pragma warning restore CS0414
-        /// <summary>
-        /// Initializes for ping.
+        ///     Initializes for ping.
         /// </summary>
         private void InitializePing()
         {
             //Give the client some room for error.
-            float requiredInterval = (NetworkManager.TimeManager.PingInterval * 0.85f);
+            var requiredInterval = NetworkManager.TimeManager.PingInterval * 0.85f;
             //Round down so required ticks is lower.
             _requiredPingTicks = NetworkManager.TimeManager.TimeToTicks(requiredInterval, TickRounding.RoundDown);
         }
 
 
         /// <summary>
-        /// Resets PingPong values.
+        ///     Resets PingPong values.
         /// </summary>
         private void ResetPingPong()
         {
@@ -56,7 +30,7 @@ namespace FishNet.Connection
         }
 
         /// <summary>
-        /// Called when a ping is received from this connection. Returns if can respond to ping.
+        ///     Called when a ping is received from this connection. Returns if can respond to ping.
         /// </summary>
         /// <returns>True to respond to ping, false to kick connection.</returns>
         internal bool CanPingPong()
@@ -97,7 +71,36 @@ namespace FishNet.Connection
             }
 #endif
         }
+#pragma warning disable CS0414
+
+        #region Private.
+
+        /// <summary>
+        ///     Last tick this connection sent a ping.
+        /// </summary>
+        private uint _lastPingTick;
+
+        /// <summary>
+        ///     Number of times client has excessively sent a ping.
+        /// </summary>
+        private float _excessivePingCount;
+
+        /// <summary>
+        ///     Ticks expected between each ping.
+        /// </summary>
+        private uint _requiredPingTicks;
+
+        #endregion
+
+        #region Const.
+
+        /// <summary>
+        ///     Number of times a ping may occur excessively before server will punish connection.
+        /// </summary>
+        private const byte EXCESSIVE_PING_LIMIT = 10;
+
+        #endregion
+
+#pragma warning restore CS0414
     }
-
-
 }

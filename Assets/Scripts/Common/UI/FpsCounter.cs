@@ -1,4 +1,8 @@
-﻿using System.Collections;
+
+/************************************
+FpsCounter.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -20,14 +24,17 @@ namespace UStacker.Common.UI
         {
             StartCoroutine(ShowFpsCor());
         }
-        
+
         private IEnumerator ShowFpsCor()
         {
             while (true)
             {
-                _text.text = $"FPS: {Mathf.RoundToInt(1/Time.deltaTime)}";
+                _text.text = $"FPS: {Mathf.RoundToInt(1 / Time.deltaTime)}";
                 yield return new WaitForSeconds(_interval);
             }
         }
     }
 }
+/************************************
+end FpsCounter.cs
+*************************************/

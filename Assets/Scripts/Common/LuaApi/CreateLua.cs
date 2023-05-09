@@ -1,4 +1,8 @@
-﻿using NLua;
+
+/************************************
+CreateLua.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using NLua;
 
 namespace UStacker.Common.LuaApi
 {
@@ -30,6 +34,7 @@ namespace UStacker.Common.LuaApi
             output["package"] = null;
             output["luanet"] = null;
             output["load"] = null;
+            output["import"] = null;
             return output;
         }
 
@@ -40,3 +45,6 @@ namespace UStacker.Common.LuaApi
         }
     }
 }
+/************************************
+end CreateLua.cs
+*************************************/

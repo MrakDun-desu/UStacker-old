@@ -1,4 +1,8 @@
-﻿using TMPro;
+
+/************************************
+LobbySettingsChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using TMPro;
 using UnityEngine;
 
 namespace UStacker.Multiplayer.Settings
@@ -19,7 +23,7 @@ namespace UStacker.Multiplayer.Settings
             _minimumPlayersField.onEndEdit.AddListener(OnMinimumPlayersChanged);
 
             _lobbySettings.SettingsReloaded += RefreshValue;
-            
+
             RefreshValue();
         }
 
@@ -85,3 +89,6 @@ namespace UStacker.Multiplayer.Settings
         }
     }
 }
+/************************************
+end LobbySettingsChanger.cs
+*************************************/

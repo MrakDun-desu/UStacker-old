@@ -1,7 +1,7 @@
 ﻿namespace FishNet.Observing
 {
     /// <summary>
-    /// States which observer(s) can change to.
+    ///     States which observer(s) can change to.
     /// </summary>
     internal enum ObserverStateChange : byte
     {

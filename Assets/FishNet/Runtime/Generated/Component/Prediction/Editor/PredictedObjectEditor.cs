@@ -4,32 +4,30 @@ using UnityEngine;
 
 namespace FishNet.Component.Prediction
 {
-
-
     [CustomEditor(typeof(PredictedObject), true)]
     [CanEditMultipleObjects]
     public class PredictedObjectEditor : Editor
     {
-        private SerializedProperty _implementsPredictionMethods;
+        private SerializedProperty _enableTeleport;
         private SerializedProperty _graphicalObject;
+        private SerializedProperty _implementsPredictionMethods;
+        private SerializedProperty _maintainedVelocity;
+
+        private SerializedProperty _networkTransform;
+        private SerializedProperty _overflowMultiplier;
+        private SerializedProperty _ownerInterpolation;
         private SerializedProperty _ownerSmoothPosition;
         private SerializedProperty _ownerSmoothRotation;
-        private SerializedProperty _ownerInterpolation;
-        private SerializedProperty _enableTeleport;
-        private SerializedProperty _teleportThreshold;
         private SerializedProperty _predictionType;
+        private SerializedProperty _resendInterval;
+        private SerializedProperty _resendType;
 
         private SerializedProperty _rigidbody;
         private SerializedProperty _rigidbody2d;
+        private SerializedProperty _spectatorInterpolation;
         private SerializedProperty _spectatorSmoothPosition;
         private SerializedProperty _spectatorSmoothRotation;
-        private SerializedProperty _spectatorInterpolation;
-        private SerializedProperty _overflowMultiplier;
-        private SerializedProperty _maintainedVelocity;
-        private SerializedProperty _resendType;
-        private SerializedProperty _resendInterval;
-
-        private SerializedProperty _networkTransform;
+        private SerializedProperty _teleportThreshold;
 
         protected virtual void OnEnable()
         {
@@ -53,7 +51,6 @@ namespace FishNet.Component.Prediction
             _resendInterval = serializedObject.FindProperty(nameof(_resendInterval));
 
             _networkTransform = serializedObject.FindProperty(nameof(_networkTransform));
-
         }
 
         public override void OnInspectorGUI()
@@ -61,7 +58,8 @@ namespace FishNet.Component.Prediction
             serializedObject.Update();
 
             GUI.enabled = false;
-            EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour((PredictedObject)target), typeof(PredictedObject), false);
+            EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour((PredictedObject) target),
+                typeof(PredictedObject), false);
             GUI.enabled = true;
 
             EditorGUILayout.PropertyField(_implementsPredictionMethods);
@@ -82,15 +80,18 @@ namespace FishNet.Component.Prediction
             EditorGUI.indentLevel--;
 
             EditorGUILayout.PropertyField(_predictionType);
-            PredictedObject.PredictionType movementType = (PredictedObject.PredictionType)_predictionType.intValue;
+            var movementType = (PredictedObject.PredictionType) _predictionType.intValue;
             if (movementType != PredictedObject.PredictionType.Other)
             {
                 EditorGUI.indentLevel++;
-                EditorGUILayout.HelpBox("When using physics prediction do not include a NetworkTransform; this component will synchronize instead.", MessageType.Info);
+                EditorGUILayout.HelpBox(
+                    "When using physics prediction do not include a NetworkTransform; this component will synchronize instead.",
+                    MessageType.Info);
                 if (movementType == PredictedObject.PredictionType.Rigidbody)
                     EditorGUILayout.PropertyField(_rigidbody);
                 else
-                    EditorGUILayout.PropertyField(_rigidbody2d, new GUIContent("Rigidbody2D", "Rigidbody2D to predict."));
+                    EditorGUILayout.PropertyField(_rigidbody2d,
+                        new GUIContent("Rigidbody2D", "Rigidbody2D to predict."));
 
                 EditorGUILayout.LabelField("Spectator Settings");
                 EditorGUI.indentLevel++;
@@ -104,13 +105,14 @@ namespace FishNet.Component.Prediction
                 EditorGUILayout.PropertyField(_maintainedVelocity);
 
                 EditorGUILayout.PropertyField(_resendType);
-                PredictedObject.ResendType resendType = (PredictedObject.ResendType)_resendType.intValue;
+                var resendType = (PredictedObject.ResendType) _resendType.intValue;
                 if (resendType == PredictedObject.ResendType.Interval)
                 {
                     EditorGUI.indentLevel++;
                     EditorGUILayout.PropertyField(_resendInterval, new GUIContent("Interval"));
                     EditorGUI.indentLevel--;
                 }
+
                 EditorGUI.indentLevel--;
 
                 EditorGUI.indentLevel--;
@@ -118,7 +120,9 @@ namespace FishNet.Component.Prediction
             else
             {
                 EditorGUI.indentLevel++;
-                EditorGUILayout.HelpBox("When other is selected another component, such as NetworkTransform, must be used to synchronize.", MessageType.Info);
+                EditorGUILayout.HelpBox(
+                    "When other is selected another component, such as NetworkTransform, must be used to synchronize.",
+                    MessageType.Info);
                 EditorGUILayout.PropertyField(_networkTransform);
                 EditorGUI.indentLevel--;
             }
@@ -126,8 +130,6 @@ namespace FishNet.Component.Prediction
             EditorGUILayout.Space();
             serializedObject.ApplyModifiedProperties();
         }
-
     }
 }
 #endif
-

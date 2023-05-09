@@ -5,16 +5,17 @@ namespace FishNet.Object
 {
     public sealed partial class NetworkObject : MonoBehaviour
     {
-
         #region Private.
+
         /// <summary>
-        /// RpcLinks being used within this NetworkObject.
+        ///     RpcLinks being used within this NetworkObject.
         /// </summary>
         private List<ushort> _rpcLinkIndexes;
+
         #endregion
 
         /// <summary>
-        /// Sets rpcLinkIndexes to values.
+        ///     Sets rpcLinkIndexes to values.
         /// </summary>
         internal void SetRpcLinkIndexes(List<ushort> values)
         {
@@ -22,13 +23,11 @@ namespace FishNet.Object
         }
 
         /// <summary>
-        /// Removes used link indexes from ClientObjects.
+        ///     Removes used link indexes from ClientObjects.
         /// </summary>
         internal void RemoveClientRpcLinkIndexes()
         {
             NetworkManager.ClientManager.Objects.RemoveLinkIndexes(_rpcLinkIndexes);
         }
     }
-
 }
-

@@ -1,11 +1,15 @@
+
+/************************************
+Piece.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UStacker.Gameplay.Blocks;
-using UStacker.GameSettings.Enums;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Pool;
+using UStacker.Gameplay.Blocks;
+using UStacker.GameSettings.Enums;
 
 namespace UStacker.Gameplay.Pieces
 {
@@ -26,6 +30,20 @@ namespace UStacker.Gameplay.Pieces
         private bool _activeInPool = true;
         private string _currentType;
 
+        public ObjectPool<Piece> SourcePool { get; set; }
+
+        private void Awake()
+        {
+            _currentType = _type;
+            _activeTransforms.AddRange(Blocks.Select(block => block.transform));
+            for (var i = 0; i < Blocks.Count; i++)
+            {
+                var block = Blocks[i];
+                block.Cleared += OnBlockCleared;
+                block.BlockNumber = (uint) Mathf.Min(i, 3);
+            }
+        }
+
         public string Type
         {
             get => _currentType;
@@ -45,25 +63,11 @@ namespace UStacker.Gameplay.Pieces
 
         public event Action Rotated;
 
-        public ObjectPool<Piece> SourcePool { get; set; }
-
-        private void Awake()
-        {
-            _currentType = _type;
-            _activeTransforms.AddRange(Blocks.Select(block => block.transform));
-            for (var i = 0; i < Blocks.Count; i++)
-            {
-                var block = Blocks[i];
-                block.Cleared += OnBlockCleared;
-                block.BlockNumber = (uint) Mathf.Min(i, 3);
-            }
-        }
-        
         public void SetVisibility(float value)
         {
             foreach (var block in Blocks) block.Visibility = value;
         }
-        
+
         private void OnBlockCleared(ClearableBlock sender)
         {
             _activeTransforms.Remove(sender.transform);
@@ -76,6 +80,17 @@ namespace UStacker.Gameplay.Pieces
         {
             transform.Rotate(Vector3.forward, rotationAngle);
             Rotated?.Invoke();
+        }
+
+        public void Move(Vector2Int moveVector)
+        {
+            var selfTransform = transform;
+            var piecePosition = selfTransform.localPosition;
+            piecePosition = new Vector3(
+                piecePosition.x + moveVector.x,
+                piecePosition.y + moveVector.y,
+                piecePosition.z);
+            selfTransform.localPosition = piecePosition;
         }
 
         public void SetBoard(Board board)
@@ -126,3 +141,6 @@ namespace UStacker.Gameplay.Pieces
         }
     }
 }
+/************************************
+end Piece.cs
+*************************************/

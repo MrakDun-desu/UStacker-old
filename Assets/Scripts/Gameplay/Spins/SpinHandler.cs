@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+
+/************************************
+SpinHandler.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Linq;
+using UnityEngine;
 using UStacker.Gameplay.Enums;
 using UStacker.Gameplay.Pieces;
 using UStacker.GameSettings;
 using UStacker.GameSettings.Enums;
-using UnityEngine;
 
 namespace UStacker.Gameplay.Spins
 {
@@ -20,9 +23,11 @@ namespace UStacker.Gameplay.Spins
             _allowedSpins = allowedSpins;
         }
 
-        public bool TryKick(Piece piece, Board board, RotateDirection direction, out SpinResult result)
+        public bool TryKick(Piece piece, Board board, RotateDirection direction, bool firstOnly, out SpinResult result)
         {
             var kickList = GetKickList(piece, direction);
+            if (firstOnly)
+                kickList = kickList.Take(1).ToArray();
 
             result = new SpinResult(Vector2Int.zero);
 
@@ -35,13 +40,13 @@ namespace UStacker.Gameplay.Spins
                 if (!board.CanPlace(piece, actualKick)) continue;
 
                 result.Kick = actualKick;
-                
+
                 if (_allowedSpins.HasFlag(AllowedSpins.StupidSpinsFlag))
                 {
                     result.WasSpin = true;
                     result.WasSpinMini = false;
                 }
-                
+
                 if (piece.SpinDetectors.Count(spinDetector => !board.IsEmpty(spinDetector.position, actualKick)) <
                     piece.MinimumSpinDetectors)
                     return true;
@@ -64,13 +69,14 @@ namespace UStacker.Gameplay.Spins
         {
             if (_allowedSpins.HasFlag(AllowedSpins.StupidSpinsFlag))
                 return;
-            
+
             if (CheckSpinValidity(pieceType))
             {
                 formerResult.WasSpin = formerResult.WasSpinRaw;
                 formerResult.WasSpinMini = formerResult.WasSpinMiniRaw;
                 return;
             }
+
             formerResult.WasSpin = false;
             formerResult.WasSpinMini = false;
         }
@@ -92,7 +98,7 @@ namespace UStacker.Gameplay.Spins
             };
         }
 
-        private IEnumerable<Vector2Int> GetKickList(Piece piece, RotateDirection direction)
+        private Vector2Int[] GetKickList(Piece piece, RotateDirection direction)
         {
             var kickTable = _rotationSystem.GetKickTable(piece.Type);
             var output = direction switch
@@ -127,3 +133,6 @@ namespace UStacker.Gameplay.Spins
         }
     }
 }
+/************************************
+end SpinHandler.cs
+*************************************/

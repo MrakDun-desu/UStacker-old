@@ -1,4 +1,8 @@
-﻿using TMPro;
+
+/************************************
+PlayerListCard.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +17,7 @@ namespace UStacker.Multiplayer.LobbyUi
         [SerializeField] private Sprite _spectatorBackground;
 
         private Player _player;
-        
+
         public void SetPlayer(Player player)
         {
             _player = player;
@@ -54,3 +58,6 @@ namespace UStacker.Multiplayer.LobbyUi
         }
     }
 }
+/************************************
+end PlayerListCard.cs
+*************************************/

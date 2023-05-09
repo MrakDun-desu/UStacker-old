@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+SeedSetter.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Enums;
 using UStacker.Gameplay.Initialization;
@@ -6,10 +10,9 @@ using UStacker.GameSettings;
 
 namespace UStacker.Gameplay
 {
-    public class SeedSetter: MonoBehaviour, IGameSettingsDependency
+    public class SeedSetter : MonoBehaviour, IGameSettingsDependency
     {
         [SerializeField] private Mediator _mediator;
-        public GameSettingsSO.SettingsContainer GameSettings { get; set; }
 
         private void OnEnable()
         {
@@ -20,6 +23,8 @@ namespace UStacker.Gameplay
         {
             _mediator.Unregister<GameStateChangedMessage>(OnGameStateChanged);
         }
+
+        public GameSettingsSO.SettingsContainer GameSettings { get; set; }
 
         private void OnGameStateChanged(GameStateChangedMessage message)
         {
@@ -33,7 +38,9 @@ namespace UStacker.Gameplay
             }
 
             if (GameSettings.General.UseCustomSeed)
+            {
                 GameSettings.General.ActiveSeed = GameSettings.General.CustomSeed;
+            }
             else
             {
                 var seed1 = (ulong) ((long) Random.Range(int.MinValue, int.MaxValue) + int.MaxValue);
@@ -43,6 +50,8 @@ namespace UStacker.Gameplay
 
             _mediator.Send(new SeedSetMessage(GameSettings.General.ActiveSeed));
         }
-
     }
 }
+/************************************
+end SeedSetter.cs
+*************************************/

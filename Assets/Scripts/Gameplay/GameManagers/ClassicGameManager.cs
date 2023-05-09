@@ -1,5 +1,9 @@
-using UStacker.Gameplay.Communication;
+
+/************************************
+ClassicGameManager.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
+using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Enums;
 
 namespace UStacker.Gameplay.GameManagers
@@ -71,6 +75,7 @@ namespace UStacker.Gameplay.GameManagers
             130, // level 18 start
             140 // level 19 start
         };
+
         private uint _currentLevel;
         private long _currentScore;
         private int _linesToNextLevel;
@@ -106,14 +111,15 @@ namespace UStacker.Gameplay.GameManagers
             _mediator.Send(new GravityChangedMessage(CalculateGravity(), 0));
             _mediator.Send(new LevelChangedMessage(_currentLevel.ToString(), 0));
             _mediator.Send(new LockDelayChangedMessage(0, 0));
-            _mediator.Send(new LevelUpConditionChangedMessage(0, _totalLinesToNextLevel, _linesClearedThisLevel, LEVELUP_CONDITION_NAME));
+            _mediator.Send(new LevelUpConditionChangedMessage(0, _totalLinesToNextLevel, _linesClearedThisLevel,
+                LEVELUP_CONDITION_NAME));
         }
 
         private void HandleGameStateChange(GameStateChangedMessage message)
         {
             if (message.NewState is not GameState.Initializing)
                 return;
-            
+
             ResetState();
         }
 
@@ -145,7 +151,11 @@ namespace UStacker.Gameplay.GameManagers
                 _mediator.Send(new LevelChangedMessage(_currentLevel.ToString(), message.Time));
                 _mediator.Send(new GravityChangedMessage(CalculateGravity(), message.Time));
             }
-            else if (message.LinesCleared > 0) _mediator.Send(new LevelUpConditionChangedMessage(message.Time, _totalLinesToNextLevel, _linesClearedThisLevel, LEVELUP_CONDITION_NAME));
+            else if (message.LinesCleared > 0)
+            {
+                _mediator.Send(new LevelUpConditionChangedMessage(message.Time, _totalLinesToNextLevel,
+                    _linesClearedThisLevel, LEVELUP_CONDITION_NAME));
+            }
         }
 
         private void HandlePieceMoved(PieceMovedMessage pieceMoved)
@@ -163,3 +173,6 @@ namespace UStacker.Gameplay.GameManagers
         }
     }
 }
+/************************************
+end ClassicGameManager.cs
+*************************************/

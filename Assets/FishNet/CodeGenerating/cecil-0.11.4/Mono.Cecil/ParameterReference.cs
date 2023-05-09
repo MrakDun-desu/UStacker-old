@@ -10,48 +10,45 @@
 
 using System;
 
-namespace MonoFN.Cecil {
+namespace MonoFN.Cecil
+{
+    public abstract class ParameterReference : IMetadataTokenProvider
+    {
+        internal int index = -1;
 
-	public abstract class ParameterReference : IMetadataTokenProvider {
+        protected TypeReference parameter_type;
+        internal MetadataToken token;
 
-		string name;
-		internal int index = -1;
-		protected TypeReference parameter_type;
-		internal MetadataToken token;
+        internal ParameterReference(string name, TypeReference parameterType)
+        {
+            if (parameterType == null)
+                throw new ArgumentNullException("parameterType");
 
-		public string Name {
-			get { return name; }
-			set { name = value; }
-		}
+            this.Name = name ?? string.Empty;
+            parameter_type = parameterType;
+        }
 
-		public int Index {
-			get { return index; }
-		}
+        public string Name { get; set; }
 
-		public TypeReference ParameterType {
-			get { return parameter_type; }
-			set { parameter_type = value; }
-		}
+        public int Index => index;
 
-		public MetadataToken MetadataToken {
-			get { return token; }
-			set { token = value; }
-		}
+        public TypeReference ParameterType
+        {
+            get => parameter_type;
+            set => parameter_type = value;
+        }
 
-		internal ParameterReference (string name, TypeReference parameterType)
-		{
-			if (parameterType == null)
-				throw new ArgumentNullException ("parameterType");
+        public MetadataToken MetadataToken
+        {
+            get => token;
+            set => token = value;
+        }
 
-			this.name = name ?? string.Empty;
-			this.parameter_type = parameterType;
-		}
+        public override string ToString()
+        {
+            return Name;
+        }
 
-		public override string ToString ()
-		{
-			return name;
-		}
-
-		public abstract ParameterDefinition Resolve ();
-	}
+        public abstract ParameterDefinition Resolve();
+    }
 }

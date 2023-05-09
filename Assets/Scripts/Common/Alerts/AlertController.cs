@@ -1,11 +1,16 @@
-﻿using System;
+
+/************************************
+AlertController.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections;
-using UStacker.Common.Extensions;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UStacker.Common.Extensions;
 
 namespace UStacker.Common.Alerts
 {
@@ -23,18 +28,19 @@ namespace UStacker.Common.Alerts
         [SerializeField] private RectTransform _controlledTransform;
         [SerializeField] private float _movement = 200f;
         [SerializeField] private float _appearTime = .5f;
-
-        private bool _removeStarted;
         private bool _activeInPool;
         private Image[] _controlledImages = Array.Empty<Image>();
         private TMP_Text[] _controlledTexts = Array.Empty<TMP_Text>();
-        
+
+        private bool _removeStarted;
+
         public ObjectPool<AlertController> SourcePool { get; set; }
 
         private void Awake()
         {
             _controlledImages = GetComponentsInChildren<Image>();
             _controlledTexts = GetComponentsInChildren<TMP_Text>();
+            SceneManager.sceneLoaded += (_, _) => Release();
         }
 
         public void Initialize(Alert alert)
@@ -52,7 +58,7 @@ namespace UStacker.Common.Alerts
 
             _title.text = alert.Title;
             _text.text = alert.Text;
-            
+
             _text.ForceMeshUpdate();
             var newTextSize = new Vector2(_text.rectTransform.sizeDelta.x, _text.preferredHeight);
             var newContainerSize = newTextSize.y != 0 ? newTextSize : _title.rectTransform.sizeDelta;
@@ -61,7 +67,7 @@ namespace UStacker.Common.Alerts
             _text.rectTransform.sizeDelta = newTextSize;
             _controlledTransform.sizeDelta = newContainerSize;
             ((RectTransform) transform).sizeDelta = newContainerSize;
-            
+
             _closeButton.onClick.AddListener(RemoveAlert);
             SetAlpha(0);
             DOTween.To(GetAlpha, SetAlpha, 1, _appearTime).SetEase(Ease.Linear);
@@ -79,12 +85,7 @@ namespace UStacker.Common.Alerts
         {
             _removeStarted = true;
             _controlledTransform.DOMoveY(_movement, _appearTime).SetRelative(true)
-                .OnComplete(() =>
-                {
-                    if (!_activeInPool) return;
-                    SourcePool.Release(this);
-                    _activeInPool = false;
-                });
+                .OnComplete(Release);
             DOTween.To(GetAlpha, SetAlpha, 0, _appearTime).SetEase(Ease.Linear);
         }
 
@@ -100,5 +101,15 @@ namespace UStacker.Common.Alerts
         {
             return _controlledImages[0].color.a;
         }
+
+        private void Release()
+        {
+            if (!_activeInPool) return;
+            SourcePool.Release(this);
+            _activeInPool = false;
+        }
     }
 }
+/************************************
+end AlertController.cs
+*************************************/

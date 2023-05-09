@@ -1,8 +1,12 @@
-﻿using System;
+
+/************************************
+StatCountingChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
-using UStacker.GlobalSettings.StatCounting;
 using UnityEngine;
 using UnityEngine.UI;
+using UStacker.GlobalSettings.StatCounting;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -113,7 +117,7 @@ namespace UStacker.GlobalSettings.Changers
 
             _statCounterGroups.Remove(groupId);
         }
-        
+
         private void RemoveGroup(Guid groupId)
         {
             if (!_groupChangers.ContainsKey(groupId)) return;
@@ -133,3 +137,6 @@ namespace UStacker.GlobalSettings.Changers
         }
     }
 }
+/************************************
+end StatCountingChanger.cs
+*************************************/

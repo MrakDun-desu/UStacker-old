@@ -1,3 +1,7 @@
+
+/************************************
+MainStat.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 namespace UStacker.GameSettings.Enums
 {
     public enum MainStat : byte
@@ -9,3 +13,6 @@ namespace UStacker.GameSettings.Enums
         PiecesUsed
     }
 }
+/************************************
+end MainStat.cs
+*************************************/

@@ -1,3 +1,7 @@
+
+/************************************
+AppSettingBoolChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,3 +23,6 @@ namespace UStacker.GlobalSettings.Changers
         }
     }
 }
+/************************************
+end AppSettingBoolChanger.cs
+*************************************/

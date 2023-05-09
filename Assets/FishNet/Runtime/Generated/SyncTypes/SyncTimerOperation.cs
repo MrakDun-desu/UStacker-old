@@ -1,40 +1,46 @@
 ﻿namespace FishNet.Object.Synchronizing
 {
-
     public enum SyncTimerOperation : byte
     {
         /// <summary>
-        /// Timer is started. Value is included with start.
+        ///     Timer is started. Value is included with start.
         /// </summary>
         Start = 1,
+
         /// <summary>
-        /// Timer was paused.
+        ///     Timer was paused.
         /// </summary>
         Pause = 2,
+
         /// <summary>
-        /// Timer was paused. Value at time of pause is sent.
+        ///     Timer was paused. Value at time of pause is sent.
         /// </summary>
         PauseUpdated = 3,
+
         /// <summary>
-        /// Timer was unpaused.
+        ///     Timer was unpaused.
         /// </summary>
         Unpause = 4,
+
         /// <summary>
-        /// Timer was stopped.
+        ///     Timer was stopped.
         /// </summary>
         Stop = 6,
+
         /// <summary>
-        /// Timer was stopped. Value prior to stopping is sent.
+        ///     Timer was stopped. Value prior to stopping is sent.
         /// </summary>
         StopUpdated = 7,
+
         /// <summary>
-        /// The timer has ended finished it's duration.
+        ///     The timer has ended finished it's duration.
         /// </summary>
         Finished = 8,
-        /// <summary>
-        /// All operations for the tick have been processed. This only occurs on clients as the server is unable to be aware of when the user is done modifying the list.
-        /// </summary>
-        Complete = 9,
-    }
 
+        /// <summary>
+        ///     All operations for the tick have been processed. This only occurs on clients as the server is unable to be aware of
+        ///     when the user is done modifying the list.
+        /// </summary>
+        Complete = 9
+    }
 }

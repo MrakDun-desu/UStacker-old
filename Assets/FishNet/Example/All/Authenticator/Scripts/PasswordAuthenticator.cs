@@ -1,34 +1,37 @@
-﻿using FishNet.Authenticating;
+﻿using System;
+using FishNet.Authenticating;
 using FishNet.Connection;
 using FishNet.Managing;
-using FishNet.Managing.Logging;
 using FishNet.Transporting;
-using System;
 using UnityEngine;
 
 namespace FishNet.Example.Authenticating
 {
     /// <summary>
-    /// This is an example of a password authenticator.
-    /// Never send passwords without encryption.
+    ///     This is an example of a password authenticator.
+    ///     Never send passwords without encryption.
     /// </summary>
     public class PasswordAuthenticator : HostAuthenticator
     {
-        #region Public.
+        #region Serialized.
+
         /// <summary>
-        /// Called when authenticator has concluded a result for a connection. Boolean is true if authentication passed, false if failed.
-        /// Server listens for this event automatically.
+        ///     Password to authenticate.
         /// </summary>
-        public override event Action<NetworkConnection, bool> OnAuthenticationResult;
+        [Tooltip("Password to authenticate.")] [SerializeField]
+        private string _password = "HelloWorld";
+
         #endregion
 
-        #region Serialized.
+        #region Public.
+
         /// <summary>
-        /// Password to authenticate.
+        ///     Called when authenticator has concluded a result for a connection. Boolean is true if authentication passed, false
+        ///     if failed.
+        ///     Server listens for this event automatically.
         /// </summary>
-        [Tooltip("Password to authenticate.")]
-        [SerializeField]
-        private string _password = "HelloWorld";
+        public override event Action<NetworkConnection, bool> OnAuthenticationResult;
+
         #endregion
 
         public override void InitializeOnce(NetworkManager networkManager)
@@ -36,15 +39,15 @@ namespace FishNet.Example.Authenticating
             base.InitializeOnce(networkManager);
 
             //Listen for connection state change as client.
-            base.NetworkManager.ClientManager.OnClientConnectionState += ClientManager_OnClientConnectionState;
+            NetworkManager.ClientManager.OnClientConnectionState += ClientManager_OnClientConnectionState;
             //Listen for broadcast from client. Be sure to set requireAuthentication to false.
-            base.NetworkManager.ServerManager.RegisterBroadcast<PasswordBroadcast>(OnPasswordBroadcast, false);
+            NetworkManager.ServerManager.RegisterBroadcast<PasswordBroadcast>(OnPasswordBroadcast, false);
             //Listen to response from server.
-            base.NetworkManager.ClientManager.RegisterBroadcast<ResponseBroadcast>(OnResponseBroadcast);
+            NetworkManager.ClientManager.RegisterBroadcast<ResponseBroadcast>(OnResponseBroadcast);
         }
 
         /// <summary>
-        /// Called when a connection state changes for the local client.
+        ///     Called when a connection state changes for the local client.
         /// </summary>
         private void ClientManager_OnClientConnectionState(ClientConnectionStateArgs args)
         {
@@ -59,17 +62,17 @@ namespace FishNet.Example.Authenticating
             if (AuthenticateAsHost())
                 return;
 
-            PasswordBroadcast pb = new PasswordBroadcast()
+            var pb = new PasswordBroadcast
             {
                 Password = _password
             };
 
-            base.NetworkManager.ClientManager.Broadcast(pb);
+            NetworkManager.ClientManager.Broadcast(pb);
         }
 
 
         /// <summary>
-        /// Received on server when a client sends the password broadcast message.
+        ///     Received on server when a client sends the password broadcast message.
         /// </summary>
         /// <param name="conn">Connection sending broadcast.</param>
         /// <param name="pb"></param>
@@ -84,7 +87,7 @@ namespace FishNet.Example.Authenticating
                 return;
             }
 
-            bool correctPassword = (pb.Password == _password);
+            var correctPassword = pb.Password == _password;
             SendAuthenticationResponse(conn, correctPassword);
             /* Invoke result. This is handled internally to complete the connection or kick client.
              * It's important to call this after sending the broadcast so that the broadcast
@@ -93,31 +96,32 @@ namespace FishNet.Example.Authenticating
         }
 
         /// <summary>
-        /// Received on client after server sends an authentication response.
+        ///     Received on client after server sends an authentication response.
         /// </summary>
         /// <param name="rb"></param>
         private void OnResponseBroadcast(ResponseBroadcast rb)
         {
-            string result = (rb.Passed) ? "Authentication complete." : "Authenitcation failed.";
+            var result = rb.Passed ? "Authentication complete." : "Authenitcation failed.";
             NetworkManager.Log(result);
         }
 
         /// <summary>
-        /// Sends an authentication result to a connection.
+        ///     Sends an authentication result to a connection.
         /// </summary>
         private void SendAuthenticationResponse(NetworkConnection conn, bool authenticated)
         {
             /* Tell client if they authenticated or not. This is
             * entirely optional but does demonstrate that you can send
             * broadcasts to client on pass or fail. */
-            ResponseBroadcast rb = new ResponseBroadcast()
+            var rb = new ResponseBroadcast
             {
                 Passed = authenticated
             };
-            base.NetworkManager.ServerManager.Broadcast(conn, rb, false);
+            NetworkManager.ServerManager.Broadcast(conn, rb, false);
         }
+
         /// <summary>
-        /// Called after handling a host authentication result.
+        ///     Called after handling a host authentication result.
         /// </summary>
         /// <param name="conn">Connection authenticating.</param>
         /// <param name="authenticated">True if authentication passed.</param>
@@ -127,6 +131,4 @@ namespace FishNet.Example.Authenticating
             OnAuthenticationResult?.Invoke(conn, authenticated);
         }
     }
-
-
 }

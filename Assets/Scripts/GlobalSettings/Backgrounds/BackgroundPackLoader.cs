@@ -1,3 +1,7 @@
+
+/************************************
+BackgroundPackLoader.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,15 +44,8 @@ namespace UStacker.GlobalSettings.Backgrounds
             );
             Backgrounds.Clear();
             if (Path.GetFileName(path).Equals(DEFAULT_PATH))
-            {
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
-
-                BackgroundPackChanged?.Invoke();
-                if (showAlert)
-                    AlertDisplayer.ShowAlert(defaultAlert);
-                return;
-            }
 
             if (!Directory.Exists(path))
             {
@@ -125,3 +122,6 @@ namespace UStacker.GlobalSettings.Backgrounds
         }
     }
 }
+/************************************
+end BackgroundPackLoader.cs
+*************************************/

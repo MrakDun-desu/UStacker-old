@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+DocumentationOpener.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 
 namespace UStacker.Common
 {
@@ -10,3 +14,6 @@ namespace UStacker.Common
         }
     }
 }
+/************************************
+end DocumentationOpener.cs
+*************************************/

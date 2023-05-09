@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+SpinResult.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using UnityEngine;
 
 namespace UStacker.Gameplay.Spins
@@ -24,3 +28,6 @@ namespace UStacker.Gameplay.Spins
         }
     }
 }
+/************************************
+end SpinResult.cs
+*************************************/

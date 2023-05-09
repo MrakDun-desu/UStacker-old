@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+
+/************************************
+PlayerListDisplayer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -78,3 +82,6 @@ namespace UStacker.Multiplayer.LobbyUi
         }
     }
 }
+/************************************
+end PlayerListDisplayer.cs
+*************************************/

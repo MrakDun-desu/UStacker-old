@@ -4,17 +4,15 @@ using UnityEngine;
 
 namespace FishNet.Managing.Predicting.Editing
 {
-
-
     [CustomEditor(typeof(PredictionManager), true)]
     [CanEditMultipleObjects]
     public class PredictionManagerEditor : Editor
     {
-        private SerializedProperty _dropExcessiveReplicates;
-        private SerializedProperty _maximumServerReplicates;
-        private SerializedProperty _maximumConsumeCount;
-        private SerializedProperty _redundancyCount;
         private SerializedProperty _allowPredictedSpawning;
+        private SerializedProperty _dropExcessiveReplicates;
+        private SerializedProperty _maximumConsumeCount;
+        private SerializedProperty _maximumServerReplicates;
+        private SerializedProperty _redundancyCount;
         private SerializedProperty _reservedObjectIds;
 
 
@@ -33,21 +31,18 @@ namespace FishNet.Managing.Predicting.Editing
             serializedObject.Update();
 
             GUI.enabled = false;
-            EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour((PredictionManager)target), typeof(PredictionManager), false);
+            EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour((PredictionManager) target),
+                typeof(PredictionManager), false);
             GUI.enabled = true;
 
             EditorGUILayout.LabelField("Server", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
             EditorGUILayout.PropertyField(_dropExcessiveReplicates);
             EditorGUI.indentLevel++;
-            if (_dropExcessiveReplicates.boolValue == true)
-            {
+            if (_dropExcessiveReplicates.boolValue)
                 EditorGUILayout.PropertyField(_maximumServerReplicates);
-            }
             else
-            {
                 EditorGUILayout.PropertyField(_maximumConsumeCount);
-            }
             EditorGUI.indentLevel--;
             EditorGUI.indentLevel--;
 
@@ -57,7 +52,7 @@ namespace FishNet.Managing.Predicting.Editing
             EditorGUI.indentLevel--;
 
             EditorGUILayout.PropertyField(_allowPredictedSpawning);
-            if (_allowPredictedSpawning.boolValue == true)
+            if (_allowPredictedSpawning.boolValue)
             {
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(_reservedObjectIds);
@@ -68,7 +63,6 @@ namespace FishNet.Managing.Predicting.Editing
 
             serializedObject.ApplyModifiedProperties();
         }
-
     }
 }
 #endif

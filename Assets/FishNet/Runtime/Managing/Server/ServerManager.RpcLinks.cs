@@ -1,46 +1,32 @@
-﻿using FishNet.Object;
-using FishNet.Transporting;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using FishNet.Object;
+using FishNet.Transporting;
 using UnityEngine;
 
 namespace FishNet.Managing.Server
 {
-
     public sealed partial class ServerManager : MonoBehaviour
     {
-
-
-        #region Internal
         /// <summary>
-        /// Current RPCLinks.
-        /// </summary>
-        internal Dictionary<ushort, RpcLink> RpcLinks = new Dictionary<ushort, RpcLink>();
-        /// <summary>
-        /// RPCLink indexes which can be used.
-        /// </summary>
-        private Queue<ushort> _availableRpcLinkIndexes = new Queue<ushort>();
-        #endregion
-
-        /// <summary>
-        /// Initializes RPC Links for NetworkBehaviours.
+        ///     Initializes RPC Links for NetworkBehaviours.
         /// </summary>
         private void InitializeRpcLinks()
         {
             /* Brute force enum values. 
              * Linq Last/Max lookup throws for IL2CPP. */
             ushort highestValue = 0;
-            Array pidValues = Enum.GetValues(typeof(PacketId));
+            var pidValues = Enum.GetValues(typeof(PacketId));
             foreach (PacketId pid in pidValues)
-                highestValue = Math.Max(highestValue, (ushort)pid);
+                highestValue = Math.Max(highestValue, (ushort) pid);
 
             highestValue += 1;
-            for (ushort i = highestValue; i < ushort.MaxValue; i++)
+            for (var i = highestValue; i < ushort.MaxValue; i++)
                 _availableRpcLinkIndexes.Enqueue(i);
         }
 
         /// <summary>
-        /// Sets the next RPC Link to use.
+        ///     Sets the next RPC Link to use.
         /// </summary>
         /// <returns>True if a link was available and set.</returns>
         internal bool GetRpcLink(out ushort value)
@@ -50,15 +36,13 @@ namespace FishNet.Managing.Server
                 value = _availableRpcLinkIndexes.Dequeue();
                 return true;
             }
-            else
-            {
-                value = 0;
-                return false;
-            }
+
+            value = 0;
+            return false;
         }
 
         /// <summary>
-        /// Sets data to RpcLinks for linkIndex.
+        ///     Sets data to RpcLinks for linkIndex.
         /// </summary>
         internal void SetRpcLink(ushort linkIndex, RpcLink data)
         {
@@ -66,13 +50,27 @@ namespace FishNet.Managing.Server
         }
 
         /// <summary>
-        /// Returns RPCLinks to availableRpcLinkIndexes.
+        ///     Returns RPCLinks to availableRpcLinkIndexes.
         /// </summary>
         internal void StoreRpcLinks(Dictionary<uint, RpcLinkType> links)
         {
-            foreach (RpcLinkType rlt in links.Values)
+            foreach (var rlt in links.Values)
                 _availableRpcLinkIndexes.Enqueue(rlt.LinkIndex);
         }
-    }
 
+
+        #region Internal
+
+        /// <summary>
+        ///     Current RPCLinks.
+        /// </summary>
+        internal Dictionary<ushort, RpcLink> RpcLinks = new();
+
+        /// <summary>
+        ///     RPCLink indexes which can be used.
+        /// </summary>
+        private readonly Queue<ushort> _availableRpcLinkIndexes = new();
+
+        #endregion
+    }
 }

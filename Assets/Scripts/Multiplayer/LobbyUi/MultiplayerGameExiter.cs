@@ -1,8 +1,11 @@
-﻿using FishNet;
-using FishNet.Object;
+
+/************************************
+MultiplayerGameExiter.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using FishNet;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using SceneManager = UnityEngine.SceneManagement.SceneManager;
 
 namespace UStacker.Multiplayer.LobbyUi
 {
@@ -30,7 +33,7 @@ namespace UStacker.Multiplayer.LobbyUi
                 _exitButton.onClick.AddListener(LoadMainMenu);
                 return;
             }
-            
+
             _exitButton.onClick.AddListener(OpenExitCanvas);
             _confirmExitButton.onClick.AddListener(LoadMainMenu);
             _cancelExitButton.onClick.AddListener(CloseExitCanvas);
@@ -53,3 +56,6 @@ namespace UStacker.Multiplayer.LobbyUi
         }
     }
 }
+/************************************
+end MultiplayerGameExiter.cs
+*************************************/

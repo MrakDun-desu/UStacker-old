@@ -1,4 +1,8 @@
-﻿using UStacker.Gameplay.Enums;
+
+/************************************
+IDetailLevelDependency.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UStacker.Gameplay.Enums;
 
 namespace UStacker.Gameplay.Presentation
 {
@@ -7,3 +11,6 @@ namespace UStacker.Gameplay.Presentation
         BoardDetailLevel DetailLevel { set; }
     }
 }
+/************************************
+end IDetailLevelDependency.cs
+*************************************/

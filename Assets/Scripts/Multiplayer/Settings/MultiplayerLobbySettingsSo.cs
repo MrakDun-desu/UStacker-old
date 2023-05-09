@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+MultiplayerLobbySettingsSo.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using UnityEngine;
 
 namespace UStacker.Multiplayer.Settings
@@ -6,11 +10,8 @@ namespace UStacker.Multiplayer.Settings
     [CreateAssetMenu(fileName = "LobbySettings", menuName = "UStacker/Lobby settings asset")]
     public class MultiplayerLobbySettingsSo : ScriptableObject
     {
-        public event Action SettingsReloaded;
+        [SerializeField] private SettingsContainer _settings = new();
 
-        [SerializeField]
-        private SettingsContainer _settings = new();
-        
         public SettingsContainer Settings
         {
             get => _settings;
@@ -18,11 +19,13 @@ namespace UStacker.Multiplayer.Settings
             {
                 if (value == _settings)
                     return;
-                
-                _settings = value;   
+
+                _settings = value;
                 SettingsReloaded?.Invoke();
             }
         }
+
+        public event Action SettingsReloaded;
 
         [Serializable]
         public class SettingsContainer
@@ -44,7 +47,7 @@ namespace UStacker.Multiplayer.Settings
                 get => _minimumPlayers;
                 set => _minimumPlayers = Math.Clamp(value, 1, Math.Min(2000, PlayerLimit));
             }
-            
+
             public uint FirstTo
             {
                 get => _firstTo;
@@ -59,3 +62,6 @@ namespace UStacker.Multiplayer.Settings
         }
     }
 }
+/************************************
+end MultiplayerLobbySettingsSo.cs
+*************************************/

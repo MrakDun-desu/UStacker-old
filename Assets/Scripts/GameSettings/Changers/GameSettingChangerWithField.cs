@@ -1,4 +1,8 @@
-﻿using TMPro;
+
+/************************************
+GameSettingChangerWithField.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using TMPro;
 using UnityEngine;
 
 namespace UStacker.GameSettings.Changers
@@ -21,3 +25,6 @@ namespace UStacker.GameSettings.Changers
         protected abstract void OnValueOverwritten(string newValue);
     }
 }
+/************************************
+end GameSettingChangerWithField.cs
+*************************************/

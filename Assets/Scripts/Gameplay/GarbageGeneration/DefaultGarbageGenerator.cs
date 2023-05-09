@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+
+/************************************
+DefaultGarbageGenerator.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections.Generic;
 using UStacker.Common;
 using UStacker.Gameplay.Communication;
 using UStacker.GameSettings.Enums;
@@ -9,11 +13,12 @@ namespace UStacker.Gameplay.GarbageGeneration
     {
         private readonly GarbageBoardInterface _boardInterface;
         private readonly List<int> _holeSizes = new();
+        private readonly Random _random;
         private int _lastHole = -1;
         private int _linesLeft;
-        private readonly Random _random;
 
-        public DefaultGarbageGenerator(GarbageBoardInterface boardInterface, GarbageGenerationType garbageGenerationType)
+        public DefaultGarbageGenerator(GarbageBoardInterface boardInterface,
+            GarbageGenerationType garbageGenerationType)
         {
             _random = new Random();
             if (garbageGenerationType.HasFlag(GarbageGenerationType.Singles))
@@ -60,7 +65,8 @@ namespace UStacker.Gameplay.GarbageGeneration
                     if (_lastHole == -1)
                         newHole = _random.NextInt((int) _boardInterface.Width);
                     else
-                        newHole = (_lastHole + _random.NextInt((int) _boardInterface.Width - 1) + 1) % (int) _boardInterface.Width;
+                        newHole = (_lastHole + _random.NextInt((int) _boardInterface.Width - 1) + 1) %
+                                  (int) _boardInterface.Width;
 
                     _lastHole = newHole;
                     addToLast = false;
@@ -76,3 +82,6 @@ namespace UStacker.Gameplay.GarbageGeneration
         }
     }
 }
+/************************************
+end DefaultGarbageGenerator.cs
+*************************************/

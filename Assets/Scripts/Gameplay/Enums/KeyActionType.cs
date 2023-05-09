@@ -1,4 +1,8 @@
-﻿namespace UStacker.Gameplay.Enums
+
+/************************************
+KeyActionType.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.Gameplay.Enums
 {
     public enum KeyActionType : byte
     {
@@ -6,3 +10,6 @@
         KeyDown
     }
 }
+/************************************
+end KeyActionType.cs
+*************************************/

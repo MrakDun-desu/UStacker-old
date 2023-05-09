@@ -1,3 +1,7 @@
+
+/************************************
+GameStateManager.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -29,16 +33,36 @@ namespace UStacker.Gameplay.GameStateManagement
 
         public bool IsReplay { get; set; }
 
+        private void OnEnable()
+        {
+            _mediator.Register<GameStateChangedMessage>(UpdateGameState, 10);
+        }
+
+        private void OnDisable()
+        {
+            _mediator.Unregister<GameStateChangedMessage>(UpdateGameState);
+        }
+
         public GameSettingsSO.SettingsContainer GameSettings { get; set; }
 
-        public void InitializeGame(bool startCountdown = true)
+        // this method is split into 2 because of UnityEvents not working correctly with
+        // methods that have default params
+        public void InitializeGame()
         {
             _mediator.Send(new GameStateChangedMessage(
                 _currentState,
                 GameState.Initializing,
                 0, IsReplay));
-            if (startCountdown)
-                StartCountdown();
+
+            StartCountdown();
+        }
+
+        public void InitializeGameWithoutCountdown()
+        {
+            _mediator.Send(new GameStateChangedMessage(
+                _currentState,
+                GameState.Initializing,
+                0, IsReplay));
         }
 
         public void StartCountdown()
@@ -60,13 +84,11 @@ namespace UStacker.Gameplay.GameStateManagement
             if (CurrentState is
                 GameState.StartCountdown or
                 GameState.ResumeCountdown)
-            {
                 _mediator.Send(new GameStateChangedMessage(
                     _currentState,
                     GameState.Running,
                     _timer.CurrentTime,
                     IsReplay));
-            }
             else
                 Debug.LogWarning("Trying to start game from invalid state " + CurrentState);
         }
@@ -134,13 +156,11 @@ namespace UStacker.Gameplay.GameStateManagement
             }
 
             if (CurrentState == GameState.Running)
-            {
                 _mediator.Send(new GameStateChangedMessage(
                     _currentState,
                     GameState.Lost,
                     loseTime,
                     IsReplay));
-            }
             else
                 Debug.LogWarning("Trying to lose game from invalid state " + CurrentState);
         }
@@ -190,9 +210,9 @@ namespace UStacker.Gameplay.GameStateManagement
 
         public void TogglePause(InputAction.CallbackContext ctx)
         {
-            if (ctx.performed && 
-                CurrentState is GameState.Paused 
-                    or GameState.Running 
+            if (ctx.performed &&
+                CurrentState is GameState.Paused
+                    or GameState.Running
                     or GameState.StartCountdown
                     or GameState.ResumeCountdown
                     or GameState.Initializing)
@@ -205,19 +225,12 @@ namespace UStacker.Gameplay.GameStateManagement
                 InitializeGame();
         }
 
-        private void OnEnable()
-        {
-            _mediator.Register<GameStateChangedMessage>(UpdateGameState, 10);
-        }
-
-        private void OnDisable()
-        {
-            _mediator.Unregister<GameStateChangedMessage>(UpdateGameState);
-        }
-
         private void UpdateGameState(GameStateChangedMessage message)
         {
             CurrentState = message.NewState;
         }
     }
 }
+/************************************
+end GameStateManager.cs
+*************************************/

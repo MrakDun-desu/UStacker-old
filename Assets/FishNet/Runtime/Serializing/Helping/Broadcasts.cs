@@ -1,16 +1,12 @@
-﻿using FishNet.Managing.Scened;
-using FishNet.Managing.Server;
-using FishNet.Object.Helping;
+﻿using FishNet.Object.Helping;
 using FishNet.Transporting;
-using UnityEngine;
 
 namespace FishNet.Serializing.Helping
 {
-
     internal static class Broadcasts
     {
         /// <summary>
-        /// Writes a broadcast to writer.
+        ///     Writes a broadcast to writer.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="writer"></param>
@@ -20,10 +16,11 @@ namespace FishNet.Serializing.Helping
         internal static PooledWriter WriteBroadcast<T>(PooledWriter writer, T message, Channel channel)
         {
             writer.WritePacketId(PacketId.Broadcast);
-            writer.WriteUInt16(typeof(T).FullName.GetStableHash16()); //muchlater codegen this to pass in hash. use technique similar to rpcs to limit byte/shorts.            
+            writer.WriteUInt16(typeof(T).FullName
+                .GetStableHash16()); //muchlater codegen this to pass in hash. use technique similar to rpcs to limit byte/shorts.            
             //Write data to a new writer.
-            PooledWriter dataWriter = WriterPool.GetWriter();
-            dataWriter.Write<T>(message);
+            var dataWriter = WriterPool.GetWriter();
+            dataWriter.Write(message);
             //Write length of data.
             writer.WriteLength(dataWriter.Length);
             //Write data.
@@ -34,5 +31,4 @@ namespace FishNet.Serializing.Helping
             return writer;
         }
     }
-
 }

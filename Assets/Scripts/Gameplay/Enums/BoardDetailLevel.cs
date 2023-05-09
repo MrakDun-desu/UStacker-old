@@ -1,4 +1,8 @@
-﻿namespace UStacker.Gameplay.Enums
+
+/************************************
+BoardDetailLevel.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.Gameplay.Enums
 {
     public enum BoardDetailLevel : byte
     {
@@ -7,3 +11,6 @@
         Full
     }
 }
+/************************************
+end BoardDetailLevel.cs
+*************************************/

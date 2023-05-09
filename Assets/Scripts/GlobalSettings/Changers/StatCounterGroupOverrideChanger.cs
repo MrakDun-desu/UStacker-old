@@ -1,10 +1,14 @@
-﻿using System;
+
+/************************************
+StatCounterGroupOverrideChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using UStacker.Common;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UStacker.Common;
 using UStacker.GlobalSettings.Groups;
 
 namespace UStacker.GlobalSettings.Changers
@@ -33,7 +37,9 @@ namespace UStacker.GlobalSettings.Changers
             set
             {
                 if (AppSettings.GameOverrides.TryGetValue(_gameType, out var overrides))
+                {
                     overrides.StatCounterGroupId = value;
+                }
                 else
                 {
                     var newOverrides = new GameSettingsOverrides {StatCounterGroupId = value};
@@ -55,7 +61,7 @@ namespace UStacker.GlobalSettings.Changers
         {
             if (_availableGroups.Count <= _dropdown.value)
                 return;
-            
+
             ChangedGroupId = isOn ? _availableGroups[_dropdown.value].Key : null;
         }
 
@@ -86,3 +92,6 @@ namespace UStacker.GlobalSettings.Changers
         }
     }
 }
+/************************************
+end StatCounterGroupOverrideChanger.cs
+*************************************/

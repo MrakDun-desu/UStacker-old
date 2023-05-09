@@ -1,16 +1,19 @@
+
+/************************************
+AppSettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using UStacker.Common;
 using UStacker.GlobalSettings.Groups;
-using Newtonsoft.Json;
 
 namespace UStacker.GlobalSettings
 {
     public static class AppSettings
     {
-        private const char INVALID_CHAR_REPLACEMENT = '_';
         private static SettingsContainer Settings = new();
         public static HandlingSettings Handling => Settings.Handling;
         public static SoundSettings Sound => Settings.Sound;
@@ -31,6 +34,7 @@ namespace UStacker.GlobalSettings
 
         public static async Task<bool> TrySaveAsync(string path = null)
         {
+            const char INVALID_CHAR_REPLACEMENT = '_';
             if (path is not null)
             {
                 var filename = Path.GetFileName(path);
@@ -43,7 +47,8 @@ namespace UStacker.GlobalSettings
             path ??= PersistentPaths.GlobalSettings;
 
             if (!Directory.Exists(Path.GetDirectoryName(path))) return false;
-            await File.WriteAllTextAsync(path, JsonConvert.SerializeObject(Settings, StaticSettings.DefaultSerializerSettings));
+            await File.WriteAllTextAsync(path,
+                JsonConvert.SerializeObject(Settings, StaticSettings.DefaultSerializerSettings));
             return true;
         }
 
@@ -56,7 +61,7 @@ namespace UStacker.GlobalSettings
             Settings = JsonConvert.DeserializeObject<SettingsContainer>(await File.ReadAllTextAsync(path),
                 StaticSettings.DefaultSerializerSettings);
             Settings ??= new SettingsContainer();
-            
+
             SettingsReloaded?.Invoke();
             return true;
         }
@@ -153,6 +158,8 @@ namespace UStacker.GlobalSettings
 
         internal record SettingsContainer
         {
+            public OverridesDictionary GameOverrrides { get; } = new();
+
             // ReSharper disable MemberHidesStaticFromOuterClass
             public HandlingSettings Handling { get; } = new();
             public SoundSettings Sound { get; } = new();
@@ -161,9 +168,12 @@ namespace UStacker.GlobalSettings
             public CustomizationSettings Customization { get; } = new();
             public StatCountingSettings StatCounting { get; } = new();
             public OtherSettings Others { get; } = new();
+
             public string Rebinds { get; set; } = string.Empty;
             // ReSharper restore MemberHidesStaticFromOuterClass
-            public OverridesDictionary GameOverrrides { get; } = new();
         }
     }
 }
+/************************************
+end AppSettings.cs
+*************************************/

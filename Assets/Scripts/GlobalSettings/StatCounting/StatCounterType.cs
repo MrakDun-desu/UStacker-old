@@ -1,4 +1,8 @@
-﻿namespace UStacker.GlobalSettings.StatCounting
+
+/************************************
+StatCounterType.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.GlobalSettings.StatCounting
 {
     public enum StatCounterType
     {
@@ -6,3 +10,6 @@
         Custom
     }
 }
+/************************************
+end StatCounterType.cs
+*************************************/

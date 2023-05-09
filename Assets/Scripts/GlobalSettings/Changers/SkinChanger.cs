@@ -1,10 +1,13 @@
-using System;
+
+/************************************
+SkinChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.IO;
-using UStacker.Common;
-using UStacker.GlobalSettings.BlockSkins;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UStacker.Common;
+using UStacker.GlobalSettings.BlockSkins;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -27,11 +30,11 @@ namespace UStacker.GlobalSettings.Changers
             _folderButton.onClick.AddListener(OpenSkinFolder);
             _docsButton.onClick.AddListener(OpenDocumentation);
         }
-        
+
         private void OnApplicationFocus(bool hasFocus)
         {
             if (!hasFocus) return;
-            
+
             RefreshNames();
         }
 
@@ -51,6 +54,7 @@ namespace UStacker.GlobalSettings.Changers
                 _dropdown.SetValueWithoutNotify(i);
                 break;
             }
+
             _dropdown.RefreshShownValue();
         }
 
@@ -86,3 +90,6 @@ namespace UStacker.GlobalSettings.Changers
         }
     }
 }
+/************************************
+end SkinChanger.cs
+*************************************/

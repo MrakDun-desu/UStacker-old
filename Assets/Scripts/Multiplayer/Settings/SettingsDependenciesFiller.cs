@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+SettingsDependenciesFiller.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 using UStacker.Gameplay.Initialization;
 using UStacker.GameSettings;
 
@@ -7,7 +11,7 @@ namespace UStacker.Multiplayer.Settings
     public class SettingsDependenciesFiller : MonoBehaviour
     {
         private IGameSettingsDependency[] _dependencies;
-        
+
         private void Awake()
         {
             _dependencies = GetComponentsInChildren<IGameSettingsDependency>();
@@ -20,3 +24,6 @@ namespace UStacker.Multiplayer.Settings
         }
     }
 }
+/************************************
+end SettingsDependenciesFiller.cs
+*************************************/

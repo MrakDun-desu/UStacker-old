@@ -1,9 +1,13 @@
-﻿using System;
+
+/************************************
+MusicOptionChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
-using UStacker.Common;
-using UStacker.GlobalSettings.Music;
 using TMPro;
 using UnityEngine;
+using UStacker.Common;
+using UStacker.GlobalSettings.Music;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -33,7 +37,6 @@ namespace UStacker.GlobalSettings.Changers
         private void Awake()
         {
             foreach (var option in MusicPlayer.Instance.ListAvailableOptions())
-            {
                 switch (option.OptionType)
                 {
                     case OptionType.Group:
@@ -47,7 +50,6 @@ namespace UStacker.GlobalSettings.Changers
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            }
         }
 
         protected override void Start()
@@ -141,3 +143,6 @@ namespace UStacker.GlobalSettings.Changers
         }
     }
 }
+/************************************
+end MusicOptionChanger.cs
+*************************************/

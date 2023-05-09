@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+FocusChecker.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 using UnityEngine.Events;
 using UStacker.GlobalSettings;
 
@@ -7,7 +11,7 @@ namespace UStacker.Gameplay.GameStateManagement
     public class FocusChecker : MonoBehaviour
     {
         public UnityEvent FocusLost;
-            
+
         private void Awake()
         {
             AppSettings.Gameplay.PauseSingleplayerGamesOutOfFocusChanged += OnPauseSettingChange;
@@ -35,3 +39,6 @@ namespace UStacker.Gameplay.GameStateManagement
         }
     }
 }
+/************************************
+end FocusChecker.cs
+*************************************/

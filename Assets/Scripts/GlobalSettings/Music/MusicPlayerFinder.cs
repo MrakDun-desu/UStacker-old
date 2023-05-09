@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+MusicPlayerFinder.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 
 namespace UStacker.GlobalSettings.Music
 {
@@ -22,3 +26,6 @@ namespace UStacker.GlobalSettings.Music
         }
     }
 }
+/************************************
+end MusicPlayerFinder.cs
+*************************************/

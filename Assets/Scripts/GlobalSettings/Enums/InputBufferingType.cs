@@ -1,9 +1,15 @@
-﻿namespace UStacker.GlobalSettings.Enums
+
+/************************************
+InputBufferingType.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.GlobalSettings.Enums
 {
-    public enum InputBufferingType : byte
+    public enum InitialActionsType : byte
     {
-        DontBuffer,
-        BufferKeypressDuringDelay,
-        BufferKeydownDuringSpawn
+        RegisterKeypressDuringDelay,
+        RegisterKeydownDuringSpawn
     }
 }
+/************************************
+end InputBufferingType.cs
+*************************************/

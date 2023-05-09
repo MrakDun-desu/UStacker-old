@@ -1,4 +1,8 @@
-﻿using FishNet.Connection;
+
+/************************************
+MultiplayerSettingsManager.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using FishNet.Connection;
 using FishNet.Object;
 using UnityEngine;
 using UnityEngine.UI;
@@ -47,15 +51,15 @@ namespace UStacker.Multiplayer.Settings
             _saveSettingsButton.onClick.AddListener(OnSaveButtonClicked);
         }
 
+        private void OnDestroy()
+        {
+            Settings = null;
+        }
+
         public override void OnStartServer()
         {
             base.OnStartServer();
             Settings = new MultiplayerGameSettings(_lobbySettings.Settings, _gameSettings.Settings);
-        }
-
-        private void OnDestroy()
-        {
-            Settings = null;
         }
 
         public override void OnStartClient()
@@ -133,3 +137,6 @@ namespace UStacker.Multiplayer.Settings
         }
     }
 }
+/************************************
+end MultiplayerSettingsManager.cs
+*************************************/

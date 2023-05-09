@@ -1,4 +1,8 @@
-﻿namespace UStacker.Gameplay.Enums
+
+/************************************
+ActionType.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.Gameplay.Enums
 {
     public enum ActionType : short
     {
@@ -14,3 +18,6 @@
         MoveToRightWall
     }
 }
+/************************************
+end ActionType.cs
+*************************************/

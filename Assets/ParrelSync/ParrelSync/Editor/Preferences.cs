@@ -1,22 +1,23 @@
-﻿using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
+using UnityEngine;
 
 namespace ParrelSync
 {
     /// <summary>
-    /// To add value caching for <see cref="EditorPrefs"/> functions
+    ///     To add value caching for <see cref="EditorPrefs" /> functions
     /// </summary>
     public class BoolPreference
     {
-        public string key { get; private set; }
-        public bool defaultValue { get; private set; }
+        private bool? valueCache;
+
         public BoolPreference(string key, bool defaultValue)
         {
             this.key = key;
             this.defaultValue = defaultValue;
         }
 
-        private bool? valueCache = null;
+        public string key { get; }
+        public bool defaultValue { get; }
 
         public bool Value
         {
@@ -25,7 +26,7 @@ namespace ParrelSync
                 if (valueCache == null)
                     valueCache = EditorPrefs.GetBool(key, defaultValue);
 
-                return (bool)valueCache;
+                return (bool) valueCache;
             }
             set
             {
@@ -47,32 +48,25 @@ namespace ParrelSync
 
     public class Preferences : EditorWindow
     {
-        [MenuItem("ParrelSync/Preferences", priority = 1)]
-        private static void InitWindow()
-        {
-            Preferences window = (Preferences)EditorWindow.GetWindow(typeof(Preferences));
-            window.titleContent = new GUIContent(ClonesManager.ProjectName + " Preferences");
-            window.Show();
-        }
+        /// <summary>
+        ///     Disable asset saving in clone editors?
+        /// </summary>
+        public static BoolPreference AssetModPref = new("ParrelSync_DisableClonesAssetSaving", true);
 
         /// <summary>
-        /// Disable asset saving in clone editors?
+        ///     In addition of checking the existence of UnityLockFile,
+        ///     also check is the is the UnityLockFile being opened.
         /// </summary>
-        public static BoolPreference AssetModPref = new BoolPreference("ParrelSync_DisableClonesAssetSaving", true);
-
-        /// <summary>
-        /// In addition of checking the existence of UnityLockFile, 
-        /// also check is the is the UnityLockFile being opened.
-        /// </summary>
-        public static BoolPreference AlsoCheckUnityLockFileStaPref = new BoolPreference("ParrelSync_CheckUnityLockFileOpenStatus", true);
+        public static BoolPreference AlsoCheckUnityLockFileStaPref =
+            new("ParrelSync_CheckUnityLockFileOpenStatus", true);
 
         private void OnGUI()
         {
             if (ClonesManager.IsClone())
             {
                 EditorGUILayout.HelpBox(
-                        "This is a clone project. Please use the original project editor to change preferences.",
-                        MessageType.Info);
+                    "This is a clone project. Please use the original project editor to change preferences.",
+                    MessageType.Info);
                 return;
             }
 
@@ -88,7 +82,6 @@ namespace ParrelSync
                 AssetModPref.Value);
 
             if (Application.platform == RuntimePlatform.WindowsEditor)
-            {
                 AlsoCheckUnityLockFileStaPref.Value = EditorGUILayout.ToggleLeft(
                     new GUIContent(
                         "Also check UnityLockFile lock status while checking clone projects running status",
@@ -96,7 +89,6 @@ namespace ParrelSync
                         "(the Clones Manager window show the clone project is still running even it's not) if the clone editor crashed"
                     ),
                     AlsoCheckUnityLockFileStaPref.Value);
-            }
             GUILayout.EndVertical();
             if (GUILayout.Button("Reset to default"))
             {
@@ -104,7 +96,16 @@ namespace ParrelSync
                 AlsoCheckUnityLockFileStaPref.ClearValue();
                 Debug.Log("Editor preferences cleared");
             }
+
             GUILayout.EndVertical();
+        }
+
+        [MenuItem("ParrelSync/Preferences", priority = 1)]
+        private static void InitWindow()
+        {
+            var window = (Preferences) GetWindow(typeof(Preferences));
+            window.titleContent = new GUIContent(ClonesManager.ProjectName + " Preferences");
+            window.Show();
         }
     }
 }

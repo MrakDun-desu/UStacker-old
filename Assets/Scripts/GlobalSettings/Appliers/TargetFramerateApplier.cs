@@ -1,3 +1,7 @@
+
+/************************************
+TargetFramerateApplier.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
 
 namespace UStacker.GlobalSettings.Appliers
@@ -13,3 +17,6 @@ namespace UStacker.GlobalSettings.Appliers
         }
     }
 }
+/************************************
+end TargetFramerateApplier.cs
+*************************************/

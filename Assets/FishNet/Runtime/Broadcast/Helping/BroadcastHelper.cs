@@ -5,7 +5,7 @@ namespace FishNet.Broadcast.Helping
     internal static class BroadcastHelper
     {
         /// <summary>
-        /// Gets the key for a broadcast type.
+        ///     Gets the key for a broadcast type.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="broadcastType"></param>
@@ -15,5 +15,4 @@ namespace FishNet.Broadcast.Helping
             return typeof(T).FullName.GetStableHash16();
         }
     }
-
 }

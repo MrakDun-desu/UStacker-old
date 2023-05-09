@@ -22,21 +22,21 @@ MonoBehaviour:
       <UseCustomSeed>k__BackingField: 0
       <CustomSeed>k__BackingField: 0
       <CustomRandomizerScript>k__BackingField: 
-      <ActiveSeed>k__BackingField: 5461952342148806951
+      <ActiveSeed>k__BackingField: 12195390301077316964
     <Controls>k__BackingField:
       _rotationSystemType: 2
       _customRotationSystem: 
-      <Allow180Spins>k__BackingField: 1
+      <Allow180Rotations>k__BackingField: 1
       <AllowHardDrop>k__BackingField: 1
       <AllowHold>k__BackingField: 1
       <AllowMoveToWall>k__BackingField: 1
-      <AllowInputBuffering>k__BackingField: 1
-      <AllowAutomaticPreSpawnRotation>k__BackingField: 1
+      <AllowInitialActions>k__BackingField: 1
+      <AllowAutomaticInitialRotation>k__BackingField: 1
       <UnlimitedHold>k__BackingField: 0
       <ShowGhostPiece>k__BackingField: 1
       <OverrideHandling>k__BackingField: 0
       <Handling>k__BackingField:
-        _delayedAutoShift: 0.09
+        _delayedAutoShift: 0.08500000089406967
         _automaticRepeatRate: 0
         _dasCutDelay: 0.01666666753590107
         _cancelDasDelayWithInput: 1
@@ -49,8 +49,8 @@ MonoBehaviour:
         _zeroGravitySoftDropBase: 0.02
         _doubleDropPreventionInterval: 0.01666666753590107
         _diagonalLockBehavior: 0
-        _inputBufferingType: 0
-        _automaticPreSpawnRotation: 0
+        _initialActionsType: 1
+        _automaticInitialRotation: 0
       <ActiveRotationSystem>k__BackingField:
         DefaultTable:
           StartState: 0
@@ -164,8 +164,8 @@ MonoBehaviour:
       <StartingLevel>k__BackingField: 
     <Presentation>k__BackingField:
       _title: Sprint 40L
-      _countdownInterval: 0.5
-      _countdownCount: 1
+      _countdownInterval: 0.65
+      _countdownCount: 3
       _gamePadding: 5
       <DefaultStatCounterGroup>k__BackingField:
         _name: Sprint 40L

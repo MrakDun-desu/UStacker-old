@@ -1,4 +1,8 @@
-﻿using UStacker.Common;
+
+/************************************
+OnQuitSettingsSaver.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UStacker.Common;
 
 namespace UStacker.GlobalSettings.Startup
 {
@@ -10,3 +14,6 @@ namespace UStacker.GlobalSettings.Startup
         }
     }
 }
+/************************************
+end OnQuitSettingsSaver.cs
+*************************************/

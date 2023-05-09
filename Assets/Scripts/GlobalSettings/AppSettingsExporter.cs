@@ -1,8 +1,12 @@
+
+/************************************
+AppSettingsExporter.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
-using UStacker.GlobalSettings.Changers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UStacker.GlobalSettings.Changers;
 
 namespace UStacker.GlobalSettings
 {
@@ -17,13 +21,13 @@ namespace UStacker.GlobalSettings
         [SerializeField] private Button _exportButton;
         [SerializeField] private Button _importButton;
 
-        public event Action SettingChanged;
-
         private void Awake()
         {
             _exportButton.onClick.AddListener(ExportAsync);
             _importButton.onClick.AddListener(ImportAsync);
         }
+
+        public event Action SettingChanged;
 
         private async void ExportAsync()
         {
@@ -59,3 +63,6 @@ namespace UStacker.GlobalSettings
         }
     }
 }
+/************************************
+end AppSettingsExporter.cs
+*************************************/

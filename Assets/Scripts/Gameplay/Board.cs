@@ -1,3 +1,7 @@
+
+/************************************
+Board.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -33,22 +37,24 @@ namespace UStacker.Gameplay
         [SerializeField] private UnityEvent<double> ToppedOut;
 
         private readonly List<ClearableBlock[]> Blocks = new();
-
-        public IEnumerable<Vector3> BlockPositions =>
-            Blocks.SelectMany(tf => tf.Select(block => block.transform.position));
+        private bool _awake;
 
         private bool _backToBackActive;
         private bool _comboActive;
         private uint _currentBackToBack;
         private uint _currentCombo;
 
+        private GameSettingsSO.SettingsContainer _gameSettings;
+
         private ObjectPool<ClearableBlock> _garbageBlockPool;
+        private IGarbageGenerator _garbageGenerator;
         private ObjectPool<GarbageLayer> _garbageLayerPool;
         private GarbageLayer _lastGarbageLayer;
-        private IGarbageGenerator _garbageGenerator;
 
         private float _warningPieceTreshhold;
-        private bool _awake;
+
+        public IEnumerable<Vector3> BlockPositions =>
+            Blocks.SelectMany(tf => tf.Where(block => block is not null).Select(block => block.transform.position));
 
         public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots =>
             Blocks
@@ -59,21 +65,6 @@ namespace UStacker.Gameplay
         public uint Height { get; private set; }
         public uint GarbageHeight { get; private set; }
         public uint LethalHeight { get; private set; }
-        
-        private GameSettingsSO.SettingsContainer _gameSettings;
-
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            private get => _gameSettings;
-            set
-            {
-                _gameSettings = value;
-                Awake();
-                Initialize();
-            }
-        }
-
-        public event Action LinesCleared;
 
         private void Awake()
         {
@@ -112,6 +103,19 @@ namespace UStacker.Gameplay
             BoardVisibilityApplier.VisibilityChanged -= ChangeVisibility;
             WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
         }
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            private get => _gameSettings;
+            set
+            {
+                _gameSettings = value;
+                Awake();
+                Initialize();
+            }
+        }
+
+        public event Action LinesCleared;
 
         private void OnSeedSet(SeedSetMessage message)
         {
@@ -164,15 +168,11 @@ namespace UStacker.Gameplay
             var readonlyBoard = new GarbageBoardInterface(this);
 
             if (GameSettings.Objective.GarbageGenerationType.HasFlag(GarbageGenerationType.CustomFlag))
-            {
                 _garbageGenerator = new CustomGarbageGenerator(readonlyBoard,
                     GameSettings.Objective.CustomGarbageScript, _mediator);
-            }
             else
-            {
                 _garbageGenerator = new DefaultGarbageGenerator(
                     readonlyBoard, GameSettings.Objective.GarbageGenerationType);
-            }
         }
 
         private void InitializeGarbagePools()
@@ -462,20 +462,23 @@ namespace UStacker.Gameplay
             _currentCombo = 0;
         }
 
-        public void AddGarbageLayer(IList<List<bool>> slots, bool addToLast)
+        public void AddGarbageLayer(IList<List<bool>> garbageLines, bool addToLast)
         {
+            if (garbageLines.Count <= 0)
+                return;
+
             var newGarbageLayer = addToLast && _lastGarbageLayer is not null
                 ? _lastGarbageLayer
                 : _garbageLayerPool.Get();
 
             var height = 0;
 
-            for (; height < slots.Count; height++)
+            for (; height < garbageLines.Count; height++)
             {
-                var line = slots[height];
+                var line = garbageLines[height];
                 if (line.Count != Width)
                 {
-                    slots.RemoveAt(height);
+                    garbageLines.RemoveAt(height);
                     height--;
                     continue;
                 }
@@ -488,7 +491,6 @@ namespace UStacker.Gameplay
                     var garbageBlockTransform = garbageBlock.transform;
                     garbageBlockTransform.SetParent(newGarbageLayer.transform);
                     garbageBlockTransform.localPosition = new Vector3(x + .5f, height + .5f);
-                    garbageBlockTransform.localScale = Vector3.one;
                     newGarbageLayer.AddBlock(garbageBlock);
                 }
             }
@@ -507,7 +509,7 @@ namespace UStacker.Gameplay
 
                 var blockTransform = Blocks[y][x].transform;
                 var selfTransform = transform;
-                blockTransform.position -= selfTransform.up * selfTransform.lossyScale.y;
+                blockTransform.position += selfTransform.up * selfTransform.lossyScale.y;
             }
 
             for (var i = 0; i < height; i++)
@@ -524,9 +526,12 @@ namespace UStacker.Gameplay
         {
             var up = transform.lossyScale.y * transform.up;
             var right = transform.lossyScale.x * transform.right;
-            
-            transform.RotateAround(transform.position + (Width * .5f * right) + (Height * .5f * up),
+
+            transform.RotateAround(transform.position + Width * .5f * right + Height * .5f * up,
                 Vector3.forward, 30f);
         }
     }
 }
+/************************************
+end Board.cs
+*************************************/

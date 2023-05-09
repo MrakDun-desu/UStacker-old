@@ -1,5 +1,9 @@
-﻿using UStacker.Gameplay.Communication;
+
+/************************************
+ModernGameManagerWithoutLevelling.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
+using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Enums;
 
 namespace UStacker.Gameplay.GameManagers
@@ -36,7 +40,7 @@ namespace UStacker.Gameplay.GameManagers
         {
             if (message.NewState != GameState.Initializing)
                 return;
-            
+
             ResetState();
         }
 
@@ -46,7 +50,6 @@ namespace UStacker.Gameplay.GameManagers
             if (message.WasSpin)
                 scoreAddition = ((int) message.LinesCleared + 1) * 400;
             else if (message.WasSpinMini)
-            {
                 scoreAddition = message.LinesCleared switch
                 {
                     0 => 100,
@@ -54,9 +57,7 @@ namespace UStacker.Gameplay.GameManagers
                     2 => 400,
                     var amount => (int) amount * 300
                 };
-            }
             else
-            {
                 scoreAddition = message.LinesCleared switch
                 {
                     0 => 0,
@@ -65,7 +66,6 @@ namespace UStacker.Gameplay.GameManagers
                     3 => 500,
                     var amount => (int) amount * 200
                 };
-            }
 
             scoreAddition += (int) message.CurrentCombo * 50;
             if (message.WasAllClear)
@@ -97,3 +97,6 @@ namespace UStacker.Gameplay.GameManagers
         }
     }
 }
+/************************************
+end ModernGameManagerWithoutLevelling.cs
+*************************************/

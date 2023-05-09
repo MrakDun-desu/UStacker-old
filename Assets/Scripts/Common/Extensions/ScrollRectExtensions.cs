@@ -1,4 +1,8 @@
-﻿using DG.Tweening;
+
+/************************************
+ScrollRectExtensions.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,7 +41,10 @@ namespace UStacker.Common.Extensions
 
                 if (!setX && !setY) return;
             }
-            else targetPos = targetRect.max;
+            else
+            {
+                targetPos = targetRect.max;
+            }
 
             Vector2 contentInverse = self.transform.InverseTransformPoint(contentPanel.position);
             Vector2 targetInverse = self.transform.InverseTransformPoint(targetPos);
@@ -76,3 +83,6 @@ namespace UStacker.Common.Extensions
         }
     }
 }
+/************************************
+end ScrollRectExtensions.cs
+*************************************/

@@ -1,3 +1,7 @@
+
+/************************************
+GameSettingDoubleChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.Globalization;
 using UStacker.Common.Extensions;
 
@@ -7,7 +11,8 @@ namespace UStacker.GameSettings.Changers
     {
         protected override void RefreshValue()
         {
-            _valueField.SetTextWithoutNotify(_gameSettingsSO.GetValue<double>(_controlPath).ToString(CultureInfo.InvariantCulture));
+            _valueField.SetTextWithoutNotify(_gameSettingsSO.GetValue<double>(_controlPath)
+                .ToString(CultureInfo.InvariantCulture));
         }
 
         protected override void OnValueOverwritten(string newValue)
@@ -24,3 +29,6 @@ namespace UStacker.GameSettings.Changers
         }
     }
 }
+/************************************
+end GameSettingDoubleChanger.cs
+*************************************/

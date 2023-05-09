@@ -1,13 +1,17 @@
+
+/************************************
+PairsRandomizer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.Collections.Generic;
-using UStacker.Common.Extensions;
+using System.Linq;
 using UStacker.Common;
+using UStacker.Common.Extensions;
 
 namespace UStacker.Gameplay.Randomizers
 {
     public class PairsRandomizer : IRandomizer
     {
-
-        private readonly List<string> _availableValues = new()
+        private readonly string[] _availableValues =
         {
             "i",
             "t",
@@ -17,19 +21,20 @@ namespace UStacker.Gameplay.Randomizers
             "s",
             "z"
         };
-        private int _lastIndex;
+
         private readonly Random _random = new();
+        private int _lastIndex;
         private bool _shouldChange = true;
 
         public PairsRandomizer(IEnumerable<string> availablePieces)
         {
-            _availableValues = _availableValues.Filter(availablePieces);
+            _availableValues = _availableValues.Filter(availablePieces).ToArray();
         }
 
         public string GetNextPiece()
         {
             if (_shouldChange)
-                _lastIndex = _random.NextInt(_availableValues.Count);
+                _lastIndex = _random.NextInt(_availableValues.Length);
 
             _shouldChange = !_shouldChange;
             return _availableValues[_lastIndex];
@@ -42,3 +47,6 @@ namespace UStacker.Gameplay.Randomizers
         }
     }
 }
+/************************************
+end PairsRandomizer.cs
+*************************************/

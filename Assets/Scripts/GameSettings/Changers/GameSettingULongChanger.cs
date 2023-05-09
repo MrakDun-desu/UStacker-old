@@ -1,3 +1,7 @@
+
+/************************************
+GameSettingULongChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 namespace UStacker.GameSettings.Changers
 {
     public class GameSettingULongChanger : GameSettingChangerWithField<ulong>
@@ -14,3 +18,6 @@ namespace UStacker.GameSettings.Changers
         }
     }
 }
+/************************************
+end GameSettingULongChanger.cs
+*************************************/

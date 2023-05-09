@@ -1,3 +1,7 @@
+
+/************************************
+BetterSlider.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -57,3 +61,6 @@ namespace UStacker.Common.UI
         }
     }
 }
+/************************************
+end BetterSlider.cs
+*************************************/

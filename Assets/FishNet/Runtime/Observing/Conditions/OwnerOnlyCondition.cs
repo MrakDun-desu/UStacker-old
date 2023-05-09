@@ -5,18 +5,20 @@ using UnityEngine;
 namespace FishNet.Component.Observing
 {
     /// <summary>
-    /// This condition makes an object only visible to the owner.
+    ///     This condition makes an object only visible to the owner.
     /// </summary>
     [CreateAssetMenu(menuName = "FishNet/Observers/Owner Only Condition", fileName = "New Owner Only Condition")]
     public class OwnerOnlyCondition : ObserverCondition
     {
-
         /// <summary>
-        /// Returns if the object which this condition resides should be visible to connection.
+        ///     Returns if the object which this condition resides should be visible to connection.
         /// </summary>
         /// <param name="connection">Connection which the condition is being checked for.</param>
         /// <param name="currentlyAdded">True if the connection currently has visibility of this object.</param>
-        /// <param name="notProcessed">True if the condition was not processed. This can be used to skip processing for performance. While output as true this condition result assumes the previous ConditionMet value.</param>
+        /// <param name="notProcessed">
+        ///     True if the condition was not processed. This can be used to skip processing for
+        ///     performance. While output as true this condition result assumes the previous ConditionMet value.
+        /// </param>
         public override bool ConditionMet(NetworkConnection connection, bool currentlyAdded, out bool notProcessed)
         {
             notProcessed = false;
@@ -26,7 +28,7 @@ namespace FishNet.Component.Observing
         }
 
         /// <summary>
-        /// True if the condition requires regular updates.
+        ///     True if the condition requires regular updates.
         /// </summary>
         /// <returns></returns>
         public override bool Timed()
@@ -35,12 +37,12 @@ namespace FishNet.Component.Observing
         }
 
         /// <summary>
-        /// Clones referenced ObserverCondition. This must be populated with your conditions settings.
+        ///     Clones referenced ObserverCondition. This must be populated with your conditions settings.
         /// </summary>
         /// <returns></returns>
         public override ObserverCondition Clone()
         {
-            OwnerOnlyCondition copy = ScriptableObject.CreateInstance<OwnerOnlyCondition>();
+            var copy = CreateInstance<OwnerOnlyCondition>();
             return copy;
         }
     }

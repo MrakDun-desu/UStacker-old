@@ -1,4 +1,8 @@
-﻿using TMPro;
+
+/************************************
+AppSettingStringChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using TMPro;
 using UnityEngine;
 
 namespace UStacker.GlobalSettings.Changers
@@ -19,3 +23,6 @@ namespace UStacker.GlobalSettings.Changers
         }
     }
 }
+/************************************
+end AppSettingStringChanger.cs
+*************************************/

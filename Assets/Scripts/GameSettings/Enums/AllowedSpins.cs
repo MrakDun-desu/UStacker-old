@@ -1,3 +1,7 @@
+
+/************************************
+AllowedSpins.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 
 namespace UStacker.GameSettings.Enums
@@ -18,3 +22,6 @@ namespace UStacker.GameSettings.Enums
         Stupid = 0b1111111
     }
 }
+/************************************
+end AllowedSpins.cs
+*************************************/

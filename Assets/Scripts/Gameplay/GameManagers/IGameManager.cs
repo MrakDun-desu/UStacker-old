@@ -1,4 +1,8 @@
-﻿using UStacker.Gameplay.Communication;
+
+/************************************
+IGameManager.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UStacker.Gameplay.Communication;
 
 namespace UStacker.Gameplay.GameManagers
 {
@@ -8,3 +12,6 @@ namespace UStacker.Gameplay.GameManagers
         void Delete();
     }
 }
+/************************************
+end IGameManager.cs
+*************************************/

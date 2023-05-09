@@ -1,4 +1,8 @@
-﻿using FishNet.Broadcast;
+
+/************************************
+ChatBroadcast.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using FishNet.Broadcast;
 
 namespace UStacker.Multiplayer.Broadcasts
 {
@@ -14,3 +18,6 @@ namespace UStacker.Multiplayer.Broadcasts
         }
     }
 }
+/************************************
+end ChatBroadcast.cs
+*************************************/

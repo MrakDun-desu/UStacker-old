@@ -71,7 +71,9 @@ namespace DG.Tweening
         }
 
         public bool targetIsSelf = true; // If FALSE allows to set the target manually
+
         public GameObject targetGO; // Used in case targetIsSelf is FALSE
+
         // If FALSE always uses the GO containing this DOTweenAnimation (and not the one containing the target) as DOTween's SetTarget target
         public bool tweenTargetIsTargetGO = true;
 
@@ -213,12 +215,13 @@ namespace DG.Tweening
             if (!isValid)
             {
                 if (regenerateIfExists)
-                {
                     // Called manually: warn users
-                    Debug.LogWarning(string.Format("{0} :: This DOTweenAnimation isn't valid and its tween won't be created", gameObject.name), gameObject);
-                }
+                    Debug.LogWarning(
+                        string.Format("{0} :: This DOTweenAnimation isn't valid and its tween won't be created",
+                            gameObject.name), gameObject);
                 return;
             }
+
             if (tween != null)
             {
                 if (tween.active)
@@ -226,6 +229,7 @@ namespace DG.Tweening
                     if (regenerateIfExists) tween.Kill();
                     else return;
                 }
+
                 tween = null;
             }
 
@@ -238,27 +242,24 @@ namespace DG.Tweening
             if (target == null || tweenGO == null)
             {
                 if (targetIsSelf && target == null)
-                {
                     // Old error caused during upgrade from DOTween Pro 0.9.255
                     Debug.LogWarning(
                         string.Format(
                             "{0} :: This DOTweenAnimation's target is NULL, because the animation was created with a DOTween Pro version older than 0.9.255. To fix this, exit Play mode then simply select this object, and it will update automatically",
                             gameObject.name), gameObject);
-                }
                 else
-                {
                     // Missing non-self target
-                    Debug.LogWarning(string.Format("{0} :: This DOTweenAnimation's target/GameObject is unset: the tween will not be created.", gameObject.name), gameObject);
-                }
+                    Debug.LogWarning(
+                        string.Format(
+                            "{0} :: This DOTweenAnimation's target/GameObject is unset: the tween will not be created.",
+                            gameObject.name), gameObject);
                 return;
             }
 
             if (forcedTargetType != TargetType.Unset) targetType = forcedTargetType;
             if (targetType == TargetType.Unset)
-            {
                 // Legacy DOTweenAnimation (made with a version older than 0.9.450) without stored targetType > assign it now
                 targetType = TypeToDOTargetType(target.GetType());
-            }
 
             switch (animationType)
             {
@@ -270,7 +271,10 @@ namespace DG.Tweening
                         isRelative = false;
                         if (endValueTransform == null)
                         {
-                            Debug.LogWarning(string.Format("{0} :: This tween's TO target is NULL, a Vector3 of (0,0,0) will be used instead", gameObject.name), gameObject);
+                            Debug.LogWarning(
+                                string.Format(
+                                    "{0} :: This tween's TO target is NULL, a Vector3 of (0,0,0) will be used instead",
+                                    gameObject.name), gameObject);
                             endValueV3 = Vector3.zero;
                         }
                         else
@@ -281,7 +285,10 @@ namespace DG.Tweening
                                 var endValueT = endValueTransform as RectTransform;
                                 if (endValueT == null)
                                 {
-                                    Debug.LogWarning(string.Format("{0} :: This tween's TO target should be a RectTransform, a Vector3 of (0,0,0) will be used instead", gameObject.name),
+                                    Debug.LogWarning(
+                                        string.Format(
+                                            "{0} :: This tween's TO target should be a RectTransform, a Vector3 of (0,0,0) will be used instead",
+                                            gameObject.name),
                                         gameObject);
                                     endValueV3 = Vector3.zero;
                                 }
@@ -289,20 +296,24 @@ namespace DG.Tweening
                                 {
                                     var rTarget = target as RectTransform;
                                     if (rTarget == null)
-                                        Debug.LogWarning(string.Format("{0} :: This tween's target and TO target are not of the same type. Please reassign the values", gameObject.name),
+                                        Debug.LogWarning(
+                                            string.Format(
+                                                "{0} :: This tween's target and TO target are not of the same type. Please reassign the values",
+                                                gameObject.name),
                                             gameObject);
                                     else
-                                    {
                                         // Problem: doesn't work inside Awake (ararargh!)
                                         endValueV3 = DOTweenModuleUI.Utils.SwitchToRectTransform(endValueT, rTarget);
-                                    }
                                 }
                             }
                             else
 #endif
+                            {
                                 endValueV3 = endValueTransform.position;
+                            }
                         }
                     }
+
                     switch (targetType)
                     {
                         case TargetType.Transform:
@@ -330,6 +341,7 @@ namespace DG.Tweening
 #endif
                             break;
                     }
+
                     break;
                 case AnimationType.LocalMove:
                     tween = tweenGO.transform.DOLocalMove(endValueV3, duration, optionalBool0);
@@ -355,6 +367,7 @@ namespace DG.Tweening
 #endif
                             break;
                     }
+
                     break;
                 case AnimationType.LocalRotate:
                     tween = tweenGO.transform.DOLocalRotate(endValueV3, duration, optionalRotationMode);
@@ -364,20 +377,26 @@ namespace DG.Tweening
                     {
 #if false // TK2D_MARKER
                 case TargetType.tk2dTextMesh:
-                    tween = ((tk2dTextMesh)target).DOScale(optionalBool0 ? new Vector3(endValueFloat, endValueFloat, endValueFloat) : endValueV3, duration);
+                    tween =
+ ((tk2dTextMesh)target).DOScale(optionalBool0 ? new Vector3(endValueFloat, endValueFloat, endValueFloat) : endValueV3, duration);
                     break;
                 case TargetType.tk2dBaseSprite:
-                    tween = ((tk2dBaseSprite)target).DOScale(optionalBool0 ? new Vector3(endValueFloat, endValueFloat, endValueFloat) : endValueV3, duration);
+                    tween =
+ ((tk2dBaseSprite)target).DOScale(optionalBool0 ? new Vector3(endValueFloat, endValueFloat, endValueFloat) : endValueV3, duration);
                     break;
 #endif
                         default:
-                            tween = tweenGO.transform.DOScale(optionalBool0 ? new Vector3(endValueFloat, endValueFloat, endValueFloat) : endValueV3, duration);
+                            tween = tweenGO.transform.DOScale(
+                                optionalBool0 ? new Vector3(endValueFloat, endValueFloat, endValueFloat) : endValueV3,
+                                duration);
                             break;
                     }
+
                     break;
 #if true // UI_MARKER
                 case AnimationType.UIWidthHeight:
-                    tween = ((RectTransform) target).DOSizeDelta(optionalBool0 ? new Vector2(endValueFloat, endValueFloat) : endValueV2, duration);
+                    tween = ((RectTransform) target).DOSizeDelta(
+                        optionalBool0 ? new Vector2(endValueFloat, endValueFloat) : endValueV2, duration);
                     break;
 #endif
                 case AnimationType.Color:
@@ -420,6 +439,7 @@ namespace DG.Tweening
                             break;
 #endif
                     }
+
                     break;
                 case AnimationType.Fade:
                     isRelative = false;
@@ -464,20 +484,23 @@ namespace DG.Tweening
                             break;
 #endif
                     }
+
                     break;
                 case AnimationType.Text:
 #if true // UI_MARKER
                     switch (targetType)
                     {
                         case TargetType.Text:
-                            tween = ((Text) target).DOText(endValueString, duration, optionalBool0, optionalScrambleMode, optionalString);
+                            tween = ((Text) target).DOText(endValueString, duration, optionalBool0,
+                                optionalScrambleMode, optionalString);
                             break;
                     }
 #endif
 #if false // TK2D_MARKER
                 switch (targetType) {
                 case TargetType.tk2dTextMesh:
-                    tween = ((tk2dTextMesh)target).DOText(endValueString, duration, optionalBool0, optionalScrambleMode, optionalString);
+                    tween =
+ ((tk2dTextMesh)target).DOText(endValueString, duration, optionalBool0, optionalScrambleMode, optionalString);
                     break;
                 }
 #endif
@@ -485,10 +508,12 @@ namespace DG.Tweening
                     switch (targetType)
                     {
                         case TargetType.TextMeshProUGUI:
-                            tween = ((TextMeshProUGUI) target).DOText(endValueString, duration, optionalBool0, optionalScrambleMode, optionalString);
+                            tween = ((TextMeshProUGUI) target).DOText(endValueString, duration, optionalBool0,
+                                optionalScrambleMode, optionalString);
                             break;
                         case TargetType.TextMeshPro:
-                            tween = ((TextMeshPro) target).DOText(endValueString, duration, optionalBool0, optionalScrambleMode, optionalString);
+                            tween = ((TextMeshPro) target).DOText(endValueString, duration, optionalBool0,
+                                optionalScrambleMode, optionalString);
                             break;
                     }
 #endif
@@ -497,14 +522,17 @@ namespace DG.Tweening
                     switch (targetType)
                     {
                         case TargetType.Transform:
-                            tween = ((Transform) target).DOPunchPosition(endValueV3, duration, optionalInt0, optionalFloat0, optionalBool0);
+                            tween = ((Transform) target).DOPunchPosition(endValueV3, duration, optionalInt0,
+                                optionalFloat0, optionalBool0);
                             break;
 #if true // UI_MARKER
                         case TargetType.RectTransform:
-                            tween = ((RectTransform) target).DOPunchAnchorPos(endValueV3, duration, optionalInt0, optionalFloat0, optionalBool0);
+                            tween = ((RectTransform) target).DOPunchAnchorPos(endValueV3, duration, optionalInt0,
+                                optionalFloat0, optionalBool0);
                             break;
 #endif
                     }
+
                     break;
                 case AnimationType.PunchScale:
                     tween = tweenGO.transform.DOPunchScale(endValueV3, duration, optionalInt0, optionalFloat0);
@@ -516,20 +544,25 @@ namespace DG.Tweening
                     switch (targetType)
                     {
                         case TargetType.Transform:
-                            tween = ((Transform) target).DOShakePosition(duration, endValueV3, optionalInt0, optionalFloat0, optionalBool0, optionalBool1, optionalShakeRandomnessMode);
+                            tween = ((Transform) target).DOShakePosition(duration, endValueV3, optionalInt0,
+                                optionalFloat0, optionalBool0, optionalBool1, optionalShakeRandomnessMode);
                             break;
 #if true // UI_MARKER
                         case TargetType.RectTransform:
-                            tween = ((RectTransform) target).DOShakeAnchorPos(duration, endValueV3, optionalInt0, optionalFloat0, optionalBool0, optionalBool1, optionalShakeRandomnessMode);
+                            tween = ((RectTransform) target).DOShakeAnchorPos(duration, endValueV3, optionalInt0,
+                                optionalFloat0, optionalBool0, optionalBool1, optionalShakeRandomnessMode);
                             break;
 #endif
                     }
+
                     break;
                 case AnimationType.ShakeScale:
-                    tween = tweenGO.transform.DOShakeScale(duration, endValueV3, optionalInt0, optionalFloat0, optionalBool1, optionalShakeRandomnessMode);
+                    tween = tweenGO.transform.DOShakeScale(duration, endValueV3, optionalInt0, optionalFloat0,
+                        optionalBool1, optionalShakeRandomnessMode);
                     break;
                 case AnimationType.ShakeRotation:
-                    tween = tweenGO.transform.DOShakeRotation(duration, endValueV3, optionalInt0, optionalFloat0, optionalBool1, optionalShakeRandomnessMode);
+                    tween = tweenGO.transform.DOShakeRotation(duration, endValueV3, optionalInt0, optionalFloat0,
+                        optionalBool1, optionalShakeRandomnessMode);
                     break;
                 case AnimationType.CameraAspect:
                     tween = ((Camera) target).DOAspect(endValueFloat, duration);
@@ -572,32 +605,55 @@ namespace DG.Tweening
             {
                 if (onStart != null) tween.OnStart(onStart.Invoke);
             }
-            else onStart = null;
+            else
+            {
+                onStart = null;
+            }
+
             if (hasOnPlay)
             {
                 if (onPlay != null) tween.OnPlay(onPlay.Invoke);
             }
-            else onPlay = null;
+            else
+            {
+                onPlay = null;
+            }
+
             if (hasOnUpdate)
             {
                 if (onUpdate != null) tween.OnUpdate(onUpdate.Invoke);
             }
-            else onUpdate = null;
+            else
+            {
+                onUpdate = null;
+            }
+
             if (hasOnStepComplete)
             {
                 if (onStepComplete != null) tween.OnStepComplete(onStepComplete.Invoke);
             }
-            else onStepComplete = null;
+            else
+            {
+                onStepComplete = null;
+            }
+
             if (hasOnComplete)
             {
                 if (onComplete != null) tween.OnComplete(onComplete.Invoke);
             }
-            else onComplete = null;
+            else
+            {
+                onComplete = null;
+            }
+
             if (hasOnRewind)
             {
                 if (onRewind != null) tween.OnRewind(onRewind.Invoke);
             }
-            else onRewind = null;
+            else
+            {
+                onRewind = null;
+            }
 
             if (andPlay) tween.Play();
             else tween.Pause();
@@ -652,9 +708,11 @@ namespace DG.Tweening
             var newTargetType = TypeToDOTargetType(target.GetType());
             if (newTargetType != targetType)
             {
-                Debug.LogError("DOTweenAnimation ► SetAnimationTarget: the new target is of a different type from the one set in the Inspector");
+                Debug.LogError(
+                    "DOTweenAnimation ► SetAnimationTarget: the new target is of a different type from the one set in the Inspector");
                 return;
             }
+
             target = tweenTarget;
             targetGO = target.gameObject;
             tweenTargetIsTargetGO = useTweenTargetGameObjectForGroupOperations;
@@ -742,6 +800,7 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 1) Debugger.LogNullTween(tween);
                 return;
             }
+
             if (fromHere && isRelative) ReEvaluateRelativeTween();
             DOTween.Restart(GetTweenTarget());
         }
@@ -831,7 +890,8 @@ namespace DG.Tweening
             {
                 _playCount++;
                 var anim = anims[_playCount];
-                if (anim != null && anim.tween != null && anim.tween.active && !anim.tween.IsPlaying() && !anim.tween.IsComplete())
+                if (anim != null && anim.tween != null && anim.tween.active && !anim.tween.IsPlaying() &&
+                    !anim.tween.IsComplete())
                 {
                     anim.tween.Play();
                     break;
@@ -911,7 +971,8 @@ namespace DG.Tweening
 //#endif
 #if true // UI_MARKER
 //            if (str == "RectTransform") str = "Transform";
-            if (str == "RawImage" || str == "Graphic") str = "Image"; // RawImages/Graphics are managed like Images for DOTweenAnimation (color and fade use Graphic target anyway)
+            if (str == "RawImage" || str == "Graphic")
+                str = "Image"; // RawImages/Graphics are managed like Images for DOTweenAnimation (color and fade use Graphic target anyway)
 #endif
             return (TargetType) Enum.Parse(typeof(TargetType), str);
         }
@@ -958,12 +1019,17 @@ namespace DG.Tweening
             var tweenGO = GetTweenGO();
             if (tweenGO == null)
             {
-                Debug.LogWarning(string.Format("{0} :: This DOTweenAnimation's target/GameObject is unset: the tween will not be created.", gameObject.name), gameObject);
+                Debug.LogWarning(
+                    string.Format(
+                        "{0} :: This DOTweenAnimation's target/GameObject is unset: the tween will not be created.",
+                        gameObject.name), gameObject);
                 return;
             }
+
             if (animationType == AnimationType.Move)
                 ((Tweener) tween).ChangeEndValue(tweenGO.transform.position + endValueV3, true);
-            else if (animationType == AnimationType.LocalMove) ((Tweener) tween).ChangeEndValue(tweenGO.transform.localPosition + endValueV3, true);
+            else if (animationType == AnimationType.LocalMove)
+                ((Tweener) tween).ChangeEndValue(tweenGO.transform.localPosition + endValueV3, true);
         }
 
         #endregion

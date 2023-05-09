@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+
+/************************************
+GarbageBoardInterface.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using JetBrains.Annotations;
@@ -17,12 +21,11 @@ namespace UStacker.Gameplay.GarbageGeneration
 
         public uint Width => _source.Width;
 
-        [UsedImplicitly]
-        public uint Height => _source.Height;
-        [UsedImplicitly]
-        public uint GarbageHeight => _source.GarbageHeight;
-        [UsedImplicitly]
-        public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots => _source.Slots;
+        [UsedImplicitly] public uint Height => _source.Height;
+
+        [UsedImplicitly] public uint GarbageHeight => _source.GarbageHeight;
+
+        [UsedImplicitly] public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots => _source.Slots;
 
         public void AddGarbageLayer(List<List<bool>> slots, bool addToLast)
         {
@@ -43,3 +46,6 @@ namespace UStacker.Gameplay.GarbageGeneration
         }
     }
 }
+/************************************
+end GarbageBoardInterface.cs
+*************************************/

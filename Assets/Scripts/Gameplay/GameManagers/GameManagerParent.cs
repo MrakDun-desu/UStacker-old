@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+GameManagerParent.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UStacker.Gameplay.Communication;
@@ -52,12 +56,15 @@ namespace UStacker.Gameplay.GameManagers
 
             if (_currentManager is CustomGameManager custom)
                 custom.CustomInitialize(
-                    _board, 
-                    _timer, 
-                    GameSettings.Objective.CustomGameManagerScript, 
+                    _board,
+                    _timer,
+                    GameSettings.Objective.CustomGameManagerScript,
                     OnGameEnded,
-                    OnGameLost, 
+                    OnGameLost,
                     GameSettings.General.ActiveSeed);
         }
     }
 }
+/************************************
+end GameManagerParent.cs
+*************************************/

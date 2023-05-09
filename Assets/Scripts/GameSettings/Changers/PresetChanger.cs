@@ -1,11 +1,14 @@
-﻿using System.Linq;
+
+/************************************
+PresetChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Linq;
 using System.Threading.Tasks;
-using UStacker.Common.Alerts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UStacker.Common;
-using UStacker.GlobalSettings;
+using UStacker.Common.Alerts;
 
 namespace UStacker.GameSettings.Changers
 {
@@ -50,7 +53,9 @@ namespace UStacker.GameSettings.Changers
                 }
             }
             else
+            {
                 _dropdown.AddOptions(availableOptions.Select(opt => new TMP_Dropdown.OptionData(opt)).ToList());
+            }
 
             if (_dropdown.options.Count == 1)
             {
@@ -80,7 +85,7 @@ namespace UStacker.GameSettings.Changers
                 : new Alert("Game settings load failed!",
                     $"Game preset {presetName} couldn't be found.",
                     AlertType.Error);
-            
+
             AlertDisplayer.ShowAlert(shownAlert);
         }
 
@@ -102,3 +107,6 @@ namespace UStacker.GameSettings.Changers
         }
     }
 }
+/************************************
+end PresetChanger.cs
+*************************************/

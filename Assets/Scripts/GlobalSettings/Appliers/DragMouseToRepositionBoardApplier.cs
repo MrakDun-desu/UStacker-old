@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+DragMouseToRepositionBoardApplier.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 
 namespace UStacker.GlobalSettings.Appliers
 {
@@ -12,3 +16,6 @@ namespace UStacker.GlobalSettings.Appliers
         }
     }
 }
+/************************************
+end DragMouseToRepositionBoardApplier.cs
+*************************************/

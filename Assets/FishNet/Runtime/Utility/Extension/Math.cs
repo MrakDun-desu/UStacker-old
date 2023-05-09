@@ -1,34 +1,29 @@
 ﻿namespace FishNet.Utility.Extension
 {
-
     public static class MathFN
     {
-
         /// <summary>
-        /// Returns a clamped SBytte.
+        ///     Returns a clamped SBytte.
         /// </summary>
         public static sbyte ClampSByte(long value, sbyte min, sbyte max)
         {
             if (value < min)
                 return min;
-            else if (value > max)
+            if (value > max)
                 return max;
-            else
-                return (sbyte)value;
+            return (sbyte) value;
         }
 
         /// <summary>
-        /// Returns a clamped double.
+        ///     Returns a clamped double.
         /// </summary>
         public static double ClampDouble(double value, double min, double max)
         {
             if (value < min)
                 return min;
-            else if (value > max)
+            if (value > max)
                 return max;
-            else
-                return value;
+            return value;
         }
     }
-
 }

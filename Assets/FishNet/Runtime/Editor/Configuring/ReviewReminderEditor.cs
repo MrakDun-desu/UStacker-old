@@ -5,43 +5,86 @@ using UnityEngine;
 
 namespace FishNet.Editing
 {
-
     /// <summary>
-    /// Contributed by YarnCat! Thank you!
+    ///     Contributed by YarnCat! Thank you!
     /// </summary>
     public class ReviewReminderEditor : EditorWindow
     {
-        private Texture2D _fishnetLogo, _reviewButtonBg, _reviewButtonBgHover;
-        private GUIStyle _labelStyle, _reviewButtonStyle;
-
         private const string DATETIME_REMINDED = "ReviewDateTimeReminded";
         private const string CHECK_REMIND_COUNT = "CheckRemindCount";
         private const string IS_ENABLED = "ReminderEnabled";
 
         private static ReviewReminderEditor _window;
+        private Texture2D _fishnetLogo, _reviewButtonBg, _reviewButtonBgHover;
+        private GUIStyle _labelStyle, _reviewButtonStyle;
+
+        private void OnGUI()
+        {
+            var thisWidth = position.width;
+            StyleWindow();
+            GUILayout.Box(_fishnetLogo, GUILayout.Width(position.width), GUILayout.Height(160f));
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Space(8f);
+            GUILayout.Label("Have you considered leaving us a review?", _labelStyle,
+                GUILayout.Width(thisWidth * 0.95f));
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Don't Ask Again", GUILayout.Width(position.width)))
+            {
+                Close();
+                EditorPrefs.SetBool(IS_ENABLED, false);
+            }
+
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Ask Later", GUILayout.Width(position.width)))
+            {
+                Close();
+                Application.OpenURL("https://discord.gg/Ta9HgDh4Hj");
+            }
+
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Leave A Review", GUILayout.Width(position.width)))
+            {
+                Close();
+                EditorPrefs.SetBool(IS_ENABLED, false);
+                Application.OpenURL(
+                    "https://assetstore.unity.com/packages/tools/network/fish-net-networking-evolved-207815");
+            }
+
+            EditorGUILayout.EndHorizontal();
+
+            //GUILayout.Space(20);
+            //_showOnStartupSelected = EditorGUILayout.Popup("Show on Startup", _showOnStartupSelected, showOnStartupOptions);
+        }
 
         internal static void CheckRemindToReview()
         {
-            bool reminderEnabled = EditorPrefs.GetBool(IS_ENABLED, true);
+            var reminderEnabled = EditorPrefs.GetBool(IS_ENABLED, true);
             if (!reminderEnabled)
                 return;
 
             /* Require at least two opens and 10 days
              * to be passed before reminding. */
-            int checkRemindCount = (EditorPrefs.GetInt(CHECK_REMIND_COUNT, 0) + 1);
+            var checkRemindCount = EditorPrefs.GetInt(CHECK_REMIND_COUNT, 0) + 1;
             EditorPrefs.SetInt(CHECK_REMIND_COUNT, checkRemindCount);
 
             //Not enough checks.
             if (checkRemindCount < 2)
                 return;
 
-            string dtStr = EditorPrefs.GetString(DATETIME_REMINDED, string.Empty);
+            var dtStr = EditorPrefs.GetString(DATETIME_REMINDED, string.Empty);
             //Somehow got cleared. Reset.
             if (string.IsNullOrWhiteSpace(dtStr))
             {
                 ResetDateTimeReminded();
                 return;
             }
+
             long binary;
             //Failed to parse.
             if (!long.TryParse(dtStr, out binary))
@@ -49,8 +92,9 @@ namespace FishNet.Editing
                 ResetDateTimeReminded();
                 return;
             }
+
             //Not enough time passed.
-            DateTime dt = DateTime.FromBinary(binary);
+            var dt = DateTime.FromBinary(binary);
             if ((DateTime.Now - dt).TotalDays < 10)
                 return;
 
@@ -69,12 +113,12 @@ namespace FishNet.Editing
         {
             InitializeWindow();
         }
-      
-        static void InitializeWindow()
+
+        private static void InitializeWindow()
         {
             if (_window != null)
                 return;
-            _window = (ReviewReminderEditor)EditorWindow.GetWindow(typeof(ReviewReminderEditor));
+            _window = (ReviewReminderEditor) GetWindow(typeof(ReviewReminderEditor));
             _window.position = new Rect(0f, 0f, 320f, 300f);
             Rect mainPos;
 #if UNITY_2020_1_OR_NEWER
@@ -83,17 +127,19 @@ namespace FishNet.Editing
             mainPos = new Rect(Vector2.zero, Vector2.zero);
 #endif
             var pos = _window.position;
-            float w = (mainPos.width - pos.width) * 0.5f;
-            float h = (mainPos.height - pos.height) * 0.5f;
+            var w = (mainPos.width - pos.width) * 0.5f;
+            var h = (mainPos.height - pos.height) * 0.5f;
             pos.x = mainPos.x + w;
             pos.y = mainPos.y + h;
             _window.position = pos;
         }
 
-        static void StyleWindow()
+        private static void StyleWindow()
         {
             InitializeWindow();
-            _window._fishnetLogo = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/FishNet/Runtime/Editor/Textures/UI/Logo_With_Text.png", typeof(Texture));
+            _window._fishnetLogo =
+                (Texture2D) AssetDatabase.LoadAssetAtPath(
+                    "Assets/FishNet/Runtime/Editor/Textures/UI/Logo_With_Text.png", typeof(Texture));
             _window._labelStyle = new GUIStyle("label");
             _window._labelStyle.fontSize = 24;
             _window._labelStyle.wordWrap = true;
@@ -113,59 +159,18 @@ namespace FishNet.Editing
             _window._reviewButtonStyle.onHover.background = _window._reviewButtonBgHover;
             _window._reviewButtonStyle.alignment = TextAnchor.MiddleCenter;
             _window._reviewButtonStyle.normal.textColor = new Color(1, 1, 1, 1);
-
-        }
-
-        void OnGUI()
-        {
-            float thisWidth = this.position.width;
-            StyleWindow();
-            GUILayout.Box(_fishnetLogo, GUILayout.Width(this.position.width), GUILayout.Height(160f));
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Space(8f);
-            GUILayout.Label("Have you considered leaving us a review?", _labelStyle, GUILayout.Width(thisWidth * 0.95f));
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Don't Ask Again", GUILayout.Width(this.position.width)))
-            {
-                this.Close();
-                EditorPrefs.SetBool(IS_ENABLED, false);
-            }
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Ask Later", GUILayout.Width(this.position.width)))
-            {
-                this.Close();
-                Application.OpenURL("https://discord.gg/Ta9HgDh4Hj");
-            }
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Leave A Review", GUILayout.Width(this.position.width)))
-            {
-                this.Close();
-                EditorPrefs.SetBool(IS_ENABLED, false);
-                Application.OpenURL("https://assetstore.unity.com/packages/tools/network/fish-net-networking-evolved-207815");
-            }
-            EditorGUILayout.EndHorizontal();
-
-            //GUILayout.Space(20);
-            //_showOnStartupSelected = EditorGUILayout.Popup("Show on Startup", _showOnStartupSelected, showOnStartupOptions);
         }
 
         private static Texture2D MakeBackgroundTexture(int width, int height, Color color)
         {
-            Color[] pixels = new Color[width * height];
-            for (int i = 0; i < pixels.Length; i++)
+            var pixels = new Color[width * height];
+            for (var i = 0; i < pixels.Length; i++)
                 pixels[i] = color;
-            Texture2D backgroundTexture = new Texture2D(width, height);
+            var backgroundTexture = new Texture2D(width, height);
             backgroundTexture.SetPixels(pixels);
             backgroundTexture.Apply();
             return backgroundTexture;
         }
     }
-
 }
 #endif

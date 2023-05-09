@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+
+/************************************
+GameManagerBoardInterface.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using JetBrains.Annotations;
@@ -8,7 +12,6 @@ namespace UStacker.Gameplay.GameManagers
 {
     public class GameManagerBoardInterface
     {
-
         private readonly Board _source;
 
         public GameManagerBoardInterface(Board source)
@@ -16,16 +19,15 @@ namespace UStacker.Gameplay.GameManagers
             _source = source;
         }
 
-        [UsedImplicitly]
-        public uint Width => _source.Width;
-        [UsedImplicitly]
-        public uint Height => _source.Height;
-        [UsedImplicitly]
-        public uint LethalHeight => _source.LethalHeight;
-        [UsedImplicitly]
-        public uint GarbageHeight => _source.GarbageHeight;
-        [UsedImplicitly]
-        public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots => _source.Slots;
+        [UsedImplicitly] public uint Width => _source.Width;
+
+        [UsedImplicitly] public uint Height => _source.Height;
+
+        [UsedImplicitly] public uint LethalHeight => _source.LethalHeight;
+
+        [UsedImplicitly] public uint GarbageHeight => _source.GarbageHeight;
+
+        [UsedImplicitly] public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots => _source.Slots;
 
         [UsedImplicitly]
         public void AddGarbageLayer(List<List<bool>> slots, bool addToLast)
@@ -50,3 +52,6 @@ namespace UStacker.Gameplay.GameManagers
         }
     }
 }
+/************************************
+end GameManagerBoardInterface.cs
+*************************************/

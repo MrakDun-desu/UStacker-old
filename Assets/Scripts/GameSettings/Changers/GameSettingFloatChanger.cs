@@ -1,3 +1,7 @@
+
+/************************************
+GameSettingFloatChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.Globalization;
 
 namespace UStacker.GameSettings.Changers
@@ -6,7 +10,8 @@ namespace UStacker.GameSettings.Changers
     {
         protected override void RefreshValue()
         {
-            _valueField.SetTextWithoutNotify(_gameSettingsSO.GetValue<float>(_controlPath).ToString(CultureInfo.InvariantCulture));
+            _valueField.SetTextWithoutNotify(_gameSettingsSO.GetValue<float>(_controlPath)
+                .ToString(CultureInfo.InvariantCulture));
         }
 
         protected override void OnValueOverwritten(string value)
@@ -22,3 +27,6 @@ namespace UStacker.GameSettings.Changers
         }
     }
 }
+/************************************
+end GameSettingFloatChanger.cs
+*************************************/

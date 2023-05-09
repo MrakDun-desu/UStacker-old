@@ -1,4 +1,8 @@
-﻿using FishNet;
+
+/************************************
+ChatController.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using FishNet;
 using FishNet.Connection;
 using TMPro;
 using UnityEngine;
@@ -31,7 +35,7 @@ namespace UStacker.Multiplayer.LobbyUi
         {
             if (InstanceFinder.ClientManager != null)
                 InstanceFinder.ClientManager.UnregisterBroadcast<ChatBroadcast>(OnChatBroadcastClient);
-            
+
             if (InstanceFinder.ServerManager != null)
                 InstanceFinder.ServerManager.UnregisterBroadcast<ChatBroadcast>(OnChatBroadcastServer);
         }
@@ -40,7 +44,7 @@ namespace UStacker.Multiplayer.LobbyUi
         {
             if (!Player.ConnectedPlayers.TryGetValue(broadcast.SenderId, out var sender))
                 return;
-            
+
             var newChatMessage = Instantiate(_chatMessagePrefab, _chatListParent);
             newChatMessage.Init(sender.DisplayName, broadcast.Content);
             _chatScrollRect.verticalScrollbar.SetValueWithoutNotify(0);
@@ -53,7 +57,7 @@ namespace UStacker.Multiplayer.LobbyUi
                 message = message[..250];
                 AlertDisplayer.ShowAlert(new Alert(
                     "Chat message shortened",
-                    "Your message exceeded the limit of 250 characters.", 
+                    "Your message exceeded the limit of 250 characters.",
                     AlertType.Info));
             }
 
@@ -72,3 +76,6 @@ namespace UStacker.Multiplayer.LobbyUi
         }
     }
 }
+/************************************
+end ChatController.cs
+*************************************/

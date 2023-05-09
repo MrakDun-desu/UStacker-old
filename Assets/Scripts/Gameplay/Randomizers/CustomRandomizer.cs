@@ -1,8 +1,13 @@
+
+/************************************
+CustomRandomizer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections.Generic;
-using UStacker.Common.Extensions;
+using System.Linq;
 using NLua;
 using NLua.Exceptions;
+using UStacker.Common.Extensions;
 using UStacker.Common.LuaApi;
 using UStacker.Gameplay.Communication;
 using Random = UStacker.Common.Random;
@@ -12,7 +17,8 @@ namespace UStacker.Gameplay.Randomizers
     public class CustomRandomizer : IRandomizer, IDisposable
     {
         private const string AVAILABLE_PIECES_VARIABLE_NAME = "AvailablePieces";
-        private readonly List<string> _availableValues = new()
+
+        private readonly string[] _availableValues =
         {
             "i",
             "t",
@@ -24,15 +30,15 @@ namespace UStacker.Gameplay.Randomizers
         };
 
         private readonly Lua _luaState;
-        private readonly LuaFunction _nextPieceFunction;
-        private readonly LuaFunction _resetFunction;
-        private readonly Random _random;
         private readonly Mediator _mediator;
+        private readonly LuaFunction _nextPieceFunction;
+        private readonly Random _random;
+        private readonly LuaFunction _resetFunction;
 
         public CustomRandomizer(IEnumerable<string> availablePieces, string script, Mediator mediator)
         {
             _luaState = CreateLua.WithAllPrerequisites(out _random);
-            _availableValues = _availableValues.Filter(availablePieces);
+            _availableValues = _availableValues.Filter(availablePieces).ToArray();
             _mediator = mediator;
 
             InsertAvailableValuesIntoLua();
@@ -56,12 +62,18 @@ namespace UStacker.Gameplay.Randomizers
 
                 if (_resetFunction is null)
                     _mediator.Send(new GameCrashedMessage("Custom randomizer reset function is not valid"));
-
             }
             catch (LuaException ex)
             {
                 _mediator.Send(new GameCrashedMessage($"Custom randomizer crashed. Lua exception: {ex.Message}"));
             }
+        }
+
+        public void Dispose()
+        {
+            _luaState?.Dispose();
+            _nextPieceFunction?.Dispose();
+            _resetFunction?.Dispose();
         }
 
         public string GetNextPiece()
@@ -72,25 +84,30 @@ namespace UStacker.Gameplay.Randomizers
 
                 if (result.Length < 1)
                 {
-                    _mediator.Send(new GameCrashedMessage("Custom randomizer next piece function didn't return a value"));
+                    _mediator.Send(
+                        new GameCrashedMessage("Custom randomizer next piece function didn't return a value"));
                     return null;
                 }
 
                 if (result[0] is not string nextPiece)
                 {
-                    _mediator.Send(new GameCrashedMessage($"Custom randomizer next piece function returned an invalid value {result[0]}"));
+                    _mediator.Send(new GameCrashedMessage(
+                        $"Custom randomizer next piece function returned an invalid value \"{result[0]}\""));
                     return null;
                 }
 
                 if (_availableValues.Contains(nextPiece))
                     return nextPiece;
-                
-                _mediator.Send(new GameCrashedMessage($"Custom randomizer next piece function returned an invalid value {result[0]}"));
+
+                _mediator.Send(new GameCrashedMessage(
+                    $"Custom randomizer next piece function returned an invalid value \"{result[0]}\""));
                 return null;
             }
             catch (LuaException ex)
             {
-                _mediator.Send(new GameCrashedMessage($"Custom randomizer next piece function crashed. Lua exception: {ex.Message}"));
+                _mediator.Send(
+                    new GameCrashedMessage(
+                        $"Custom randomizer next piece function crashed. Lua exception: {ex.Message}"));
                 return null;
             }
         }
@@ -103,8 +120,10 @@ namespace UStacker.Gameplay.Randomizers
             }
             catch (LuaException ex)
             {
-                _mediator.Send(new GameCrashedMessage($"Custom randomizer reset function crashed. Lua exception: {ex.Message}"));
+                _mediator.Send(
+                    new GameCrashedMessage($"Custom randomizer reset function crashed. Lua exception: {ex.Message}"));
             }
+
             _random.State = newSeed;
         }
 
@@ -112,15 +131,11 @@ namespace UStacker.Gameplay.Randomizers
         {
             _luaState.DoString($"{AVAILABLE_PIECES_VARIABLE_NAME} = {{}}");
             var availablePiecesTable = (LuaTable) _luaState[AVAILABLE_PIECES_VARIABLE_NAME];
-            for (var i = 0; i < _availableValues.Count; i++)
+            for (var i = 0; i < _availableValues.Length; i++)
                 availablePiecesTable[i + 1] = _availableValues[i];
-        }
-
-        public void Dispose()
-        {
-            _luaState?.Dispose();
-            _nextPieceFunction?.Dispose();
-            _resetFunction?.Dispose();
         }
     }
 }
+/************************************
+end CustomRandomizer.cs
+*************************************/

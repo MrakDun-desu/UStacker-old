@@ -1,10 +1,14 @@
+
+/************************************
+RebindChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections;
 using System.Linq;
-using UStacker.Common.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UStacker.Common.Extensions;
 using static UnityEngine.InputSystem.InputActionRebindingExtensions;
 
 namespace UStacker.GlobalSettings.Changers
@@ -137,3 +141,6 @@ namespace UStacker.GlobalSettings.Changers
         }
     }
 }
+/************************************
+end RebindChanger.cs
+*************************************/

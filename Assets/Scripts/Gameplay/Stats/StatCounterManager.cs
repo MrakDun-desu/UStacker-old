@@ -1,15 +1,19 @@
-﻿using System;
+
+/************************************
+StatCounterManager.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using UStacker.Gameplay.Communication;
-using UStacker.Gameplay.Enums;
-using UStacker.GlobalSettings;
-using UStacker.GlobalSettings.StatCounting;
 using UnityEngine;
 using UnityEngine.Pool;
+using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Enums;
 using UStacker.Gameplay.Initialization;
 using UStacker.Gameplay.Timing;
 using UStacker.GameSettings;
+using UStacker.GlobalSettings;
+using UStacker.GlobalSettings.StatCounting;
 
 namespace UStacker.Gameplay.Stats
 {
@@ -23,31 +27,13 @@ namespace UStacker.Gameplay.Stats
         [SerializeField] private StatContainer _stats = new();
 
         public ReadonlyStatContainer Stats;
+        private readonly List<StatCounterDisplayer> _activeDisplayers = new();
+        private bool _awake;
+        private ObjectPool<StatCounterDisplayer> _displayerPool;
 
         private GameSettingsSO.SettingsContainer _gameSettings;
-        private bool _awake;
-
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            private get => _gameSettings;
-            set
-            {
-                _gameSettings = value;
-                Awake();
-                Initialize();
-            }
-        }
 
         private StatUtility _statUtility;
-        private ObjectPool<StatCounterDisplayer> _displayerPool;
-        private readonly List<StatCounterDisplayer> _activeDisplayers = new();
-
-        private StatCounterDisplayer CreateDisplayer()
-        {
-            var newDisplayer = Instantiate(_displayerPrefab, _statCountersCanvas.transform);
-            newDisplayer.Initialize(_mediator, new StatBoardInterface(_board), Stats, _statUtility);
-            return newDisplayer;
-        }
 
         private void Awake()
         {
@@ -59,16 +45,23 @@ namespace UStacker.Gameplay.Stats
             Stats = new ReadonlyStatContainer(_stats);
 
             _displayerPool = new ObjectPool<StatCounterDisplayer>(
-                CreateDisplayer, 
+                CreateDisplayer,
                 displayer => displayer.gameObject.SetActive(true),
                 displayer => displayer.gameObject.SetActive(false),
                 displayer => Destroy(displayer.gameObject)
             );
         }
 
-        private void OnDestroy()
+        private void Update()
         {
-            _displayerPool.Dispose();
+            if (_timer.CurrentTime > 0)
+            {
+                _stats.LinesPerMinute = _stats.LinesCleared / _timer.CurrentTime * 60d;
+                _stats.PiecesPerSecond = _stats.PiecesPlaced / _timer.CurrentTime;
+            }
+
+            if (_stats.PiecesPlaced > 0)
+                _stats.KeysPerPiece = (double) _stats.KeysPressed / _stats.PiecesPlaced;
         }
 
         private void OnEnable()
@@ -91,16 +84,27 @@ namespace UStacker.Gameplay.Stats
             _mediator.Unregister<GameStateChangedMessage>(OnGameStateChange);
         }
 
-        private void Update()
+        private void OnDestroy()
         {
-            if (_timer.CurrentTime > 0)
-            {
-                _stats.LinesPerMinute = _stats.LinesCleared / _timer.CurrentTime * 60d;
-                _stats.PiecesPerSecond = _stats.PiecesPlaced / _timer.CurrentTime;
-            }
+            _displayerPool.Dispose();
+        }
 
-            if (_stats.PiecesPlaced > 0)
-                _stats.KeysPerPiece = (double) _stats.KeysPressed / _stats.PiecesPlaced;
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            private get => _gameSettings;
+            set
+            {
+                _gameSettings = value;
+                Awake();
+                Initialize();
+            }
+        }
+
+        private StatCounterDisplayer CreateDisplayer()
+        {
+            var newDisplayer = Instantiate(_displayerPrefab, _statCountersCanvas.transform);
+            newDisplayer.Initialize(_mediator, new StatBoardInterface(_board), Stats, _statUtility);
+            return newDisplayer;
         }
 
         private void OnGameStateChange(GameStateChangedMessage message)
@@ -115,7 +119,7 @@ namespace UStacker.Gameplay.Stats
         {
             foreach (var displayer in _activeDisplayers)
                 _displayerPool.Release(displayer);
-            
+
             _activeDisplayers.Clear();
 
             var counterGroup = GameSettings.Presentation.DefaultStatCounterGroup;
@@ -124,8 +128,8 @@ namespace UStacker.Gameplay.Stats
             {
                 AppSettings.StatCounting.StatCounterGroups ??= new Dictionary<Guid, StatCounterGroup>();
 
-                if (AppSettings.StatCounting.StatCounterGroups.ContainsKey(overrideId))
-                    counterGroup = AppSettings.StatCounting.StatCounterGroups[overrideId];
+                if (AppSettings.StatCounting.StatCounterGroups.TryGetValue(overrideId, out var group))
+                    counterGroup = group;
             }
 
             var usedCounters = counterGroup.StatCounters.Where(counter => !string.IsNullOrEmpty(counter.Script))
@@ -219,3 +223,6 @@ namespace UStacker.Gameplay.Stats
         }
     }
 }
+/************************************
+end StatCounterManager.cs
+*************************************/

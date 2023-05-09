@@ -1,4 +1,8 @@
-﻿using System.Diagnostics;
+
+/************************************
+GameTimer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Diagnostics;
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
@@ -18,9 +22,9 @@ namespace UStacker.Gameplay.Timing
         [SerializeField] private UnityEvent PauseEvent;
 
         private readonly Stopwatch _stopwatch = new();
+        private double _offset;
 
         private double _timeScale = 1d;
-        private double _offset;
         private TweenerCore<double, double, NoOptions> _timeTween;
 
         public bool IsRunning => _stopwatch.IsRunning;
@@ -72,10 +76,14 @@ namespace UStacker.Gameplay.Timing
                 RestartEvent.Invoke();
             }
             else
+            {
                 TimeScale = 1;
+            }
 
             if (wasRunning)
+            {
                 _stopwatch.Restart();
+            }
             else
             {
                 if (restarted)
@@ -99,21 +107,28 @@ namespace UStacker.Gameplay.Timing
             if (tweenDuration < 0)
                 return;
 
-            // if (tweenDuration > _maximumTweenDuration)
-            // {
-            //     SetTime(Math.Max(targetTime - _maximumTweenDuration, 0d));
-            //     currentTime = CurrentTime;
-            //     tweenDuration = (float) (targetTime - currentTime);
-            // }
-
             _timeTween?.Kill();
             _timeTween = DOTween
                 .To(TweenGetter, TweenSetter, targetTime, Mathf.Min(tweenDuration, _maximumTweenDuration))
                 .OnComplete(NullTween).SetEase(Ease.Linear);
 
-            double TweenGetter() => CurrentTime;
-            void TweenSetter(double value) => SetTime(value, false);
-            void NullTween() => _timeTween = null;
+            double TweenGetter()
+            {
+                return CurrentTime;
+            }
+
+            void TweenSetter(double value)
+            {
+                SetTime(value, false);
+            }
+
+            void NullTween()
+            {
+                _timeTween = null;
+            }
         }
     }
 }
+/************************************
+end GameTimer.cs
+*************************************/

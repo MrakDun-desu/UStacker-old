@@ -1,4 +1,8 @@
-﻿namespace UStacker.Gameplay.Communication
+
+/************************************
+SeedSetMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.Gameplay.Communication
 {
     public readonly struct SeedSetMessage : IMessage
     {
@@ -10,3 +14,6 @@
         }
     }
 }
+/************************************
+end SeedSetMessage.cs
+*************************************/

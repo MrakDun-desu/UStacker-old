@@ -1,27 +1,24 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Xml.Serialization;
-using UnityEngine;
-
 #if UNITY_EDITOR
-using UnityEditor.Compilation;
-using UnityEditor.Build.Reporting;
-using UnityEditor;
-using UnityEditor.Build;
 #endif
 
 namespace FishNet.Configuring
 {
-
-
     public class Configuration
     {
+        /// <summary>
+        ///     File name for configuration disk data.
+        /// </summary>
+        public const string CONFIG_FILE_NAME = "FishNet.Config.XML";
 
         /// <summary>
-        /// 
         /// </summary>
         private static ConfigurationData _configurations;
+
         /// <summary>
-        /// ConfigurationData to use.
+        ///     ConfigurationData to use.
         /// </summary>
         public static ConfigurationData Configurations
         {
@@ -30,33 +27,27 @@ namespace FishNet.Configuring
                 if (_configurations == null)
                     _configurations = LoadConfigurationData();
                 if (_configurations == null)
-                    throw new System.Exception("Fish-Networking Configurations could not be loaded. Certain features such as code-stripping may not function.");
+                    throw new Exception(
+                        "Fish-Networking Configurations could not be loaded. Certain features such as code-stripping may not function.");
                 return _configurations;
             }
-            private set
-            {
-                _configurations = value;
-            }
+            private set => _configurations = value;
         }
 
         /// <summary>
-        /// File name for configuration disk data.
-        /// </summary>
-        public const string CONFIG_FILE_NAME = "FishNet.Config.XML";
-
-        /// <summary>
-        /// Returns the path for the configuration file.
+        ///     Returns the path for the configuration file.
         /// </summary>
         /// <returns></returns>
         internal static string GetAssetsPath(string additional = "")
         {
-            string a = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Assets");
+            var a = Path.Combine(Directory.GetCurrentDirectory(), "Assets");
             if (additional != "")
                 a = Path.Combine(a, additional);
             return a;
         }
+
         /// <summary>
-        /// Returns FishNetworking ConfigurationData.
+        ///     Returns FishNetworking ConfigurationData.
         /// </summary>
         /// <returns></returns>
         internal static ConfigurationData LoadConfigurationData()
@@ -64,7 +55,7 @@ namespace FishNet.Configuring
             //return new ConfigurationData();
             if (_configurations == null || !_configurations.Loaded)
             {
-                string configPath = GetAssetsPath(CONFIG_FILE_NAME);
+                var configPath = GetAssetsPath(CONFIG_FILE_NAME);
                 //string configPath = string.Empty;
                 //File is on disk.
                 if (File.Exists(configPath))
@@ -72,14 +63,15 @@ namespace FishNet.Configuring
                     FileStream fs = null;
                     try
                     {
-                        XmlSerializer serializer = new XmlSerializer(typeof(ConfigurationData));
+                        var serializer = new XmlSerializer(typeof(ConfigurationData));
                         fs = new FileStream(configPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                        _configurations = (ConfigurationData)serializer.Deserialize(fs);
+                        _configurations = (ConfigurationData) serializer.Deserialize(fs);
                     }
                     finally
                     {
                         fs?.Close();
                     }
+
                     _configurations.Loaded = true;
                 }
                 else
@@ -93,10 +85,6 @@ namespace FishNet.Configuring
             }
 
             return _configurations;
-
         }
-
     }
-
-
 }

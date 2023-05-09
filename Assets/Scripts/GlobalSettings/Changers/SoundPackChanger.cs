@@ -1,10 +1,13 @@
-using System;
+
+/************************************
+SoundPackChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.IO;
-using UStacker.Common;
-using UStacker.GlobalSettings.Music;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UStacker.Common;
+using UStacker.GlobalSettings.Music;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -92,3 +95,6 @@ namespace UStacker.GlobalSettings.Changers
         }
     }
 }
+/************************************
+end SoundPackChanger.cs
+*************************************/

@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+GameStateChangeEventReceiver.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using UnityEngine;
 using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Enums;
@@ -9,19 +13,6 @@ namespace UStacker.Gameplay.GameStateManagement
     {
         [SerializeField] private GameStateChangeEvent[] _events;
         [SerializeField] private Mediator _mediator;
-
-        public static event Action Activated;
-        public static event Action Deactivated;
-
-        public static void Activate()
-        {
-            Activated?.Invoke();
-        }
-
-        public static void Deactivate()
-        {
-            Deactivated?.Invoke();
-        }
 
         private void Awake()
         {
@@ -34,6 +25,19 @@ namespace UStacker.Gameplay.GameStateManagement
             OnDeactivated();
             Deactivated -= OnDeactivated;
             Activated -= OnActivated;
+        }
+
+        public static event Action Activated;
+        public static event Action Deactivated;
+
+        public static void Activate()
+        {
+            Activated?.Invoke();
+        }
+
+        public static void Deactivate()
+        {
+            Deactivated?.Invoke();
         }
 
         private void OnActivated()
@@ -50,17 +54,20 @@ namespace UStacker.Gameplay.GameStateManagement
         {
             foreach (var changeEvent in _events)
             {
-                if (message.IsReplay && !changeEvent.WorkInReplay || !message.IsReplay && !changeEvent.WorkInGame)
+                if ((message.IsReplay && !changeEvent.WorkInReplay) || (!message.IsReplay && !changeEvent.WorkInGame))
                     continue;
 
                 var previousFits = changeEvent.PreviousState == GameState.Any ||
                                    changeEvent.PreviousState == message.PreviousState;
                 var newFits = changeEvent.NewState == GameState.Any ||
-                                  changeEvent.NewState == message.NewState;
-                
+                              changeEvent.NewState == message.NewState;
+
                 if (previousFits && newFits)
                     changeEvent.OnStateChanged.Invoke();
             }
         }
     }
 }
+/************************************
+end GameStateChangeEventReceiver.cs
+*************************************/

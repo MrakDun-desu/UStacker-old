@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+ReplayController.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
@@ -16,12 +20,14 @@ namespace UStacker.Gameplay
     {
         [SerializeField] private Mediator _mediator;
         [SerializeField] private GameStateManager _stateManager;
-        [Header("Controlled objects")]
-        [SerializeField] private GameTimer _timer;
+
+        [Header("Controlled objects")] [SerializeField]
+        private GameTimer _timer;
+
         [SerializeField] private InputProcessor _inputProcessor;
 
-        [Header("Controls")]
-        [SerializeField] private Slider _timeSlider;
+        [Header("Controls")] [SerializeField] private Slider _timeSlider;
+
         [SerializeField] private Image _pauseImage;
         [SerializeField] private Button _endReplayButton;
         [SerializeField] private Button _nextPieceButton;
@@ -33,8 +39,9 @@ namespace UStacker.Gameplay
         [SerializeField] private TMP_Text _currentTimeText;
         [SerializeField] private TMP_InputField _timeScaleField;
 
-        [Header("Used values")]
-        [SerializeField] private Sprite _pauseSprite;
+        [Header("Used values")] [SerializeField]
+        private Sprite _pauseSprite;
+
         [SerializeField] private Sprite _playSprite;
 
         private double _replayLength;
@@ -42,7 +49,7 @@ namespace UStacker.Gameplay
         private void Awake()
         {
             _timeSlider.onValueChanged.AddListener(OnTimeSet);
-            
+
             _endReplayButton.onClick.AddListener(() => _stateManager.EndReplay(_replayLength));
             _nextPieceButton.onClick.AddListener(_inputProcessor.MoveToNextPiece);
             _prevPieceButton.onClick.AddListener(_inputProcessor.MoveToPrevPiece);
@@ -54,6 +61,17 @@ namespace UStacker.Gameplay
             _mediator.Register<GameStateChangedMessage>(OnGameStateChange);
         }
 
+        private void Update()
+        {
+            _currentTimeText.text = _timer.CurrentTime.FormatAsTime();
+            _timeSlider.SetValueWithoutNotify((float) _timer.CurrentTime);
+        }
+
+        private void OnEnable()
+        {
+            _timeScaleField.text = _timer.TimeScale.ToString(CultureInfo.InvariantCulture);
+        }
+
         private void OnGameStateChange(GameStateChangedMessage message)
         {
             _pauseImage.sprite = message.NewState switch
@@ -62,17 +80,6 @@ namespace UStacker.Gameplay
                 GameState.Running => _pauseSprite,
                 _ => _pauseImage.sprite
             };
-        }
-
-        private void OnEnable()
-        {
-            _timeScaleField.text = _timer.TimeScale.ToString(CultureInfo.InvariantCulture);
-        }
-
-        private void Update()
-        {
-            _currentTimeText.text = _timer.CurrentTime.FormatAsTime();
-            _timeSlider.SetValueWithoutNotify((float)_timer.CurrentTime);
         }
 
         private void OnSpeedChanged(string timeScaleStr)
@@ -101,3 +108,6 @@ namespace UStacker.Gameplay
         }
     }
 }
+/************************************
+end ReplayController.cs
+*************************************/

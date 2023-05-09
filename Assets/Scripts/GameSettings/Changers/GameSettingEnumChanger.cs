@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+GameSettingEnumChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -49,3 +53,6 @@ namespace UStacker.GameSettings.Changers
         }
     }
 }
+/************************************
+end GameSettingEnumChanger.cs
+*************************************/

@@ -1,5 +1,9 @@
-using UStacker.Common.Extensions;
+
+/************************************
+ResolutionApplier.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
+using UStacker.Common.Extensions;
 
 namespace UStacker.GlobalSettings.Appliers
 {
@@ -24,3 +28,6 @@ namespace UStacker.GlobalSettings.Appliers
         }
     }
 }
+/************************************
+end ResolutionApplier.cs
+*************************************/

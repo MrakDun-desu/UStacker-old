@@ -20,6 +20,7 @@ namespace DG.Tweening
     public static class DOTweenModuleUnityVersion
     {
 #if UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_5 || UNITY_2017_1_OR_NEWER
+
         #region Unity 4.3 or Newer
 
         #region Material
@@ -44,11 +45,13 @@ namespace DG.Tweening
                     target.color = c.color;
                     continue;
                 }
+
                 var colorDuration = i == len - 1
                     ? duration - s.Duration(false) // Verifies that total duration is correct
                     : duration * (i == 0 ? c.time : c.time - colors[i - 1].time);
                 s.Append(target.DOColor(c.color, colorDuration).SetEase(Ease.Linear));
             }
+
             s.SetTarget(target);
             return s;
         }
@@ -74,11 +77,13 @@ namespace DG.Tweening
                     target.SetColor(property, c.color);
                     continue;
                 }
+
                 var colorDuration = i == len - 1
                     ? duration - s.Duration(false) // Verifies that total duration is correct
                     : duration * (i == 0 ? c.time : c.time - colors[i - 1].time);
                 s.Append(target.DOColor(c.color, property, colorDuration).SetEase(Ease.Linear));
             }
+
             s.SetTarget(target);
             return s;
         }
@@ -86,9 +91,11 @@ namespace DG.Tweening
         #endregion
 
         #endregion
+
 #endif
 
 #if UNITY_5_3_OR_NEWER || UNITY_2017_1_OR_NEWER
+
         #region Unity 5.3 or Newer
 
         #region CustomYieldInstructions
@@ -106,6 +113,7 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return null;
             }
+
             return new DOTweenCYInstruction.WaitForCompletion(t);
         }
 
@@ -122,6 +130,7 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return null;
             }
+
             return new DOTweenCYInstruction.WaitForRewind(t);
         }
 
@@ -138,6 +147,7 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return null;
             }
+
             return new DOTweenCYInstruction.WaitForKill(t);
         }
 
@@ -149,13 +159,15 @@ namespace DG.Tweening
         ///     <code>yield return myTween.WaitForElapsedLoops(2);</code>
         /// </summary>
         /// <param name="elapsedLoops">Elapsed loops to wait for</param>
-        public static CustomYieldInstruction WaitForElapsedLoops(this Tween t, int elapsedLoops, bool returnCustomYieldInstruction)
+        public static CustomYieldInstruction WaitForElapsedLoops(this Tween t, int elapsedLoops,
+            bool returnCustomYieldInstruction)
         {
             if (!t.active)
             {
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return null;
             }
+
             return new DOTweenCYInstruction.WaitForElapsedLoops(t, elapsedLoops);
         }
 
@@ -167,13 +179,15 @@ namespace DG.Tweening
         ///     <code>yield return myTween.WaitForPosition(2.5f);</code>
         /// </summary>
         /// <param name="position">Position (loops included, delays excluded) to wait for</param>
-        public static CustomYieldInstruction WaitForPosition(this Tween t, float position, bool returnCustomYieldInstruction)
+        public static CustomYieldInstruction WaitForPosition(this Tween t, float position,
+            bool returnCustomYieldInstruction)
         {
             if (!t.active)
             {
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return null;
             }
+
             return new DOTweenCYInstruction.WaitForPosition(t, position);
         }
 
@@ -191,15 +205,18 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return null;
             }
+
             return new DOTweenCYInstruction.WaitForStart(t);
         }
 
         #endregion
 
         #endregion
+
 #endif
 
 #if UNITY_2018_1_OR_NEWER
+
         #region Unity 2018.1 or Newer
 
         #region Material
@@ -211,14 +228,17 @@ namespace DG.Tweening
         /// <param name="endValue">The end value to reach</param>
         /// <param name="propertyID">The ID of the material property to tween (also called nameID in Unity's manual)</param>
         /// <param name="duration">The duration of the tween</param>
-        public static TweenerCore<Vector2, Vector2, VectorOptions> DOOffset(this Material target, Vector2 endValue, int propertyID, float duration)
+        public static TweenerCore<Vector2, Vector2, VectorOptions> DOOffset(this Material target, Vector2 endValue,
+            int propertyID, float duration)
         {
             if (!target.HasProperty(propertyID))
             {
                 if (Debugger.logPriority > 0) Debugger.LogMissingMaterialProperty(propertyID);
                 return null;
             }
-            var t = DOTween.To(() => target.GetTextureOffset(propertyID), x => target.SetTextureOffset(propertyID, x), endValue, duration);
+
+            var t = DOTween.To(() => target.GetTextureOffset(propertyID), x => target.SetTextureOffset(propertyID, x),
+                endValue, duration);
             t.SetTarget(target);
             return t;
         }
@@ -230,14 +250,17 @@ namespace DG.Tweening
         /// <param name="endValue">The end value to reach</param>
         /// <param name="propertyID">The ID of the material property to tween (also called nameID in Unity's manual)</param>
         /// <param name="duration">The duration of the tween</param>
-        public static TweenerCore<Vector2, Vector2, VectorOptions> DOTiling(this Material target, Vector2 endValue, int propertyID, float duration)
+        public static TweenerCore<Vector2, Vector2, VectorOptions> DOTiling(this Material target, Vector2 endValue,
+            int propertyID, float duration)
         {
             if (!target.HasProperty(propertyID))
             {
                 if (Debugger.logPriority > 0) Debugger.LogMissingMaterialProperty(propertyID);
                 return null;
             }
-            var t = DOTween.To(() => target.GetTextureScale(propertyID), x => target.SetTextureScale(propertyID, x), endValue, duration);
+
+            var t = DOTween.To(() => target.GetTextureScale(propertyID), x => target.SetTextureScale(propertyID, x),
+                endValue, duration);
             t.SetTarget(target);
             return t;
         }
@@ -263,6 +286,7 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return;
             }
+
             while (t.active && !t.IsComplete()) await Task.Yield();
         }
 
@@ -279,6 +303,7 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return;
             }
+
             while (t.active && (!t.playedOnce || t.position * (t.CompletedLoops() + 1) > 0)) await Task.Yield();
         }
 
@@ -295,6 +320,7 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return;
             }
+
             while (t.active) await Task.Yield();
         }
 
@@ -313,6 +339,7 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return;
             }
+
             while (t.active && t.CompletedLoops() < elapsedLoops) await Task.Yield();
         }
 
@@ -331,6 +358,7 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return;
             }
+
             while (t.active && t.position * (t.CompletedLoops() + 1) < position) await Task.Yield();
         }
 
@@ -347,15 +375,18 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return;
             }
+
             while (t.active && !t.playedOnce) await Task.Yield();
         }
 
         #endregion
+
 #endif
 
         #endregion
 
         #endregion
+
 #endif
     }
 
@@ -387,7 +418,8 @@ namespace DG.Tweening
                 t = tween;
             }
 
-            public override bool keepWaiting => t.active && (!t.playedOnce || t.position * (t.CompletedLoops() + 1) > 0);
+            public override bool keepWaiting =>
+                t.active && (!t.playedOnce || t.position * (t.CompletedLoops() + 1) > 0);
         }
 
         public class WaitForKill : CustomYieldInstruction

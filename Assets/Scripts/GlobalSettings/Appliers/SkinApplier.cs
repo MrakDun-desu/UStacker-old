@@ -1,9 +1,13 @@
+
+/************************************
+SkinApplier.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.IO;
 using System.Threading.Tasks;
-using UStacker.GlobalSettings.BlockSkins;
 using UnityEngine;
 using UnityEngine.Events;
 using UStacker.Common;
+using UStacker.GlobalSettings.BlockSkins;
 
 namespace UStacker.GlobalSettings.Appliers
 {
@@ -27,10 +31,13 @@ namespace UStacker.GlobalSettings.Appliers
         {
             if (string.IsNullOrEmpty(AppSettings.Customization.SkinFolder))
                 AppSettings.Customization.SkinFolder = SkinLoader.DEFAULT_PATH;
-            
+
             var skinFolder = Path.Combine(PersistentPaths.Skins, AppSettings.Customization.SkinFolder);
             await SkinLoader.ReloadAsync(skinFolder, _showAlert);
             LoadingFinished.Invoke();
         }
     }
 }
+/************************************
+end SkinApplier.cs
+*************************************/

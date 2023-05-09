@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+GameSettingCounterGroupChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -18,7 +22,7 @@ namespace UStacker.GameSettings.Changers
             base.Start();
             _dropdown.onValueChanged.AddListener(OnDropdownPicked);
         }
-        
+
         protected override void RefreshValue()
         {
             _availableGroups.Clear();
@@ -28,9 +32,7 @@ namespace UStacker.GameSettings.Changers
 
             _dropdown.ClearOptions();
             foreach (var (_, value) in _availableGroups)
-            {
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(value));
-            }
 
             _dropdown.RefreshShownValue();
         }
@@ -38,14 +40,16 @@ namespace UStacker.GameSettings.Changers
         private void OnDropdownPicked(int pickedIndex)
         {
             var key = _availableGroups[pickedIndex].Key;
-            var newGroup = new StatCounterGroup();
-            if (AppSettings.StatCounting.StatCounterGroups.ContainsKey(key))
+            var newGroup = AppSettings.StatCounting.StatCounterGroups.TryGetValue(key, out var group) switch
             {
-                newGroup = AppSettings.StatCounting.StatCounterGroups[key].Copy();
-            }
-            
+                true => group.Copy(),
+                false => new StatCounterGroup()
+            };
+
             SetValue(newGroup);
         }
-
     }
 }
+/************************************
+end GameSettingCounterGroupChanger.cs
+*************************************/

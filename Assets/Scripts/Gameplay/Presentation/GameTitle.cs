@@ -1,4 +1,8 @@
-﻿using TMPro;
+
+/************************************
+GameTitle.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using TMPro;
 using UnityEngine;
 using UStacker.Gameplay.Initialization;
 using UStacker.GameSettings;
@@ -15,3 +19,6 @@ namespace UStacker.Gameplay.Presentation
         }
     }
 }
+/************************************
+end GameTitle.cs
+*************************************/

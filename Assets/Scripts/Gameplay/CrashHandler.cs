@@ -1,4 +1,8 @@
-﻿using System.Collections;
+
+/************************************
+CrashHandler.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -52,6 +56,8 @@ namespace UStacker.Gameplay
 
             SceneManager.LoadScene("Scene_Menu_Main");
         }
-
     }
 }
+/************************************
+end CrashHandler.cs
+*************************************/

@@ -345,6 +345,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _text: {fileID: 942207733}
   _background: {fileID: 1545971396}
+  _maxWidthScreenPercent: 0.4
 --- !u!1001 &455287186
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1231,7 +1232,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7198592304762667749, guid: 0ed263f4373fd7f469bdb84de977e4ba, type: 3}
       propertyPath: m_Name
-      value: AlertCanvas
+      value: AlertDisplayer
       objectReference: {fileID: 0}
     - target: {fileID: 8290584842433092627, guid: 0ed263f4373fd7f469bdb84de977e4ba, type: 3}
       propertyPath: m_SortingOrder

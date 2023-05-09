@@ -1,6 +1,11 @@
-﻿using System.Collections;
+
+/************************************
+BlockSkin.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UStacker.Common.Extensions;
 using UStacker.Gameplay.GarbageGeneration;
 using UStacker.Gameplay.Pieces;
@@ -8,7 +13,6 @@ using UStacker.GlobalSettings;
 using UStacker.GlobalSettings.Appliers;
 using UStacker.GlobalSettings.BlockSkins;
 using UStacker.GlobalSettings.Enums;
-using UnityEngine;
 
 namespace UStacker.Gameplay.Blocks
 {
@@ -17,11 +21,11 @@ namespace UStacker.Gameplay.Blocks
     {
         [SerializeField] private SkinRecord _skinRecord;
         [SerializeField] private SpriteRenderer _renderer;
+        private Coroutine _animationCoroutine;
         private List<SpriteRecord> _currentSprites = new();
 
         private float _switchFrameTime;
         private float _visibility = 1;
-        private Coroutine _animationCoroutine;
 
         public float Visibility
         {
@@ -45,6 +49,11 @@ namespace UStacker.Gameplay.Blocks
                 _skinRecord = value;
                 RefreshSkin();
             }
+        }
+
+        private void OnDestroy()
+        {
+            UnregisterEvents();
         }
 
         private void HandleSpritesChanged()
@@ -82,18 +91,12 @@ namespace UStacker.Gameplay.Blocks
             // ReSharper disable once IteratorNeverReturns
         }
 
-        private void OnDestroy()
-        {
-            UnregisterEvents();
-        }
-
         public void RefreshSkin()
         {
             _switchFrameTime = 1f / SkinRecord.AnimationFps;
             _renderer.sortingOrder = SkinRecord.Layer;
 
             if (!SkinRecord.RotateWithPiece)
-            {
                 switch (BlockCollection)
                 {
                     case Piece piece:
@@ -105,7 +108,6 @@ namespace UStacker.Gameplay.Blocks
                         ghost.Rendered += ResetRotation;
                         break;
                 }
-            }
 
             if (!SkinRecord.IsConnected)
             {
@@ -159,12 +161,9 @@ namespace UStacker.Gameplay.Blocks
             return myPos + (myTransform.right * (pos.x * boardScale.x) + myTransform.up * (pos.y * boardScale.y));
         }
 
-        private bool ConnectedBlockInPos(Vector2Int pos)
+        private bool ConnectedBlockInPos(Vector2Int pos, IEnumerable<Vector3> traversedBlocks)
         {
             var checkedPos = RelativePos(pos);
-            var traversedBlocks = BlockCollection.BlockPositions;
-            if (SkinRecord.ConnectWithBoard)
-                traversedBlocks = traversedBlocks.Concat(Board.BlockPositions);
 
             return traversedBlocks.Any(worldPos => AreClose(worldPos, checkedPos));
         }
@@ -207,23 +206,35 @@ namespace UStacker.Gameplay.Blocks
 
         private void PickConnectedPart()
         {
+            var connectedBlocksEnumerable = BlockCollection.BlockPositions;
+
+            var connectedBlocks = connectedBlocksEnumerable as Vector3[] ?? connectedBlocksEnumerable.ToArray();
+
             var edges = Edges.None;
-            if (!ConnectedBlockInPos(Vector2Int.right))
+            if (!ConnectedBlockInPos(Vector2Int.right, connectedBlocks))
                 edges |= Edges.Right;
-            if (!ConnectedBlockInPos(Vector2Int.left))
+            if (!ConnectedBlockInPos(Vector2Int.left, connectedBlocks))
                 edges |= Edges.Left;
-            if (!ConnectedBlockInPos(Vector2Int.up))
+            if (!ConnectedBlockInPos(Vector2Int.up, connectedBlocks))
                 edges |= Edges.Top;
-            if (!ConnectedBlockInPos(Vector2Int.down))
+            if (!ConnectedBlockInPos(Vector2Int.down, connectedBlocks))
                 edges |= Edges.Bottom;
 
-            if (!ConnectedBlockInPos(new Vector2Int(1, 1)) && ConnectedBlockInPos(Vector2Int.up) && ConnectedBlockInPos(Vector2Int.right))
+            if (!ConnectedBlockInPos(new Vector2Int(1, 1), connectedBlocks) &&
+                ConnectedBlockInPos(Vector2Int.up, connectedBlocks) &&
+                ConnectedBlockInPos(Vector2Int.right, connectedBlocks))
                 edges |= Edges.TopRight;
-            if (!ConnectedBlockInPos(new Vector2Int(-1, 1)) && ConnectedBlockInPos(Vector2Int.up) && ConnectedBlockInPos(Vector2Int.left))
+            if (!ConnectedBlockInPos(new Vector2Int(-1, 1), connectedBlocks) &&
+                ConnectedBlockInPos(Vector2Int.up, connectedBlocks) &&
+                ConnectedBlockInPos(Vector2Int.left, connectedBlocks))
                 edges |= Edges.TopLeft;
-            if (!ConnectedBlockInPos(new Vector2Int(1, -1)) && ConnectedBlockInPos(Vector2Int.down) && ConnectedBlockInPos(Vector2Int.right))
+            if (!ConnectedBlockInPos(new Vector2Int(1, -1), connectedBlocks) &&
+                ConnectedBlockInPos(Vector2Int.down, connectedBlocks) &&
+                ConnectedBlockInPos(Vector2Int.right, connectedBlocks))
                 edges |= Edges.BottomRight;
-            if (!ConnectedBlockInPos(new Vector2Int(-1, -1)) && ConnectedBlockInPos(Vector2Int.down) && ConnectedBlockInPos(Vector2Int.left))
+            if (!ConnectedBlockInPos(new Vector2Int(-1, -1), connectedBlocks) &&
+                ConnectedBlockInPos(Vector2Int.down, connectedBlocks) &&
+                ConnectedBlockInPos(Vector2Int.left, connectedBlocks))
                 edges |= Edges.BottomLeft;
 
             if (!SkinRecord.ConnectedSprites.TryGetValue(edges, out var newSprites))
@@ -252,3 +263,6 @@ namespace UStacker.Gameplay.Blocks
         #endregion
     }
 }
+/************************************
+end BlockSkin.cs
+*************************************/

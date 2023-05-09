@@ -1,8 +1,12 @@
-﻿using System.Globalization;
-using UStacker.Common;
-using UStacker.GlobalSettings.Groups;
+
+/************************************
+GameSettingsOverrideChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Globalization;
 using TMPro;
 using UnityEngine;
+using UStacker.Common;
+using UStacker.GlobalSettings.Groups;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -61,3 +65,6 @@ namespace UStacker.GlobalSettings.Changers
         }
     }
 }
+/************************************
+end GameSettingsOverrideChanger.cs
+*************************************/

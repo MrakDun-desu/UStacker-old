@@ -1,4 +1,8 @@
-﻿using TMPro;
+
+/************************************
+ChatMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +19,7 @@ namespace UStacker.Multiplayer.LobbyUi
             _senderNameLabel.text = senderName;
             _messageContent.text = content;
 
-            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)_selfTransform.parent);
+            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform) _selfTransform.parent);
 
             _messageContent.ForceMeshUpdate();
             var sizeDelta = _messageContent.rectTransform.sizeDelta;
@@ -27,3 +31,6 @@ namespace UStacker.Multiplayer.LobbyUi
         }
     }
 }
+/************************************
+end ChatMessage.cs
+*************************************/

@@ -1,7 +1,11 @@
-using UStacker.Gameplay.Communication;
+
+/************************************
+GameCountdown.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Enums;
 using UStacker.Gameplay.Initialization;
 using UStacker.GameSettings;
@@ -17,63 +21,17 @@ namespace UStacker.Gameplay.Presentation
         [SerializeField] private Mediator _mediator;
         [SerializeField] private UnityEvent CountdownFinished;
 
-        private GameSettingsSO.SettingsContainer _gameSettings;
-
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            private get => _gameSettings;
-            set
-            {
-                _gameSettings = value;
-                Initialize();
-            }
-        }
-
         private bool _active;
-        private uint _currentCount;
-        private float _nextInterval;
-        private float _interval = .1f;
         private uint _count = 3;
+        private uint _currentCount;
+
+        private GameSettingsSO.SettingsContainer _gameSettings;
+        private float _interval = .1f;
+        private float _nextInterval;
 
         private void Awake()
         {
             CountdownFinished.AddListener(() => _countdownText.alpha = 0);
-        }
-
-        private void OnEnable()
-        {
-            _mediator.Register<GameStateChangedMessage>(OnGameStateChange);
-        }
-
-        private void OnDisable()
-        {
-            _mediator.Unregister<GameStateChangedMessage>(OnGameStateChange);
-        }
-
-        private void Initialize()
-        {
-            _interval = GameSettings.Presentation.CountdownInterval;
-            _count = GameSettings.Presentation.CountdownCount;
-
-            transform.localPosition = new Vector2(
-                GameSettings.BoardDimensions.BoardWidth / 2f,
-                GameSettings.BoardDimensions.BoardHeight / 2f);
-        }
-
-        private void OnGameStateChange(GameStateChangedMessage message)
-        {
-            switch (message)
-            {
-                case {NewState: GameState.StartCountdown or GameState.ResumeCountdown, IsReplay: true}:
-                    CountdownFinished.Invoke();
-                    break;
-                case {NewState: GameState.StartCountdown or GameState.ResumeCountdown}:
-                    StartCountdown();
-                    break;
-                case {PreviousState: GameState.StartCountdown or GameState.ResumeCountdown}:
-                    StopCountdown();
-                    break;
-            }
         }
 
         private void Update()
@@ -104,6 +62,52 @@ namespace UStacker.Gameplay.Presentation
             }
         }
 
+        private void OnEnable()
+        {
+            _mediator.Register<GameStateChangedMessage>(OnGameStateChange);
+        }
+
+        private void OnDisable()
+        {
+            _mediator.Unregister<GameStateChangedMessage>(OnGameStateChange);
+        }
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            private get => _gameSettings;
+            set
+            {
+                _gameSettings = value;
+                Initialize();
+            }
+        }
+
+        private void Initialize()
+        {
+            _interval = GameSettings.Presentation.CountdownInterval;
+            _count = GameSettings.Presentation.CountdownCount;
+
+            transform.localPosition = new Vector2(
+                GameSettings.BoardDimensions.BoardWidth / 2f,
+                GameSettings.BoardDimensions.BoardHeight / 2f);
+        }
+
+        private void OnGameStateChange(GameStateChangedMessage message)
+        {
+            switch (message)
+            {
+                case {NewState: GameState.StartCountdown or GameState.ResumeCountdown, IsReplay: true}:
+                    CountdownFinished.Invoke();
+                    break;
+                case {NewState: GameState.StartCountdown or GameState.ResumeCountdown}:
+                    StartCountdown();
+                    break;
+                case {PreviousState: GameState.StartCountdown or GameState.ResumeCountdown}:
+                    StopCountdown();
+                    break;
+            }
+        }
+
         private void StopCountdown()
         {
             _active = false;
@@ -121,3 +125,6 @@ namespace UStacker.Gameplay.Presentation
         }
     }
 }
+/************************************
+end GameCountdown.cs
+*************************************/

@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using FishNet.Documenting;
 using FishNet.Object;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace FishNet.Managing.Object
@@ -10,13 +10,17 @@ namespace FishNet.Managing.Object
     public abstract class PrefabObjects : ScriptableObject
     {
         /// <summary>
-        /// CollectionId for this PrefabObjects.
+        ///     CollectionId for this PrefabObjects.
         /// </summary>
         public ushort CollectionId { get; private set; }
+
         /// <summary>
-        /// Sets CollectionIdValue.
+        ///     Sets CollectionIdValue.
         /// </summary>
-        internal void SetCollectionId(ushort id) => CollectionId = id;
+        internal void SetCollectionId(ushort id)
+        {
+            CollectionId = id;
+        }
 
         public abstract void Clear();
         public abstract int GetObjectCount();
@@ -29,8 +33,5 @@ namespace FishNet.Managing.Object
         public abstract void AddObjects(List<DualPrefab> dualPrefab, bool checkForDuplicates = false);
         public abstract void AddObjects(DualPrefab[] dualPrefab, bool checkForDuplicates = false);
         public abstract void InitializePrefabRange(int startIndex);
-
-
-
     }
 }

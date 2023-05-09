@@ -1,10 +1,14 @@
+
+/************************************
+AppSettingDoubleChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Globalization;
-using UStacker.Common.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UStacker.Common.Extensions;
+using UStacker.Common.UI;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -22,6 +26,7 @@ namespace UStacker.GlobalSettings.Changers
 
         [Header("Other settings")] [SerializeField]
         private bool _maxIsInfinity;
+
         [SerializeField] private string _infinityString = "INF";
         [SerializeField] private UnityEvent<float> _valueChanged;
 
@@ -89,3 +94,6 @@ namespace UStacker.GlobalSettings.Changers
         }
     }
 }
+/************************************
+end AppSettingDoubleChanger.cs
+*************************************/

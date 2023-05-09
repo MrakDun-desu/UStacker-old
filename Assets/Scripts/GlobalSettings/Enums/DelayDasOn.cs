@@ -1,5 +1,8 @@
-﻿using System;
-using UStacker.Common.Attributes;
+
+/************************************
+DelayDasOn.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 
 namespace UStacker.GlobalSettings.Enums
 {
@@ -11,3 +14,6 @@ namespace UStacker.GlobalSettings.Enums
         Rotation = 2
     }
 }
+/************************************
+end DelayDasOn.cs
+*************************************/

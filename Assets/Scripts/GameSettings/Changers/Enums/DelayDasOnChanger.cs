@@ -1,4 +1,8 @@
-﻿using UStacker.GlobalSettings.Enums;
+
+/************************************
+DelayDasOnChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UStacker.GlobalSettings.Enums;
 
 namespace UStacker.GameSettings.Changers.Enums
 {
@@ -6,3 +10,6 @@ namespace UStacker.GameSettings.Changers.Enums
     {
     }
 }
+/************************************
+end DelayDasOnChanger.cs
+*************************************/

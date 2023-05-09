@@ -1,5 +1,4 @@
 ﻿#if UNITY_EDITOR
-using FishNet.Managing.Object;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,13 +7,13 @@ namespace FishNet.Managing.Editing
     [CustomEditor(typeof(NetworkManager))]
     public class NetworkManagerEditor : Editor
     {
+        private SerializedProperty _dontDestroyOnLoad;
         private SerializedProperty _logging;
+        private SerializedProperty _objectPool;
+        private SerializedProperty _persistence;
         private SerializedProperty _refreshDefaultPrefabs;
         private SerializedProperty _runInBackground;
-        private SerializedProperty _dontDestroyOnLoad;
-        private SerializedProperty _persistence;
         private SerializedProperty _spawnablePrefabs;
-        private SerializedProperty _objectPool;
 
         private void OnEnable()
         {
@@ -31,10 +30,11 @@ namespace FishNet.Managing.Editing
         {
             serializedObject.Update();
 
-            NetworkManager networkManager = (NetworkManager)target;
+            var networkManager = (NetworkManager) target;
 
             GUI.enabled = false;
-            EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour(networkManager), typeof(NetworkManager), false);
+            EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour(networkManager), typeof(NetworkManager),
+                false);
             GUI.enabled = true;
 
             //EditorGUILayout.BeginVertical(GUI.skin.box);

@@ -1,9 +1,14 @@
+
+/************************************
+HandlingSettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using FishNet.Serializing;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using UStacker.GlobalSettings.Enums;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UStacker.GlobalSettings.Enums;
 
 namespace UStacker.GlobalSettings.Groups
 {
@@ -28,8 +33,10 @@ namespace UStacker.GlobalSettings.Groups
 
             writer.WriteDouble(handling.DoubleDropPreventionInterval);
             writer.WriteByte((byte) handling.DiagonalLockBehavior);
-            writer.WriteByte((byte) handling.InputBufferingType);
-            writer.WriteByte((byte) handling.AutomaticPreSpawnRotation);
+            writer.WriteByte((byte) handling.InitialActionsType);
+            writer.WriteBoolean(handling.UseInitialRotations);
+            writer.WriteBoolean(handling.UseInitialHold);
+            writer.WriteByte((byte) handling.AutomaticInitialRotation);
         }
 
         [UsedImplicitly]
@@ -49,11 +56,13 @@ namespace UStacker.GlobalSettings.Groups
                 MinSoftDropGravity = reader.ReadDouble(),
                 MaxSoftDropGravity = reader.ReadDouble(),
                 ZeroGravitySoftDropBase = reader.ReadDouble(),
-                
+
                 DoubleDropPreventionInterval = reader.ReadDouble(),
                 DiagonalLockBehavior = (DiagonalLockBehavior) reader.ReadByte(),
-                InputBufferingType = (InputBufferingType) reader.ReadByte(),
-                AutomaticPreSpawnRotation = (AutomaticPreSpawnRotation) reader.ReadByte()
+                InitialActionsType = (InitialActionsType) reader.ReadByte(),
+                UseInitialRotations = reader.ReadBoolean(),
+                UseInitialHold = reader.ReadBoolean(),
+                AutomaticInitialRotation = (AutomaticInitialRotation) reader.ReadByte()
             };
         }
     }
@@ -67,9 +76,10 @@ namespace UStacker.GlobalSettings.Groups
         [SerializeField] private double _dasCutDelay;
         [SerializeField] private bool _cancelDasDelayWithInput = true;
         [SerializeField] private DelayDasOn _delayDasOn = DelayDasOn.Nothing;
+
         [SerializeField]
         private SimultaneousDasBehavior _simultaneousDasBehavior = SimultaneousDasBehavior.CancelBothDirections;
-        
+
         // soft drop related settings
         [SerializeField] private double _softDropFactor = 20d;
         [SerializeField] private double _softDropDelay;
@@ -79,13 +89,20 @@ namespace UStacker.GlobalSettings.Groups
 
         // other settings
         [SerializeField] private double _doubleDropPreventionInterval;
-        [SerializeField] private DiagonalLockBehavior _diagonalLockBehavior = DiagonalLockBehavior.DontLock;
-        [SerializeField] private InputBufferingType _inputBufferingType = InputBufferingType.DontBuffer;
+        [SerializeField] private DiagonalLockBehavior _diagonalLockBehavior = DiagonalLockBehavior.Disabled;
+
         [SerializeField]
-        private AutomaticPreSpawnRotation _automaticPreSpawnRotation = AutomaticPreSpawnRotation.DontRotate;
+        private InitialActionsType _initialActionsType = InitialActionsType.RegisterKeypressDuringDelay;
 
-        [JsonIgnore] private bool _isDirty;
+        [SerializeField] private bool _useInitialRotations = true;
+        [SerializeField] private bool _useInitialHold;
 
+        [FormerlySerializedAs("_automaticPreSpawnRotation")] [SerializeField]
+        private AutomaticInitialRotation _automaticInitialRotation = AutomaticInitialRotation.RotateClockwise;
+
+        private bool _isDirty;
+
+        [JsonIgnore]
         public bool IsDirty
         {
             get => _isDirty;
@@ -95,34 +112,6 @@ namespace UStacker.GlobalSettings.Groups
                 if (_isDirty)
                     Dirtied?.Invoke();
             }
-        }
-
-        public event Action Dirtied;
-
-        public void Undirty()
-        {
-            IsDirty = false;
-        }
-
-        public void Override(HandlingSettings other)
-        {
-            DelayedAutoShift = other.DelayedAutoShift;
-            AutomaticRepeatRate = other.AutomaticRepeatRate;
-            DasCutDelay = other.DasCutDelay;
-            CancelDasDelayWithInput = other.CancelDasDelayWithInput;
-            DelayDasOn = other.DelayDasOn;
-            SimultaneousDasBehavior = other.SimultaneousDasBehavior;
-
-            SoftDropFactor = other.SoftDropFactor;
-            SoftDropDelay = other.SoftDropDelay;
-            MinSoftDropGravity = other.MinSoftDropGravity;
-            MaxSoftDropGravity = other.MaxSoftDropGravity;
-            ZeroGravitySoftDropBase = other.ZeroGravitySoftDropBase;
-
-            DoubleDropPreventionInterval = other.DoubleDropPreventionInterval;
-            DiagonalLockBehavior = other.DiagonalLockBehavior;
-            InputBufferingType = other.InputBufferingType;
-            AutomaticPreSpawnRotation = other.AutomaticPreSpawnRotation;
         }
 
         public DelayDasOn DelayDasOn
@@ -225,12 +214,32 @@ namespace UStacker.GlobalSettings.Groups
             }
         }
 
-        public InputBufferingType InputBufferingType
+        public bool UseInitialRotations
         {
-            get => _inputBufferingType;
+            get => _useInitialRotations;
             set
             {
-                _inputBufferingType = value;
+                _useInitialRotations = value;
+                IsDirty = true;
+            }
+        }
+
+        public bool UseInitialHold
+        {
+            get => _useInitialHold;
+            set
+            {
+                _useInitialHold = value;
+                IsDirty = true;
+            }
+        }
+
+        public InitialActionsType InitialActionsType
+        {
+            get => _initialActionsType;
+            set
+            {
+                _initialActionsType = value;
                 IsDirty = true;
             }
         }
@@ -264,15 +273,46 @@ namespace UStacker.GlobalSettings.Groups
                 IsDirty = true;
             }
         }
-        
-        public AutomaticPreSpawnRotation AutomaticPreSpawnRotation
+
+        public AutomaticInitialRotation AutomaticInitialRotation
         {
-            get => _automaticPreSpawnRotation;
+            get => _automaticInitialRotation;
             set
             {
-                _automaticPreSpawnRotation = value;
+                _automaticInitialRotation = value;
                 IsDirty = true;
             }
         }
+
+        public event Action Dirtied;
+
+        public void Undirty()
+        {
+            IsDirty = false;
+        }
+
+        public void Override(HandlingSettings other)
+        {
+            DelayedAutoShift = other.DelayedAutoShift;
+            AutomaticRepeatRate = other.AutomaticRepeatRate;
+            DasCutDelay = other.DasCutDelay;
+            CancelDasDelayWithInput = other.CancelDasDelayWithInput;
+            DelayDasOn = other.DelayDasOn;
+            SimultaneousDasBehavior = other.SimultaneousDasBehavior;
+
+            SoftDropFactor = other.SoftDropFactor;
+            SoftDropDelay = other.SoftDropDelay;
+            MinSoftDropGravity = other.MinSoftDropGravity;
+            MaxSoftDropGravity = other.MaxSoftDropGravity;
+            ZeroGravitySoftDropBase = other.ZeroGravitySoftDropBase;
+
+            DoubleDropPreventionInterval = other.DoubleDropPreventionInterval;
+            DiagonalLockBehavior = other.DiagonalLockBehavior;
+            InitialActionsType = other.InitialActionsType;
+            AutomaticInitialRotation = other.AutomaticInitialRotation;
+        }
     }
 }
+/************************************
+end HandlingSettings.cs
+*************************************/

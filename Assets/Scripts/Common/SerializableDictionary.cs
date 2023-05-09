@@ -1,16 +1,22 @@
-﻿using System;
+
+/************************************
+SerializableDictionary.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace UStacker.Common
 {
     [Serializable]
-    public abstract class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
+    public abstract class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>,
+        ISerializationCallbackReceiver
     {
-        [Tooltip("Actual content of the dictionary")]
-        [SerializeField] private List<Entry> _entries = new();
-        [Tooltip("Aren't actually in the dictionary, but are required to make serialization possible")]
-        [SerializeField] private List<Entry> _duplicateEntries = new();
+        [Tooltip("Actual content of the dictionary")] [SerializeField]
+        private List<Entry> _entries = new();
+
+        [Tooltip("Aren't actually in the dictionary, but are required to make serialization possible")] [SerializeField]
+        private List<Entry> _duplicateEntries = new();
 
         public void OnBeforeSerialize()
         {
@@ -31,7 +37,9 @@ namespace UStacker.Common
                     _entries.Remove(keyValuePair);
                 }
                 else
+                {
                     Add(keyValuePair.Key, keyValuePair.Value);
+                }
             }
 
             for (var i = 0; i < _duplicateEntries.Count; i++)
@@ -58,3 +66,6 @@ namespace UStacker.Common
         }
     }
 }
+/************************************
+end SerializableDictionary.cs
+*************************************/

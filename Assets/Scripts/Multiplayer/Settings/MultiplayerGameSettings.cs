@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+MultiplayerGameSettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using FishNet.Serializing;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -16,7 +20,7 @@ namespace UStacker.Multiplayer.Settings
         {
             var settingsBytes =
                 FileHandling.Zip(JsonConvert.SerializeObject(settings, StaticSettings.DefaultSerializerSettings));
-            
+
             writer.WriteBytesAndSize(settingsBytes);
         }
 
@@ -28,17 +32,13 @@ namespace UStacker.Multiplayer.Settings
                 StaticSettings.DefaultSerializerSettings);
         }
     }
-    
+
     [Serializable]
     public class MultiplayerGameSettings
     {
-        [SerializeField]
-        private MultiplayerLobbySettingsSo.SettingsContainer _lobbySettings;
-        [SerializeField]
-        private GameSettingsSO.SettingsContainer _gameSettings;
+        [SerializeField] private MultiplayerLobbySettingsSo.SettingsContainer _lobbySettings;
 
-        public MultiplayerLobbySettingsSo.SettingsContainer LobbySettings => _lobbySettings;
-        public GameSettingsSO.SettingsContainer GameSettings => _gameSettings;
+        [SerializeField] private GameSettingsSO.SettingsContainer _gameSettings;
 
         public MultiplayerGameSettings(MultiplayerLobbySettingsSo.SettingsContainer lobbySettings,
             GameSettingsSO.SettingsContainer gameSettings)
@@ -46,5 +46,11 @@ namespace UStacker.Multiplayer.Settings
             _lobbySettings = lobbySettings;
             _gameSettings = gameSettings;
         }
+
+        public MultiplayerLobbySettingsSo.SettingsContainer LobbySettings => _lobbySettings;
+        public GameSettingsSO.SettingsContainer GameSettings => _gameSettings;
     }
 }
+/************************************
+end MultiplayerGameSettings.cs
+*************************************/

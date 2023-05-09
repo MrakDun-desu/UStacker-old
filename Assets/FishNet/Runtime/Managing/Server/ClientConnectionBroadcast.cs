@@ -11,8 +11,6 @@ namespace FishNet.Managing.Server
 
     public struct ConnectedClientsBroadcast : IBroadcast
     {
-        public ListCache<int> ListCache; 
+        public ListCache<int> ListCache;
     }
-
-
 }

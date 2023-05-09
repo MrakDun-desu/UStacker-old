@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+
+/************************************
+PiecePreviews.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections.Generic;
 using System.Linq;
 using UStacker.Gameplay.Pieces;
 
@@ -26,3 +30,6 @@ namespace UStacker.Gameplay
         }
     }
 }
+/************************************
+end PiecePreviews.cs
+*************************************/

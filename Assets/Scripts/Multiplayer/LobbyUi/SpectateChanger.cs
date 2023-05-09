@@ -1,4 +1,8 @@
-﻿using TMPro;
+
+/************************************
+SpectateChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -45,8 +49,11 @@ namespace UStacker.Multiplayer.LobbyUi
         private void ToggleSpectate()
         {
             if (_localPlayer is null) return;
-            
+
             _localPlayer.IsSpectating = !_localPlayer.IsSpectating;
         }
     }
 }
+/************************************
+end SpectateChanger.cs
+*************************************/

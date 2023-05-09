@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+UpdateEvent.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,12 +13,22 @@ namespace UStacker.Gameplay.InputProcessing
     {
         // static field so there is absolutely no chance events have the same priority
         private static int LastPriority;
+        [SerializeField] private EventType _type;
+
+        [SerializeField] private double _time = double.PositiveInfinity;
         private readonly List<UpdateEvent> _parentList;
         private readonly int _priority;
-        [SerializeField] private EventType _type;
+
+        public UpdateEvent(List<UpdateEvent> parentList, EventType type)
+        {
+            _parentList = parentList;
+            _parentList.Add(this);
+            _priority = LastPriority++;
+            _type = type;
+        }
+
         public EventType Type => _type;
-        
-        [SerializeField] private double _time = double.PositiveInfinity;
+
         public double Time
         {
             get => _time;
@@ -23,18 +37,10 @@ namespace UStacker.Gameplay.InputProcessing
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 if (_time == value)
                     return;
-                
+
                 _time = value;
                 _parentList.Sort();
             }
-        }
-
-        public UpdateEvent(List<UpdateEvent> parentList, EventType type)
-        {
-            _parentList = parentList;
-            _parentList.Add(this);
-            _priority = LastPriority++;
-            _type = type;
         }
 
 
@@ -47,3 +53,6 @@ namespace UStacker.Gameplay.InputProcessing
         }
     }
 }
+/************************************
+end UpdateEvent.cs
+*************************************/

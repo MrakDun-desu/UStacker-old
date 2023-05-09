@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+MultiplayerLobbyManager.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections;
 using System.Linq;
 using FishNet.Connection;
@@ -121,7 +125,7 @@ namespace UStacker.Multiplayer
             }
 
             _startGameCountdown.SetActive(false);
-            
+
             _gameManager.InitializeGame();
         }
 
@@ -146,3 +150,6 @@ namespace UStacker.Multiplayer
         }
     }
 }
+/************************************
+end MultiplayerLobbyManager.cs
+*************************************/

@@ -1,12 +1,17 @@
-using UStacker.Common;
+
+/************************************
+StrideRandomizer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.Collections.Generic;
+using System.Linq;
+using UStacker.Common;
 using UStacker.Common.Extensions;
 
 namespace UStacker.Gameplay.Randomizers
 {
     public class StrideRandomizer : IRandomizer
     {
-        private readonly List<string> _availableValues = new()
+        private readonly string[] _availableValues =
         {
             "i",
             "t",
@@ -16,31 +21,47 @@ namespace UStacker.Gameplay.Randomizers
             "s",
             "z"
         };
+
         private readonly List<string> _currentValues = new();
-        private int _ignoreSzoFor = 2;
+
+        private readonly string[] _firstTryValues =
+        {
+            "i",
+            "t",
+            "l",
+            "j"
+        };
+
         private readonly Random _random = new();
+        private bool _started;
 
         public StrideRandomizer(IEnumerable<string> availablePieces)
         {
-            _availableValues = _availableValues.Filter(availablePieces);
-            InitializeCurrentPieces();
+            var availableArray = availablePieces as string[] ?? availablePieces.ToArray();
+            _availableValues = _availableValues.Filter(availableArray).ToArray();
+            _firstTryValues = _firstTryValues.Filter(availableArray).ToArray();
+            InitializeCurrentValues();
         }
 
         public string GetNextPiece()
         {
-            if (_currentValues.Count == 0) InitializeCurrentPieces();
-            var nextIndex = _random.NextInt(_currentValues.Count);
-            var nextValue = _currentValues[nextIndex];
+            if (_currentValues.Count == 0) InitializeCurrentValues();
 
-            if (_ignoreSzoFor > 0)
+            int nextIndex;
+            string nextValue;
+
+            if (!_started)
             {
-                while (nextValue is "s" or "z" or "o")
-                {
-                    nextIndex = _random.NextInt(_currentValues.Count);
-                    nextValue = _currentValues[nextIndex];
-                }
+                nextIndex = _random.NextInt(_firstTryValues.Length);
+                nextValue = _firstTryValues[nextIndex];
 
-                _ignoreSzoFor--;
+                nextIndex = _currentValues.IndexOf(nextValue);
+                _started = true;
+            }
+            else
+            {
+                nextIndex = _random.NextInt(_currentValues.Count);
+                nextValue = _currentValues[nextIndex];
             }
 
             _currentValues.RemoveAt(nextIndex);
@@ -51,13 +72,16 @@ namespace UStacker.Gameplay.Randomizers
         {
             _random.State = newSeed;
             _currentValues.Clear();
-            InitializeCurrentPieces();
-            _ignoreSzoFor = 2;
+            InitializeCurrentValues();
+            _started = false;
         }
 
-        private void InitializeCurrentPieces()
+        private void InitializeCurrentValues()
         {
             _currentValues.AddRange(_availableValues);
         }
     }
 }
+/************************************
+end StrideRandomizer.cs
+*************************************/

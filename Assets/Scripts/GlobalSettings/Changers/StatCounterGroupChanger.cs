@@ -1,9 +1,13 @@
-﻿using System;
+
+/************************************
+StatCounterGroupChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
-using UStacker.GlobalSettings.StatCounting;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UStacker.GlobalSettings.StatCounting;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -38,9 +42,6 @@ namespace UStacker.GlobalSettings.Changers
         }
 
         public Guid Id { get; set; }
-        
-        public event Action<Guid> GroupRemoved;
-        public event Action<float> SizeChanged;
 
         private void Awake()
         {
@@ -56,6 +57,9 @@ namespace UStacker.GlobalSettings.Changers
             _groupRemoveButton.onClick.AddListener(() => GroupRemoved?.Invoke(Id));
             _counterAddButton.onClick.AddListener(OnStatCounterAdded);
         }
+
+        public event Action<Guid> GroupRemoved;
+        public event Action<float> SizeChanged;
 
         private void ChangeHeight(float sizeDelta)
         {
@@ -149,7 +153,7 @@ namespace UStacker.GlobalSettings.Changers
         {
             if (changer == null)
                 return;
-            
+
             var reducedSize = ((RectTransform) changer.transform).sizeDelta.y;
             if (_statCounterChangers.Count > 0)
                 reducedSize += _statCounterSpacing;
@@ -168,9 +172,12 @@ namespace UStacker.GlobalSettings.Changers
             // invoking on type picked so the user doesn't need to pick from dropdown
             // to actually set the counter type
             newCounterChanger.OnTypePicked(0);
-            
+
             if (_isMinimized)
                 OnMinimize();
         }
     }
 }
+/************************************
+end StatCounterGroupChanger.cs
+*************************************/

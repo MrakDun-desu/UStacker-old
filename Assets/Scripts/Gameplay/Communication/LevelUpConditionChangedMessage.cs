@@ -1,15 +1,16 @@
-﻿using JetBrains.Annotations;
+
+/************************************
+LevelUpConditionChangedMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using JetBrains.Annotations;
 
 namespace UStacker.Gameplay.Communication
 {
     public readonly struct LevelUpConditionChangedMessage : IMidgameMessage
     {
-        [UsedImplicitly]
-        public readonly string ConditionName;
-        [UsedImplicitly]
-        public readonly double CurrentCount;
-        [UsedImplicitly]
-        public readonly double TotalCount;
+        [UsedImplicitly] public readonly string ConditionName;
+        [UsedImplicitly] public readonly double CurrentCount;
+        [UsedImplicitly] public readonly double TotalCount;
 
         public double Time { get; }
 
@@ -22,3 +23,6 @@ namespace UStacker.Gameplay.Communication
         }
     }
 }
+/************************************
+end LevelUpConditionChangedMessage.cs
+*************************************/

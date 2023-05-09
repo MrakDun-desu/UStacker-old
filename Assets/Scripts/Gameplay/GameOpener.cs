@@ -1,7 +1,11 @@
-﻿using UStacker.Gameplay.Initialization;
-using UStacker.GameSettings;
+
+/************************************
+GameOpener.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UStacker.Gameplay.Initialization;
+using UStacker.GameSettings;
 
 namespace UStacker.Gameplay
 {
@@ -16,3 +20,6 @@ namespace UStacker.Gameplay
         }
     }
 }
+/************************************
+end GameOpener.cs
+*************************************/

@@ -1,4 +1,8 @@
-﻿namespace UStacker.GameSettings.Enums
+
+/************************************
+LockDelayType.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.GameSettings.Enums
 {
     public enum LockDelayType : byte
     {
@@ -6,3 +10,6 @@
         OnIllegalMovement
     }
 }
+/************************************
+end LockDelayType.cs
+*************************************/

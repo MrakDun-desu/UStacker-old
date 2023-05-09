@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+ReadonlyStatContainer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 
 namespace UStacker.Gameplay.Stats
 {
@@ -12,7 +16,19 @@ namespace UStacker.Gameplay.Stats
             _parent = parent;
         }
 
-        
+        public static implicit operator StatContainer(ReadonlyStatContainer source)
+        {
+            return source._parent with
+            {
+            };
+        }
+
+        public static implicit operator ReadonlyStatContainer(StatContainer source)
+        {
+            return new ReadonlyStatContainer(source);
+        }
+
+
         // ReSharper disable UnusedMember.Global
         public long Score => _parent.Score;
         public string Level => _parent.Level;
@@ -41,19 +57,11 @@ namespace UStacker.Gameplay.Stats
         public double PiecesPerSecond => _parent.PiecesPerSecond;
         public double KeysPerPiece => _parent.KeysPerPiece;
         public double KeysPerSecond => _parent.KeysPerSecond;
+
         public double LinesPerMinute => _parent.LinesPerMinute;
         // ReSharper restore UnusedMember.Global
-
-        public static implicit operator StatContainer(ReadonlyStatContainer source)
-        {
-            return source._parent with
-            {
-            };
-        }
-
-        public static implicit operator ReadonlyStatContainer(StatContainer source)
-        {
-            return new ReadonlyStatContainer(source);
-        }
     }
 }
+/************************************
+end ReadonlyStatContainer.cs
+*************************************/

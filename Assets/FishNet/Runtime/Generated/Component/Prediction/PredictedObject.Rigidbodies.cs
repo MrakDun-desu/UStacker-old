@@ -1,9 +1,8 @@
-﻿using FishNet.Connection;
-using FishNet.Managing;
+﻿using System.Runtime.CompilerServices;
+using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Transporting;
 using FishNet.Utility;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace FishNet.Component.Prediction
@@ -11,45 +10,64 @@ namespace FishNet.Component.Prediction
     public partial class PredictedObject : NetworkBehaviour
     {
         #region All.
+
         #region Internal.
+
         /// <summary>
-        /// True if owner and implements prediction methods.
+        ///     True if owner and implements prediction methods.
         /// </summary>
-        internal bool IsPredictingOwner() => (base.IsOwner && _implementsPredictionMethods);
+        internal bool IsPredictingOwner()
+        {
+            return IsOwner && _implementsPredictionMethods;
+        }
+
         #endregion
+
         #region Private.
+
         /// <summary>
-        /// Pauser for rigidbodies when they cannot be rolled back.
+        ///     Pauser for rigidbodies when they cannot be rolled back.
         /// </summary>
-        private RigidbodyPauser _rigidbodyPauser = new RigidbodyPauser();
+        private RigidbodyPauser _rigidbodyPauser = new();
+
         /// <summary>
-        /// Next tick to resend data when resend type is set to interval.
+        ///     Next tick to resend data when resend type is set to interval.
         /// </summary>
         private uint _nextIntervalResend;
+
         /// <summary>
-        /// Number of resends remaining when the object has not changed.
+        ///     Number of resends remaining when the object has not changed.
         /// </summary>
         private ushort _resendsRemaining;
+
         /// <summary>
-        /// True if object was changed previous tick.
+        ///     True if object was changed previous tick.
         /// </summary>
         private bool _previouslyChanged;
+
         /// <summary>
-        /// Animators found on the graphical object.
+        ///     Animators found on the graphical object.
         /// </summary>
         private Animator[] _graphicalAnimators;
+
         /// <summary>
-        /// True if GraphicalAniamtors have been intialized.
+        ///     True if GraphicalAniamtors have been intialized.
         /// </summary>
         private bool _animatorsInitialized;
+
         /// <summary>
-        /// Tick on the last received state.
+        ///     Tick on the last received state.
         /// </summary>
         private uint _lastStateLocalTick;
+
         /// <summary>
-        /// True if a connection is owner and prediction methods are implemented.
+        ///     True if a connection is owner and prediction methods are implemented.
         /// </summary>
-        private bool _isPredictingOwner(NetworkConnection c) => (c == base.Owner && _implementsPredictionMethods);
+        private bool _isPredictingOwner(NetworkConnection c)
+        {
+            return c == Owner && _implementsPredictionMethods;
+        }
+
         #endregion
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -57,12 +75,12 @@ namespace FishNet.Component.Prediction
         {
             if (!IsRigidbodyPrediction)
                 return;
-            if (c == base.Owner)
+            if (c == Owner)
                 return;
             if (c.IsLocalClient)
                 return;
 
-            uint tick = c.LastPacketTick;
+            var tick = c.LastPacketTick;
             if (_predictionType == PredictionType.Rigidbody)
                 SendRigidbodyState(tick, c, true);
             else
@@ -70,12 +88,12 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Called when the client starts.
+        ///     Called when the client starts.
         /// </summary>
         private void Rigidbodies_OnStartClient()
         {
             //Store up to 1 second of states.
-            int capacity = base.TimeManager.TickRate;
+            int capacity = TimeManager.TickRate;
             /* Only need to check one collection capacity since they both will be the same.
              * If capacity does not line up then re-initialize. */
             if (capacity != _rigidbodyStates.Capacity)
@@ -86,7 +104,7 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Called on client when ownership changes for this object.
+        ///     Called on client when ownership changes for this object.
         /// </summary>
         /// <param name="prevOwner"></param>
         private void Rigidbodies_OnOwnershipClient(NetworkConnection prevOwner)
@@ -94,7 +112,7 @@ namespace FishNet.Component.Prediction
             if (!IsRigidbodyPrediction)
                 return;
             //If owner no need to fix for animators.
-            if (base.IsOwner)
+            if (IsOwner)
                 return;
             //Would have already fixed if animators are set.
             if (_animatorsInitialized)
@@ -105,7 +123,7 @@ namespace FishNet.Component.Prediction
 
             if (_graphicalAnimators.Length > 0)
             {
-                for (int i = 0; i < _graphicalAnimators.Length; i++)
+                for (var i = 0; i < _graphicalAnimators.Length; i++)
                     _graphicalAnimators[i].keepAnimatorControllerStateOnDisable = true;
 
                 /* True if at least one animator is on the graphical root. 
@@ -114,7 +132,7 @@ namespace FishNet.Component.Prediction
                  * to prevent animation jitter when pausing the rbs. */
                 if (_graphicalAnimators[0].transform == _graphicalObject)
                 {
-                    Transform graphicalHolder = new GameObject().transform;
+                    var graphicalHolder = new GameObject().transform;
                     graphicalHolder.name = "GraphicalObjectHolder";
                     graphicalHolder.SetParent(transform);
                     //ref _graphicalInstantiatedOffsetPosition, ref _graphicalInstantiatedOffsetRotation);
@@ -131,17 +149,17 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Called after a tick occurs; physics would have simulated if using PhysicsMode.TimeManager.
+        ///     Called after a tick occurs; physics would have simulated if using PhysicsMode.TimeManager.
         /// </summary>
         private void Rigidbodies_TimeManager_OnPostTick()
         {
             if (!IsRigidbodyPrediction)
                 return;
-            if (base.IsServer)
+            if (IsServer)
                 return;
 
-            bool is2D = (_predictionType == PredictionType.Rigidbody2D);
-            uint localTick = base.TimeManager.LocalTick;
+            var is2D = _predictionType == PredictionType.Rigidbody2D;
+            var localTick = TimeManager.LocalTick;
 
             /* Can check either one. They may not be initialized yet if host. */
             if (_rigidbodyStates.Initialized)
@@ -162,7 +180,7 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Called before performing a reconcile on NetworkBehaviour.
+        ///     Called before performing a reconcile on NetworkBehaviour.
         /// </summary>
         private void Rigidbodies_TimeManager_OnPreReconcile(NetworkBehaviour nb)
         {
@@ -176,9 +194,9 @@ namespace FishNet.Component.Prediction
             if (!IsRigidbodyPrediction)
                 return;
 
-            bool is2D = (_predictionType == PredictionType.Rigidbody2D);
-            uint lastNbTick = nb.GetLastReconcileTick();
-            int stateIndex = GetCachedStateIndex(lastNbTick, is2D);
+            var is2D = _predictionType == PredictionType.Rigidbody2D;
+            var lastNbTick = nb.GetLastReconcileTick();
+            var stateIndex = GetCachedStateIndex(lastNbTick, is2D);
 
             /* If running again on the same reconcile or state is for a different
              * tick then do make RBs kinematic. Resetting to a different state
@@ -207,7 +225,7 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Called after performing a reconcile on NetworkBehaviour.
+        ///     Called after performing a reconcile on NetworkBehaviour.
         /// </summary>
         private void Rigidbodies_TimeManager_OnPostReconcile(NetworkBehaviour nb)
         {
@@ -215,8 +233,8 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Called before physics is simulated when replaying a replicate method.
-        /// Contains the PhysicsScene and PhysicsScene2D which was simulated.
+        ///     Called before physics is simulated when replaying a replicate method.
+        ///     Contains the PhysicsScene and PhysicsScene2D which was simulated.
         /// </summary>
         private void Rigidbodies_PredictionManager_OnPreReplicateReplay(uint tick, PhysicsScene ps, PhysicsScene2D ps2d)
         {
@@ -230,10 +248,11 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Called before physics is simulated when replaying a replicate method.
-        /// Contains the PhysicsScene and PhysicsScene2D which was simulated.
+        ///     Called before physics is simulated when replaying a replicate method.
+        ///     Contains the PhysicsScene and PhysicsScene2D which was simulated.
         /// </summary>
-        private void Rigidbodies_PredictionManager_OnPostReplicateReplay(uint tick, PhysicsScene ps, PhysicsScene2D ps2d)
+        private void Rigidbodies_PredictionManager_OnPostReplicateReplay(uint tick, PhysicsScene ps,
+            PhysicsScene2D ps2d)
         {
             if (!CanPredict())
                 return;
@@ -242,44 +261,45 @@ namespace FishNet.Component.Prediction
 
             if (_predictionType == PredictionType.Rigidbody)
             {
-                int index = GetCachedStateIndex(tick, false);
+                var index = GetCachedStateIndex(tick, false);
                 if (index != -1)
                     _rigidbodyStates[index] = new RigidbodyState(_rigidbody, tick);
             }
+
             if (_predictionType == PredictionType.Rigidbody2D)
             {
-                int index = GetCachedStateIndex(tick, true);
+                var index = GetCachedStateIndex(tick, true);
                 if (index != -1)
                     _rigidbody2dStates[index] = new Rigidbody2DState(_rigidbody2d, tick);
             }
         }
 
         /// <summary>
-        /// Sends the rigidbodies state to Observers of a NetworkBehaviour.
+        ///     Sends the rigidbodies state to Observers of a NetworkBehaviour.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SendRigidbodyState(NetworkBehaviour nb)
         {
-            NetworkConnection owner = nb.Owner;
+            var owner = nb.Owner;
             if (!owner.IsActive)
                 return;
-            NetworkManager nm = nb.NetworkManager;
+            var nm = nb.NetworkManager;
             if (nm == null)
                 return;
 
-            uint tick = nb.GetLastReplicateTick();
+            var tick = nb.GetLastReplicateTick();
             TrySendRigidbodyState(nb, tick);
         }
 
         /// <summary>
-        /// Send current state to a connection.
+        ///     Send current state to a connection.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void TrySendRigidbodyState(NetworkBehaviour nb, uint tick)
         {
             if (!IsRigidbodyPrediction)
                 return;
-            NetworkConnection nbOwner = nb.Owner;
+            var nbOwner = nb.Owner;
             //No need to send to self unless doesnt implement prediction methods.
             if (_isPredictingOwner(nbOwner))
                 return;
@@ -291,17 +311,17 @@ namespace FishNet.Component.Prediction
              * is true but we want to save perf by exiting
              * early before checks and serialization when
              * we know the conn is not an observer. */
-            if (!base.Observers.Contains(nbOwner))
+            if (!Observers.Contains(nbOwner))
                 return;
 
-            bool hasChanged = base.TransformMayChange();
+            var hasChanged = TransformMayChange();
             if (!hasChanged)
             {
                 //Not changed but was previous tick. Reset resends.
                 if (_previouslyChanged)
-                    _resendsRemaining = base.TimeManager.TickRate;
+                    _resendsRemaining = TimeManager.TickRate;
 
-                uint currentTick = base.TimeManager.Tick;
+                var currentTick = TimeManager.Tick;
                 //Resends remain.
                 if (_resendsRemaining > 0)
                 {
@@ -326,10 +346,10 @@ namespace FishNet.Component.Prediction
                 //Updates the next tick when a resend should occur.
                 void UpdateNextIntervalResend()
                 {
-                    _nextIntervalResend = (currentTick + _resendInterval);
+                    _nextIntervalResend = currentTick + _resendInterval;
                 }
-
             }
+
             _previouslyChanged = hasChanged;
 
             if (_predictionType == PredictionType.Rigidbody)
@@ -339,7 +359,7 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Gets a cached state index in actual array position.
+        ///     Gets a cached state index in actual array position.
         /// </summary>
         /// <returns></returns>
         private int GetCachedStateIndex(uint tick, bool is2d)
@@ -367,27 +387,28 @@ namespace FishNet.Component.Prediction
             if (firstTick > tick)
                 return -1;
 
-            long difference = (tick - firstTick);
+            long difference = tick - firstTick;
             //Desired tick would be out of bounds. This should never happen.
             if (difference >= count)
                 return -1;
 
-            return (int)difference;
+            return (int) difference;
         }
 
 
         /// <summary>
-        /// Tries to predict velocity for a Vector3.
+        ///     Tries to predict velocity for a Vector3.
         /// </summary>
-        protected bool PredictVector3Velocity(ref float? velocityBaseline, ref Vector3 lastVelocity, Vector3 velocity, out Vector3 result)
+        protected bool PredictVector3Velocity(ref float? velocityBaseline, ref Vector3 lastVelocity, Vector3 velocity,
+            out Vector3 result)
         {
             float velocityDifference;
             float directionDifference;
 
             /* Velocity. */
-            directionDifference = (velocityBaseline != null) ?
-                Vector3.SqrMagnitude(lastVelocity.normalized - velocity.normalized) :
-                0f;
+            directionDifference = velocityBaseline != null
+                ? Vector3.SqrMagnitude(lastVelocity.normalized - velocity.normalized)
+                : 0f;
             //If direction has changed too much then reset the baseline.
             if (directionDifference > 0.01f)
             {
@@ -408,23 +429,24 @@ namespace FishNet.Component.Prediction
                 else
                 {
                     //If the difference exceeds the baseline by 10% then reset baseline so another will be calculated.
-                    if (velocityDifference > (velocityBaseline.Value * 1.1f) || velocityDifference < (velocityBaseline.Value * 0.9f))
+                    if (velocityDifference > velocityBaseline.Value * 1.1f ||
+                        velocityDifference < velocityBaseline.Value * 0.9f)
                     {
                         velocityBaseline = null;
                     }
                     //Velocity difference is close enough to the baseline to where it doesn't need to be reset, so use prediction.
                     else
                     {
-                        Vector3 changeMultiplied = (velocity - lastVelocity) * _maintainedVelocity;
+                        var changeMultiplied = (velocity - lastVelocity) * _maintainedVelocity;
                         //Retaining velocity.
                         if (_maintainedVelocity > 0f)
                         {
-                            result = (velocity + changeMultiplied);
+                            result = velocity + changeMultiplied;
                         }
                         //Reducing velocity.
                         else
                         {
-                            result = (velocity + changeMultiplied);
+                            result = velocity + changeMultiplied;
                             /* When reducing velocity make sure the direction
                              * did not change. When this occurs it means the velocity
                              * was reduced into the opposite direction. To prevent
@@ -432,6 +454,7 @@ namespace FishNet.Component.Prediction
                             if (velocity.normalized != result.normalized)
                                 result = Vector3.zero;
                         }
+
                         return true;
                     }
                 }
@@ -444,15 +467,16 @@ namespace FishNet.Component.Prediction
 
 
         /// <summary>
-        /// Tries to predict velocity for a float.
+        ///     Tries to predict velocity for a float.
         /// </summary>
-        private bool PredictFloatVelocity(ref float? velocityBaseline, ref float lastVelocity, float velocity, out float result)
+        private bool PredictFloatVelocity(ref float? velocityBaseline, ref float lastVelocity, float velocity,
+            out float result)
         {
             float velocityDifference;
             float directionDifference;
 
             /* Velocity. */
-            directionDifference = (velocityBaseline != null) ? (velocity - lastVelocity) : 0f;
+            directionDifference = velocityBaseline != null ? velocity - lastVelocity : 0f;
 
             //If direction has changed too much then reset the baseline.
             if (directionDifference > 0.01f)
@@ -474,23 +498,24 @@ namespace FishNet.Component.Prediction
                 else
                 {
                     //If the difference exceeds the baseline by 10% then reset baseline so another will be calculated.
-                    if (velocityDifference > (velocityBaseline.Value * 1.1f) || velocityDifference < (velocityBaseline.Value * 0.9f))
+                    if (velocityDifference > velocityBaseline.Value * 1.1f ||
+                        velocityDifference < velocityBaseline.Value * 0.9f)
                     {
                         velocityBaseline = null;
                     }
                     //Velocity difference is close enough to the baseline to where it doesn't need to be reset, so use prediction.
                     else
                     {
-                        float changeMultiplied = (velocity - lastVelocity) * _maintainedVelocity;
+                        var changeMultiplied = (velocity - lastVelocity) * _maintainedVelocity;
                         //Retaining velocity.
                         if (_maintainedVelocity > 0f)
                         {
-                            result = (velocity + changeMultiplied);
+                            result = velocity + changeMultiplied;
                         }
                         //Reducing velocity.
                         else
                         {
-                            result = (velocity + changeMultiplied);
+                            result = velocity + changeMultiplied;
                             /* When reducing velocity make sure the direction
                              * did not change. When this occurs it means the velocity
                              * was reduced into the opposite direction. To prevent
@@ -498,6 +523,7 @@ namespace FishNet.Component.Prediction
                             if (Mathf.Abs(velocity) != Mathf.Abs(result))
                                 result = 0f;
                         }
+
                         return true;
                     }
                 }
@@ -510,46 +536,55 @@ namespace FishNet.Component.Prediction
 
 
         /// <summary>
-        /// Returns if prediction can be used on this rigidbody.
+        ///     Returns if prediction can be used on this rigidbody.
         /// </summary>
         /// <returns></returns>
         private bool CanPredict()
         {
             if (!IsRigidbodyPrediction)
                 return false;
-            if (base.IsServer || base.IsOwner)
+            if (IsServer || IsOwner)
                 return false;
 
             return true;
         }
+
         #endregion
 
         #region Rigidbody.
+
         #region Private.
+
         /// <summary>
-        /// Past RigidbodyStates.
+        ///     Past RigidbodyStates.
         /// </summary>
-        private RingBuffer<RigidbodyState> _rigidbodyStates = new RingBuffer<RigidbodyState>();
+        private readonly RingBuffer<RigidbodyState> _rigidbodyStates = new();
+
         /// <summary>
-        /// Velocity from previous simulation.
+        ///     Velocity from previous simulation.
         /// </summary>
         private Vector3 _lastVelocity;
+
         /// <summary>
-        /// Angular velocity from previous simulation.
+        ///     Angular velocity from previous simulation.
         /// </summary>
         private Vector3 _lastAngularVelocity;
+
         /// <summary>
-        /// Baseline for velocity magnitude.
+        ///     Baseline for velocity magnitude.
         /// </summary>
         private float? _velocityBaseline;
+
         /// <summary>
-        /// Baseline for angular velocity magnitude.
+        ///     Baseline for angular velocity magnitude.
         /// </summary>
         private float? _angularVelocityBaseline;
+
         /// <summary>
-        /// PhysicsScene for this object when OnPreReconcile is called.
+        ///     PhysicsScene for this object when OnPreReconcile is called.
         /// </summary>
         private PhysicsScene _physicsScene;
+
         #endregion
 
         private void ResetRigidbodyToData(RigidbodyState state)
@@ -557,7 +592,7 @@ namespace FishNet.Component.Prediction
             //Update transform and rigidbody.
             _rigidbody.transform.position = state.Position;
             _rigidbody.transform.rotation = state.Rotation;
-            bool isKinematic = state.IsKinematic;
+            var isKinematic = state.IsKinematic;
             _rigidbody.isKinematic = isKinematic;
             if (!isKinematic)
             {
@@ -576,7 +611,7 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Sets the next predicted velocity on the rigidbody.
+        ///     Sets the next predicted velocity on the rigidbody.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void PredictVelocity(PhysicsScene ps)
@@ -589,7 +624,8 @@ namespace FishNet.Component.Prediction
             Vector3 result;
             if (PredictVector3Velocity(ref _velocityBaseline, ref _lastVelocity, _rigidbody.velocity, out result))
                 _rigidbody.velocity = result;
-            if (PredictVector3Velocity(ref _angularVelocityBaseline, ref _lastAngularVelocity, _rigidbody.angularVelocity, out result))
+            if (PredictVector3Velocity(ref _angularVelocityBaseline, ref _lastAngularVelocity,
+                    _rigidbody.angularVelocity, out result))
                 _rigidbody.angularVelocity = result;
 
             _lastVelocity = _rigidbody.velocity;
@@ -598,7 +634,7 @@ namespace FishNet.Component.Prediction
 
 
         /// <summary>
-        /// Sends current states of this object to client.
+        ///     Sends current states of this object to client.
         /// </summary>
         private void SendRigidbodyState(uint reconcileTick, NetworkConnection conn, bool applyImmediately)
         {
@@ -606,28 +642,29 @@ namespace FishNet.Component.Prediction
             if (_isPredictingOwner(conn))
                 return;
 
-            reconcileTick = (conn == base.NetworkObject.PredictedSpawner) ? conn.LastPacketTick : reconcileTick;
-            RigidbodyState state = new RigidbodyState(_rigidbody, reconcileTick);
+            reconcileTick = conn == NetworkObject.PredictedSpawner ? conn.LastPacketTick : reconcileTick;
+            var state = new RigidbodyState(_rigidbody, reconcileTick);
             TargetSendRigidbodyState(conn, state, applyImmediately);
         }
 
         /// <summary>
-        /// Sends transform and rigidbody state to spectators.
+        ///     Sends transform and rigidbody state to spectators.
         /// </summary>
         [TargetRpc(ValidateTarget = false)]
-        private void TargetSendRigidbodyState(NetworkConnection c, RigidbodyState state, bool applyImmediately, Channel channel = Channel.Unreliable)
+        private void TargetSendRigidbodyState(NetworkConnection c, RigidbodyState state, bool applyImmediately,
+            Channel channel = Channel.Unreliable)
         {
             if (!CanPredict())
                 return;
 
-            uint localTick = state.LocalTick;
+            var localTick = state.LocalTick;
             if (applyImmediately)
             {
                 /* If PredictedSpawner is self then this client
                  * was the one to predicted spawn this object. When that is
                  * the case do not apply initial velocities, but so allow
                  * regular updates/corrections. */
-                if (base.NetworkObject.PredictedSpawner.IsLocalClient)
+                if (NetworkObject.PredictedSpawner.IsLocalClient)
                     return;
             }
             else
@@ -643,53 +680,62 @@ namespace FishNet.Component.Prediction
             }
             else
             {
-                int index = GetCachedStateIndex(localTick, false);
+                var index = GetCachedStateIndex(localTick, false);
                 if (index != -1)
                     _rigidbodyStates[index] = state;
                 else
                     _rigidbodyStates.Add(state);
             }
         }
+
         #endregion
 
         #region Rigidbody2D.
+
         #region Private.
+
         /// <summary>
-        /// Past RigidbodyStates.
+        ///     Past RigidbodyStates.
         /// </summary>
-        private RingBuffer<Rigidbody2DState> _rigidbody2dStates = new RingBuffer<Rigidbody2DState>();
+        private readonly RingBuffer<Rigidbody2DState> _rigidbody2dStates = new();
+
         /// <summary>
-        /// Velocity from previous simulation.
+        ///     Velocity from previous simulation.
         /// </summary>
         private Vector3 _lastVelocity2D;
+
         /// <summary>
-        /// Angular velocity from previous simulation.
+        ///     Angular velocity from previous simulation.
         /// </summary>
         private float _lastAngularVelocity2D;
+
         /// <summary>
-        /// Baseline for velocity magnitude.
+        ///     Baseline for velocity magnitude.
         /// </summary>
         private float? _velocityBaseline2D;
+
         /// <summary>
-        /// Baseline for angular velocity magnitude.
+        ///     Baseline for angular velocity magnitude.
         /// </summary>
         private float? _angularVelocityBaseline2D;
+
         /// <summary>
-        /// PhysicsScene for this object when OnPreReconcile is called.
+        ///     PhysicsScene for this object when OnPreReconcile is called.
         /// </summary>
         private PhysicsScene2D _physicsScene2D;
+
         #endregion
 
 
         /// <summary>
-        /// Resets the Rigidbody2D to last received data.
+        ///     Resets the Rigidbody2D to last received data.
         /// </summary>
         private void ResetRigidbody2DToData(Rigidbody2DState state)
         {
             //Update transform and rigidbody.
             _rigidbody2d.transform.position = state.Position;
             _rigidbody2d.transform.rotation = state.Rotation;
-            bool simulated = state.Simulated;
+            var simulated = state.Simulated;
             _rigidbody2d.simulated = simulated;
             _rigidbody2d.isKinematic = !simulated;
             if (simulated)
@@ -709,7 +755,7 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Sets the next predicted velocity on the rigidbody.
+        ///     Sets the next predicted velocity on the rigidbody.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void PredictVelocity(PhysicsScene2D ps)
@@ -720,10 +766,12 @@ namespace FishNet.Component.Prediction
                 return;
 
             Vector3 v3Result;
-            if (PredictVector3Velocity(ref _velocityBaseline2D, ref _lastVelocity2D, _rigidbody2d.velocity, out v3Result))
+            if (PredictVector3Velocity(ref _velocityBaseline2D, ref _lastVelocity2D, _rigidbody2d.velocity,
+                    out v3Result))
                 _rigidbody2d.velocity = v3Result;
             float floatResult;
-            if (PredictFloatVelocity(ref _angularVelocityBaseline2D, ref _lastAngularVelocity2D, _rigidbody2d.angularVelocity, out floatResult))
+            if (PredictFloatVelocity(ref _angularVelocityBaseline2D, ref _lastAngularVelocity2D,
+                    _rigidbody2d.angularVelocity, out floatResult))
                 _rigidbody2d.angularVelocity = floatResult;
 
             _lastVelocity2D = _rigidbody2d.velocity;
@@ -732,31 +780,32 @@ namespace FishNet.Component.Prediction
 
 
         /// <summary>
-        /// Sends current Rigidbody2D state to a connection.
+        ///     Sends current Rigidbody2D state to a connection.
         /// </summary>
         private void SendRigidbody2DState(uint reconcileTick, NetworkConnection conn, bool applyImmediately)
         {
-            Rigidbody2DState state = new Rigidbody2DState(_rigidbody2d, reconcileTick);
+            var state = new Rigidbody2DState(_rigidbody2d, reconcileTick);
             TargetSendRigidbody2DState(conn, state, applyImmediately);
         }
 
         /// <summary>
-        /// Sends transform and rigidbody state to spectators.
+        ///     Sends transform and rigidbody state to spectators.
         /// </summary>
         [TargetRpc(ValidateTarget = false)]
-        private void TargetSendRigidbody2DState(NetworkConnection c, Rigidbody2DState state, bool applyImmediately, Channel channel = Channel.Unreliable)
+        private void TargetSendRigidbody2DState(NetworkConnection c, Rigidbody2DState state, bool applyImmediately,
+            Channel channel = Channel.Unreliable)
         {
             if (!CanPredict())
                 return;
 
-            uint localTick = state.LocalTick;
+            var localTick = state.LocalTick;
             if (applyImmediately)
             {
                 /* If PredictedSpawner is self then this client
                  * was the one to predicted spawn this object. When that is
                  * the case do not apply initial velocities, but so allow
                  * regular updates/corrections. */
-                if (base.NetworkObject.PredictedSpawner.IsLocalClient)
+                if (NetworkObject.PredictedSpawner.IsLocalClient)
                     return;
             }
             else
@@ -772,18 +821,16 @@ namespace FishNet.Component.Prediction
             }
             else
             {
-                int index = GetCachedStateIndex(localTick, true);
+                var index = GetCachedStateIndex(localTick, true);
                 if (index != -1)
                     _rigidbody2dStates[index] = state;
                 else
                     _rigidbody2dStates.Add(state);
             }
-
-
         }
 
         /// <summary>
-        /// Returns if a received state can be processed based on it's tick.
+        ///     Returns if a received state can be processed based on it's tick.
         /// </summary>
         /// <param name="stateTick"></param>
         /// <returns></returns>
@@ -796,9 +843,7 @@ namespace FishNet.Component.Prediction
 
             return true;
         }
+
         #endregion
-
     }
-
-
 }

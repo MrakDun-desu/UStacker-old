@@ -1,87 +1,55 @@
-﻿using FishNet.Documenting;
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
+using FishNet.Documenting;
 using UnityEngine;
 
 namespace FishNet.Managing.Logging
 {
-
     /// <summary>
-    /// Configuration ScriptableObject specifying which data to log. Used in conjuction with NetworkManager.
+    ///     Configuration ScriptableObject specifying which data to log. Used in conjuction with NetworkManager.
     /// </summary>
-    [CreateAssetMenu(fileName = "New LevelLoggingConfiguration", menuName = "FishNet/Logging/Level Logging Configuration")]
+    [CreateAssetMenu(fileName = "New LevelLoggingConfiguration",
+        menuName = "FishNet/Logging/Level Logging Configuration")]
     public class LevelLoggingConfiguration : LoggingConfiguration
     {
-
-        #region Serialized.
-        /// <summary>
-        /// Type of logging to use for development builds and editor.
-        /// </summary>
-        [Tooltip("Type of logging to use for development builds and editor.")]
-        [SerializeField]
-        private LoggingType _developmentLogging = LoggingType.Common;
-        /// <summary>
-        /// Type of logging to use for GUI builds.
-        /// </summary>
-        [Tooltip("Type of logging to use for GUI builds.")]
-        [SerializeField]
-        private LoggingType _guiLogging = LoggingType.Warning;
-        /// <summary>
-        /// Type of logging to use for headless builds.
-        /// </summary>
-        [Tooltip("Type of logging to use for headless builds.")]
-        [SerializeField]
-        private LoggingType _headlessLogging = LoggingType.Error;
-        #endregion
-
-        #region Private.
-        /// <summary>
-        /// True when initialized.
-        /// </summary>
-        private bool _initialized;
-        /// <summary>
-        /// Highest type which can be logged.
-        /// </summary>
-        private LoggingType _highestLoggingType = LoggingType.Off;
-        #endregion
-
         [APIExclude]
-        public void LoggingConstructor(bool loggingEnabled, LoggingType development, LoggingType gui, LoggingType headless)
+        public void LoggingConstructor(bool loggingEnabled, LoggingType development, LoggingType gui,
+            LoggingType headless)
         {
-            base.LoggingEnabled = loggingEnabled;
+            LoggingEnabled = loggingEnabled;
             _developmentLogging = development;
             _guiLogging = gui;
             _headlessLogging = headless;
         }
 
         /// <summary>
-        /// Initializes script for use.
+        ///     Initializes script for use.
         /// </summary>
         /// <param name="manager"></param>
         public override void InitializeOnce()
         {
-            byte currentHighest = (byte)LoggingType.Off;
+            var currentHighest = (byte) LoggingType.Off;
 #if UNITY_SERVER //if headless.
             currentHighest = Math.Max(currentHighest, (byte)_headlessLogging);
 #endif
 #if UNITY_EDITOR || DEVELOPMENT_BUILD //if editor or development.
-            currentHighest = Math.Max(currentHighest, (byte)_developmentLogging);
+            currentHighest = Math.Max(currentHighest, (byte) _developmentLogging);
 #endif
 #if !UNITY_EDITOR && !UNITY_SERVER //if a build.
             currentHighest = Math.Max(currentHighest, (byte)_guiLogging);
 #endif
-            _highestLoggingType = (LoggingType)currentHighest;
+            _highestLoggingType = (LoggingType) currentHighest;
             _initialized = true;
         }
 
         /// <summary>
-        /// True if can log for loggingType.
+        ///     True if can log for loggingType.
         /// </summary>
         /// <param name="loggingType">Type of logging being filtered.</param>
         /// <returns></returns>
         public override bool CanLog(LoggingType loggingType)
         {
-            if (!base.LoggingEnabled)
+            if (!LoggingEnabled)
                 return false;
 
             if (!_initialized)
@@ -95,11 +63,11 @@ namespace FishNet.Managing.Logging
                 return false;
             }
 
-            return ((byte)loggingType <= (byte)_highestLoggingType);
+            return (byte) loggingType <= (byte) _highestLoggingType;
         }
 
         /// <summary>
-        /// Logs a common value if can log.
+        ///     Logs a common value if can log.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override void Log(string value)
@@ -109,7 +77,7 @@ namespace FishNet.Managing.Logging
         }
 
         /// <summary>
-        /// Logs a warning value if can log.
+        ///     Logs a warning value if can log.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override void LogWarning(string value)
@@ -119,7 +87,7 @@ namespace FishNet.Managing.Logging
         }
 
         /// <summary>
-        /// Logs an error value if can log.
+        ///     Logs an error value if can log.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override void LogError(string value)
@@ -129,14 +97,50 @@ namespace FishNet.Managing.Logging
         }
 
         /// <summary>
-        /// Clones this logging configuration.
+        ///     Clones this logging configuration.
         /// </summary>
         /// <returns></returns>
         public override LoggingConfiguration Clone()
         {
-            LevelLoggingConfiguration copy = ScriptableObject.CreateInstance<LevelLoggingConfiguration>();
-            copy.LoggingConstructor(base.LoggingEnabled, _developmentLogging, _guiLogging, _headlessLogging);
+            var copy = CreateInstance<LevelLoggingConfiguration>();
+            copy.LoggingConstructor(LoggingEnabled, _developmentLogging, _guiLogging, _headlessLogging);
             return copy;
         }
+
+        #region Serialized.
+
+        /// <summary>
+        ///     Type of logging to use for development builds and editor.
+        /// </summary>
+        [Tooltip("Type of logging to use for development builds and editor.")] [SerializeField]
+        private LoggingType _developmentLogging = LoggingType.Common;
+
+        /// <summary>
+        ///     Type of logging to use for GUI builds.
+        /// </summary>
+        [Tooltip("Type of logging to use for GUI builds.")] [SerializeField]
+        private LoggingType _guiLogging = LoggingType.Warning;
+
+        /// <summary>
+        ///     Type of logging to use for headless builds.
+        /// </summary>
+        [Tooltip("Type of logging to use for headless builds.")] [SerializeField]
+        private LoggingType _headlessLogging = LoggingType.Error;
+
+        #endregion
+
+        #region Private.
+
+        /// <summary>
+        ///     True when initialized.
+        /// </summary>
+        private bool _initialized;
+
+        /// <summary>
+        ///     Highest type which can be logged.
+        /// </summary>
+        private LoggingType _highestLoggingType = LoggingType.Off;
+
+        #endregion
     }
 }

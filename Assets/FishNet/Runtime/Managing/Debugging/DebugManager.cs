@@ -3,7 +3,7 @@
 namespace FishNet.Managing.Debugging
 {
     /// <summary>
-    /// A container for debugging.
+    ///     A container for debugging.
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("FishNet/Manager/DebugManager")]
@@ -15,6 +15,4 @@ namespace FishNet.Managing.Debugging
         public bool ReconcileRpcLinks = true;
         public bool ServerRpcLinks = true;
     }
-
-
 }

@@ -5,35 +5,33 @@ using UnityEngine;
 
 namespace FishNet.Example.Scened
 {
-
     /// <summary>
-    /// Unloads specified scenes when entering or exiting this trigger.
+    ///     Unloads specified scenes when entering or exiting this trigger.
     /// </summary>
     public class SceneUnloaderExample : MonoBehaviour
     {
         /// <summary>
-        /// Scenes to unload.
+        ///     Scenes to unload.
         /// </summary>
-        [Tooltip("Scenes to unload.")]
-        [SerializeField]
+        [Tooltip("Scenes to unload.")] [SerializeField]
         private string[] _scenes = new string[0];
+
         /// <summary>
-        /// True to only unload for the connectioning causing the trigger.
+        ///     True to only unload for the connectioning causing the trigger.
         /// </summary>
-        [Tooltip("True to only unload for the connectioning causing the trigger.")]
-        [SerializeField]
+        [Tooltip("True to only unload for the connectioning causing the trigger.")] [SerializeField]
         private bool _connectionOnly;
+
         /// <summary>
-        /// True to unload unused scenes.
+        ///     True to unload unused scenes.
         /// </summary>
-        [Tooltip("True to unload unused scenes.")]
-        [SerializeField]
+        [Tooltip("True to unload unused scenes.")] [SerializeField]
         private bool _unloadUnused = true;
+
         /// <summary>
-        /// True to fire when entering the trigger. False to fire when exiting the trigger.
+        ///     True to fire when entering the trigger. False to fire when exiting the trigger.
         /// </summary>
-        [Tooltip("True to fire when entering the trigger. False to fire when exiting the trigger.")]
-        [SerializeField]
+        [Tooltip("True to fire when entering the trigger. False to fire when exiting the trigger.")] [SerializeField]
         private bool _onTriggerEnter = true;
 
 
@@ -56,7 +54,7 @@ namespace FishNet.Example.Scened
         }
 
         /// <summary>
-        /// Unload scenes.
+        ///     Unload scenes.
         /// </summary>
         /// <param name="triggeringIdentity"></param>
         private void UnloadScenes(NetworkObject triggeringIdentity)
@@ -68,12 +66,14 @@ namespace FishNet.Example.Scened
             if (triggeringIdentity == null)
                 return;
 
-            UnloadOptions unloadOptions = new UnloadOptions()
+            var unloadOptions = new UnloadOptions
             {
-                Mode = (_unloadUnused) ? UnloadOptions.ServerUnloadMode.UnloadUnused : UnloadOptions.ServerUnloadMode.KeepUnused
+                Mode = _unloadUnused
+                    ? UnloadOptions.ServerUnloadMode.UnloadUnused
+                    : UnloadOptions.ServerUnloadMode.KeepUnused
             };
 
-            SceneUnloadData sud = new SceneUnloadData(_scenes);
+            var sud = new SceneUnloadData(_scenes);
             sud.Options = unloadOptions;
 
             //Unload only for the triggering connection.
@@ -83,9 +83,5 @@ namespace FishNet.Example.Scened
             else
                 InstanceFinder.SceneManager.UnloadGlobalScenes(sud);
         }
-
-
     }
-
-
 }

@@ -1,10 +1,9 @@
-﻿using System;
+
+/************************************
+StatCounterDisplayer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections;
-using UStacker.Common;
-using UStacker.Common.Alerts;
-using UStacker.Common.Extensions;
-using UStacker.Gameplay.Communication;
-using UStacker.GlobalSettings.StatCounting;
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
@@ -13,7 +12,12 @@ using NLua.Exceptions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UStacker.Common;
+using UStacker.Common.Alerts;
+using UStacker.Common.Extensions;
 using UStacker.Common.LuaApi;
+using UStacker.Gameplay.Communication;
+using UStacker.GlobalSettings.StatCounting;
 using Logger = UStacker.Common.Logger;
 using Random = UStacker.Common.Random;
 
@@ -21,7 +25,6 @@ namespace UStacker.Gameplay.Stats
 {
     public class StatCounterDisplayer : MonoBehaviour, IDisposable
     {
-
         private const string UPDATED_KEY = "CounterUpdated";
         private const string UTILITY_NAME = "StatUtility";
         private const string BOARD_INTERFACE_NAME = "Board";
@@ -34,7 +37,6 @@ namespace UStacker.Gameplay.Stats
         private StatBoardInterface _boardInterface;
         private Camera _camera;
         private TweenerCore<Color, Color, ColorOptions> _colorTween;
-        private TweenerCore<Color, Color, ColorOptions> _visibilityTween;
 
         private Vector3 _dragStartPosition;
         private Vector3 _dragStartTransformPosition;
@@ -44,38 +46,30 @@ namespace UStacker.Gameplay.Stats
         private Lua _luaState;
 
         private Mediator _mediator;
+        private Random _random;
         private ReadonlyStatContainer _statContainer;
         private StatCounterRecord _statCounter;
         private StatUtility _statUtility;
         private LuaFunction _updateFunction;
-        private Random _random;
 
         private Coroutine _updateRoutine;
+        private TweenerCore<Color, Color, ColorOptions> _visibilityTween;
 
         private void Awake()
         {
             _camera = FindObjectOfType<Camera>();
         }
 
-        private void OnDestroy()
-        {
-            Dispose();
-            if (_currentlyUnderMouse == this)
-                _currentlyUnderMouse = null;
-        }
-
         private void Update()
         {
             Vector2 mousePos = _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             if (_currentlyUnderMouse is null)
-            {
                 if (_textContainer.GetWorldSpaceRect().Contains(mousePos))
                 {
                     _currentlyUnderMouse = this;
                     _moveHandle.gameObject.SetActive(true);
                     _sizeHandle.gameObject.SetActive(true);
                 }
-            }
 
             if (_currentlyUnderMouse != this) return;
 
@@ -89,6 +83,42 @@ namespace UStacker.Gameplay.Stats
             _currentlyUnderMouse = null;
             _moveHandle.gameObject.SetActive(false);
             _sizeHandle.gameObject.SetActive(false);
+        }
+
+        private void OnEnable()
+        {
+            if (_updateFunction is not null && _updateRoutine is null)
+                _updateRoutine = StartCoroutine(UpdateCor());
+
+            if (_mediator != null)
+                _mediator.Register<SeedSetMessage>(OnSeedSet);
+        }
+
+        private void OnDisable()
+        {
+            if (_updateRoutine is not null)
+            {
+                StopCoroutine(_updateRoutine);
+                _updateRoutine = null;
+            }
+
+            _mediator.Register<SeedSetMessage>(OnSeedSet);
+        }
+
+        private void OnDestroy()
+        {
+            Dispose();
+            if (_currentlyUnderMouse == this)
+                _currentlyUnderMouse = null;
+        }
+
+        public void Dispose()
+        {
+            _luaState?.Dispose();
+            _updateFunction?.Dispose();
+
+            _luaState = null;
+            _updateFunction = null;
         }
 
         private void OnSeedSet(SeedSetMessage message)
@@ -107,7 +137,7 @@ namespace UStacker.Gameplay.Stats
             {
                 if (!gameObject.activeSelf)
                     yield break;
-                
+
                 try
                 {
                     DisplayOutput(_updateFunction.Call());
@@ -153,13 +183,18 @@ namespace UStacker.Gameplay.Stats
                 _textContainer.localPosition = newPos;
                 _statCounter.Position = newPos;
             }
-            else if (Mouse.current.leftButton.wasReleasedThisFrame) _isDraggingPosition = false;
+            else if (Mouse.current.leftButton.wasReleasedThisFrame)
+            {
+                _isDraggingPosition = false;
+            }
         }
 
         private void HandleSizeDrag(Vector2 mousePos)
         {
             if (Mouse.current.leftButton.wasPressedThisFrame && _sizeHandle.GetWorldSpaceRect().Contains(mousePos))
+            {
                 _isDraggingSize = true;
+            }
             else if (Mouse.current.leftButton.isPressed && _isDraggingSize)
             {
                 var containerPos = (Vector2) _textContainer.position;
@@ -170,16 +205,20 @@ namespace UStacker.Gameplay.Stats
                 _textContainer.sizeDelta = sizeDelta;
                 _statCounter.Size = sizeDelta;
             }
-            else if (Mouse.current.leftButton.wasReleasedThisFrame) _isDraggingSize = false;
+            else if (Mouse.current.leftButton.wasReleasedThisFrame)
+            {
+                _isDraggingSize = false;
+            }
         }
-        
+
         public void RefreshStatCounter(StatCounterRecord statCounter)
         {
             _statCounter = statCounter;
-            
+
             _textContainer.localPosition =
                 new Vector3(_statCounter.Position.x, _statCounter.Position.y, _textContainer.localPosition.z);
             _textContainer.sizeDelta = _statCounter.Size;
+            _displayText.enableAutoSizing = true;
 
             Dispose();
             _luaState = CreateLua.WithAllPrerequisites(out _random);
@@ -233,9 +272,9 @@ namespace UStacker.Gameplay.Stats
                         AlertType.Warning));
                     continue;
                 }
-                
+
                 if (eventName == UPDATED_KEY) continue;
-                
+
                 if (!RegisterableMessages.Default.ContainsKey(eventName))
                 {
                     AlertDisplayer.ShowAlert(new Alert(
@@ -244,12 +283,12 @@ namespace UStacker.Gameplay.Stats
                         AlertType.Warning));
                     continue;
                 }
-                
+
                 void Action(IMessage message)
                 {
                     if (!gameObject.activeSelf)
                         return;
-                    
+
                     try
                     {
                         DisplayOutput(function.Call(message));
@@ -265,11 +304,13 @@ namespace UStacker.Gameplay.Stats
                     }
                 }
 
-                _mediator.Register((Action<IMessage>) Action, RegisterableMessages.Default[eventName]); 
+                _mediator.Register((Action<IMessage>) Action, RegisterableMessages.Default[eventName]);
             }
-            
+
             if (events[UPDATED_KEY] is not LuaFunction updateFunc) return;
             _updateFunction = updateFunc;
+            if (gameObject.activeInHierarchy)
+                _updateRoutine = StartCoroutine(UpdateCor());
         }
 
 
@@ -280,26 +321,6 @@ namespace UStacker.Gameplay.Stats
             _boardInterface = board;
             _statContainer = statContainer;
             _statUtility = statUtility;
-            _mediator.Register<SeedSetMessage>(OnSeedSet);
-        }
-
-        private void OnEnable()
-        {
-            if (_updateFunction is not null)
-                _updateRoutine = StartCoroutine(UpdateCor());
-            
-            if (_mediator != null)
-                _mediator.Register<SeedSetMessage>(OnSeedSet);
-        }
-
-        private void OnDisable()
-        {
-            if (_updateRoutine is not null)
-            {
-                StopCoroutine(_updateRoutine);
-                _updateRoutine = null;
-            }
-            
             _mediator.Register<SeedSetMessage>(OnSeedSet);
         }
 
@@ -368,14 +389,8 @@ namespace UStacker.Gameplay.Stats
         }
 
         #endregion
-
-        public void Dispose()
-        {
-            _luaState?.Dispose();
-            _updateFunction?.Dispose();
-
-            _luaState = null;
-            _updateFunction = null;
-        }
     }
 }
+/************************************
+end StatCounterDisplayer.cs
+*************************************/

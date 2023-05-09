@@ -1,59 +1,19 @@
-﻿using FishNet.Connection;
+﻿using System;
+using FishNet.Connection;
 using FishNet.Managing;
 using FishNet.Object;
-using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace FishNet.Component.Spawning
 {
-
     /// <summary>
-    /// Spawns a player object for clients when they connect.
-    /// Must be placed on or beneath the NetworkManager object.
+    ///     Spawns a player object for clients when they connect.
+    ///     Must be placed on or beneath the NetworkManager object.
     /// </summary>
     [AddComponentMenu("FishNet/Component/PlayerSpawner")]
     public class PlayerSpawner : MonoBehaviour
     {
-        #region Public.
-        /// <summary>
-        /// Called on the server when a player is spawned.
-        /// </summary>
-        public event Action<NetworkObject> OnSpawned;
-        #endregion
-
-        #region Serialized.
-        /// <summary>
-        /// Prefab to spawn for the player.
-        /// </summary>
-        [Tooltip("Prefab to spawn for the player.")]
-        [SerializeField]
-        private NetworkObject _playerPrefab;
-        /// <summary>
-        /// True to add player to the active scene when no global scenes are specified through the SceneManager.
-        /// </summary>
-        [Tooltip("True to add player to the active scene when no global scenes are specified through the SceneManager.")]
-        [SerializeField]
-        private bool _addToDefaultScene = true;
-        /// <summary>
-        /// Areas in which players may spawn.
-        /// </summary>
-        [Tooltip("Areas in which players may spawn.")]
-        [FormerlySerializedAs("_spawns")]
-        public Transform[] Spawns = new Transform[0];
-        #endregion
-
-        #region Private.
-        /// <summary>
-        /// NetworkManager on this object or within this objects parents.
-        /// </summary>
-        private NetworkManager _networkManager;
-        /// <summary>
-        /// Next spawns to use.
-        /// </summary>
-        private int _nextSpawn;
-        #endregion
-
         private void Start()
         {
             InitializeOnce();
@@ -65,16 +25,26 @@ namespace FishNet.Component.Spawning
                 _networkManager.SceneManager.OnClientLoadedStartScenes -= SceneManager_OnClientLoadedStartScenes;
         }
 
+        #region Public.
 
         /// <summary>
-        /// Initializes this script for use.
+        ///     Called on the server when a player is spawned.
+        /// </summary>
+        public event Action<NetworkObject> OnSpawned;
+
+        #endregion
+
+
+        /// <summary>
+        ///     Initializes this script for use.
         /// </summary>
         private void InitializeOnce()
         {
             _networkManager = InstanceFinder.NetworkManager;
             if (_networkManager == null)
             {
-                Debug.LogWarning($"PlayerSpawner on {gameObject.name} cannot work as NetworkManager wasn't found on this object or within parent objects.");
+                Debug.LogWarning(
+                    $"PlayerSpawner on {gameObject.name} cannot work as NetworkManager wasn't found on this object or within parent objects.");
                 return;
             }
 
@@ -82,7 +52,7 @@ namespace FishNet.Component.Spawning
         }
 
         /// <summary>
-        /// Called when a client loads initial scenes after connecting.
+        ///     Called when a client loads initial scenes after connecting.
         /// </summary>
         private void SceneManager_OnClientLoadedStartScenes(NetworkConnection conn, bool asServer)
         {
@@ -98,7 +68,7 @@ namespace FishNet.Component.Spawning
             Quaternion rotation;
             SetSpawn(_playerPrefab.transform, out position, out rotation);
 
-            NetworkObject nob = _networkManager.GetPooledInstantiated(_playerPrefab, true);
+            var nob = _networkManager.GetPooledInstantiated(_playerPrefab, true);
             nob.transform.SetPositionAndRotation(position, rotation);
             _networkManager.ServerManager.Spawn(nob, conn);
 
@@ -111,7 +81,7 @@ namespace FishNet.Component.Spawning
 
 
         /// <summary>
-        /// Sets a spawn position and rotation.
+        ///     Sets a spawn position and rotation.
         /// </summary>
         /// <param name="pos"></param>
         /// <param name="rot"></param>
@@ -124,7 +94,7 @@ namespace FishNet.Component.Spawning
                 return;
             }
 
-            Transform result = Spawns[_nextSpawn];
+            var result = Spawns[_nextSpawn];
             if (result == null)
             {
                 SetSpawnUsingPrefab(prefab, out pos, out rot);
@@ -142,7 +112,7 @@ namespace FishNet.Component.Spawning
         }
 
         /// <summary>
-        /// Sets spawn using values from prefab.
+        ///     Sets spawn using values from prefab.
         /// </summary>
         /// <param name="prefab"></param>
         /// <param name="pos"></param>
@@ -153,7 +123,42 @@ namespace FishNet.Component.Spawning
             rot = prefab.rotation;
         }
 
+        #region Serialized.
+
+        /// <summary>
+        ///     Prefab to spawn for the player.
+        /// </summary>
+        [Tooltip("Prefab to spawn for the player.")] [SerializeField]
+        private NetworkObject _playerPrefab;
+
+        /// <summary>
+        ///     True to add player to the active scene when no global scenes are specified through the SceneManager.
+        /// </summary>
+        [Tooltip(
+            "True to add player to the active scene when no global scenes are specified through the SceneManager.")]
+        [SerializeField]
+        private bool _addToDefaultScene = true;
+
+        /// <summary>
+        ///     Areas in which players may spawn.
+        /// </summary>
+        [Tooltip("Areas in which players may spawn.")] [FormerlySerializedAs("_spawns")]
+        public Transform[] Spawns = new Transform[0];
+
+        #endregion
+
+        #region Private.
+
+        /// <summary>
+        ///     NetworkManager on this object or within this objects parents.
+        /// </summary>
+        private NetworkManager _networkManager;
+
+        /// <summary>
+        ///     Next spawns to use.
+        /// </summary>
+        private int _nextSpawn;
+
+        #endregion
     }
-
-
 }

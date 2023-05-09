@@ -1,26 +1,21 @@
-using FishNet.Connection;
-using FishNet.Documenting;
-using FishNet.Object;
-using FishNet.Serializing.Helping;
-using FishNet.Transporting;
 using System;
 using System.Collections.Generic;
+using FishNet.Documenting;
+using FishNet.Serializing.Helping;
 using UnityEngine;
 
 namespace FishNet.Serializing
 {
-
     /// <summary>
-    /// Extensions to Write methods. Used by Write<T>.
+    ///     Extensions to Write methods. Used by Write<T>.
     /// </summary>
     [APIExclude]
     public static class WriterExtensions
     {
-
         /// <summary>
-        /// Types which are are set to auto pack by default.
+        ///     Types which are are set to auto pack by default.
         /// </summary>
-        internal static HashSet<System.Type> DefaultPackedTypes = new HashSet<System.Type>();
+        internal static HashSet<Type> DefaultPackedTypes = new();
 
         static WriterExtensions()
         {
@@ -35,30 +30,31 @@ namespace FishNet.Serializing
         }
 
         /// <summary>
-        /// Writes value to dst without error checking.
+        ///     Writes value to dst without error checking.
         /// </summary>
         [CodegenExclude]
         internal static void WriteUInt32(byte[] dst, uint value, ref int position)
         {
-            dst[position++] = (byte)value;
-            dst[position++] = (byte)(value >> 8);
-            dst[position++] = (byte)(value >> 16);
-            dst[position++] = (byte)(value >> 24);
+            dst[position++] = (byte) value;
+            dst[position++] = (byte) (value >> 8);
+            dst[position++] = (byte) (value >> 16);
+            dst[position++] = (byte) (value >> 24);
         }
+
         /// <summary>
-        /// Writes value to dst without error checking.
+        ///     Writes value to dst without error checking.
         /// </summary>
         [CodegenExclude]
         internal static void WriteUInt64(byte[] dst, ulong value, ref int position)
         {
-            dst[position++] = (byte)value;
-            dst[position++] = (byte)(value >> 8);
-            dst[position++] = (byte)(value >> 16);
-            dst[position++] = (byte)(value >> 24);
-            dst[position++] = (byte)(value >> 32);
-            dst[position++] = (byte)(value >> 40);
-            dst[position++] = (byte)(value >> 48);
-            dst[position++] = (byte)(value >> 56);
+            dst[position++] = (byte) value;
+            dst[position++] = (byte) (value >> 8);
+            dst[position++] = (byte) (value >> 16);
+            dst[position++] = (byte) (value >> 24);
+            dst[position++] = (byte) (value >> 32);
+            dst[position++] = (byte) (value >> 40);
+            dst[position++] = (byte) (value >> 48);
+            dst[position++] = (byte) (value >> 56);
         }
 
 
@@ -108,6 +104,5 @@ namespace FishNet.Serializing
         //public static void WriteNetworkConnection(this Writer writer, NetworkConnection value) => writer.WriteNetworkConnection(value);
         //[CodegenExclude]
         //public static void Write<T>(this Writer writer, T value) => writer.Write<T>(value);
-
     }
 }

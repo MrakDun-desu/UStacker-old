@@ -2,16 +2,15 @@
 
 namespace FishNet.Object
 {
-
-
     internal struct RpcLinkType
     {
         /// <summary>
-        /// Index of link.
+        ///     Index of link.
         /// </summary>
         public ushort LinkIndex;
+
         /// <summary>
-        /// Type of Rpc link is for.
+        ///     Type of Rpc link is for.
         /// </summary>
         public RpcType RpcType;
 
@@ -21,5 +20,4 @@ namespace FishNet.Object
             RpcType = rpcType;
         }
     }
-
 }

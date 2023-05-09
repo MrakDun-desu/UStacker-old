@@ -1,36 +1,48 @@
-﻿using FishNet.Managing;
-using FishNet.Managing.Logging;
+
+/************************************
+NetworkDiscovery.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using FishNet;
+using FishNet.Managing;
+using FishNet.Managing.Logging;
 using UnityEngine;
 
 namespace UStacker.Multiplayer
 {
     public sealed class NetworkDiscovery : MonoBehaviour
     {
-        [Tooltip("Interval between discovery tries in seconds")] [SerializeField]
-        private float _discoveryInterval;
-
         private const string SECRET = "UStacker Discovery";
         private const ushort PORT = 7771;
 
-        private UdpClient _serverUdpClient;
+        [Tooltip("Interval between discovery tries in seconds")] [SerializeField]
+        private float _discoveryInterval;
+
         private UdpClient _clientUdpClient;
         private byte[] _secretBytes;
+
+        private UdpClient _serverUdpClient;
 
         public bool IsAdvertising => _serverUdpClient != null;
 
         public bool IsSearching => _clientUdpClient != null;
 
-        public event Action<IPEndPoint> ServerDiscovered;
-
         private void Awake()
         {
             _secretBytes = Encoding.UTF8.GetBytes(SECRET);
+
+            var secretChars = new StringBuilder();
+            foreach (var character in _secretBytes)
+            {
+                secretChars.Append(character);
+                secretChars.Append("\n");
+            }
+
+            Debug.Log("Secret chars are: " + secretChars);
         }
 
         private void OnDestroy()
@@ -38,6 +50,8 @@ namespace UStacker.Multiplayer
             StopAdvertisingServer();
             StopSearchingForServers();
         }
+
+        public event Action<IPEndPoint> ServerDiscovered;
 
         public void StartAdvertisingServer()
         {
@@ -90,14 +104,22 @@ namespace UStacker.Multiplayer
 
         private async Task AdvertiseServerAsync()
         {
-            while (_serverUdpClient != null)
+            while (_serverUdpClient is not null)
             {
                 var result = await _serverUdpClient.ReceiveAsync();
 
                 var receivedSecret = Encoding.UTF8.GetString(result.Buffer);
 
 #if UNITY_EDITOR
-                Debug.Log("Received message from client with content " + receivedSecret);
+                Debug.Log("Received message from client " + result.RemoteEndPoint.Address);
+                var secretChars = new StringBuilder();
+                foreach (var character in result.Buffer)
+                {
+                    secretChars.Append(character);
+                    secretChars.Append("\n");
+                }
+
+                Debug.Log("Received chars are: " + secretChars);
 #endif
 
                 if (receivedSecret != SECRET)
@@ -140,7 +162,7 @@ namespace UStacker.Multiplayer
             _clientUdpClient = new UdpClient
             {
                 EnableBroadcast = true,
-                MulticastLoopback = false,
+                MulticastLoopback = false
             };
 
             _ = SearchForServersAsync();
@@ -163,7 +185,7 @@ namespace UStacker.Multiplayer
         {
             var endPoint = new IPEndPoint(IPAddress.Broadcast, PORT);
 
-            while (_clientUdpClient != null)
+            while (_clientUdpClient is not null)
             {
                 await _clientUdpClient.SendAsync(_secretBytes, _secretBytes.Length, endPoint);
 #if UNITY_EDITOR
@@ -182,6 +204,11 @@ namespace UStacker.Multiplayer
                     continue;
                 }
 
+#if UNITY_EDITOR
+                Debug.Log("Received server response from " + result.RemoteEndPoint.Address + ":" +
+                          result.RemoteEndPoint.Port);
+#endif
+
                 ServerDiscovered?.Invoke(result.RemoteEndPoint);
 
                 StopSearchingForServers();
@@ -189,3 +216,6 @@ namespace UStacker.Multiplayer
         }
     }
 }
+/************************************
+end NetworkDiscovery.cs
+*************************************/

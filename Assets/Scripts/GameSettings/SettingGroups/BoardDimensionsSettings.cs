@@ -1,3 +1,7 @@
+
+/************************************
+BoardDimensionsSettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using UnityEngine;
 
@@ -7,16 +11,15 @@ namespace UStacker.GameSettings.SettingGroups
     public record BoardDimensionsSettings
     {
         // backing fields
-        [SerializeField]
-        private uint _boardWidth = 10;
-        [SerializeField]
-        private uint _boardHeight = 20;
-        [SerializeField]
-        private uint _lethalHeight = 20;
-        [SerializeField]
-        private uint _pieceSpawnHeight = 21;
-        [SerializeField]
-        private uint _blockCutHeight = 40;
+        [SerializeField] private uint _boardWidth = 10;
+
+        [SerializeField] private uint _boardHeight = 20;
+
+        [SerializeField] private uint _lethalHeight = 20;
+
+        [SerializeField] private uint _pieceSpawnHeight = 21;
+
+        [SerializeField] private uint _blockCutHeight = 40;
 
         public uint BoardWidth
         {
@@ -39,13 +42,16 @@ namespace UStacker.GameSettings.SettingGroups
         public uint PieceSpawnHeight
         {
             get => _pieceSpawnHeight;
-            set => _pieceSpawnHeight = Math.Clamp(value, 2, 410);
+            set => _pieceSpawnHeight = Math.Clamp(value, 2, 420);
         }
 
         public uint BlockCutHeight
         {
             get => _blockCutHeight;
-            set => _blockCutHeight = Math.Clamp(value, 2, 410);
+            set => _blockCutHeight = Math.Clamp(value, 10, 420);
         }
     }
 }
+/************************************
+end BoardDimensionsSettings.cs
+*************************************/

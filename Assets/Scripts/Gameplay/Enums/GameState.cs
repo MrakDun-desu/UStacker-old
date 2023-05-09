@@ -1,4 +1,8 @@
-﻿namespace UStacker.Gameplay.Enums
+
+/************************************
+GameState.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.Gameplay.Enums
 {
     public enum GameState : byte
     {
@@ -10,6 +14,9 @@
         Paused = 4, // game is in progress, but not running
         ResumeCountdown = 8, // counting down resuming of the game
         Ended = 5, // game has successfully ended with game end condition
-        Lost = 6, // game has ended with player failure
+        Lost = 6 // game has ended with player failure
     }
 }
+/************************************
+end GameState.cs
+*************************************/

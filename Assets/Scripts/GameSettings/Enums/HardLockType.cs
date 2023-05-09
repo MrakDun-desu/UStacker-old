@@ -1,3 +1,7 @@
+
+/************************************
+HardLockType.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 namespace UStacker.GameSettings.Enums
 {
     public enum HardLockType : byte
@@ -8,3 +12,6 @@ namespace UStacker.GameSettings.Enums
         InfiniteMovement
     }
 }
+/************************************
+end HardLockType.cs
+*************************************/

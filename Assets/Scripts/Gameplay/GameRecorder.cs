@@ -1,5 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+
+/************************************
+GameRecorder.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using UnityEngine;
 using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Enums;
@@ -15,21 +18,14 @@ namespace UStacker.Gameplay
         [SerializeField] private Mediator _mediator;
         [SerializeField] private StatCounterManager _statCounterManager;
 
-        private readonly List<InputActionMessage> ActionList = new();
-        private readonly List<double> PiecePlacementTimes = new();
-        public string GameType { get; set; }
+        private bool _recording;
 
-        private GameSettingsSO.SettingsContainer _replaySettings;
-
-        public GameSettingsSO.SettingsContainer GameSettings
+        public string GameType
         {
-            // we need to copy the value here in case it gets changed during the game
-            set => _replaySettings = value with { };
+            set => Replay.GameType = value;
         }
 
-        public GameReplay Replay { get; private set; }
-        
-        private bool _recording;
+        public GameReplay Replay { get; set; } = new();
 
         private void OnEnable()
         {
@@ -42,10 +38,16 @@ namespace UStacker.Gameplay
             _mediator.Unregister<GameStateChangedMessage>(OnGameStateChange);
             _mediator.Unregister<SeedSetMessage>(OnSeedSet);
         }
-        
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            // we need to copy the value here in case it gets changed during the game
+            set => Replay.GameSettings = value with { };
+        }
+
         private void OnSeedSet(SeedSetMessage message)
         {
-            _replaySettings.General.ActiveSeed = message.Seed;
+            Replay.GameSettings.General.ActiveSeed = message.Seed;
         }
 
         private void OnGameStateChange(GameStateChangedMessage message)
@@ -63,15 +65,9 @@ namespace UStacker.Gameplay
                     break;
             }
         }
+
         private void RecordReplay(double endTime)
         {
-            Replay ??= new GameReplay();
-            Replay.GameType = GameType;
-            Replay.GameSettings = _replaySettings;
-            Replay.ActionList.Clear();
-            Replay.PiecePlacementList.Clear();
-            Replay.ActionList.AddRange(ActionList);
-            Replay.PiecePlacementList.AddRange(PiecePlacementTimes);
             Replay.Stats = _statCounterManager.Stats;
             Replay.GameLength = endTime;
             Replay.TimeStamp = DateTime.UtcNow;
@@ -82,18 +78,18 @@ namespace UStacker.Gameplay
 
         private void AddInputActionToList(InputActionMessage message)
         {
-            ActionList.Add(message);
+            Replay.ActionList.Add(message);
         }
 
         private void AddPiecePlacementToList(PiecePlacedMessage message)
         {
-            PiecePlacementTimes.Add(message.Time);
+            Replay.PiecePlacementList.Add(message.Time);
         }
 
         private void StartRecording()
         {
-            ActionList.Clear();
-            PiecePlacementTimes.Clear();
+            Replay.ActionList.Clear();
+            Replay.PiecePlacementList.Clear();
             if (_recording) return;
             _mediator.Register<InputActionMessage>(AddInputActionToList);
             _mediator.Register<PiecePlacedMessage>(AddPiecePlacementToList);
@@ -109,3 +105,6 @@ namespace UStacker.Gameplay
         }
     }
 }
+/************************************
+end GameRecorder.cs
+*************************************/

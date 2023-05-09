@@ -1,50 +1,20 @@
-﻿using FishNet.Managing.Timing;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace FishNet.Component.Utility
 {
     /// <summary>
-    /// Add to any object to display current ping(round trip time).
+    ///     Add to any object to display current ping(round trip time).
     /// </summary>
     [AddComponentMenu("FishNet/Component/PingDisplay")]
     public class PingDisplay : MonoBehaviour
     {
-        #region Types.
-        private enum Corner
-        {
-            TopLeft,
-            TopRight,
-            BottomLeft,
-            BottomRight
-        }
-        #endregion
-
-        #region Serialized.
-        /// <summary>
-        /// Color for text.
-        /// </summary>
-        [Tooltip("Color for text.")]
-        [SerializeField]
-        private Color _color = Color.white;
-        /// <summary>
-        /// Which corner to display ping in.
-        /// </summary>
-        [Tooltip("Which corner to display ping in.")]
-        [SerializeField]
-        private Corner _placement = Corner.TopRight;
-        /// <summary>
-        /// True to show the real ping. False to include tick rate latency within the ping.
-        /// </summary>
-        [Tooltip("True to show the real ping. False to include tick rate latency within the ping.")]
-        [SerializeField]
-        private bool _hideTickRate = true;
-        #endregion
-
         #region Private.
+
         /// <summary>
-        /// Style for drawn ping.
+        ///     Style for drawn ping.
         /// </summary>
-        private GUIStyle _style = new GUIStyle();
+        private readonly GUIStyle _style = new();
+
         #endregion
 
         private void OnGUI()
@@ -60,9 +30,9 @@ namespace FishNet.Component.Utility
 
             _style.normal.textColor = _color;
             _style.fontSize = 15;
-            float width = 85f;
-            float height = 15f;
-            float edge = 10f;
+            var width = 85f;
+            var height = 15f;
+            var edge = 10f;
 
             float horizontal;
             float vertical;
@@ -89,7 +59,7 @@ namespace FishNet.Component.Utility
             }
 
             long ping;
-            TimeManager tm = InstanceFinder.TimeManager;
+            var tm = InstanceFinder.TimeManager;
             if (tm == null)
             {
                 ping = 0;
@@ -100,19 +70,51 @@ namespace FishNet.Component.Utility
                 long deduction = 0;
                 if (_hideTickRate)
                 {
-                    deduction = (long)(tm.TickDelta * 1000d);
+                    deduction = (long) (tm.TickDelta * 1000d);
                     /* If host subtract two ticks, if client only subtract one tick.
                     * This will reflect the users real ping without the tick rate latency. */
                     if (InstanceFinder.IsHost)
                         deduction *= 2;
                 }
 
-                ping = (long)Mathf.Max(0, ping - deduction);
+                ping = (long) Mathf.Max(0, ping - deduction);
             }
 
             GUI.Label(new Rect(horizontal, vertical, width, height), $"Ping: {ping}ms", _style);
         }
+
+        #region Types.
+
+        private enum Corner
+        {
+            TopLeft,
+            TopRight,
+            BottomLeft,
+            BottomRight
+        }
+
+        #endregion
+
+        #region Serialized.
+
+        /// <summary>
+        ///     Color for text.
+        /// </summary>
+        [Tooltip("Color for text.")] [SerializeField]
+        private Color _color = Color.white;
+
+        /// <summary>
+        ///     Which corner to display ping in.
+        /// </summary>
+        [Tooltip("Which corner to display ping in.")] [SerializeField]
+        private Corner _placement = Corner.TopRight;
+
+        /// <summary>
+        ///     True to show the real ping. False to include tick rate latency within the ping.
+        /// </summary>
+        [Tooltip("True to show the real ping. False to include tick rate latency within the ping.")] [SerializeField]
+        private bool _hideTickRate = true;
+
+        #endregion
     }
-
-
 }

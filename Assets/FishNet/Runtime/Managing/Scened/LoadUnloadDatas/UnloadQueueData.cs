@@ -1,42 +1,49 @@
-﻿using FishNet.Connection;
-using FishNet.Utility.Constant;
+﻿using System;
 using System.Runtime.CompilerServices;
+using FishNet.Connection;
+using FishNet.Utility.Constant;
 
 [assembly: InternalsVisibleTo(UtilityConstants.GENERATED_ASSEMBLY_NAME)]
+
 namespace FishNet.Managing.Scened
 {
-
     /// <summary>
-    /// Data generated when unloading a scene.
+    ///     Data generated when unloading a scene.
     /// </summary>
     public class UnloadQueueData
     {
         /// <summary>
-        /// Clients which receive this SceneQueueData. If Networked, all clients do. If Connections, only the specified Connections do.
+        ///     True if to iterate this queue data as server.
         /// </summary>
-        [System.NonSerialized]
-        public readonly SceneScopeType ScopeType;
+        [NonSerialized] public readonly bool AsServer;
+
         /// <summary>
-        /// Connections to unload scenes for. Only valid on the server and when ScopeType is Connections.
+        ///     Clients which receive this SceneQueueData. If Networked, all clients do. If Connections, only the specified
+        ///     Connections do.
         /// </summary>
-        [System.NonSerialized]
-        public NetworkConnection[] Connections;
+        [NonSerialized] public readonly SceneScopeType ScopeType;
+
         /// <summary>
-        /// SceneUnloadData to use.
+        ///     Connections to unload scenes for. Only valid on the server and when ScopeType is Connections.
         /// </summary>
-        public SceneUnloadData SceneUnloadData = null;
+        [NonSerialized] public NetworkConnection[] Connections;
+
         /// <summary>
-        /// Current global scenes.
+        ///     Current global scenes.
         /// </summary>
         public string[] GlobalScenes = new string[0];
-        /// <summary>
-        /// True if to iterate this queue data as server.
-        /// </summary>
-        [System.NonSerialized]
-        public readonly bool AsServer;
 
-        public UnloadQueueData() { }
-        internal UnloadQueueData(SceneScopeType scopeType, NetworkConnection[] conns, SceneUnloadData sceneUnloadData, string[] globalScenes, bool asServer)
+        /// <summary>
+        ///     SceneUnloadData to use.
+        /// </summary>
+        public SceneUnloadData SceneUnloadData;
+
+        public UnloadQueueData()
+        {
+        }
+
+        internal UnloadQueueData(SceneScopeType scopeType, NetworkConnection[] conns, SceneUnloadData sceneUnloadData,
+            string[] globalScenes, bool asServer)
         {
             ScopeType = scopeType;
             Connections = conns;
@@ -44,10 +51,5 @@ namespace FishNet.Managing.Scened
             GlobalScenes = globalScenes;
             AsServer = asServer;
         }
-
-
     }
-
-
-
 }

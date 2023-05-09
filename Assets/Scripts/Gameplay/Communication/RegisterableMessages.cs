@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+RegisterableMessages.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 
 namespace UStacker.Gameplay.Communication
@@ -18,7 +22,10 @@ namespace UStacker.Gameplay.Communication
             {"PiecePlaced", typeof(PiecePlacedMessage)},
             {"PieceRotated", typeof(PieceRotatedMessage)},
             {"PieceSpawned", typeof(PieceSpawnedMessage)},
-            {"ScoreChanged", typeof(ScoreChangedMessage)},
+            {"ScoreChanged", typeof(ScoreChangedMessage)}
         };
     }
 }
+/************************************
+end RegisterableMessages.cs
+*************************************/

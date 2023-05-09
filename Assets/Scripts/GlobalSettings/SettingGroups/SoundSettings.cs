@@ -1,7 +1,11 @@
+
+/************************************
+SoundSettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections.Generic;
-using UStacker.GlobalSettings.Music;
 using UnityEngine;
+using UStacker.GlobalSettings.Music;
 
 namespace UStacker.GlobalSettings.Groups
 {
@@ -45,3 +49,6 @@ namespace UStacker.GlobalSettings.Groups
         public Dictionary<string, MusicOption> GameMusicDictionary { get; set; } = new();
     }
 }
+/************************************
+end SoundSettings.cs
+*************************************/

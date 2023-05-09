@@ -24,7 +24,8 @@ namespace DG.Tweening
         /// </summary>
         /// <param name="endValue">The end value to reach (0 to 1)</param>
         /// <param name="duration">The duration of the tween</param>
-        public static TweenerCore<float, float, FloatOptions> DOFade(this AudioSource target, float endValue, float duration)
+        public static TweenerCore<float, float, FloatOptions> DOFade(this AudioSource target, float endValue,
+            float duration)
         {
             if (endValue < 0) endValue = 0;
             else if (endValue > 1) endValue = 1;
@@ -39,7 +40,8 @@ namespace DG.Tweening
         /// </summary>
         /// <param name="endValue">The end value to reach</param>
         /// <param name="duration">The duration of the tween</param>
-        public static TweenerCore<float, float, FloatOptions> DOPitch(this AudioSource target, float endValue, float duration)
+        public static TweenerCore<float, float, FloatOptions> DOPitch(this AudioSource target, float endValue,
+            float duration)
         {
             var t = DOTween.To(() => target.pitch, x => target.pitch = x, endValue, duration);
             t.SetTarget(target);
@@ -49,6 +51,7 @@ namespace DG.Tweening
         #endregion
 
 #if UNITY_5 || UNITY_2017_1_OR_NEWER
+
         #region AudioMixer (Unity 5 or Newer)
 
         /// <summary>
@@ -60,7 +63,8 @@ namespace DG.Tweening
         /// <param name="floatName">Name given to the exposed float to set</param>
         /// <param name="endValue">The end value to reach</param>
         /// <param name="duration">The duration of the tween</param>
-        public static TweenerCore<float, float, FloatOptions> DOSetFloat(this AudioMixer target, string floatName, float endValue, float duration)
+        public static TweenerCore<float, float, FloatOptions> DOSetFloat(this AudioMixer target, string floatName,
+            float endValue, float duration)
         {
             var t = DOTween.To(() =>
             {
@@ -210,6 +214,7 @@ namespace DG.Tweening
         #endregion
 
         #endregion
+
 #endif
 
         #endregion

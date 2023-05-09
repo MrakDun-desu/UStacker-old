@@ -1,3 +1,7 @@
+
+/************************************
+InputPresetApplier.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,3 +17,6 @@ namespace UStacker.GlobalSettings.Appliers
         }
     }
 }
+/************************************
+end InputPresetApplier.cs
+*************************************/

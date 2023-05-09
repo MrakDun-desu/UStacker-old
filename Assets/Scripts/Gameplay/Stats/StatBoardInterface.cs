@@ -1,4 +1,8 @@
-﻿using System.Collections.ObjectModel;
+
+/************************************
+StatBoardInterface.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections.ObjectModel;
 using JetBrains.Annotations;
 
 namespace UStacker.Gameplay.Stats
@@ -21,3 +25,6 @@ namespace UStacker.Gameplay.Stats
         [UsedImplicitly] public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots => _source.Slots;
     }
 }
+/************************************
+end StatBoardInterface.cs
+*************************************/

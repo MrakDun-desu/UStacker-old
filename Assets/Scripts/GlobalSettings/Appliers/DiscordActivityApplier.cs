@@ -1,3 +1,7 @@
+
+/************************************
+DiscordActivityApplier.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UStacker.DiscordPresence;
 
 namespace UStacker.GlobalSettings.Appliers
@@ -23,3 +27,6 @@ namespace UStacker.GlobalSettings.Appliers
         }
     }
 }
+/************************************
+end DiscordActivityApplier.cs
+*************************************/

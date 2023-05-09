@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+BoardContainer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 using UnityEngine.InputSystem;
 using UStacker.Gameplay.Initialization;
 using UStacker.GameSettings;
@@ -17,20 +21,11 @@ namespace UStacker.Gameplay
 
         private Vector3 _dragStartPosition;
         private Vector3 _dragStartTransformPosition;
+        private uint _height;
         private Vector3 _offset;
 
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            set
-            {
-                Height = value.BoardDimensions.BoardHeight;
-                Width = value.BoardDimensions.BoardWidth;
-            }
-        }
-
         private uint _width;
-        private uint _height;
-        
+
         private uint Width
         {
             get => _width;
@@ -56,7 +51,7 @@ namespace UStacker.Gameplay
                     new Vector3(myPos.x, -value * .5f * mytransform.localScale.y + _offset.y, myPos.z);
             }
         }
-        
+
         private Vector2 CurrentOffset => new(
             transform.position.x + Width * .5f * transform.localScale.x,
             transform.position.y + Height * .5f * transform.localScale.y
@@ -71,17 +66,26 @@ namespace UStacker.Gameplay
             BoardZoomApplier.BoardZoomChanged += ChangeBoardZoom;
         }
 
-        private void OnDestroy()
-        {
-            BoardZoomApplier.BoardZoomChanged -= ChangeBoardZoom;
-        }
-
         private void Update()
         {
             HandleBoardZooming();
             HandleBoardDrag();
         }
-        
+
+        private void OnDestroy()
+        {
+            BoardZoomApplier.BoardZoomChanged -= ChangeBoardZoom;
+        }
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            set
+            {
+                Height = value.BoardDimensions.BoardHeight;
+                Width = value.BoardDimensions.BoardWidth;
+            }
+        }
+
         private void HandleBoardZooming()
         {
             const float ONE_SCROLL_UNIT = 1 / 120f;
@@ -126,6 +130,8 @@ namespace UStacker.Gameplay
             mytransform.localScale = new Vector3(zoom, zoom, 1);
             mytransform.position = new Vector3(-zoom * .5f * Width, -zoom * .5f * Height, 1);
         }
-
     }
 }
+/************************************
+end BoardContainer.cs
+*************************************/

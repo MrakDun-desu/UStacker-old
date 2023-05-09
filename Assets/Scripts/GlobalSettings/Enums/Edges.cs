@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+Edges.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 
 namespace UStacker.GlobalSettings.Enums
 {
@@ -16,3 +20,6 @@ namespace UStacker.GlobalSettings.Enums
         BottomRight = 1 << 7 // 128
     }
 }
+/************************************
+end Edges.cs
+*************************************/

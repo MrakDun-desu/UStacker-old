@@ -1,22 +1,21 @@
-﻿using JetBrains.Annotations;
+
+/************************************
+PieceRotatedMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using JetBrains.Annotations;
 using UStacker.GameSettings.Enums;
 
 namespace UStacker.Gameplay.Communication
 {
     public readonly struct PieceRotatedMessage : IMidgameMessage
     {
-        [UsedImplicitly]
-        public readonly string PieceType;
-        [UsedImplicitly]
-        public readonly RotationState StartRotation;
-        [UsedImplicitly]
-        public readonly RotationState EndRotation;
+        [UsedImplicitly] public readonly string PieceType;
+        [UsedImplicitly] public readonly RotationState StartRotation;
+        [UsedImplicitly] public readonly RotationState EndRotation;
         public readonly bool WasSpin;
         public readonly bool WasSpinMini;
-        [UsedImplicitly]
-        public readonly bool WasSpinRaw;
-        [UsedImplicitly]
-        public readonly bool WasSpinMiniRaw;
+        [UsedImplicitly] public readonly bool WasSpinRaw;
+        [UsedImplicitly] public readonly bool WasSpinMiniRaw;
         public double Time { get; }
 
         public PieceRotatedMessage(string pieceType, RotationState startRotation, RotationState endRotation,
@@ -33,3 +32,6 @@ namespace UStacker.Gameplay.Communication
         }
     }
 }
+/************************************
+end PieceRotatedMessage.cs
+*************************************/

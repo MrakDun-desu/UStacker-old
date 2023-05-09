@@ -871,156 +871,132 @@ namespace Discord
         public ApplicationManager GetApplicationManager()
         {
             if (ApplicationManagerInstance == null)
-            {
                 ApplicationManagerInstance = new ApplicationManager(
                     Methods.GetApplicationManager(MethodsPtr),
                     ApplicationEventsPtr,
                     ref ApplicationEvents
                 );
-            }
             return ApplicationManagerInstance;
         }
 
         public UserManager GetUserManager()
         {
             if (UserManagerInstance == null)
-            {
                 UserManagerInstance = new UserManager(
                     Methods.GetUserManager(MethodsPtr),
                     UserEventsPtr,
                     ref UserEvents
                 );
-            }
             return UserManagerInstance;
         }
 
         public ImageManager GetImageManager()
         {
             if (ImageManagerInstance == null)
-            {
                 ImageManagerInstance = new ImageManager(
                     Methods.GetImageManager(MethodsPtr),
                     ImageEventsPtr,
                     ref ImageEvents
                 );
-            }
             return ImageManagerInstance;
         }
 
         public ActivityManager GetActivityManager()
         {
             if (ActivityManagerInstance == null)
-            {
                 ActivityManagerInstance = new ActivityManager(
                     Methods.GetActivityManager(MethodsPtr),
                     ActivityEventsPtr,
                     ref ActivityEvents
                 );
-            }
             return ActivityManagerInstance;
         }
 
         public RelationshipManager GetRelationshipManager()
         {
             if (RelationshipManagerInstance == null)
-            {
                 RelationshipManagerInstance = new RelationshipManager(
                     Methods.GetRelationshipManager(MethodsPtr),
                     RelationshipEventsPtr,
                     ref RelationshipEvents
                 );
-            }
             return RelationshipManagerInstance;
         }
 
         public LobbyManager GetLobbyManager()
         {
             if (LobbyManagerInstance == null)
-            {
                 LobbyManagerInstance = new LobbyManager(
                     Methods.GetLobbyManager(MethodsPtr),
                     LobbyEventsPtr,
                     ref LobbyEvents
                 );
-            }
             return LobbyManagerInstance;
         }
 
         public NetworkManager GetNetworkManager()
         {
             if (NetworkManagerInstance == null)
-            {
                 NetworkManagerInstance = new NetworkManager(
                     Methods.GetNetworkManager(MethodsPtr),
                     NetworkEventsPtr,
                     ref NetworkEvents
                 );
-            }
             return NetworkManagerInstance;
         }
 
         public OverlayManager GetOverlayManager()
         {
             if (OverlayManagerInstance == null)
-            {
                 OverlayManagerInstance = new OverlayManager(
                     Methods.GetOverlayManager(MethodsPtr),
                     OverlayEventsPtr,
                     ref OverlayEvents
                 );
-            }
             return OverlayManagerInstance;
         }
 
         public StorageManager GetStorageManager()
         {
             if (StorageManagerInstance == null)
-            {
                 StorageManagerInstance = new StorageManager(
                     Methods.GetStorageManager(MethodsPtr),
                     StorageEventsPtr,
                     ref StorageEvents
                 );
-            }
             return StorageManagerInstance;
         }
 
         public StoreManager GetStoreManager()
         {
             if (StoreManagerInstance == null)
-            {
                 StoreManagerInstance = new StoreManager(
                     Methods.GetStoreManager(MethodsPtr),
                     StoreEventsPtr,
                     ref StoreEvents
                 );
-            }
             return StoreManagerInstance;
         }
 
         public VoiceManager GetVoiceManager()
         {
             if (VoiceManagerInstance == null)
-            {
                 VoiceManagerInstance = new VoiceManager(
                     Methods.GetVoiceManager(MethodsPtr),
                     VoiceEventsPtr,
                     ref VoiceEvents
                 );
-            }
             return VoiceManagerInstance;
         }
 
         public AchievementManager GetAchievementManager()
         {
             if (AchievementManagerInstance == null)
-            {
                 AchievementManagerInstance = new AchievementManager(
                     Methods.GetAchievementManager(MethodsPtr),
                     AchievementEventsPtr,
                     ref AchievementEvents
                 );
-            }
             return AchievementManagerInstance;
         }
 
@@ -3097,7 +3073,6 @@ namespace Discord
 
     public partial class StorageManager
     {
-
         public delegate void ReadAsyncPartialHandler(Result result, byte[] data);
 
         public delegate void ReadAsyncHandler(Result result, byte[] data);

@@ -1,12 +1,16 @@
+
+/************************************
+GameSettingsSO.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using UStacker.Common;
-using UStacker.GameSettings.SettingGroups;
 using Newtonsoft.Json;
 using UnityEngine;
+using UStacker.Common;
+using UStacker.GameSettings.SettingGroups;
 
 namespace UStacker.GameSettings
 {
@@ -16,8 +20,8 @@ namespace UStacker.GameSettings
         private const string FILENAME_EXTENSION = ".json";
         private const char INVALID_CHAR_REPLACEMENT = '_';
         public StringReferenceSO GameType;
-        [SerializeField]
-        private SettingsContainer _settings = new();
+
+        [SerializeField] private SettingsContainer _settings = new();
 
         public SettingsContainer Settings
         {
@@ -26,7 +30,7 @@ namespace UStacker.GameSettings
             {
                 if (value == _settings)
                     return;
-                
+
                 _settings = value;
                 SettingsReloaded?.Invoke();
             }
@@ -39,7 +43,8 @@ namespace UStacker.GameSettings
             if (!Directory.Exists(PersistentPaths.GameSettingsPresets))
                 Directory.CreateDirectory(PersistentPaths.GameSettingsPresets);
 
-            foreach (var filename in Directory.EnumerateFiles(PersistentPaths.GameSettingsPresets)) yield return Path.GetFileNameWithoutExtension(filename);
+            foreach (var filename in Directory.EnumerateFiles(PersistentPaths.GameSettingsPresets))
+                yield return Path.GetFileNameWithoutExtension(filename);
         }
 
         public async Task<string> Save(string presetName)
@@ -145,18 +150,20 @@ namespace UStacker.GameSettings
         [Serializable]
         public record SettingsContainer
         {
-            [field: SerializeField]
-            public GeneralSettings General { get; set; } = new();
-            [field: SerializeField]
-            public ControlsSettings Controls { get; set; } = new();
-            [field: SerializeField]
-            public BoardDimensionsSettings BoardDimensions { get; set; } = new();
-            [field: SerializeField]
-            public GravitySettings Gravity { get; set; } = new();
-            [field: SerializeField]
-            public ObjectiveSettings Objective { get; set; } = new();
-            [field: SerializeField]
-            public PresentationSettings Presentation { get; set; } = new();
+            [field: SerializeField] public GeneralSettings General { get; set; } = new();
+
+            [field: SerializeField] public ControlsSettings Controls { get; set; } = new();
+
+            [field: SerializeField] public BoardDimensionsSettings BoardDimensions { get; set; } = new();
+
+            [field: SerializeField] public GravitySettings Gravity { get; set; } = new();
+
+            [field: SerializeField] public ObjectiveSettings Objective { get; set; } = new();
+
+            [field: SerializeField] public PresentationSettings Presentation { get; set; } = new();
         }
     }
 }
+/************************************
+end GameSettingsSO.cs
+*************************************/

@@ -1,4 +1,5 @@
-﻿using FishNet.Managing.Logging;
+﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using FishNet.Managing.Object;
 using FishNet.Managing.Utility;
 using FishNet.Object;
@@ -6,46 +7,44 @@ using FishNet.Object.Helping;
 using FishNet.Serializing;
 using FishNet.Transporting;
 using FishNet.Utility.Extension;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using UnityEngine;
 
 namespace FishNet.Managing.Client
 {
     /// <summary>
-    /// Handles objects and information about objects for the local client. See ManagedObjects for inherited options.
+    ///     Handles objects and information about objects for the local client. See ManagedObjects for inherited options.
     /// </summary>
     public partial class ClientObjects : ManagedObjects
     {
-
         #region Private.
+
         /// <summary>
-        /// RPCLinks of currently spawned objects.
+        ///     RPCLinks of currently spawned objects.
         /// </summary>
-        private Dictionary<ushort, RpcLink> _rpcLinks = new Dictionary<ushort, RpcLink>();
+        private readonly Dictionary<ushort, RpcLink> _rpcLinks = new();
+
         #endregion
 
         /// <summary>
-        /// Parses a received RPCLink.
+        ///     Parses a received RPCLink.
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="index"></param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void ParseRpcLink(PooledReader reader, ushort index, Channel channel)
         {
-            int dataLength = Packets.GetPacketLength(ushort.MaxValue, reader, channel);
+            var dataLength = Packets.GetPacketLength(ushort.MaxValue, reader, channel);
 
             //Link index isn't stored.
-            if (!_rpcLinks.TryGetValueIL2CPP(index, out RpcLink link))
+            if (!_rpcLinks.TryGetValueIL2CPP(index, out var link))
             {
                 SkipDataLength(index, reader, dataLength);
                 return;
             }
-            else
+
             //Found NetworkObject for link.
-            if (Spawned.TryGetValueIL2CPP(link.ObjectId, out NetworkObject nob))
+            if (Spawned.TryGetValueIL2CPP(link.ObjectId, out var nob))
             {
-                NetworkBehaviour nb = nob.NetworkBehaviours[link.ComponentIndex];
+                var nb = nob.NetworkBehaviours[link.ComponentIndex];
                 if (link.RpcType == RpcType.Target)
                     nb.OnTargetRpc(link.RpcHash, reader, channel);
                 else if (link.RpcType == RpcType.Observers)
@@ -61,7 +60,7 @@ namespace FishNet.Managing.Client
         }
 
         /// <summary>
-        /// Sets link to rpcLinks key linkIndex.
+        ///     Sets link to rpcLinks key linkIndex.
         /// </summary>
         /// <param name="linkIndex"></param>
         /// <param name="link"></param>
@@ -71,17 +70,15 @@ namespace FishNet.Managing.Client
         }
 
         /// <summary>
-        /// Removes link index keys from rpcLinks.
+        ///     Removes link index keys from rpcLinks.
         /// </summary>
         internal void RemoveLinkIndexes(List<ushort> values)
         {
             if (values == null)
                 return;
 
-            for (int i = 0; i < values.Count; i++)
+            for (var i = 0; i < values.Count; i++)
                 _rpcLinks.Remove(values[i]);
         }
-
     }
-
 }

@@ -1,8 +1,12 @@
-﻿using System;
-using UStacker.Gameplay.Communication;
+
+/************************************
+CustomGarbageGenerator.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using NLua;
 using NLua.Exceptions;
 using UStacker.Common.LuaApi;
+using UStacker.Gameplay.Communication;
 using Random = UStacker.Common.Random;
 
 namespace UStacker.Gameplay.GarbageGeneration
@@ -11,10 +15,10 @@ namespace UStacker.Gameplay.GarbageGeneration
     {
         private const string BOARD_VARIABLE_NAME = "Board";
         private readonly LuaFunction _generationFunction;
-        private readonly LuaFunction _resetFunction;
-        private readonly Random _random;
-        private readonly Mediator _mediator;
         private readonly Lua _luaState;
+        private readonly Mediator _mediator;
+        private readonly Random _random;
+        private readonly LuaFunction _resetFunction;
 
         public CustomGarbageGenerator(GarbageBoardInterface boardInterface, string script, Mediator mediator)
         {
@@ -41,12 +45,19 @@ namespace UStacker.Gameplay.GarbageGeneration
 
                 if (_resetFunction is null)
                     _mediator.Send(new GameCrashedMessage("Custom garbage generator reset function is not valid"));
-
             }
             catch (LuaException ex)
             {
-                _mediator.Send(new GameCrashedMessage($"Custom garbage generator script crashed. Lua exception: {ex.Message}"));
+                _mediator.Send(
+                    new GameCrashedMessage($"Custom garbage generator script crashed. Lua exception: {ex.Message}"));
             }
+        }
+
+        public void Dispose()
+        {
+            _generationFunction?.Dispose();
+            _resetFunction?.Dispose();
+            _luaState?.Dispose();
         }
 
         public void ResetState(ulong seed)
@@ -57,8 +68,11 @@ namespace UStacker.Gameplay.GarbageGeneration
             }
             catch (LuaException ex)
             {
-                _mediator.Send(new GameCrashedMessage($"Custom garbage generator reset function crashed. Lua exception: {ex.Message}"));
+                _mediator.Send(
+                    new GameCrashedMessage(
+                        $"Custom garbage generator reset function crashed. Lua exception: {ex.Message}"));
             }
+
             _random.State = seed;
         }
 
@@ -70,15 +84,12 @@ namespace UStacker.Gameplay.GarbageGeneration
             }
             catch (LuaException ex)
             {
-                _mediator.Send(new GameCrashedMessage($"Custom garbage generation function crashed. Lua exception: {ex.Message}"));
+                _mediator.Send(
+                    new GameCrashedMessage($"Custom garbage generation function crashed. Lua exception: {ex.Message}"));
             }
-        }
-        
-        public void Dispose()
-        {
-            _generationFunction?.Dispose();
-            _resetFunction?.Dispose();
-            _luaState?.Dispose();
         }
     }
 }
+/************************************
+end CustomGarbageGenerator.cs
+*************************************/

@@ -4,19 +4,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using FishNet.Configuring;
 using UnityEditor;
 using UnityEngine;
-
 using UnitySettingsProviderAttribute = UnityEditor.SettingsProviderAttribute;
 using UnitySettingsProvider = UnityEditor.SettingsProvider;
-using FishNet.Configuring;
-using System.Linq;
 
 namespace FishNet.Editing.PrefabCollectionGenerator
 {
     internal static class SettingsProvider
     {
-        private static readonly Regex SlashRegex = new Regex(@"[\\//]");
+        private static readonly Regex SlashRegex = new(@"[\\//]");
 
         private static PrefabGeneratorConfigurations _settings;
 
@@ -36,14 +34,14 @@ namespace FishNet.Editing.PrefabCollectionGenerator
 
                 guiHandler = OnGUI,
 
-                keywords = new string[]
+                keywords = new[]
                 {
                     "Fish",
                     "Networking",
                     "Prefab",
                     "Objects",
-                    "Generator",
-                },
+                    "Generator"
+                }
             };
         }
 
@@ -57,32 +55,43 @@ namespace FishNet.Editing.PrefabCollectionGenerator
                 _deleteIcon = EditorGUIUtility.IconContent("P4_DeletedLocal");
 
             EditorGUI.BeginChangeCheck();
-            GUIStyle scrollViewStyle = new GUIStyle()
+            var scrollViewStyle = new GUIStyle
             {
-                padding = new RectOffset(10, 10, 10, 10),
+                padding = new RectOffset(10, 10, 10, 10)
             };
 
             _scrollVector = EditorGUILayout.BeginScrollView(_scrollVector, scrollViewStyle);
 
-            _settings.Enabled = EditorGUILayout.Toggle(ObjectNames.NicifyVariableName(nameof(_settings.Enabled)), _settings.Enabled);
-            _settings.LogToConsole = EditorGUILayout.Toggle(ObjectNames.NicifyVariableName(nameof(_settings.LogToConsole)), _settings.LogToConsole);
-            _settings.FullRebuild = EditorGUILayout.Toggle(ObjectNames.NicifyVariableName(nameof(_settings.FullRebuild)), _settings.FullRebuild);
-            _settings.SaveChanges = EditorGUILayout.Toggle(ObjectNames.NicifyVariableName(nameof(_settings.SaveChanges)), _settings.SaveChanges);
+            _settings.Enabled = EditorGUILayout.Toggle(ObjectNames.NicifyVariableName(nameof(_settings.Enabled)),
+                _settings.Enabled);
+            _settings.LogToConsole =
+                EditorGUILayout.Toggle(ObjectNames.NicifyVariableName(nameof(_settings.LogToConsole)),
+                    _settings.LogToConsole);
+            _settings.FullRebuild =
+                EditorGUILayout.Toggle(ObjectNames.NicifyVariableName(nameof(_settings.FullRebuild)),
+                    _settings.FullRebuild);
+            _settings.SaveChanges =
+                EditorGUILayout.Toggle(ObjectNames.NicifyVariableName(nameof(_settings.SaveChanges)),
+                    _settings.SaveChanges);
 
-            GUILayoutOption iconWidthConstraint = GUILayout.MaxWidth(32.0f);
-            GUILayoutOption iconHeightConstraint = GUILayout.MaxHeight(EditorGUIUtility.singleLineHeight);
+            var iconWidthConstraint = GUILayout.MaxWidth(32.0f);
+            var iconHeightConstraint = GUILayout.MaxHeight(EditorGUIUtility.singleLineHeight);
 
             EditorGUILayout.BeginHorizontal();
 
-            string oldAssetPath = _settings.DefaultPrefabObjectsPath;
-            string newAssetPath = EditorGUILayout.DelayedTextField(ObjectNames.NicifyVariableName(nameof(_settings.DefaultPrefabObjectsPath)), oldAssetPath);
+            var oldAssetPath = _settings.DefaultPrefabObjectsPath;
+            var newAssetPath =
+                EditorGUILayout.DelayedTextField(
+                    ObjectNames.NicifyVariableName(nameof(_settings.DefaultPrefabObjectsPath)), oldAssetPath);
 
             if (GUILayout.Button(_folderIcon, iconWidthConstraint, iconHeightConstraint))
             {
-                if (TrySaveFilePathInsideAssetsFolder(null, Application.dataPath, "DefaultPrefabObjects", "asset", out string result))
+                if (TrySaveFilePathInsideAssetsFolder(null, Application.dataPath, "DefaultPrefabObjects", "asset",
+                        out var result))
                     newAssetPath = result;
                 else
-                    EditorWindow.focusedWindow.ShowNotification(new GUIContent($"{ObjectNames.NicifyVariableName(nameof(_settings.DefaultPrefabObjectsPath))} must be inside the Assets folder."));
+                    EditorWindow.focusedWindow.ShowNotification(new GUIContent(
+                        $"{ObjectNames.NicifyVariableName(nameof(_settings.DefaultPrefabObjectsPath))} must be inside the Assets folder."));
             }
 
             if (!newAssetPath.Equals(oldAssetPath, StringComparison.OrdinalIgnoreCase))
@@ -91,7 +100,8 @@ namespace FishNet.Editing.PrefabCollectionGenerator
                 {
                     if (File.Exists(newAssetPath))
                     {
-                        EditorWindow.focusedWindow.ShowNotification(new GUIContent("Another asset already exists at the new path."));
+                        EditorWindow.focusedWindow.ShowNotification(
+                            new GUIContent("Another asset already exists at the new path."));
                     }
                     else
                     {
@@ -106,67 +116,83 @@ namespace FishNet.Editing.PrefabCollectionGenerator
                 }
                 else
                 {
-                    EditorWindow.focusedWindow.ShowNotification(new GUIContent($"{ObjectNames.NicifyVariableName(nameof(_settings.DefaultPrefabObjectsPath))} must be inside the Assets folder."));
+                    EditorWindow.focusedWindow.ShowNotification(new GUIContent(
+                        $"{ObjectNames.NicifyVariableName(nameof(_settings.DefaultPrefabObjectsPath))} must be inside the Assets folder."));
                 }
             }
 
             EditorGUILayout.EndHorizontal();
 
-            int currentSearchScope = _settings.SearchScope;
-            SearchScopeType searchScopeType = (SearchScopeType)EditorGUILayout.EnumPopup(ValueToSearchScope(_settings.SearchScope));
-            _settings.SearchScope = (int)searchScopeType;
-            SearchScopeType ValueToSearchScope(int value) => (SearchScopeType)value;
-            if (_settings.SearchScope == (int)SearchScopeType.EntireProject)
+            var currentSearchScope = _settings.SearchScope;
+            var searchScopeType =
+                (SearchScopeType) EditorGUILayout.EnumPopup(ValueToSearchScope(_settings.SearchScope));
+            _settings.SearchScope = (int) searchScopeType;
+
+            SearchScopeType ValueToSearchScope(int value)
             {
-                EditorGUILayout.HelpBox("Searching the entire project for prefabs can become very slow. Consider switching the search scope to specific folders instead.", MessageType.Warning);
+                return (SearchScopeType) value;
+            }
+
+            if (_settings.SearchScope == (int) SearchScopeType.EntireProject)
+            {
+                EditorGUILayout.HelpBox(
+                    "Searching the entire project for prefabs can become very slow. Consider switching the search scope to specific folders instead.",
+                    MessageType.Warning);
 
                 if (GUILayout.Button("Switch"))
-                    _settings.SearchScope = (int)SearchScopeType.SpecificFolders;
+                    _settings.SearchScope = (int) SearchScopeType.SpecificFolders;
             }
+
             //If search scope changed then update prefabs.
-            if (currentSearchScope != _settings.SearchScope && (SearchScopeType)_settings.SearchScope == SearchScopeType.EntireProject)
+            if (currentSearchScope != _settings.SearchScope &&
+                (SearchScopeType) _settings.SearchScope == SearchScopeType.EntireProject)
                 Generator.GenerateFull();
 
             List<string> folders = null;
             string foldersName = null;
 
-            if (_settings.SearchScope == (int)SearchScopeType.EntireProject)
+            if (_settings.SearchScope == (int) SearchScopeType.EntireProject)
             {
                 folders = _settings.ExcludedFolders;
                 foldersName = ObjectNames.NicifyVariableName(nameof(_settings.ExcludedFolders));
             }
-            else if (_settings.SearchScope == (int)SearchScopeType.SpecificFolders)
+            else if (_settings.SearchScope == (int) SearchScopeType.SpecificFolders)
             {
                 folders = _settings.IncludedFolders;
                 foldersName = ObjectNames.NicifyVariableName(nameof(_settings.IncludedFolders));
             }
 
-            string folderName = foldersName.Substring(0, foldersName.Length - 1);
+            var folderName = foldersName.Substring(0, foldersName.Length - 1);
 
-            if ((_showFolders = EditorGUILayout.Foldout(_showFolders, $"{foldersName} ({folders.Count})")) && folders != null)
+            if ((_showFolders = EditorGUILayout.Foldout(_showFolders, $"{foldersName} ({folders.Count})")) &&
+                folders != null)
             {
                 EditorGUI.indentLevel++;
 
-                for (int i = 0; i < folders.Count; i++)
+                for (var i = 0; i < folders.Count; i++)
                 {
                     EditorGUILayout.BeginHorizontal();
 
-                    string oldFolder = folders[i];
-                    string newFolder = SlashRegex.Replace(EditorGUILayout.DelayedTextField(oldFolder), Path.DirectorySeparatorChar.ToString());
+                    var oldFolder = folders[i];
+                    var newFolder = SlashRegex.Replace(EditorGUILayout.DelayedTextField(oldFolder),
+                        Path.DirectorySeparatorChar.ToString());
                     if (!newFolder.Equals(oldFolder, StringComparison.OrdinalIgnoreCase))
                     {
-                        if (newFolder.StartsWith($"Assets{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+                        if (newFolder.StartsWith($"Assets{Path.DirectorySeparatorChar}",
+                                StringComparison.OrdinalIgnoreCase))
                             folders[i] = newFolder;
                         else
-                            EditorWindow.focusedWindow.ShowNotification(new GUIContent($"{folderName} must be inside the Assets folder."));
+                            EditorWindow.focusedWindow.ShowNotification(
+                                new GUIContent($"{folderName} must be inside the Assets folder."));
                     }
 
                     if (GUILayout.Button(_folderIcon, iconWidthConstraint, iconHeightConstraint))
                     {
-                        if (TryOpenFolderPathInsideAssetsFolder(null, Application.dataPath, null, out string result))
+                        if (TryOpenFolderPathInsideAssetsFolder(null, Application.dataPath, null, out var result))
                             folders[i] = result;
                         else
-                            EditorWindow.focusedWindow.ShowNotification(new GUIContent($"{folderName} must be inside the Assets folder."));
+                            EditorWindow.focusedWindow.ShowNotification(
+                                new GUIContent($"{folderName} must be inside the Assets folder."));
                     }
 
                     if (GUILayout.Button(_deleteIcon, iconWidthConstraint, iconHeightConstraint)) folders.RemoveAt(i);
@@ -176,18 +202,17 @@ namespace FishNet.Editing.PrefabCollectionGenerator
 
                 EditorGUI.indentLevel--;
 
-                if (_settings.SearchScope == (int)SearchScopeType.SpecificFolders) EditorGUILayout.HelpBox("You can include subfolders by appending an asterisk (*) to a path.", MessageType.None);
+                if (_settings.SearchScope == (int) SearchScopeType.SpecificFolders)
+                    EditorGUILayout.HelpBox("You can include subfolders by appending an asterisk (*) to a path.",
+                        MessageType.None);
 
                 if (GUILayout.Button("Browse"))
                 {
-                    if (TryOpenFolderPathInsideAssetsFolder(null, Application.dataPath, null, out string result))
-                    {
+                    if (TryOpenFolderPathInsideAssetsFolder(null, Application.dataPath, null, out var result))
                         folders.Add(result);
-                    }
                     else
-                    {
-                        EditorWindow.focusedWindow.ShowNotification(new GUIContent($"{folderName} must be inside the Assets folder."));
-                    }
+                        EditorWindow.focusedWindow.ShowNotification(
+                            new GUIContent($"{folderName} must be inside the Assets folder."));
                 }
             }
 
@@ -201,15 +226,18 @@ namespace FishNet.Editing.PrefabCollectionGenerator
             EditorGUILayout.EndScrollView();
         }
 
-        private static bool TrySaveFilePathInsideAssetsFolder(string title, string directory, string name, string extension, out string result)
+        private static bool TrySaveFilePathInsideAssetsFolder(string title, string directory, string name,
+            string extension, out string result)
         {
             result = null;
 
-            string selectedPath = EditorUtility.SaveFilePanel(title, directory, name, extension);
+            var selectedPath = EditorUtility.SaveFilePanel(title, directory, name, extension);
 
             if (selectedPath.StartsWith(Application.dataPath, StringComparison.OrdinalIgnoreCase))
             {
-                result = SlashRegex.Replace(selectedPath.Remove(0, Path.GetDirectoryName(Application.dataPath).Length + 1), Path.DirectorySeparatorChar.ToString());
+                result = SlashRegex.Replace(
+                    selectedPath.Remove(0, Path.GetDirectoryName(Application.dataPath).Length + 1),
+                    Path.DirectorySeparatorChar.ToString());
 
                 return true;
             }
@@ -217,15 +245,18 @@ namespace FishNet.Editing.PrefabCollectionGenerator
             return false;
         }
 
-        private static bool TryOpenFolderPathInsideAssetsFolder(string title, string folder, string name, out string result)
+        private static bool TryOpenFolderPathInsideAssetsFolder(string title, string folder, string name,
+            out string result)
         {
             result = null;
 
-            string selectedPath = EditorUtility.OpenFolderPanel(title, folder, name);
+            var selectedPath = EditorUtility.OpenFolderPanel(title, folder, name);
 
             if (selectedPath.StartsWith(Application.dataPath, StringComparison.OrdinalIgnoreCase))
             {
-                result = SlashRegex.Replace(selectedPath.Remove(0, Path.GetDirectoryName(Application.dataPath).Length + 1), Path.DirectorySeparatorChar.ToString());
+                result = SlashRegex.Replace(
+                    selectedPath.Remove(0, Path.GetDirectoryName(Application.dataPath).Length + 1),
+                    Path.DirectorySeparatorChar.ToString());
 
                 return true;
             }

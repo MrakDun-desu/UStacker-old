@@ -1,12 +1,16 @@
+
+/************************************
+SkinLoader.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using UStacker.Common;
-using UStacker.Common.Alerts;
 using Newtonsoft.Json;
 using UnityEngine;
+using UStacker.Common;
+using UStacker.Common.Alerts;
 
 namespace UStacker.GlobalSettings.BlockSkins
 {
@@ -33,15 +37,8 @@ namespace UStacker.GlobalSettings.BlockSkins
             );
             SkinRecords.Clear();
             if (Path.GetFileName(path).Equals(DEFAULT_PATH))
-            {
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
-                
-                SkinChanged?.Invoke();
-                if (showAlert)
-                    AlertDisplayer.ShowAlert(defaultAlert);
-                return;
-            }
 
             if (!Directory.Exists(path))
             {
@@ -92,7 +89,7 @@ namespace UStacker.GlobalSettings.BlockSkins
                     for (var i = 0; i < spriteRecords.Count; i++)
                     {
                         if (spriteRecords[i].TryLoadSpriteFromDict(existingTextures)) continue;
-                        
+
                         // if we couldn't load the sprite record, we remove it from the collection
                         spriteRecords.RemoveAt(i);
                         i--;
@@ -109,10 +106,8 @@ namespace UStacker.GlobalSettings.BlockSkins
             else
             {
                 foreach (var spriteRecord in skinRecord.Sprites)
-                {
                     if (!spriteRecord.TryLoadSpriteFromDict(existingTextures))
                         skinRecord.Sprites.Remove(spriteRecord);
-                }
 
                 if (skinRecord.Sprites.Count == 0)
                     SkinRecords.Remove(skinRecord);
@@ -126,7 +121,6 @@ namespace UStacker.GlobalSettings.BlockSkins
             var output = new Dictionary<string, Texture2D>();
             var fileList = new List<string>();
             foreach (var skinRecord in skinRecords)
-            {
                 if (skinRecord.IsConnected)
                 {
                     var spriteRecords = skinRecords
@@ -155,7 +149,6 @@ namespace UStacker.GlobalSettings.BlockSkins
                             path));
                     }
                 }
-            }
 
             await Task.WhenAll(taskList);
             return output;
@@ -173,3 +166,6 @@ namespace UStacker.GlobalSettings.BlockSkins
         }
     }
 }
+/************************************
+end SkinLoader.cs
+*************************************/

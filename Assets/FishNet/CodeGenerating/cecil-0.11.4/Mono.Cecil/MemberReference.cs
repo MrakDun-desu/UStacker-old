@@ -10,93 +10,91 @@
 
 using System;
 
-namespace MonoFN.Cecil {
+namespace MonoFN.Cecil
+{
+    public abstract class MemberReference : IMetadataTokenProvider
+    {
+        private TypeReference declaring_type;
 
-	public abstract class MemberReference : IMetadataTokenProvider {
+        private string name;
+        internal object projection;
 
-		string name;
-		TypeReference declaring_type;
+        internal MetadataToken token;
 
-		internal MetadataToken token;
-		internal object projection;
+        internal MemberReference()
+        {
+        }
 
-		public virtual string Name {
-			get { return name; }
-			set {
-				if (IsWindowsRuntimeProjection && value != name)
-					throw new InvalidOperationException ();
+        internal MemberReference(string name)
+        {
+            this.name = name ?? string.Empty;
+        }
 
-				name = value;
-			}
-		}
+        public virtual string Name
+        {
+            get => name;
+            set
+            {
+                if (IsWindowsRuntimeProjection && value != name)
+                    throw new InvalidOperationException();
 
-		public abstract string FullName {
-			get;
-		}
+                name = value;
+            }
+        }
 
-		public virtual TypeReference DeclaringType {
-			get { return declaring_type; }
-			set { declaring_type = value; }
-		}
+        public abstract string FullName { get; }
 
-		public MetadataToken MetadataToken {
-			get { return token; }
-			set { token = value; }
-		}
+        public virtual TypeReference DeclaringType
+        {
+            get => declaring_type;
+            set => declaring_type = value;
+        }
 
-		public bool IsWindowsRuntimeProjection {
-			get { return projection != null; }
-		}
+        public bool IsWindowsRuntimeProjection => projection != null;
 
-		internal bool HasImage {
-			get {
-				var module = Module;
-				if (module == null)
-					return false;
+        internal bool HasImage
+        {
+            get
+            {
+                var module = Module;
+                if (module == null)
+                    return false;
 
-				return module.HasImage;
-			}
-		}
+                return module.HasImage;
+            }
+        }
 
-		public virtual ModuleDefinition Module {
-			get { return declaring_type != null ? declaring_type.Module : null; }
-		}
+        public virtual ModuleDefinition Module => declaring_type != null ? declaring_type.Module : null;
 
-		public virtual bool IsDefinition {
-			get { return false; }
-		}
+        public virtual bool IsDefinition => false;
 
-		public virtual bool ContainsGenericParameter {
-			get { return declaring_type != null && declaring_type.ContainsGenericParameter; }
-		}
+        public virtual bool ContainsGenericParameter =>
+            declaring_type != null && declaring_type.ContainsGenericParameter;
 
-		internal MemberReference ()
-		{
-		}
+        public MetadataToken MetadataToken
+        {
+            get => token;
+            set => token = value;
+        }
 
-		internal MemberReference (string name)
-		{
-			this.name = name ?? string.Empty;
-		}
+        internal string MemberFullName()
+        {
+            if (declaring_type == null)
+                return name;
 
-		internal string MemberFullName ()
-		{
-			if (declaring_type == null)
-				return name;
+            return declaring_type.FullName + "::" + name;
+        }
 
-			return declaring_type.FullName + "::" + name;
-		}
+        public IMemberDefinition Resolve()
+        {
+            return ResolveDefinition();
+        }
 
-		public IMemberDefinition Resolve ()
-		{
-			return ResolveDefinition ();
-		}
+        protected abstract IMemberDefinition ResolveDefinition();
 
-		protected abstract IMemberDefinition ResolveDefinition ();
-
-		public override string ToString ()
-		{
-			return FullName;
-		}
-	}
+        public override string ToString()
+        {
+            return FullName;
+        }
+    }
 }

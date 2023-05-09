@@ -1,4 +1,8 @@
-﻿namespace UStacker.Gameplay.Communication
+
+/************************************
+HoldUsedMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.Gameplay.Communication
 {
     public readonly struct HoldUsedMessage : IMidgameMessage
     {
@@ -12,3 +16,6 @@
         }
     }
 }
+/************************************
+end HoldUsedMessage.cs
+*************************************/

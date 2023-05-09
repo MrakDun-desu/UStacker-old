@@ -1,4 +1,8 @@
-﻿namespace UStacker.Multiplayer
+
+/************************************
+MultiplayerGameState.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.Multiplayer
 {
     public enum MultiplayerGameState : byte
     {
@@ -7,3 +11,6 @@
         Running
     }
 }
+/************************************
+end MultiplayerGameState.cs
+*************************************/

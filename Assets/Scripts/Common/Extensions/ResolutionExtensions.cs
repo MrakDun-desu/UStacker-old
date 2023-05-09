@@ -1,3 +1,7 @@
+
+/************************************
+ResolutionExtensions.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using UnityEngine;
 
@@ -13,3 +17,6 @@ namespace UStacker.Common.Extensions
         }
     }
 }
+/************************************
+end ResolutionExtensions.cs
+*************************************/

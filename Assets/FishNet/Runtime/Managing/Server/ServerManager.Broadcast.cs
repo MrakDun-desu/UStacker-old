@@ -1,4 +1,8 @@
-﻿using FishNet.Broadcast;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using FishNet.Broadcast;
 using FishNet.Broadcast.Helping;
 using FishNet.Connection;
 using FishNet.Managing.Logging;
@@ -8,46 +12,22 @@ using FishNet.Serializing;
 using FishNet.Serializing.Helping;
 using FishNet.Transporting;
 using FishNet.Utility.Extension;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace FishNet.Managing.Server
 {
     public sealed partial class ServerManager : MonoBehaviour
     {
-        #region Private.
         /// <summary>
-        /// Delegate to read received broadcasts.
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="reader"></param>
-        private delegate void ClientBroadcastDelegate(NetworkConnection connection, PooledReader reader);
-        /// <summary>
-        /// Delegates for each key.
-        /// </summary>
-        private readonly Dictionary<ushort, HashSet<ClientBroadcastDelegate>> _broadcastHandlers = new Dictionary<ushort, HashSet<ClientBroadcastDelegate>>();
-        /// <summary>
-        /// Delegate targets for each key.
-        /// </summary>
-        private Dictionary<ushort, HashSet<(int, ClientBroadcastDelegate)>> _handlerTargets = new Dictionary<ushort, HashSet<(int, ClientBroadcastDelegate)>>();
-        /// <summary>
-        /// Connections which can be broadcasted to after having excluded removed.
-        /// </summary>
-        private HashSet<NetworkConnection> _connectionsWithoutExclusions = new HashSet<NetworkConnection>();
-        #endregion
-
-        /// <summary>
-        /// Registers a method to call when a Broadcast arrives.
+        ///     Registers a method to call when a Broadcast arrives.
         /// </summary>
         /// <typeparam name="T">Type of broadcast being registered.</typeparam>
         /// <param name="handler">Method to call.</param>
         /// <param name="requireAuthentication">True if the client must be authenticated for the method to call.</param>
-        public void RegisterBroadcast<T>(Action<NetworkConnection, T> handler, bool requireAuthentication = true) where T : struct, IBroadcast
+        public void RegisterBroadcast<T>(Action<NetworkConnection, T> handler, bool requireAuthentication = true)
+            where T : struct, IBroadcast
         {
-            ushort key = BroadcastHelper.GetKey<T>();
+            var key = BroadcastHelper.GetKey<T>();
 
             /* Create delegate and add for
              * handler method. */
@@ -57,12 +37,13 @@ namespace FishNet.Managing.Server
                 handlers = new HashSet<ClientBroadcastDelegate>();
                 _broadcastHandlers.Add(key, handlers);
             }
-            ClientBroadcastDelegate del = CreateBroadcastDelegate(handler, requireAuthentication);
+
+            var del = CreateBroadcastDelegate(handler, requireAuthentication);
             handlers.Add(del);
 
             /* Add hashcode of target for handler.
              * This is so we can unregister the target later. */
-            int handlerHashCode = handler.GetHashCode();
+            var handlerHashCode = handler.GetHashCode();
             HashSet<(int, ClientBroadcastDelegate)> targetHashCodes;
             if (!_handlerTargets.TryGetValueIL2CPP(key, out targetHashCodes))
             {
@@ -74,32 +55,31 @@ namespace FishNet.Managing.Server
         }
 
         /// <summary>
-        /// Unregisters a method call from a Broadcast type.
+        ///     Unregisters a method call from a Broadcast type.
         /// </summary>
         /// <typeparam name="T">Type of broadcast being unregistered.</typeparam>
         /// <param name="handler">Method to unregister.</param>
         public void UnregisterBroadcast<T>(Action<NetworkConnection, T> handler) where T : struct, IBroadcast
         {
-            ushort key = BroadcastHelper.GetKey<T>();
+            var key = BroadcastHelper.GetKey<T>();
 
             /* If key is found for T then look for
              * the appropriate handler to remove. */
-            if (_broadcastHandlers.TryGetValueIL2CPP(key, out HashSet<ClientBroadcastDelegate> handlers))
+            if (_broadcastHandlers.TryGetValueIL2CPP(key, out var handlers))
             {
                 HashSet<(int, ClientBroadcastDelegate)> targetHashCodes;
                 if (_handlerTargets.TryGetValueIL2CPP(key, out targetHashCodes))
                 {
-                    int handlerHashCode = handler.GetHashCode();
+                    var handlerHashCode = handler.GetHashCode();
                     ClientBroadcastDelegate result = null;
-                    foreach ((int targetHashCode, ClientBroadcastDelegate del) in targetHashCodes)
-                    {
+                    foreach ((var targetHashCode, var del) in targetHashCodes)
                         if (targetHashCode == handlerHashCode)
                         {
                             result = del;
                             targetHashCodes.Remove((targetHashCode, del));
                             break;
                         }
-                    }
+
                     //If no more in targetHashCodes then remove from handlerTarget.
                     if (targetHashCodes.Count == 0)
                         _handlerTargets.Remove(key);
@@ -115,52 +95,55 @@ namespace FishNet.Managing.Server
         }
 
         /// <summary>
-        /// Creates a ClientBroadcastDelegate.
+        ///     Creates a ClientBroadcastDelegate.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="handler"></param>
         /// <param name="requireAuthentication"></param>
         /// <returns></returns>
-        private ClientBroadcastDelegate CreateBroadcastDelegate<T>(Action<NetworkConnection, T> handler, bool requireAuthentication)
+        private ClientBroadcastDelegate CreateBroadcastDelegate<T>(Action<NetworkConnection, T> handler,
+            bool requireAuthentication)
         {
             void LogicContainer(NetworkConnection connection, PooledReader reader)
             {
                 //If requires authentication and client isn't authenticated.
                 if (requireAuthentication && !connection.Authenticated)
                 {
-                    connection.Kick(KickReason.ExploitAttempt, LoggingType.Common, $"ConnectionId {connection.ClientId} sent broadcast {typeof(T).Name} which requires authentication, but client was not authenticated. Client has been disconnected.");
+                    connection.Kick(KickReason.ExploitAttempt, LoggingType.Common,
+                        $"ConnectionId {connection.ClientId} sent broadcast {typeof(T).Name} which requires authentication, but client was not authenticated. Client has been disconnected.");
                     return;
                 }
 
-                T broadcast = reader.Read<T>();
+                var broadcast = reader.Read<T>();
                 handler?.Invoke(connection, broadcast);
             }
+
             return LogicContainer;
         }
 
         /// <summary>
-        /// Parses a received broadcast.
+        ///     Parses a received broadcast.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ParseBroadcast(PooledReader reader, NetworkConnection conn, Channel channel)
         {
-            ushort key = reader.ReadUInt16();
-            int dataLength = Packets.GetPacketLength((ushort)PacketId.Broadcast, reader, channel);
+            var key = reader.ReadUInt16();
+            var dataLength = Packets.GetPacketLength((ushort) PacketId.Broadcast, reader, channel);
 
             //Try to invoke the handler for that message
-            if (_broadcastHandlers.TryGetValueIL2CPP(key, out HashSet<ClientBroadcastDelegate> handlers))
+            if (_broadcastHandlers.TryGetValueIL2CPP(key, out var handlers))
             {
-                int readerStartPosition = reader.Position;
+                var readerStartPosition = reader.Position;
                 /* //muchlater resetting the position could be better by instead reading once and passing in
                  * the object to invoke with. */
-                bool rebuildHandlers = false;
+                var rebuildHandlers = false;
                 //True if data is read at least once. Otherwise it's length will have to be purged.
-                bool dataRead = false;
-                foreach (ClientBroadcastDelegate handler in handlers)
-                {
+                var dataRead = false;
+                foreach (var handler in handlers)
                     if (handler.Target == null)
                     {
-                        NetworkManager.LogWarning($"A Broadcast handler target is null. This can occur when a script is destroyed but does not unregister from a Broadcast.");
+                        NetworkManager.LogWarning(
+                            "A Broadcast handler target is null. This can occur when a script is destroyed but does not unregister from a Broadcast.");
                         rebuildHandlers = true;
                     }
                     else
@@ -169,19 +152,17 @@ namespace FishNet.Managing.Server
                         handler.Invoke(conn, reader);
                         dataRead = true;
                     }
-                }
 
                 //If rebuilding handlers...
                 if (rebuildHandlers)
                 {
-                    List<ClientBroadcastDelegate> dels = handlers.ToList();
+                    var dels = handlers.ToList();
                     handlers.Clear();
-                    for (int i = 0; i < dels.Count; i++)
-                    {
+                    for (var i = 0; i < dels.Count; i++)
                         if (dels[i].Target != null)
                             handlers.Add(dels[i]);
-                    }
                 }
+
                 //Make sure data was read as well.
                 if (!dataRead)
                     reader.Skip(dataLength);
@@ -193,76 +174,75 @@ namespace FishNet.Managing.Server
         }
 
         /// <summary>
-        /// Sends a broadcast to a connection.
+        ///     Sends a broadcast to a connection.
         /// </summary>
         /// <typeparam name="T">Type of broadcast to send.</typeparam>
         /// <param name="connection">Connection to send to.</param>
         /// <param name="message">Broadcast data being sent; for example: an instance of your broadcast type.</param>
         /// <param name="requireAuthenticated">True if the client must be authenticated for this broadcast to send.</param>
         /// <param name="channel">Channel to send on.</param>
-        public void Broadcast<T>(NetworkConnection connection, T message, bool requireAuthenticated = true, Channel channel = Channel.Reliable) where T : struct, IBroadcast
+        public void Broadcast<T>(NetworkConnection connection, T message, bool requireAuthenticated = true,
+            Channel channel = Channel.Reliable) where T : struct, IBroadcast
         {
             if (!Started)
             {
-                NetworkManager.LogWarning($"Cannot send broadcast to client because server is not active.");
-                return;
-            }
-            if (requireAuthenticated && !connection.Authenticated)
-            {
-                NetworkManager.LogWarning($"Cannot send broadcast to client because they are not authenticated.");
+                NetworkManager.LogWarning("Cannot send broadcast to client because server is not active.");
                 return;
             }
 
-            using (PooledWriter writer = WriterPool.GetWriter())
+            if (requireAuthenticated && !connection.Authenticated)
             {
-                Broadcasts.WriteBroadcast<T>(writer, message, channel);
-                ArraySegment<byte> segment = writer.GetArraySegment();
-                NetworkManager.TransportManager.SendToClient((byte)channel, segment, connection);
+                NetworkManager.LogWarning("Cannot send broadcast to client because they are not authenticated.");
+                return;
+            }
+
+            using (var writer = WriterPool.GetWriter())
+            {
+                Broadcasts.WriteBroadcast(writer, message, channel);
+                var segment = writer.GetArraySegment();
+                NetworkManager.TransportManager.SendToClient((byte) channel, segment, connection);
             }
         }
 
 
         /// <summary>
-        /// Sends a broadcast to connections.
+        ///     Sends a broadcast to connections.
         /// </summary>
         /// <typeparam name="T">Type of broadcast to send.</typeparam>
         /// <param name="connections">Connections to send to.</param>
         /// <param name="message">Broadcast data being sent; for example: an instance of your broadcast type.</param>
         /// <param name="requireAuthenticated">True if the clients must be authenticated for this broadcast to send.</param>
         /// <param name="channel">Channel to send on.</param>
-        public void Broadcast<T>(HashSet<NetworkConnection> connections, T message, bool requireAuthenticated = true, Channel channel = Channel.Reliable) where T : struct, IBroadcast
+        public void Broadcast<T>(HashSet<NetworkConnection> connections, T message, bool requireAuthenticated = true,
+            Channel channel = Channel.Reliable) where T : struct, IBroadcast
         {
             if (!Started)
             {
-                NetworkManager.LogWarning($"Cannot send broadcast to client because server is not active.");
+                NetworkManager.LogWarning("Cannot send broadcast to client because server is not active.");
                 return;
             }
 
-            bool failedAuthentication = false;
-            using (PooledWriter writer = WriterPool.GetWriter())
+            var failedAuthentication = false;
+            using (var writer = WriterPool.GetWriter())
             {
-                Broadcasts.WriteBroadcast<T>(writer, message, channel);
-                ArraySegment<byte> segment = writer.GetArraySegment();
+                Broadcasts.WriteBroadcast(writer, message, channel);
+                var segment = writer.GetArraySegment();
 
-                foreach (NetworkConnection conn in connections)
-                {
+                foreach (var conn in connections)
                     if (requireAuthenticated && !conn.Authenticated)
                         failedAuthentication = true;
                     else
-                        NetworkManager.TransportManager.SendToClient((byte)channel, segment, conn);
-                }
+                        NetworkManager.TransportManager.SendToClient((byte) channel, segment, conn);
             }
 
             if (failedAuthentication)
-            {
-                NetworkManager.LogWarning($"One or more broadcast did not send to a client because they were not authenticated.");
-                return;
-            }
+                NetworkManager.LogWarning(
+                    "One or more broadcast did not send to a client because they were not authenticated.");
         }
 
 
         /// <summary>
-        /// Sends a broadcast to connections except excluded.
+        ///     Sends a broadcast to connections except excluded.
         /// </summary>
         /// <typeparam name="T">Type of broadcast to send.</typeparam>
         /// <param name="connections">Connections to send to.</param>
@@ -270,11 +250,13 @@ namespace FishNet.Managing.Server
         /// <param name="message">Broadcast data being sent; for example: an instance of your broadcast type.</param>
         /// <param name="requireAuthenticated">True if the clients must be authenticated for this broadcast to send.</param>
         /// <param name="channel">Channel to send on.</param>
-        public void BroadcastExcept<T>(HashSet<NetworkConnection> connections, NetworkConnection excludedConnection, T message, bool requireAuthenticated = true, Channel channel = Channel.Reliable) where T : struct, IBroadcast
+        public void BroadcastExcept<T>(HashSet<NetworkConnection> connections, NetworkConnection excludedConnection,
+            T message, bool requireAuthenticated = true, Channel channel = Channel.Reliable)
+            where T : struct, IBroadcast
         {
             if (!Started)
             {
-                NetworkManager.LogWarning($"Cannot send broadcast to client because server is not active.");
+                NetworkManager.LogWarning("Cannot send broadcast to client because server is not active.");
                 return;
             }
 
@@ -291,7 +273,7 @@ namespace FishNet.Managing.Server
 
 
         /// <summary>
-        /// Sends a broadcast to connections except excluded.
+        ///     Sends a broadcast to connections except excluded.
         /// </summary>
         /// <typeparam name="T">Type of broadcast to send.</typeparam>
         /// <param name="connections">Connections to send to.</param>
@@ -299,11 +281,13 @@ namespace FishNet.Managing.Server
         /// <param name="message">Broadcast data being sent; for example: an instance of your broadcast type.</param>
         /// <param name="requireAuthenticated">True if the clients must be authenticated for this broadcast to send.</param>
         /// <param name="channel">Channel to send on.</param>
-        public void BroadcastExcept<T>(HashSet<NetworkConnection> connections, HashSet<NetworkConnection> excludedConnections, T message, bool requireAuthenticated = true, Channel channel = Channel.Reliable) where T : struct, IBroadcast
+        public void BroadcastExcept<T>(HashSet<NetworkConnection> connections,
+            HashSet<NetworkConnection> excludedConnections, T message, bool requireAuthenticated = true,
+            Channel channel = Channel.Reliable) where T : struct, IBroadcast
         {
             if (!Started)
             {
-                NetworkManager.LogWarning($"Cannot send broadcast to client because server is not active.");
+                NetworkManager.LogWarning("Cannot send broadcast to client because server is not active.");
                 return;
             }
 
@@ -317,25 +301,26 @@ namespace FishNet.Managing.Server
             /* I'm not sure if the hashset API such as intersect generates
              * GC or not but I'm betting doing remove locally is faster, or
              * just as fast. */
-            foreach (NetworkConnection ec in excludedConnections)
+            foreach (var ec in excludedConnections)
                 connections.Remove(ec);
 
             Broadcast(connections, message, requireAuthenticated, channel);
         }
 
         /// <summary>
-        /// Sends a broadcast to all connections except excluded.
+        ///     Sends a broadcast to all connections except excluded.
         /// </summary>
         /// <typeparam name="T">Type of broadcast to send.</typeparam>
         /// <param name="excludedConnection">Connection to exclude.</param>
         /// <param name="message">Broadcast data being sent; for example: an instance of your broadcast type.</param>
         /// <param name="requireAuthenticated">True if the clients must be authenticated for this broadcast to send.</param>
         /// <param name="channel">Channel to send on.</param>
-        public void BroadcastExcept<T>(NetworkConnection excludedConnection, T message, bool requireAuthenticated = true, Channel channel = Channel.Reliable) where T : struct, IBroadcast
+        public void BroadcastExcept<T>(NetworkConnection excludedConnection, T message,
+            bool requireAuthenticated = true, Channel channel = Channel.Reliable) where T : struct, IBroadcast
         {
             if (!Started)
             {
-                NetworkManager.LogWarning($"Cannot send broadcast to client because server is not active.");
+                NetworkManager.LogWarning("Cannot send broadcast to client because server is not active.");
                 return;
             }
 
@@ -349,7 +334,7 @@ namespace FishNet.Managing.Server
             _connectionsWithoutExclusions.Clear();
             /* It will be faster to fill the entire list then
              * remove vs checking if each connection is contained within excluded. */
-            foreach (NetworkConnection c in Clients.Values)
+            foreach (var c in Clients.Values)
                 _connectionsWithoutExclusions.Add(c);
             //Remove
             _connectionsWithoutExclusions.Remove(excludedConnection);
@@ -358,18 +343,19 @@ namespace FishNet.Managing.Server
         }
 
         /// <summary>
-        /// Sends a broadcast to all connections except excluded.
+        ///     Sends a broadcast to all connections except excluded.
         /// </summary>
         /// <typeparam name="T">Type of broadcast to send.</typeparam>
         /// <param name="excludedConnections">Connections to send to.</param>
         /// <param name="message">Broadcast data being sent; for example: an instance of your broadcast type.</param>
         /// <param name="requireAuthenticated">True if the clients must be authenticated for this broadcast to send.</param>
         /// <param name="channel">Channel to send on.</param>
-        public void BroadcastExcept<T>(HashSet<NetworkConnection> excludedConnections, T message, bool requireAuthenticated = true, Channel channel = Channel.Reliable) where T : struct, IBroadcast
+        public void BroadcastExcept<T>(HashSet<NetworkConnection> excludedConnections, T message,
+            bool requireAuthenticated = true, Channel channel = Channel.Reliable) where T : struct, IBroadcast
         {
             if (!Started)
             {
-                NetworkManager.LogWarning($"Cannot send broadcast to client because server is not active.");
+                NetworkManager.LogWarning("Cannot send broadcast to client because server is not active.");
                 return;
             }
 
@@ -383,17 +369,17 @@ namespace FishNet.Managing.Server
             _connectionsWithoutExclusions.Clear();
             /* It will be faster to fill the entire list then
              * remove vs checking if each connection is contained within excluded. */
-            foreach (NetworkConnection c in Clients.Values)
+            foreach (var c in Clients.Values)
                 _connectionsWithoutExclusions.Add(c);
             //Remove
-            foreach (NetworkConnection c in excludedConnections)
+            foreach (var c in excludedConnections)
                 _connectionsWithoutExclusions.Remove(c);
 
             Broadcast(_connectionsWithoutExclusions, message, requireAuthenticated, channel);
         }
 
         /// <summary>
-        /// Sends a broadcast to observers.
+        ///     Sends a broadcast to observers.
         /// </summary>
         /// <typeparam name="T">Type of broadcast to send.</typeparam>
         /// <param name="networkObject">NetworkObject to use Observers from.</param>
@@ -401,11 +387,12 @@ namespace FishNet.Managing.Server
         /// <param name="requireAuthenticated">True if the clients must be authenticated for this broadcast to send.</param>
         /// <param name="channel">Channel to send on.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Broadcast<T>(NetworkObject networkObject, T message, bool requireAuthenticated = true, Channel channel = Channel.Reliable) where T : struct, IBroadcast
+        public void Broadcast<T>(NetworkObject networkObject, T message, bool requireAuthenticated = true,
+            Channel channel = Channel.Reliable) where T : struct, IBroadcast
         {
             if (networkObject == null)
             {
-                NetworkManager.LogWarning($"Cannot send broadcast because networkObject is null.");
+                NetworkManager.LogWarning("Cannot send broadcast because networkObject is null.");
                 return;
             }
 
@@ -414,44 +401,64 @@ namespace FishNet.Managing.Server
 
 
         /// <summary>
-        /// Sends a broadcast to all clients.
+        ///     Sends a broadcast to all clients.
         /// </summary>
         /// <typeparam name="T">Type of broadcast to send.</typeparam>
         /// <param name="message">Broadcast data being sent; for example: an instance of your broadcast type.</param>
         /// <param name="requireAuthenticated">True if the clients must be authenticated for this broadcast to send.</param>
         /// <param name="channel">Channel to send on.</param>
-        public void Broadcast<T>(T message, bool requireAuthenticated = true, Channel channel = Channel.Reliable) where T : struct, IBroadcast
+        public void Broadcast<T>(T message, bool requireAuthenticated = true, Channel channel = Channel.Reliable)
+            where T : struct, IBroadcast
         {
             if (!Started)
             {
-                NetworkManager.LogWarning($"Cannot send broadcast to client because server is not active.");
+                NetworkManager.LogWarning("Cannot send broadcast to client because server is not active.");
                 return;
             }
 
-            bool failedAuthentication = false;
-            using (PooledWriter writer = WriterPool.GetWriter())
+            var failedAuthentication = false;
+            using (var writer = WriterPool.GetWriter())
             {
-                Broadcasts.WriteBroadcast<T>(writer, message, channel);
-                ArraySegment<byte> segment = writer.GetArraySegment();
+                Broadcasts.WriteBroadcast(writer, message, channel);
+                var segment = writer.GetArraySegment();
 
-                foreach (NetworkConnection conn in Clients.Values)
-                {
+                foreach (var conn in Clients.Values)
                     //
                     if (requireAuthenticated && !conn.Authenticated)
                         failedAuthentication = true;
                     else
-                        NetworkManager.TransportManager.SendToClient((byte)channel, segment, conn);
-                }
+                        NetworkManager.TransportManager.SendToClient((byte) channel, segment, conn);
             }
 
             if (failedAuthentication)
-            {
-                NetworkManager.LogWarning($"One or more broadcast did not send to a client because they were not authenticated.");
-                return;
-            }
+                NetworkManager.LogWarning(
+                    "One or more broadcast did not send to a client because they were not authenticated.");
         }
 
+        #region Private.
+
+        /// <summary>
+        ///     Delegate to read received broadcasts.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="reader"></param>
+        private delegate void ClientBroadcastDelegate(NetworkConnection connection, PooledReader reader);
+
+        /// <summary>
+        ///     Delegates for each key.
+        /// </summary>
+        private readonly Dictionary<ushort, HashSet<ClientBroadcastDelegate>> _broadcastHandlers = new();
+
+        /// <summary>
+        ///     Delegate targets for each key.
+        /// </summary>
+        private readonly Dictionary<ushort, HashSet<(int, ClientBroadcastDelegate)>> _handlerTargets = new();
+
+        /// <summary>
+        ///     Connections which can be broadcasted to after having excluded removed.
+        /// </summary>
+        private readonly HashSet<NetworkConnection> _connectionsWithoutExclusions = new();
+
+        #endregion
     }
-
-
 }

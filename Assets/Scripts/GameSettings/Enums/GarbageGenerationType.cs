@@ -1,3 +1,7 @@
+
+/************************************
+GarbageGenerationType.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 
 namespace UStacker.GameSettings.Enums
@@ -13,3 +17,6 @@ namespace UStacker.GameSettings.Enums
         CustomFlag = 1 << 4
     }
 }
+/************************************
+end GarbageGenerationType.cs
+*************************************/

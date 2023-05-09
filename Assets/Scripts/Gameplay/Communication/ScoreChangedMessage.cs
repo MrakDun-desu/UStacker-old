@@ -1,4 +1,8 @@
-﻿namespace UStacker.Gameplay.Communication
+
+/************************************
+ScoreChangedMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.Gameplay.Communication
 {
     public readonly struct ScoreChangedMessage : IMidgameMessage
     {
@@ -12,3 +16,6 @@
         }
     }
 }
+/************************************
+end ScoreChangedMessage.cs
+*************************************/

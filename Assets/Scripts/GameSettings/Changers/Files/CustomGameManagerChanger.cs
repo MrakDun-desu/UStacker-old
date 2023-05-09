@@ -1,5 +1,8 @@
-﻿using UStacker.Common;
-using UStacker.GlobalSettings;
+
+/************************************
+CustomGameManagerChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UStacker.Common;
 
 namespace UStacker.GameSettings.Changers.Files
 {
@@ -8,3 +11,6 @@ namespace UStacker.GameSettings.Changers.Files
         protected override string TargetDir => PersistentPaths.GameManagers;
     }
 }
+/************************************
+end CustomGameManagerChanger.cs
+*************************************/

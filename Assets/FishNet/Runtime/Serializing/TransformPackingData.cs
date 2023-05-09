@@ -1,6 +1,8 @@
+using System;
+
 namespace FishNet.Serializing
 {
-    [System.Serializable]
+    [Serializable]
     internal class TransformPackingData
     {
         public AutoPackType Position = AutoPackType.Packed;

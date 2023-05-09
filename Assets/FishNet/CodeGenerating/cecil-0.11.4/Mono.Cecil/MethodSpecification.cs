@@ -8,76 +8,70 @@
 // Licensed under the MIT/X11 license.
 //
 
-using MonoFN.Collections.Generic;
 using System;
+using MonoFN.Collections.Generic;
 
-namespace MonoFN.Cecil {
+namespace MonoFN.Cecil
+{
+    public abstract class MethodSpecification : MethodReference
+    {
+        internal MethodSpecification(MethodReference method)
+        {
+            Mixin.CheckMethod(method);
 
-	public abstract class MethodSpecification : MethodReference {
+            this.ElementMethod = method;
+            token = new MetadataToken(TokenType.MethodSpec);
+        }
 
-		readonly MethodReference method;
+        public MethodReference ElementMethod { get; }
 
-		public MethodReference ElementMethod {
-			get { return method; }
-		}
+        public override string Name
+        {
+            get => ElementMethod.Name;
+            set => throw new InvalidOperationException();
+        }
 
-		public override string Name {
-			get { return method.Name; }
-			set { throw new InvalidOperationException (); }
-		}
+        public override MethodCallingConvention CallingConvention
+        {
+            get => ElementMethod.CallingConvention;
+            set => throw new InvalidOperationException();
+        }
 
-		public override MethodCallingConvention CallingConvention {
-			get { return method.CallingConvention; }
-			set { throw new InvalidOperationException (); }
-		}
+        public override bool HasThis
+        {
+            get => ElementMethod.HasThis;
+            set => throw new InvalidOperationException();
+        }
 
-		public override bool HasThis {
-			get { return method.HasThis; }
-			set { throw new InvalidOperationException (); }
-		}
+        public override bool ExplicitThis
+        {
+            get => ElementMethod.ExplicitThis;
+            set => throw new InvalidOperationException();
+        }
 
-		public override bool ExplicitThis {
-			get { return method.ExplicitThis; }
-			set { throw new InvalidOperationException (); }
-		}
+        public override MethodReturnType MethodReturnType
+        {
+            get => ElementMethod.MethodReturnType;
+            set => throw new InvalidOperationException();
+        }
 
-		public override MethodReturnType MethodReturnType {
-			get { return method.MethodReturnType; }
-			set { throw new InvalidOperationException (); }
-		}
+        public override TypeReference DeclaringType
+        {
+            get => ElementMethod.DeclaringType;
+            set => throw new InvalidOperationException();
+        }
 
-		public override TypeReference DeclaringType {
-			get { return method.DeclaringType; }
-			set { throw new InvalidOperationException (); }
-		}
+        public override ModuleDefinition Module => ElementMethod.Module;
 
-		public override ModuleDefinition Module {
-			get { return method.Module; }
-		}
+        public override bool HasParameters => ElementMethod.HasParameters;
 
-		public override bool HasParameters {
-			get { return method.HasParameters; }
-		}
+        public override Collection<ParameterDefinition> Parameters => ElementMethod.Parameters;
 
-		public override Collection<ParameterDefinition> Parameters {
-			get { return method.Parameters; }
-		}
+        public override bool ContainsGenericParameter => ElementMethod.ContainsGenericParameter;
 
-		public override bool ContainsGenericParameter {
-			get { return method.ContainsGenericParameter; }
-		}
-
-		internal MethodSpecification (MethodReference method)
-		{
-			Mixin.CheckMethod (method);
-
-			this.method = method;
-			this.token = new MetadataToken (TokenType.MethodSpec);
-		}
-
-		public sealed override MethodReference GetElementMethod ()
-		{
-			return method.GetElementMethod ();
-		}
-	}
+        public sealed override MethodReference GetElementMethod()
+        {
+            return ElementMethod.GetElementMethod();
+        }
+    }
 }

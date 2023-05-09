@@ -1,3 +1,7 @@
+
+/************************************
+VolumeApplier.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -22,3 +26,6 @@ namespace UStacker.GlobalSettings.Appliers
         }
     }
 }
+/************************************
+end VolumeApplier.cs
+*************************************/

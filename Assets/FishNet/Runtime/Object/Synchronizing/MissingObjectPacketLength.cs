@@ -1,11 +1,8 @@
 ﻿namespace FishNet.Object
 {
-
-    internal enum MissingObjectPacketLength : int
+    internal enum MissingObjectPacketLength
     {
         Reliable = -1,
-        PurgeRemaiming = -2,
+        PurgeRemaiming = -2
     }
-
-
 }

@@ -1,13 +1,17 @@
-﻿using System;
+
+/************************************
+WarningPiece.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.Pool;
+using UStacker.Common.Extensions;
 using UStacker.Gameplay.Blocks;
 using UStacker.Gameplay.Initialization;
 using UStacker.GameSettings;
 using UStacker.GameSettings.Enums;
-using UnityEngine;
-using UnityEngine.Pool;
-using UStacker.Common.Extensions;
 
 namespace UStacker.Gameplay.Pieces
 {
@@ -18,13 +22,14 @@ namespace UStacker.Gameplay.Pieces
         [SerializeField] private SpriteRenderer _warningLine;
 
         private readonly List<BlockBase> _blocks = new();
+        private bool _awake;
         private ObjectPool<BlockBase> _blockPool;
         private string _currentPieceType = "";
         private bool _isEnabled = true;
-        private bool _awake;
         private GameSettingsSO.SettingsContainer _settings;
 
         private float _visibility;
+
         private float Visibility
         {
             get => _visibility;
@@ -35,20 +40,6 @@ namespace UStacker.Gameplay.Pieces
                     block.Visibility = _visibility;
             }
         }
-        public IEnumerable<Vector3> BlockPositions => _blocks.Select(block => block.transform.position);
-        public string Type => "warning";
-
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            set
-            {
-                _settings = value;
-                Awake();
-                Initialize();
-            }
-        }
-
-        public event Action PieceChanged;
 
 
         private void Awake()
@@ -73,6 +64,21 @@ namespace UStacker.Gameplay.Pieces
             _blockPool.Dispose();
         }
 
+        public IEnumerable<Vector3> BlockPositions => _blocks.Select(block => block.transform.position);
+        public string Type => "warning";
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            set
+            {
+                _settings = value;
+                Awake();
+                Initialize();
+            }
+        }
+
+        public event Action PieceChanged;
+
         private void Initialize()
         {
             if (_settings.General.NextPieceCount <= 0)
@@ -81,7 +87,8 @@ namespace UStacker.Gameplay.Pieces
             MakeInvisible();
 
             var warningLineTransform = _warningLine.transform;
-            warningLineTransform.localScale = new Vector2(_settings.BoardDimensions.BoardWidth, warningLineTransform.localScale.y);
+            warningLineTransform.localScale =
+                new Vector2(_settings.BoardDimensions.BoardWidth, warningLineTransform.localScale.y);
             warningLineTransform.localPosition = new Vector3(_settings.BoardDimensions.BoardWidth / 2f,
                 _settings.BoardDimensions.BoardHeight);
         }
@@ -99,7 +106,7 @@ namespace UStacker.Gameplay.Pieces
         public void MakeInvisible()
         {
             Visibility = 0;
-            
+
             _warningLine.color = _warningLine.color.WithAlpha(0);
         }
 
@@ -156,3 +163,6 @@ namespace UStacker.Gameplay.Pieces
         }
     }
 }
+/************************************
+end WarningPiece.cs
+*************************************/

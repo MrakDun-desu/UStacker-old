@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+Vector2Converter.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -18,7 +22,8 @@ namespace UStacker.Common.Converters
             writer.WriteEndObject();
         }
 
-        public override Vector2 ReadJson(JsonReader reader, Type objectType, Vector2 existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override Vector2 ReadJson(JsonReader reader, Type objectType, Vector2 existingValue,
+            bool hasExistingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.Null)
                 throw new JsonReaderException();
@@ -67,3 +72,6 @@ namespace UStacker.Common.Converters
         }
     }
 }
+/************************************
+end Vector2Converter.cs
+*************************************/

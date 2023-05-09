@@ -1,4 +1,8 @@
-﻿namespace UStacker.GameSettings.Changers
+
+/************************************
+GameSettingStringChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.GameSettings.Changers
 {
     public class GameSettingStringChanger : GameSettingChangerWithField<string>
     {
@@ -8,3 +12,6 @@
         }
     }
 }
+/************************************
+end GameSettingStringChanger.cs
+*************************************/

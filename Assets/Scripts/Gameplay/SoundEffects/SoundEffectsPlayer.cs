@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+SoundEffectsPlayer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using NLua;
 using NLua.Exceptions;
@@ -19,8 +23,8 @@ namespace UStacker.Gameplay.SoundEffects
         [SerializeField] private AudioSource _audioSource;
 
         public bool RepressSfx;
-        private Lua _luaState;
         private readonly List<string> _playedInThisUpdate = new();
+        private Lua _luaState;
 
         private void Awake()
         {
@@ -29,11 +33,9 @@ namespace UStacker.Gameplay.SoundEffects
             SoundPackLoader.SoundPackChanged += Reload;
         }
 
-        private void Reload()
+        private void LateUpdate()
         {
-            Dispose();
-            if (!TryRegisterCustomFunctions())
-                RegisterDefaultFunctions();
+            _playedInThisUpdate.Clear();
         }
 
         private void OnDestroy()
@@ -41,9 +43,23 @@ namespace UStacker.Gameplay.SoundEffects
             Dispose();
         }
 
-        private void LateUpdate()
+        public void Dispose()
         {
-            _playedInThisUpdate.Clear();
+            _mediator.Unregister<PiecePlacedMessage>(HandlePiecePlaced);
+            _mediator.Unregister<PieceRotatedMessage>(HandlePieceRotated);
+            _mediator.Unregister<PieceMovedMessage>(HandlePieceMoved);
+            _mediator.Unregister<HoldUsedMessage>(HandleHoldUsed);
+            _mediator.Unregister<PieceSpawnedMessage>(HandlePieceSpawned);
+            _mediator.Unregister<CountdownTickedMessage>(HandleCountdownTicked);
+            _mediator.Unregister<GameStateChangedMessage>(HandleGameStateChanged);
+            _luaState?.Dispose();
+        }
+
+        private void Reload()
+        {
+            Dispose();
+            if (!TryRegisterCustomFunctions())
+                RegisterDefaultFunctions();
         }
 
         private void RegisterDefaultFunctions()
@@ -217,7 +233,7 @@ namespace UStacker.Gameplay.SoundEffects
 
                     TryPlayClip("floor");
                     break;
-                case > 0 and < 4:
+                case < 4:
                     if (message.WasSpin || message.WasSpinMini)
                     {
                         switch (message.CurrentCombo)
@@ -289,7 +305,7 @@ namespace UStacker.Gameplay.SoundEffects
                 TryPlayClip("harddrop");
         }
 
-        private void PlayAsAnnouncer(string clipName)
+        public void PlayAsAnnouncer(string clipName)
         {
             if (_playedInThisUpdate.Contains(clipName) || RepressSfx)
                 return;
@@ -311,7 +327,7 @@ namespace UStacker.Gameplay.SoundEffects
             _playedInThisUpdate.Add(clipName);
         }
 
-        private void Play(string clipName)
+        public void Play(string clipName)
         {
             TryPlayClip(clipName);
         }
@@ -335,17 +351,8 @@ namespace UStacker.Gameplay.SoundEffects
             _audioSource.PlayOneShot(clip);
             _playedInThisUpdate.Add(clipName);
         }
-
-        public void Dispose()
-        {
-            _mediator.Unregister<PiecePlacedMessage>(HandlePiecePlaced);
-            _mediator.Unregister<PieceRotatedMessage>(HandlePieceRotated);
-            _mediator.Unregister<PieceMovedMessage>(HandlePieceMoved);
-            _mediator.Unregister<HoldUsedMessage>(HandleHoldUsed);
-            _mediator.Unregister<PieceSpawnedMessage>(HandlePieceSpawned);
-            _mediator.Unregister<CountdownTickedMessage>(HandleCountdownTicked);
-            _mediator.Unregister<GameStateChangedMessage>(HandleGameStateChanged);
-            _luaState?.Dispose();
-        }
     }
 }
+/************************************
+end SoundEffectsPlayer.cs
+*************************************/

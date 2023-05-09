@@ -1,12 +1,17 @@
+
+/************************************
+ClassicRandomizer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.Collections.Generic;
-using UStacker.Common.Extensions;
+using System.Linq;
 using UStacker.Common;
+using UStacker.Common.Extensions;
 
 namespace UStacker.Gameplay.Randomizers
 {
     public class ClassicRandomizer : IRandomizer
     {
-        private readonly List<string> _availableValues = new()
+        private readonly string[] _availableValues =
         {
             "i",
             "t",
@@ -16,20 +21,20 @@ namespace UStacker.Gameplay.Randomizers
             "s",
             "z"
         };
-        private int _lastIndex;
 
         private readonly Random _random = new();
 
+        private int _lastIndex;
+
         public ClassicRandomizer(IEnumerable<string> availablePieces)
         {
-            _availableValues = _availableValues.Filter(availablePieces);
-            _lastIndex = -1;
+            _availableValues = _availableValues.Filter(availablePieces).ToArray();
         }
 
         public string GetNextPiece()
         {
-            var nextIndex = _random.NextInt(_availableValues.Count);
-            if (nextIndex == _lastIndex) nextIndex = _random.NextInt(_availableValues.Count);
+            var nextIndex = _random.NextInt(_availableValues.Length);
+            if (nextIndex == _lastIndex) nextIndex = _random.NextInt(_availableValues.Length);
             _lastIndex = nextIndex;
             return _availableValues[nextIndex];
         }
@@ -41,3 +46,6 @@ namespace UStacker.Gameplay.Randomizers
         }
     }
 }
+/************************************
+end ClassicRandomizer.cs
+*************************************/

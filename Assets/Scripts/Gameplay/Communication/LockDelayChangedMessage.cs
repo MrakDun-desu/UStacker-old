@@ -1,3 +1,7 @@
+
+/************************************
+LockDelayChangedMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 
 namespace UStacker.Gameplay.Communication
@@ -6,12 +10,16 @@ namespace UStacker.Gameplay.Communication
     public readonly struct LockDelayChangedMessage : IMidgameMessage
     {
         public readonly double LockDelay;
-        public double Time { get; }
 
         public LockDelayChangedMessage(double lockDelay, double time)
         {
             Time = time;
             LockDelay = lockDelay;
         }
+
+        public double Time { get; }
     }
 }
+/************************************
+end LockDelayChangedMessage.cs
+*************************************/

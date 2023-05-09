@@ -1,14 +1,18 @@
+
+/************************************
+StartupHandler.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using UStacker.GlobalSettings.Appliers;
-using UStacker.GlobalSettings.Changers;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UStacker.Common;
+using UStacker.GlobalSettings.Appliers;
+using UStacker.GlobalSettings.Changers;
 
 namespace UStacker.GlobalSettings.Startup
 {
@@ -19,13 +23,12 @@ namespace UStacker.GlobalSettings.Startup
         [SerializeField] private Transform _loaderMessageParent;
 
         private uint _loadersActive;
-        public event Action SettingChanged;
 
         private void Start()
         {
             if (!Directory.Exists(PersistentPaths.DataPath))
                 FileHandling.CreateDirectoriesRecursively(PersistentPaths.DataPath);
-            
+
             foreach (var loader in GetComponents<IAsyncApplier>())
             {
                 TMP_Text messageText = null;
@@ -48,6 +51,8 @@ namespace UStacker.GlobalSettings.Startup
             settingsSaver.AddComponent<OnQuitSettingsSaver>();
             _ = LoadAppSettings();
         }
+
+        public event Action SettingChanged;
 
         private async Task LoadAppSettings()
         {
@@ -75,3 +80,6 @@ namespace UStacker.GlobalSettings.Startup
         }
     }
 }
+/************************************
+end StartupHandler.cs
+*************************************/

@@ -10,67 +10,42 @@
 
 using System;
 
-namespace MonoFN.Cecil.Cil {
+namespace MonoFN.Cecil.Cil
+{
+    public sealed class SequencePoint
+    {
+        internal InstructionOffset offset;
 
-	public sealed class SequencePoint {
+        internal SequencePoint(int offset, Document document)
+        {
+            if (document == null)
+                throw new ArgumentNullException("document");
 
-		internal InstructionOffset offset;
-		Document document;
+            this.offset = new InstructionOffset(offset);
+            this.Document = document;
+        }
 
-		int start_line;
-		int start_column;
-		int end_line;
-		int end_column;
+        public SequencePoint(Instruction instruction, Document document)
+        {
+            if (document == null)
+                throw new ArgumentNullException("document");
 
-		public int Offset {
-			get { return offset.Offset; }
-		}
+            offset = new InstructionOffset(instruction);
+            this.Document = document;
+        }
 
-		public int StartLine {
-			get { return start_line; }
-			set { start_line = value; }
-		}
+        public int Offset => offset.Offset;
 
-		public int StartColumn {
-			get { return start_column; }
-			set { start_column = value; }
-		}
+        public int StartLine { get; set; }
 
-		public int EndLine {
-			get { return end_line; }
-			set { end_line = value; }
-		}
+        public int StartColumn { get; set; }
 
-		public int EndColumn {
-			get { return end_column; }
-			set { end_column = value; }
-		}
+        public int EndLine { get; set; }
 
-		public bool IsHidden {
-			get { return start_line == 0xfeefee && start_line == end_line; }
-		}
+        public int EndColumn { get; set; }
 
-		public Document Document {
-			get { return document; }
-			set { document = value; }
-		}
+        public bool IsHidden => StartLine == 0xfeefee && StartLine == EndLine;
 
-		internal SequencePoint (int offset, Document document)
-		{
-			if (document == null)
-				throw new ArgumentNullException ("document");
-
-			this.offset = new InstructionOffset (offset);
-			this.document = document;
-		}
-
-		public SequencePoint (Instruction instruction, Document document)
-		{
-			if (document == null)
-				throw new ArgumentNullException ("document");
-
-			this.offset = new InstructionOffset (instruction);
-			this.document = document;
-		}
-	}
+        public Document Document { get; set; }
+    }
 }

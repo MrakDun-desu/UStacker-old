@@ -1,69 +1,69 @@
-﻿using FishNet.Connection;
+﻿using System.Collections.Generic;
+using FishNet.Connection;
 using FishNet.Managing.Logging;
 using FishNet.Managing.Scened;
 using FishNet.Object;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace FishNet.Example.Scened
 {
-
     /// <summary>
-    /// Loads a single scene, additive scenes, or both when a client
-    /// enters or exits this trigger.
+    ///     Loads a single scene, additive scenes, or both when a client
+    ///     enters or exits this trigger.
     /// </summary>
     public class SceneLoaderExample : MonoBehaviour
     {
         /// <summary>
-        /// True to move the triggering object.
+        ///     True to move the triggering object.
         /// </summary>
-        [Tooltip("True to move the triggering object.")]
-        [SerializeField]
+        [Tooltip("True to move the triggering object.")] [SerializeField]
         private bool _moveObject = true;
+
         /// <summary>
-        /// True to move all connection objects (clients).
+        ///     True to move all connection objects (clients).
         /// </summary>
-        [Tooltip("True to move all connection objects (clients).")]
-        [SerializeField]
+        [Tooltip("True to move all connection objects (clients).")] [SerializeField]
         private bool _moveAllObjects;
+
         /// <summary>
-        /// True to replace current scenes with new scenes. First scene loaded will become active scene.
+        ///     True to replace current scenes with new scenes. First scene loaded will become active scene.
         /// </summary>
         [Tooltip("True to replace current scenes with new scenes. First scene loaded will become active scene.")]
         [SerializeField]
         private ReplaceOption _replaceOption = ReplaceOption.None;
+
         /// <summary>
-        /// Scenes to load.
+        ///     Scenes to load.
         /// </summary>
-        [Tooltip("Scenes to load.")]
-        [SerializeField]
+        [Tooltip("Scenes to load.")] [SerializeField]
         private string[] _scenes = new string[0];
+
         /// <summary>
-        /// True to only unload for the connectioning causing the trigger.
+        ///     True to only unload for the connectioning causing the trigger.
         /// </summary>
-        [Tooltip("True to only unload for the connectioning causing the trigger.")]
-        [SerializeField]
+        [Tooltip("True to only unload for the connectioning causing the trigger.")] [SerializeField]
         private bool _connectionOnly;
+
         /// <summary>
-        /// True to automatically unload the loaded scenes when no more connections are using them.
+        ///     True to automatically unload the loaded scenes when no more connections are using them.
         /// </summary>
         [Tooltip("True to automatically unload the loaded scenes when no more connections are using them.")]
         [SerializeField]
         private bool _automaticallyUnload = true;
+
         /// <summary>
-        /// True to fire when entering the trigger. False to fire when exiting the trigger.
+        ///     True to fire when entering the trigger. False to fire when exiting the trigger.
         /// </summary>
-        [Tooltip("True to fire when entering the trigger. False to fire when exiting the trigger.")]
-        [SerializeField]
+        [Tooltip("True to fire when entering the trigger. False to fire when exiting the trigger.")] [SerializeField]
         private bool _onTriggerEnter = true;
 
         /// <summary>
-        /// Used to prevent excessive triggering when two clients are loaded and server is separate.
-        /// Client may enter trigger intentionally then when moved to a new scene will re-enter trigger
-        /// since original scene will still be loaded on server due to another client being in it.
-        /// This scenario is extremely unlikely in production but keep it in mind.
+        ///     Used to prevent excessive triggering when two clients are loaded and server is separate.
+        ///     Client may enter trigger intentionally then when moved to a new scene will re-enter trigger
+        ///     since original scene will still be loaded on server due to another client being in it.
+        ///     This scenario is extremely unlikely in production but keep it in mind.
         /// </summary>
-        private Dictionary<NetworkConnection, float> _triggeredTimes = new Dictionary<NetworkConnection, float>();
+        private readonly Dictionary<NetworkConnection, float> _triggeredTimes = new();
 
 
         [Server(Logging = LoggingType.Off)]
@@ -95,35 +95,26 @@ namespace FishNet.Example.Scened
 
             /* Dont let trigger hit twice by same connection too frequently
              * See _triggeredTimes field for more info. */
-            if (_triggeredTimes.TryGetValue(triggeringIdentity.Owner, out float time))
-            {
+            if (_triggeredTimes.TryGetValue(triggeringIdentity.Owner, out var time))
                 if (Time.time - time < 0.5f)
                     return;
-            }
             _triggeredTimes[triggeringIdentity.Owner] = Time.time;
 
             //Which objects to move.
-            List<NetworkObject> movedObjects = new List<NetworkObject>();
+            var movedObjects = new List<NetworkObject>();
             if (_moveAllObjects)
-            {
-                foreach (NetworkConnection item in InstanceFinder.ServerManager.Clients.Values)
-                {
-                    foreach (NetworkObject nob in item.Objects)
-                        movedObjects.Add(nob);
-                }
-            }
-            else if (_moveObject)
-            {
-                movedObjects.Add(triggeringIdentity);
-            }
+                foreach (var item in InstanceFinder.ServerManager.Clients.Values)
+                foreach (var nob in item.Objects)
+                    movedObjects.Add(nob);
+            else if (_moveObject) movedObjects.Add(triggeringIdentity);
             //Load options.
-            LoadOptions loadOptions = new LoadOptions
+            var loadOptions = new LoadOptions
             {
-                AutomaticallyUnload = _automaticallyUnload,
+                AutomaticallyUnload = _automaticallyUnload
             };
 
             //Make scene data.
-            SceneLoadData sld = new SceneLoadData(_scenes);
+            var sld = new SceneLoadData(_scenes);
             sld.PreferredActiveScene = sld.SceneLookupDatas[0];
             sld.ReplaceScenes = _replaceOption;
             sld.Options = loadOptions;
@@ -135,14 +126,6 @@ namespace FishNet.Example.Scened
             //Load for all clients.
             else
                 InstanceFinder.SceneManager.LoadGlobalScenes(sld);
-
-
         }
-
-
     }
-
-
-
-
 }

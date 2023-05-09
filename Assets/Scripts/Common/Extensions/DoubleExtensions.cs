@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+DoubleExtensions.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 
 namespace UStacker.Common.Extensions
 {
@@ -34,3 +38,6 @@ namespace UStacker.Common.Extensions
         }
     }
 }
+/************************************
+end DoubleExtensions.cs
+*************************************/

@@ -1,5 +1,9 @@
-﻿using UStacker.Common.Alerts;
+
+/************************************
+Logger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
+using UStacker.Common.Alerts;
 #if !UNITY_EDITOR
 using System;
 using System.IO;
@@ -24,3 +28,6 @@ namespace UStacker.Common
         }
     }
 }
+/************************************
+end Logger.cs
+*************************************/

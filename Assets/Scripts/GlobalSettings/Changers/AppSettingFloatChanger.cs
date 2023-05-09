@@ -1,10 +1,14 @@
+
+/************************************
+AppSettingFloatChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Globalization;
-using UStacker.Common.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UStacker.Common.Extensions;
+using UStacker.Common.UI;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -93,3 +97,6 @@ namespace UStacker.GlobalSettings.Changers
         }
     }
 }
+/************************************
+end AppSettingFloatChanger.cs
+*************************************/

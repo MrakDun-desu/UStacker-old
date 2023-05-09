@@ -8,66 +8,66 @@
 // Licensed under the MIT/X11 license.
 //
 
-using MonoFN.Collections.Generic;
 using System;
+using MonoFN.Collections.Generic;
 
-namespace MonoFN.Cecil {
+namespace MonoFN.Cecil
+{
+    internal sealed class MemberDefinitionCollection<T> : Collection<T> where T : IMemberDefinition
+    {
+        private readonly TypeDefinition container;
 
-	sealed class MemberDefinitionCollection<T> : Collection<T> where T : IMemberDefinition {
+        internal MemberDefinitionCollection(TypeDefinition container)
+        {
+            this.container = container;
+        }
 
-		TypeDefinition container;
+        internal MemberDefinitionCollection(TypeDefinition container, int capacity)
+            : base(capacity)
+        {
+            this.container = container;
+        }
 
-		internal MemberDefinitionCollection (TypeDefinition container)
-		{
-			this.container = container;
-		}
+        protected override void OnAdd(T item, int index)
+        {
+            Attach(item);
+        }
 
-		internal MemberDefinitionCollection (TypeDefinition container, int capacity)
-			: base (capacity)
-		{
-			this.container = container;
-		}
+        protected override void OnSet(T item, int index)
+        {
+            Attach(item);
+        }
 
-		protected override void OnAdd (T item, int index)
-		{
-			Attach (item);
-		}
+        protected override void OnInsert(T item, int index)
+        {
+            Attach(item);
+        }
 
-		protected sealed override void OnSet (T item, int index)
-		{
-			Attach (item);
-		}
+        protected override void OnRemove(T item, int index)
+        {
+            Detach(item);
+        }
 
-		protected sealed override void OnInsert (T item, int index)
-		{
-			Attach (item);
-		}
+        protected override void OnClear()
+        {
+            foreach (var definition in this)
+                Detach(definition);
+        }
 
-		protected sealed override void OnRemove (T item, int index)
-		{
-			Detach (item);
-		}
+        private void Attach(T element)
+        {
+            if (element.DeclaringType == container)
+                return;
 
-		protected sealed override void OnClear ()
-		{
-			foreach (var definition in this)
-				Detach (definition);
-		}
+            if (element.DeclaringType != null)
+                throw new ArgumentException("Member already attached");
 
-		void Attach (T element)
-		{
-			if (element.DeclaringType == container)
-				return;
+            element.DeclaringType = container;
+        }
 
-			if (element.DeclaringType != null)
-				throw new ArgumentException ("Member already attached");
-
-			element.DeclaringType = this.container;
-		}
-
-		static void Detach (T element)
-		{
-			element.DeclaringType = null;
-		}
-	}
+        private static void Detach(T element)
+        {
+            element.DeclaringType = null;
+        }
+    }
 }

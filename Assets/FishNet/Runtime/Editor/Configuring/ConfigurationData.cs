@@ -1,37 +1,35 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 namespace FishNet.Configuring
 {
-
-    public enum StrippingTypes : int
+    public enum StrippingTypes
     {
         Redirect = 0,
-        Empty_Experimental = 1,
+        Empty_Experimental = 1
     }
-    public enum SearchScopeType : int
+
+    public enum SearchScopeType
     {
         EntireProject = 0,
-        SpecificFolders = 1,
+        SpecificFolders = 1
     }
 
     public class PrefabGeneratorConfigurations
     {
-        public bool Enabled = true;
-        public bool LogToConsole = true;
-        public bool FullRebuild = false;
-        public bool SaveChanges = true;
         public string DefaultPrefabObjectsPath = Path.Combine("Assets", "DefaultPrefabObjects.asset");
-        public int SearchScope = (int)SearchScopeType.EntireProject;
-        public List<string> ExcludedFolders = new List<string>();
-        public List<string> IncludedFolders = new List<string>();
+        public bool Enabled = true;
+        public List<string> ExcludedFolders = new();
+        public bool FullRebuild = false;
+        public List<string> IncludedFolders = new();
+        public bool LogToConsole = true;
+        public bool SaveChanges = true;
+        public int SearchScope = (int) SearchScopeType.EntireProject;
     }
 
     public class CodeStrippingConfigurations
@@ -39,32 +37,33 @@ namespace FishNet.Configuring
         public bool IsBuilding = false;
         public bool IsDevelopment = false;
         public bool IsHeadless = false;
-        public bool StripReleaseBuilds = false;
-        public int StrippingType = (int)StrippingTypes.Redirect;
+        public int StrippingType = (int) StrippingTypes.Redirect;
+        public bool StripReleaseBuilds;
     }
 
 
     public class ConfigurationData
     {
-        //Non serialized doesn't really do anything, its just for me.
-        [System.NonSerialized]
-        public bool Loaded;
+        public CodeStrippingConfigurations CodeStripping = new();
 
-        public PrefabGeneratorConfigurations PrefabGenerator = new PrefabGeneratorConfigurations();
-        public CodeStrippingConfigurations CodeStripping = new CodeStrippingConfigurations();
+        //Non serialized doesn't really do anything, its just for me.
+        [NonSerialized] public bool Loaded;
+
+        public PrefabGeneratorConfigurations PrefabGenerator = new();
     }
 
     public static class ConfigurationDataExtension
     {
         /// <summary>
-        /// Returns if a differs from b.
+        ///     Returns if a differs from b.
         /// </summary>
         public static bool HasChanged(this ConfigurationData a, ConfigurationData b)
         {
-            return (a.CodeStripping.StripReleaseBuilds != b.CodeStripping.StripReleaseBuilds);
+            return a.CodeStripping.StripReleaseBuilds != b.CodeStripping.StripReleaseBuilds;
         }
+
         /// <summary>
-        /// Copies all values from source to target.
+        ///     Copies all values from source to target.
         /// </summary>
         public static void CopyTo(this ConfigurationData source, ConfigurationData target)
         {
@@ -73,7 +72,7 @@ namespace FishNet.Configuring
 
 
         /// <summary>
-        /// Writes a configuration data.
+        ///     Writes a configuration data.
         /// </summary>
         public static void Write(this ConfigurationData cd, bool refreshAssetDatabase)
         {
@@ -86,8 +85,8 @@ namespace FishNet.Configuring
              * will occur once per script save, and once per assembly when building. */
             try
             {
-                string path = Configuration.GetAssetsPath(Configuration.CONFIG_FILE_NAME);
-                XmlSerializer serializer = new XmlSerializer(typeof(ConfigurationData));
+                var path = Configuration.GetAssetsPath(Configuration.CONFIG_FILE_NAME);
+                var serializer = new XmlSerializer(typeof(ConfigurationData));
                 TextWriter writer = new StreamWriter(path);
                 serializer.Serialize(writer, cd);
                 writer.Close();
@@ -103,12 +102,11 @@ namespace FishNet.Configuring
             {
                 throw new Exception($"An error occurred while writing ConfigurationData. Message: {ex.Message}");
             }
-
         }
 
 
         /// <summary>
-        /// Writes a configuration data.
+        ///     Writes a configuration data.
         /// </summary>
         public static void Write(this ConfigurationData cd, string path, bool refreshAssetDatabase)
         {
@@ -121,7 +119,7 @@ namespace FishNet.Configuring
              * will occur once per script save, and once per assembly when building. */
             try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(ConfigurationData));
+                var serializer = new XmlSerializer(typeof(ConfigurationData));
                 TextWriter writer = new StreamWriter(path);
                 serializer.Serialize(writer, cd);
                 writer.Close();
@@ -137,10 +135,6 @@ namespace FishNet.Configuring
             {
                 throw new Exception($"An error occurred while writing ConfigurationData. Message: {ex.Message}");
             }
-
         }
-
     }
-
-
 }

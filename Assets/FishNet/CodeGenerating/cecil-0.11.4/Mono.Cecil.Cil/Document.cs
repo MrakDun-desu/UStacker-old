@@ -10,114 +10,91 @@
 
 using System;
 
-namespace MonoFN.Cecil.Cil {
+namespace MonoFN.Cecil.Cil
+{
+    public enum DocumentType
+    {
+        Other,
+        Text
+    }
 
-	public enum DocumentType {
-		Other,
-		Text,
-	}
+    public enum DocumentHashAlgorithm
+    {
+        None,
+        MD5,
+        SHA1,
+        SHA256
+    }
 
-	public enum DocumentHashAlgorithm {
-		None,
-		MD5,
-		SHA1,
-		SHA256,
-	}
+    public enum DocumentLanguage
+    {
+        Other,
+        C,
+        Cpp,
+        CSharp,
+        Basic,
+        Java,
+        Cobol,
+        Pascal,
+        Cil,
+        JScript,
+        Smc,
+        MCpp,
+        FSharp
+    }
 
-	public enum DocumentLanguage {
-		Other,
-		C,
-		Cpp,
-		CSharp,
-		Basic,
-		Java,
-		Cobol,
-		Pascal,
-		Cil,
-		JScript,
-		Smc,
-		MCpp,
-		FSharp,
-	}
+    public enum DocumentLanguageVendor
+    {
+        Other,
+        Microsoft
+    }
 
-	public enum DocumentLanguageVendor {
-		Other,
-		Microsoft,
-	}
+    public sealed class Document : DebugInformation
+    {
+        public Document(string url)
+        {
+            this.Url = url;
+            Hash = Empty<byte>.Array;
+            EmbeddedSource = Empty<byte>.Array;
+            token = new MetadataToken(TokenType.Document);
+        }
 
-	public sealed class Document : DebugInformation {
+        public string Url { get; set; }
 
-		string url;
+        public DocumentType Type
+        {
+            get => TypeGuid.ToType();
+            set => TypeGuid = value.ToGuid();
+        }
 
-		Guid type;
-		Guid hash_algorithm;
-		Guid language;
-		Guid language_vendor;
+        public Guid TypeGuid { get; set; }
 
-		byte [] hash;
-		byte [] embedded_source;
+        public DocumentHashAlgorithm HashAlgorithm
+        {
+            get => HashAlgorithmGuid.ToHashAlgorithm();
+            set => HashAlgorithmGuid = value.ToGuid();
+        }
 
-		public string Url {
-			get { return url; }
-			set { url = value; }
-		}
+        public Guid HashAlgorithmGuid { get; set; }
 
-		public DocumentType Type {
-			get { return type.ToType (); }
-			set { type = value.ToGuid (); }
-		}
+        public DocumentLanguage Language
+        {
+            get => LanguageGuid.ToLanguage();
+            set => LanguageGuid = value.ToGuid();
+        }
 
-		public Guid TypeGuid {
-			get { return type; }
-			set { type = value; }
-		}
+        public Guid LanguageGuid { get; set; }
 
-		public DocumentHashAlgorithm HashAlgorithm {
-			get { return hash_algorithm.ToHashAlgorithm (); }
-			set { hash_algorithm = value.ToGuid (); }
-		}
+        public DocumentLanguageVendor LanguageVendor
+        {
+            get => LanguageVendorGuid.ToVendor();
+            set => LanguageVendorGuid = value.ToGuid();
+        }
 
-		public Guid HashAlgorithmGuid {
-			get { return hash_algorithm; }
-			set { hash_algorithm = value; }
-		}
+        public Guid LanguageVendorGuid { get; set; }
 
-		public DocumentLanguage Language {
-			get { return language.ToLanguage (); }
-			set { language = value.ToGuid (); }
-		}
+        public byte[] Hash { get; set; }
 
-		public Guid LanguageGuid {
-			get { return language; }
-			set { language = value; }
-		}
-
-		public DocumentLanguageVendor LanguageVendor {
-			get { return language_vendor.ToVendor (); }
-			set { language_vendor = value.ToGuid (); }
-		}
-
-		public Guid LanguageVendorGuid {
-			get { return language_vendor; }
-			set { language_vendor = value; }
-		}
-
-		public byte [] Hash {
-			get { return hash; }
-			set { hash = value; }
-		}
-
-		public byte [] EmbeddedSource {
-			get { return embedded_source; }
-			set { embedded_source = value; }
-		}
-
-		public Document (string url)
-		{
-			this.url = url;
-			this.hash = Empty<byte>.Array;
-			this.embedded_source = Empty<byte>.Array;
-			this.token = new MetadataToken (TokenType.Document);
-		}
-	}
+        public byte[] EmbeddedSource { get; set; }
+    }
 }

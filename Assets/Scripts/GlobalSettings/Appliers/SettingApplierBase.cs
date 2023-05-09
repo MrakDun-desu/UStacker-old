@@ -1,5 +1,9 @@
-using UStacker.GlobalSettings.Changers;
+
+/************************************
+SettingApplierBase.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
+using UStacker.GlobalSettings.Changers;
 
 namespace UStacker.GlobalSettings.Appliers
 {
@@ -25,3 +29,6 @@ namespace UStacker.GlobalSettings.Appliers
         public abstract void OnSettingChanged();
     }
 }
+/************************************
+end SettingApplierBase.cs
+*************************************/

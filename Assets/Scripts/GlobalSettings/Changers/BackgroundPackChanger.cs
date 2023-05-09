@@ -1,10 +1,13 @@
-using System;
+
+/************************************
+BackgroundPackChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.IO;
-using UStacker.Common;
-using UStacker.GlobalSettings.Backgrounds;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UStacker.Common;
+using UStacker.GlobalSettings.Backgrounds;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -31,7 +34,7 @@ namespace UStacker.GlobalSettings.Changers
         private void OnApplicationFocus(bool hasFocus)
         {
             if (!hasFocus) return;
-            
+
             RefreshNames();
         }
 
@@ -51,6 +54,7 @@ namespace UStacker.GlobalSettings.Changers
                 _dropdown.SetValueWithoutNotify(i);
                 break;
             }
+
             _dropdown.RefreshShownValue();
         }
 
@@ -68,7 +72,8 @@ namespace UStacker.GlobalSettings.Changers
 
         private void OpenDocumentation()
         {
-            const string backgroundDocsUrl = StaticSettings.WikiUrl + "blob/main/Style customization/Background-customization.md";
+            const string backgroundDocsUrl =
+                StaticSettings.WikiUrl + "blob/main/Style customization/Background-customization.md";
             Application.OpenURL(backgroundDocsUrl);
         }
 
@@ -81,8 +86,11 @@ namespace UStacker.GlobalSettings.Changers
 
             if (!_dropdown.options.Exists(item => item.text == BackgroundPackLoader.DEFAULT_PATH))
                 _dropdown.options.Insert(0, new TMP_Dropdown.OptionData(BackgroundPackLoader.DEFAULT_PATH));
-            
+
             RefreshValue();
         }
     }
 }
+/************************************
+end BackgroundPackChanger.cs
+*************************************/

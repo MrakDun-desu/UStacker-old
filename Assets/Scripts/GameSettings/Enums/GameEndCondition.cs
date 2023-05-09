@@ -1,3 +1,7 @@
+
+/************************************
+GameEndCondition.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 namespace UStacker.GameSettings.Enums
 {
     public enum GameEndCondition : byte
@@ -10,3 +14,6 @@ namespace UStacker.GameSettings.Enums
         Time = 5
     }
 }
+/************************************
+end GameEndCondition.cs
+*************************************/

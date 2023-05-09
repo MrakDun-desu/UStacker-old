@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+
+/************************************
+BoardGrid.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections.Generic;
 using System.Linq;
-using UStacker.Gameplay.Blocks;
 using UnityEngine;
 using UnityEngine.Pool;
+using UStacker.Gameplay.Blocks;
 using UStacker.Gameplay.Initialization;
 using UStacker.GameSettings;
 using UStacker.GlobalSettings;
@@ -13,26 +17,13 @@ namespace UStacker.Gameplay.Pieces
     {
         [SerializeField] private Board _board;
         [SerializeField] private BlockBase _blockPrefab;
-        
+
         private readonly List<BlockBase> _blocks = new();
-        public IEnumerable<Vector3> BlockPositions => _blocks.Select(block => block.transform.position);
-        public string Type => "grid";
+        private bool _awake;
 
         private ObjectPool<BlockBase> _blockPool;
 
         private GameSettingsSO.SettingsContainer _gameSettings;
-        private bool _awake;
-
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            private get => _gameSettings;
-            set
-            {
-                _gameSettings = value;
-                Awake();
-                Initialize();
-            }
-        }
 
         private void Awake()
         {
@@ -53,13 +44,27 @@ namespace UStacker.Gameplay.Pieces
             _blockPool.Dispose();
         }
 
+        public IEnumerable<Vector3> BlockPositions => _blocks.Select(block => block.transform.position);
+        public string Type => "grid";
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            private get => _gameSettings;
+            set
+            {
+                _gameSettings = value;
+                Awake();
+                Initialize();
+            }
+        }
+
         private void Initialize()
         {
             foreach (var block in _blocks)
                 _blockPool.Release(block);
-            
+
             _blocks.Clear();
-            
+
             for (var y = 0; y < GameSettings.BoardDimensions.BoardHeight; y++)
             for (var x = 0; x < GameSettings.BoardDimensions.BoardWidth; x++)
             {
@@ -74,3 +79,6 @@ namespace UStacker.Gameplay.Pieces
         }
     }
 }
+/************************************
+end BoardGrid.cs
+*************************************/

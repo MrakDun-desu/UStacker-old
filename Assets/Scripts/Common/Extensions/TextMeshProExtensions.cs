@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+TextMeshProExtensions.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using TMPro;
 
 namespace UStacker.Common.Extensions
@@ -15,3 +19,6 @@ namespace UStacker.Common.Extensions
         }
     }
 }
+/************************************
+end TextMeshProExtensions.cs
+*************************************/

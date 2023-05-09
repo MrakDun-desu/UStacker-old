@@ -1,3 +1,7 @@
+
+/************************************
+ResolutionChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Globalization;
 using System.Linq;
@@ -15,6 +19,22 @@ namespace UStacker.GlobalSettings.Changers
 
         private void Awake()
         {
+            RefreshResolutions();
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+
+            _resolutionDropdown.onValueChanged.AddListener(OnResolutionPicked);
+            _refreshRateDropdown.onValueChanged.AddListener(OnRefreshRatePicked);
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (!hasFocus)
+                return;
+
             RefreshResolutions();
         }
 
@@ -38,23 +58,8 @@ namespace UStacker.GlobalSettings.Changers
 
             _refreshRateDropdown.ClearOptions();
             foreach (var refreshRate in _refreshRates)
-                _refreshRateDropdown.options.Add(new TMP_Dropdown.OptionData(refreshRate.value.ToString(CultureInfo.InvariantCulture)));
-        }
-
-        private void OnApplicationFocus(bool hasFocus)
-        {
-            if (!hasFocus)
-                return;
-            
-            RefreshResolutions();
-        }
-
-        protected override void Start()
-        {
-            base.Start();
-            
-            _resolutionDropdown.onValueChanged.AddListener(OnResolutionPicked);
-            _refreshRateDropdown.onValueChanged.AddListener(OnRefreshRatePicked);
+                _refreshRateDropdown.options.Add(
+                    new TMP_Dropdown.OptionData(refreshRate.value.ToString(CultureInfo.InvariantCulture)));
         }
 
         protected override void RefreshValue()
@@ -94,9 +99,13 @@ namespace UStacker.GlobalSettings.Changers
         {
             var newRes = new Resolution
             {
-                height = Screen.currentResolution.height, width = Screen.currentResolution.width, refreshRateRatio = _refreshRates[value]
+                height = Screen.currentResolution.height, width = Screen.currentResolution.width,
+                refreshRateRatio = _refreshRates[value]
             };
             SetValue(newRes);
         }
     }
 }
+/************************************
+end ResolutionChanger.cs
+*************************************/

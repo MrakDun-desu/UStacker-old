@@ -1,6 +1,6 @@
 ﻿namespace FishNet.Object.Helping
 {
-    public enum RpcType : int
+    public enum RpcType
     {
         None = 0,
         Server = 1,
@@ -9,5 +9,4 @@
         Replicate = 8,
         Reconcile = 16
     }
-
 }

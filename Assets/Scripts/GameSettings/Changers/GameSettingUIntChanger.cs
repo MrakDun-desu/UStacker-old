@@ -1,5 +1,7 @@
-using UnityEngine;
 
+/************************************
+GameSettingUIntChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 namespace UStacker.GameSettings.Changers
 {
     public class GameSettingUintChanger : GameSettingChangerWithField<uint>
@@ -16,3 +18,6 @@ namespace UStacker.GameSettings.Changers
         }
     }
 }
+/************************************
+end GameSettingUIntChanger.cs
+*************************************/

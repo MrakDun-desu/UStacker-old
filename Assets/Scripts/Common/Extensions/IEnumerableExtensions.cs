@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+
+/************************************
+IEnumerableExtensions.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections.Generic;
 using System.Linq;
 
 namespace UStacker.Common.Extensions
@@ -15,7 +19,7 @@ namespace UStacker.Common.Extensions
             return true;
         }
 
-        public static List<T> Filter<T>(this IEnumerable<T> enumerable, IEnumerable<T> filter)
+        public static IEnumerable<T> Filter<T>(this IEnumerable<T> enumerable, IEnumerable<T> filter)
         {
             var filterArray = filter.ToArray();
             var outList = enumerable.ToList();
@@ -31,3 +35,6 @@ namespace UStacker.Common.Extensions
         }
     }
 }
+/************************************
+end IEnumerableExtensions.cs
+*************************************/

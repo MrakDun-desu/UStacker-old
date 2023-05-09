@@ -10,59 +10,51 @@
 
 using System;
 
-namespace MonoFN.Cecil {
+namespace MonoFN.Cecil
+{
+    public class FieldReference : MemberReference
+    {
+        internal FieldReference()
+        {
+            token = new MetadataToken(TokenType.MemberRef);
+        }
 
-	public class FieldReference : MemberReference {
+        public FieldReference(string name, TypeReference fieldType)
+            : base(name)
+        {
+            Mixin.CheckType(fieldType, Mixin.Argument.fieldType);
 
-		TypeReference field_type;
+            FieldType = fieldType;
+            token = new MetadataToken(TokenType.MemberRef);
+        }
 
-		public TypeReference FieldType {
-			get { return field_type; }
-			set { field_type = value; }
-		}
+        public FieldReference(string name, TypeReference fieldType, TypeReference declaringType)
+            : this(name, fieldType)
+        {
+            Mixin.CheckType(declaringType, Mixin.Argument.declaringType);
 
-		public override string FullName {
-			get { return field_type.FullName + " " + MemberFullName (); }
-		}
+            DeclaringType = declaringType;
+        }
 
-		public override bool ContainsGenericParameter {
-			get { return field_type.ContainsGenericParameter || base.ContainsGenericParameter; }
-		}
+        public TypeReference FieldType { get; set; }
 
-		internal FieldReference ()
-		{
-			this.token = new MetadataToken (TokenType.MemberRef);
-		}
+        public override string FullName => FieldType.FullName + " " + MemberFullName();
 
-		public FieldReference (string name, TypeReference fieldType)
-			: base (name)
-		{
-			Mixin.CheckType (fieldType, Mixin.Argument.fieldType);
+        public override bool ContainsGenericParameter =>
+            FieldType.ContainsGenericParameter || base.ContainsGenericParameter;
 
-			this.field_type = fieldType;
-			this.token = new MetadataToken (TokenType.MemberRef);
-		}
+        protected override IMemberDefinition ResolveDefinition()
+        {
+            return Resolve();
+        }
 
-		public FieldReference (string name, TypeReference fieldType, TypeReference declaringType)
-			: this (name, fieldType)
-		{
-			Mixin.CheckType (declaringType, Mixin.Argument.declaringType);
+        public new virtual FieldDefinition Resolve()
+        {
+            var module = Module;
+            if (module == null)
+                throw new NotSupportedException();
 
-			this.DeclaringType = declaringType;
-		}
-
-		protected override IMemberDefinition ResolveDefinition ()
-		{
-			return this.Resolve ();
-		}
-
-		public new virtual FieldDefinition Resolve ()
-		{
-			var module = this.Module;
-			if (module == null)
-				throw new NotSupportedException ();
-
-			return module.Resolve (this);
-		}
-	}
+            return module.Resolve(this);
+        }
+    }
 }

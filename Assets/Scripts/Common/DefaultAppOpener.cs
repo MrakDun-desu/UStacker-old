@@ -1,3 +1,7 @@
+
+/************************************
+DefaultAppOpener.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.Diagnostics;
 using System.IO;
 using UnityEngine;
@@ -14,3 +18,6 @@ namespace UStacker.Common
         }
     }
 }
+/************************************
+end DefaultAppOpener.cs
+*************************************/

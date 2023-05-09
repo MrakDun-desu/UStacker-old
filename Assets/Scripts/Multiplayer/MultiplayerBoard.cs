@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+MultiplayerBoard.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -21,13 +25,13 @@ namespace UStacker.Multiplayer
         [SerializeField] private InputProcessor _inputProcessor;
         [SerializeField] private GameTimer _timer;
         [SerializeField] private GameStateManager _stateManager;
-
-        public event Action<double> ProcessorUpdated;
-        public event Action<InputActionMessage> InputHandled;
+        private IDetailLevelDependency[] _detailLevelDependencies = Array.Empty<IDetailLevelDependency>();
 
         private InputActionMessage? _lastSentInput;
-        private bool _waitingForInput => _lastSentInput is not null;
         private int _ownerId;
+
+        private IGameSettingsDependency[] _settingsDependencies = Array.Empty<IGameSettingsDependency>();
+        private bool _waitingForInput => _lastSentInput is not null;
 
         public int OwnerId
         {
@@ -38,11 +42,8 @@ namespace UStacker.Multiplayer
                 _playerNameLabel.text = Player.ConnectedPlayers[_ownerId].DisplayName;
             }
         }
-        
-        public bool GameStarted { get; private set; }
 
-        private IGameSettingsDependency[] _settingsDependencies = Array.Empty<IGameSettingsDependency>();
-        private IDetailLevelDependency[] _detailLevelDependencies = Array.Empty<IDetailLevelDependency>();
+        public bool GameStarted { get; private set; }
 
         private GameSettingsSO.SettingsContainer GameSettings { get; set; }
 
@@ -52,20 +53,35 @@ namespace UStacker.Multiplayer
             _inputProcessor.InputHandled += OnInputHandled;
         }
 
+        private void OnEnable()
+        {
+            GameStateChangeEventReceiver.Activate();
+            _mediator.Register<GameStateChangedMessage>(OnGameStateChanged, 10);
+        }
+
+        private void OnDisable()
+        {
+            _mediator.Clear();
+            GameStateChangeEventReceiver.Deactivate();
+        }
+
         private void OnDestroy()
         {
             _inputProcessor.ProcessorUpdated -= OnProcessorUpdated;
             _inputProcessor.InputHandled -= OnInputHandled;
         }
 
+        public event Action<double> ProcessorUpdated;
+        public event Action<InputActionMessage> InputHandled;
+
         private void OnProcessorUpdated(double updateTime)
         {
             if (Player.LocalPlayer.OwnerId != OwnerId || _waitingForInput)
                 return;
-            
+
             ProcessorUpdated?.Invoke(updateTime);
         }
-        
+
         private void OnInputHandled(InputActionMessage message)
         {
             if (Player.LocalPlayer.OwnerId != OwnerId)
@@ -94,26 +110,14 @@ namespace UStacker.Multiplayer
             _inputProcessor.ActionList = isReplaying ? new List<InputActionMessage>() : null;
             _inputProcessor.PlacementsList = isReplaying ? new List<double>() : null;
             _lastSentInput = null;
-            
+
             foreach (var dependency in _settingsDependencies)
                 dependency.GameSettings = GameSettings;
         }
 
-        private void OnDisable()
-        {
-            _mediator.Clear();
-            GameStateChangeEventReceiver.Deactivate();
-        }
-
-        private void OnEnable()
-        {
-            GameStateChangeEventReceiver.Activate();
-            _mediator.Register<GameStateChangedMessage>(OnGameStateChanged, 10);
-        }
-
         public void InitializeGame()
         {
-            _stateManager.InitializeGame(false);
+            _stateManager.InitializeGameWithoutCountdown();
         }
 
         public void StartGameCountdown()
@@ -138,7 +142,7 @@ namespace UStacker.Multiplayer
         {
             if (_lastSentInput is not { } input)
                 return;
-            
+
             if (message.Equals(input))
                 _lastSentInput = null;
         }
@@ -156,9 +160,15 @@ namespace UStacker.Multiplayer
         public void RegisterOnMediator<TMessage>(Action<TMessage, int> action)
             where TMessage : IMessage
         {
-            void HandleMessage(TMessage message) => action.Invoke(message, _ownerId);
+            void HandleMessage(TMessage message)
+            {
+                action.Invoke(message, _ownerId);
+            }
 
             _mediator.Register<TMessage>(HandleMessage);
         }
     }
 }
+/************************************
+end MultiplayerBoard.cs
+*************************************/

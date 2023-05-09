@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+StatCounterSO.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 
 namespace UStacker.GlobalSettings.StatCounting
 {
@@ -8,3 +12,6 @@ namespace UStacker.GlobalSettings.StatCounting
         public StatCounterRecord Value;
     }
 }
+/************************************
+end StatCounterSO.cs
+*************************************/

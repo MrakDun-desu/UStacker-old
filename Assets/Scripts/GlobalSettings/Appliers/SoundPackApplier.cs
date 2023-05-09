@@ -1,9 +1,13 @@
+
+/************************************
+SoundPackApplier.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.IO;
 using System.Threading.Tasks;
-using UStacker.GlobalSettings.Music;
 using UnityEngine;
 using UnityEngine.Events;
 using UStacker.Common;
+using UStacker.GlobalSettings.Music;
 
 namespace UStacker.GlobalSettings.Appliers
 {
@@ -27,10 +31,13 @@ namespace UStacker.GlobalSettings.Appliers
         {
             if (string.IsNullOrEmpty(AppSettings.Customization.SoundPackFolder))
                 AppSettings.Customization.SoundPackFolder = SoundPackLoader.DEFAULT_PATH;
-            
+
             var soundPackFolder = Path.Combine(PersistentPaths.SoundPacks, AppSettings.Customization.SoundPackFolder);
             await SoundPackLoader.Reload(soundPackFolder, _showAlert);
             LoadingFinished.Invoke();
         }
     }
 }
+/************************************
+end SoundPackApplier.cs
+*************************************/

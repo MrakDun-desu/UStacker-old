@@ -1,4 +1,8 @@
-﻿namespace UStacker.Gameplay.Communication
+
+/************************************
+CountdownTickedMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.Gameplay.Communication
 {
     public readonly struct CountdownTickedMessage : IMessage
     {
@@ -10,3 +14,6 @@
         }
     }
 }
+/************************************
+end CountdownTickedMessage.cs
+*************************************/

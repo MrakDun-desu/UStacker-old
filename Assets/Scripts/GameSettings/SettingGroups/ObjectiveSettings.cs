@@ -1,10 +1,14 @@
+
+/************************************
+ObjectiveSettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.IO;
-using UStacker.Common.Alerts;
-using UStacker.GameSettings.Enums;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UStacker.Common;
+using UStacker.Common.Alerts;
+using UStacker.GameSettings.Enums;
 
 namespace UStacker.GameSettings.SettingGroups
 {
@@ -12,29 +16,28 @@ namespace UStacker.GameSettings.SettingGroups
     public record ObjectiveSettings
     {
         // backing fields
-        [SerializeField]
-        private GameManagerType _gameManagerType = GameManagerType.None;
-        [SerializeField]
-        private string _customGameManager = string.Empty;
+        [SerializeField] private GameManagerType _gameManagerType = GameManagerType.None;
+
+        [SerializeField] private string _customGameManager = string.Empty;
+
         [FormerlySerializedAs("_garbageGeneration")] [SerializeField]
         private GarbageGenerationType _garbageGenerationType;
-        [SerializeField]
-        private string _customGarbageGeneratorName = string.Empty;
-        [SerializeField]
-        private double _endConditionCount = 40d;
-        [SerializeField]
-        private uint _garbageHeight = 10;
 
-        [field: SerializeField]
-        public MainStat MainStat { get; set; } = MainStat.Time;
-        [field: SerializeField]
-        public GameEndCondition GameEndCondition { get; set; } = GameEndCondition.LinesCleared;
-        [field: SerializeField]
-        public string CustomGarbageScript { get; set; } = "";
-        [field: SerializeField]
-        public string CustomGameManagerScript { get; set; } = "";
-        [field: SerializeField]
-        public bool ToppingOutIsOkay { get; set; }
+        [SerializeField] private string _customGarbageGeneratorName = string.Empty;
+
+        [SerializeField] private double _endConditionCount = 40d;
+
+        [SerializeField] private uint _garbageHeight = 10;
+
+        [field: SerializeField] public MainStat MainStat { get; set; } = MainStat.Time;
+
+        [field: SerializeField] public GameEndCondition GameEndCondition { get; set; } = GameEndCondition.LinesCleared;
+
+        [field: SerializeField] public string CustomGarbageScript { get; set; } = "";
+
+        [field: SerializeField] public string CustomGameManagerScript { get; set; } = "";
+
+        [field: SerializeField] public bool ToppingOutIsOkay { get; set; }
 
         [field: SerializeField] public string StartingLevel { get; set; } = string.Empty;
 
@@ -151,3 +154,6 @@ namespace UStacker.GameSettings.SettingGroups
         }
     }
 }
+/************************************
+end ObjectiveSettings.cs
+*************************************/

@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+EndConditionChecker.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UStacker.Gameplay.Communication;
@@ -18,38 +22,8 @@ namespace UStacker.Gameplay.GameStateManagement
         [SerializeField] private StatCounterManager _statCounterManager;
         public UnityEvent<double> GameEnded;
 
-        public GameSettingsSO.SettingsContainer GameSettings { get; set; }
-
         private GameState _gameState;
         private double _lastSentCondition;
-
-        private void OnEnable()
-        {
-            _mediator.Register<PiecePlacedMessage>(OnPiecePlaced);
-            _mediator.Register<ScoreChangedMessage>(OnScoreChanged);
-            _mediator.Register<GameStateChangedMessage>(OnGameStateChanged);
-        }
-
-        private void OnDisable()
-        {
-            _mediator.Unregister<PiecePlacedMessage>(OnPiecePlaced);
-            _mediator.Unregister<ScoreChangedMessage>(OnScoreChanged);
-            _mediator.Unregister<GameStateChangedMessage>(OnGameStateChanged);
-        }
-        
-        private void OnGameStateChanged(GameStateChangedMessage message)
-        {
-            _gameState = message.NewState;
-            
-            if (_gameState != GameState.Initializing) return;
-            
-            _mediator.Send(new GameEndConditionChangedMessage(
-                0, 
-                GameSettings.Objective.EndConditionCount,
-                0,
-                GameSettings.Objective.GameEndCondition.ToString()));
-            _lastSentCondition = 0;
-        }
 
         private void Update()
         {
@@ -71,6 +45,36 @@ namespace UStacker.Gameplay.GameStateManagement
 
             if (!(functionStartTime > GameSettings.Objective.EndConditionCount)) return;
             GameEnded.Invoke(GameSettings.Objective.EndConditionCount);
+        }
+
+        private void OnEnable()
+        {
+            _mediator.Register<PiecePlacedMessage>(OnPiecePlaced);
+            _mediator.Register<ScoreChangedMessage>(OnScoreChanged);
+            _mediator.Register<GameStateChangedMessage>(OnGameStateChanged);
+        }
+
+        private void OnDisable()
+        {
+            _mediator.Unregister<PiecePlacedMessage>(OnPiecePlaced);
+            _mediator.Unregister<ScoreChangedMessage>(OnScoreChanged);
+            _mediator.Unregister<GameStateChangedMessage>(OnGameStateChanged);
+        }
+
+        public GameSettingsSO.SettingsContainer GameSettings { get; set; }
+
+        private void OnGameStateChanged(GameStateChangedMessage message)
+        {
+            _gameState = message.NewState;
+
+            if (_gameState != GameState.Initializing) return;
+
+            _mediator.Send(new GameEndConditionChangedMessage(
+                0,
+                GameSettings.Objective.EndConditionCount,
+                0,
+                GameSettings.Objective.GameEndCondition.ToString()));
+            _lastSentCondition = 0;
         }
 
         private void OnScoreChanged(ScoreChangedMessage message)
@@ -134,3 +138,6 @@ namespace UStacker.Gameplay.GameStateManagement
         }
     }
 }
+/************************************
+end EndConditionChecker.cs
+*************************************/

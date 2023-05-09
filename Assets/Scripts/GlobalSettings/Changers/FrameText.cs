@@ -1,3 +1,7 @@
+
+/************************************
+FrameText.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Globalization;
 using TMPro;
@@ -20,3 +24,6 @@ public class FrameText : MonoBehaviour
         _text.text = Math.Round(source * _framesPerSecond, 2).ToString(CultureInfo.InvariantCulture) + "F";
     }
 }
+/************************************
+end FrameText.cs
+*************************************/

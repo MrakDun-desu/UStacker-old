@@ -1,18 +1,22 @@
-﻿using System;
+
+/************************************
+PieceSpawner.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using UStacker.Gameplay.Communication;
-using UStacker.Gameplay.Initialization;
-using UStacker.Gameplay.Pieces;
-using UStacker.Gameplay.Randomizers;
-using UStacker.GameSettings;
-using UStacker.GlobalSettings;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Pool;
+using UStacker.Gameplay.Communication;
 using UStacker.Gameplay.Enums;
+using UStacker.Gameplay.Initialization;
 using UStacker.Gameplay.InputProcessing;
+using UStacker.Gameplay.Pieces;
+using UStacker.Gameplay.Randomizers;
+using UStacker.GameSettings;
 using UStacker.GameSettings.Enums;
+using UStacker.GlobalSettings;
 
 namespace UStacker.Gameplay
 {
@@ -25,27 +29,16 @@ namespace UStacker.Gameplay
         [SerializeField] private PieceDictionary _availablePieces;
         [SerializeField] private PieceContainer _pieceContainerPrefab;
         [SerializeField] private UnityEvent<double> CantSpawn;
+        private readonly List<PieceContainer> _activePreviews = new();
 
         private readonly Dictionary<string, ObjectPool<Piece>> _piecePools = new();
+        private bool _awake;
         private bool _containersEmpty = true;
         private int _defaultPoolCapacity;
-        private readonly List<PieceContainer> _activePreviews = new();
-        private ObjectPool<PieceContainer> _previewsPool;
-        private PiecePreviews _previews;
-        private bool _awake;
         private GameSettingsSO.SettingsContainer _gameSettings;
+        private PiecePreviews _previews;
+        private ObjectPool<PieceContainer> _previewsPool;
         private IRandomizer _randomizer;
-
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            private get => _gameSettings;
-            set
-            {
-                _gameSettings = value;
-                Awake();
-                Initialize();
-            }
-        }
 
         private void Awake()
         {
@@ -72,11 +65,6 @@ namespace UStacker.Gameplay
             _mediator.Unregister<SeedSetMessage>(OnSeedSet);
         }
 
-        private void OnSeedSet(SeedSetMessage message)
-        {
-            _randomizer?.Reset(message.Seed);
-        }
-
         private void OnDestroy()
         {
             foreach (var pool in _piecePools.Values)
@@ -84,6 +72,22 @@ namespace UStacker.Gameplay
 
             if (_randomizer is CustomRandomizer rand)
                 rand.Dispose();
+        }
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            private get => _gameSettings;
+            set
+            {
+                _gameSettings = value;
+                Awake();
+                Initialize();
+            }
+        }
+
+        private void OnSeedSet(SeedSetMessage message)
+        {
+            _randomizer?.Reset(message.Seed);
         }
 
         private void OnGameStateChange(GameStateChangedMessage message)
@@ -96,7 +100,8 @@ namespace UStacker.Gameplay
 
             if (message is
                 {
-                    PreviousState: GameState.Initializing or GameState.StartCountdown, NewState: GameState.Running
+                    PreviousState: GameState.Initializing or GameState.StartCountdown,
+                    NewState: GameState.Running
                 })
                 SpawnPiece();
         }
@@ -114,6 +119,7 @@ namespace UStacker.Gameplay
                 RandomizerType.Random => new RandomRandomizer(_availablePieces.Keys),
                 RandomizerType.Classic => new ClassicRandomizer(_availablePieces.Keys),
                 RandomizerType.Pairs => new PairsRandomizer(_availablePieces.Keys),
+                RandomizerType.Advanced => new AdvancedRandomizer(_availablePieces.Keys),
                 RandomizerType.Custom => new CustomRandomizer(
                     _availablePieces.Keys,
                     GameSettings.General.CustomRandomizerScript,
@@ -153,7 +159,7 @@ namespace UStacker.Gameplay
                 if (!_piecePools.ContainsKey(nextPieceType))
                 {
                     _mediator.Send(
-                        new GameCrashedMessage($"Randomizer returned an invalid piece type {nextPieceType}"));
+                        new GameCrashedMessage($"Randomizer returned an invalid piece type \"{nextPieceType}\""));
                     return;
                 }
 
@@ -166,10 +172,10 @@ namespace UStacker.Gameplay
 
         public void SpawnPiece()
         {
-            SpawnPiece(0d);
+            SpawnPiece(0d, false);
         }
 
-        public bool SpawnPiece(double spawnTime)
+        public bool SpawnPiece(double spawnTime, bool spawnWithInitialHold = true)
         {
             if (_containersEmpty) return false;
 
@@ -180,18 +186,18 @@ namespace UStacker.Gameplay
 
             if (!_piecePools.ContainsKey(newPieceType))
             {
-                _mediator.Send(new GameCrashedMessage($"Randomizer returned an invalid piece type {newPieceType}"));
+                _mediator.Send(new GameCrashedMessage($"Randomizer returned an invalid piece type \"{newPieceType}\""));
                 return false;
             }
 
             var newPiece = _piecePools[newPieceType].Get();
             var nextPiece = _previews.AddPiece(newPiece);
 
-            SpawnPiece(nextPiece, spawnTime);
+            SpawnPiece(nextPiece, spawnTime, spawnWithInitialHold);
             return true;
         }
 
-        public void SpawnPiece(Piece piece, double spawnTime)
+        public void SpawnPiece(Piece piece, double spawnTime, bool spawnWithInitialHold = true)
         {
             var boardTransform = _board.transform;
             var piecePos = new Vector3(
@@ -212,9 +218,14 @@ namespace UStacker.Gameplay
             piece.RotationState = rotation;
             piece.Rotate((int) rotation);
 
-            _inputProcessor.HandlePreSpawnBufferedInputs(spawnTime, out var cancelSpawn);
+            if (spawnWithInitialHold)
+            {
+                _inputProcessor.HandleInitialHold(spawnTime, out var cancelSpawn);
 
-            if (cancelSpawn) return;
+                if (cancelSpawn) return;
+            }
+
+            _inputProcessor.HandleInitialRotation(spawnTime);
 
             _warningPiece.SetPiece(_previews.GetFirstPiece());
 
@@ -223,13 +234,15 @@ namespace UStacker.Gameplay
             _mediator.Send(new PieceSpawnedMessage(piece.Type, nextPiece, spawnTime));
 
             if (_board.CanPlace(piece)) return;
-            if (GameSettings.Controls.AllowAutomaticPreSpawnRotation)
+            if (GameSettings.Controls.AllowAutomaticInitialRotation)
             {
                 if (!_inputProcessor.TryAutomaticPreSpawnRotation(spawnTime))
                     CantSpawn.Invoke(spawnTime);
             }
             else
+            {
                 CantSpawn.Invoke(spawnTime);
+            }
         }
 
         public void EmptyAllContainers()
@@ -252,7 +265,6 @@ namespace UStacker.Gameplay
             var maxSize = (int) (blockCount / 3u);
 
             foreach (var piecePair in pieces)
-            {
                 _piecePools.Add(piecePair.Key, new ObjectPool<Piece>(
                     () => CreatePiece(piecePair.Value, piecePair.Key),
                     p => p.Activate(),
@@ -262,7 +274,6 @@ namespace UStacker.Gameplay
                     _defaultPoolCapacity,
                     maxSize
                 ));
-            }
         }
 
         private Piece CreatePiece(Piece piece, string pieceType)
@@ -274,3 +285,6 @@ namespace UStacker.Gameplay
         }
     }
 }
+/************************************
+end PieceSpawner.cs
+*************************************/

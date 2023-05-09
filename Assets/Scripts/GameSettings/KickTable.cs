@@ -1,6 +1,10 @@
+
+/************************************
+KickTable.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
-using UStacker.GameSettings.Enums;
 using UnityEngine;
+using UStacker.GameSettings.Enums;
 
 namespace UStacker.GameSettings
 {
@@ -23,3 +27,6 @@ namespace UStacker.GameSettings
         public Vector2Int[] ThreeToOne = Array.Empty<Vector2Int>();
     }
 }
+/************************************
+end KickTable.cs
+*************************************/

@@ -1,6 +1,10 @@
-﻿using System;
-using UStacker.Common;
+
+/************************************
+AudioClipDictionary.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using UnityEngine;
+using UStacker.Common;
 
 namespace UStacker.GlobalSettings.Music
 {
@@ -8,5 +12,7 @@ namespace UStacker.GlobalSettings.Music
     public class AudioClipCollection : SerializableDictionary<string, AudioClip>
     {
     }
-
 }
+/************************************
+end AudioClipDictionary.cs
+*************************************/

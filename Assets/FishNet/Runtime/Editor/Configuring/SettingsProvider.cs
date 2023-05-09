@@ -1,12 +1,11 @@
 ﻿#if UNITY_EDITOR
 
-using UnityEngine;
+using System;
+using System.Collections.Generic;
 using UnityEditor;
-using FishNet.Configuring;
-
+using UnityEngine;
 using UnitySettingsProviderAttribute = UnityEditor.SettingsProviderAttribute;
 using UnitySettingsProvider = UnityEditor.SettingsProvider;
-using System.Collections.Generic;
 
 namespace FishNet.Configuring.Editing
 {
@@ -23,18 +22,18 @@ namespace FishNet.Configuring.Editing
 
                 guiHandler = OnGUI,
 
-                keywords = new string[]
+                keywords = new[]
                 {
                     "Fish",
                     "Networking",
-                    "Configuration",
-                },
+                    "Configuration"
+                }
             };
         }
 
         private static void OnGUI(string searchContext)
         {
-            ConfigurationData configuration = Configuration.LoadConfigurationData();
+            var configuration = Configuration.LoadConfigurationData();
 
             if (configuration == null)
             {
@@ -45,21 +44,24 @@ namespace FishNet.Configuring.Editing
 
             EditorGUI.BeginChangeCheck();
 
-            GUIStyle scrollViewStyle = new GUIStyle()
+            var scrollViewStyle = new GUIStyle
             {
-                padding = new RectOffset(10, 10, 10, 10),
+                padding = new RectOffset(10, 10, 10, 10)
             };
 
             _scrollView = GUILayout.BeginScrollView(_scrollView, scrollViewStyle);
 
             EditorGUILayout.BeginHorizontal();
 
-            GUIStyle toggleStyle = new GUIStyle(EditorStyles.toggle)
+            var toggleStyle = new GUIStyle(EditorStyles.toggle)
             {
-                richText = true,
+                richText = true
             };
 
-            configuration.CodeStripping.StripReleaseBuilds = GUILayout.Toggle(configuration.CodeStripping.StripReleaseBuilds, $"{ObjectNames.NicifyVariableName(nameof(configuration.CodeStripping.StripReleaseBuilds))} <color=yellow>(Pro Only)</color>", toggleStyle);
+            configuration.CodeStripping.StripReleaseBuilds = GUILayout.Toggle(
+                configuration.CodeStripping.StripReleaseBuilds,
+                $"{ObjectNames.NicifyVariableName(nameof(configuration.CodeStripping.StripReleaseBuilds))} <color=yellow>(Pro Only)</color>",
+                toggleStyle);
 
             EditorGUILayout.EndHorizontal();
 
@@ -67,12 +69,16 @@ namespace FishNet.Configuring.Editing
             {
                 EditorGUI.indentLevel++;
                 //Stripping Method.
-                List<string> enumStrings = new List<string>();
-                foreach (string item in System.Enum.GetNames(typeof(StrippingTypes)))
+                var enumStrings = new List<string>();
+                foreach (var item in Enum.GetNames(typeof(StrippingTypes)))
                     enumStrings.Add(item);
-                configuration.CodeStripping.StrippingType = EditorGUILayout.Popup($"{ObjectNames.NicifyVariableName(nameof(configuration.CodeStripping.StrippingType))}", (int)configuration.CodeStripping.StrippingType, enumStrings.ToArray());
+                configuration.CodeStripping.StrippingType = EditorGUILayout.Popup(
+                    $"{ObjectNames.NicifyVariableName(nameof(configuration.CodeStripping.StrippingType))}",
+                    configuration.CodeStripping.StrippingType, enumStrings.ToArray());
 
-                EditorGUILayout.HelpBox("Development builds will not have code stripped. Additionally, if you plan to run as host disable code stripping.", MessageType.Warning);
+                EditorGUILayout.HelpBox(
+                    "Development builds will not have code stripped. Additionally, if you plan to run as host disable code stripping.",
+                    MessageType.Warning);
                 EditorGUI.indentLevel--;
             }
 

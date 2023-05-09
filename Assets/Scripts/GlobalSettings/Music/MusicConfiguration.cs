@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+MusicConfiguration.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -38,10 +42,10 @@ namespace UStacker.GlobalSettings.Music
                 if (group.Count > 0)
                     GameMusicGroups.Add(key, group);
             }
-
         }
 
-        private void UpdateGroup(List<string> oldGroup, IReadOnlyCollection<string> newGroup, bool removeFromGame = true)
+        private void UpdateGroup(List<string> oldGroup, IReadOnlyCollection<string> newGroup,
+            bool removeFromGame = true)
         {
             if (newGroup.Count == 0) return;
             oldGroup.Clear();
@@ -56,3 +60,6 @@ namespace UStacker.GlobalSettings.Music
         }
     }
 }
+/************************************
+end MusicConfiguration.cs
+*************************************/

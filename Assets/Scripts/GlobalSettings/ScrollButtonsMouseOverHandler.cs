@@ -1,4 +1,8 @@
-﻿using System.Collections;
+
+/************************************
+ScrollButtonsMouseOverHandler.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -45,3 +49,6 @@ namespace UStacker.GlobalSettings
         }
     }
 }
+/************************************
+end ScrollButtonsMouseOverHandler.cs
+*************************************/

@@ -1,25 +1,26 @@
-﻿using FishNet.Documenting;
+﻿using System;
+using FishNet.Documenting;
 
 namespace FishNet.Object
 {
     /// <summary>
-    /// Properties which have changed on a transform.
+    ///     Properties which have changed on a transform.
     /// </summary>
-    [System.Flags]
+    [Flags]
     [APIExclude]
     internal enum ChangedTransformProperties : byte
     {
         Unset = 0,
         LocalPosition = 1,
         LocalRotation = 2,
-        LocalScale = 4,
+        LocalScale = 4
     }
 
     [APIExclude]
-    internal static partial class ChangedTransformPropertiesEnum
+    internal static class ChangedTransformPropertiesEnum
     {
         /// <summary>
-        /// Returns if whole contains part.
+        ///     Returns if whole contains part.
         /// </summary>
         /// <param name="whole"></param>
         /// <param name="part"></param>
@@ -29,7 +30,4 @@ namespace FishNet.Object
             return (whole & part) == part;
         }
     }
-
-
 }
-

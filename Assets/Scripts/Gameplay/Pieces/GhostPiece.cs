@@ -1,46 +1,32 @@
-﻿using System;
+
+/************************************
+GhostPiece.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.Pool;
 using UStacker.Gameplay.Blocks;
 using UStacker.Gameplay.Initialization;
 using UStacker.GameSettings;
 using UStacker.GlobalSettings;
 using UStacker.GlobalSettings.Appliers;
-using UnityEngine;
-using UnityEngine.Pool;
 
 namespace UStacker.Gameplay.Pieces
 {
     public class GhostPiece : MonoBehaviour, IBlockCollection, IGameSettingsDependency
     {
-
         private static readonly Color _defaultColor = Color.white;
         [SerializeField] private BlockBase _blockPrefab;
         [SerializeField] private Board _board;
         private readonly List<BlockBase> _blocks = new();
         private Piece _activePiece;
+        private bool _awake;
         private ObjectPool<BlockBase> _blockPool;
         private bool _colorGhostPiece;
-        private bool _awake;
         private Color _currentColor = _defaultColor;
         private GameSettingsSO.SettingsContainer _settings;
-        
-        public IEnumerable<Vector3> BlockPositions =>
-            _blocks.Select(block => block.transform.position);
-
-        public string Type => "ghost";
-
-        public GameSettingsSO.SettingsContainer GameSettings
-        {
-            set
-            {
-                 _settings = value;
-                 Awake();
-                 Initialize();
-            }
-        }
-        public event Action<Color> ColorChanged;
-        public event Action Rendered;
 
 
         public Piece ActivePiece
@@ -87,6 +73,30 @@ namespace UStacker.Gameplay.Pieces
             );
         }
 
+        private void OnDestroy()
+        {
+            _blockPool?.Dispose();
+            ColorGhostPieceApplier.ColorGhostPieceChanged -= ChangeColoring;
+        }
+
+        public IEnumerable<Vector3> BlockPositions =>
+            _blocks.Select(block => block.transform.position);
+
+        public string Type => "ghost";
+
+        public GameSettingsSO.SettingsContainer GameSettings
+        {
+            set
+            {
+                _settings = value;
+                Awake();
+                Initialize();
+            }
+        }
+
+        public event Action<Color> ColorChanged;
+        public event Action Rendered;
+
         private void Initialize()
         {
             if (!_settings.Controls.ShowGhostPiece)
@@ -94,12 +104,6 @@ namespace UStacker.Gameplay.Pieces
 
             _colorGhostPiece = AppSettings.Gameplay.ColorGhostPiece;
             ColorGhostPieceApplier.ColorGhostPieceChanged += ChangeColoring;
-        }
-
-        private void OnDestroy()
-        {
-            _blockPool?.Dispose();
-            ColorGhostPieceApplier.ColorGhostPieceChanged -= ChangeColoring;
         }
 
         private BlockBase CreateBlock()
@@ -167,3 +171,6 @@ namespace UStacker.Gameplay.Pieces
         }
     }
 }
+/************************************
+end GhostPiece.cs
+*************************************/

@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+ToggleOnInputAction.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
@@ -27,3 +31,6 @@ namespace UStacker.Common
         }
     }
 }
+/************************************
+end ToggleOnInputAction.cs
+*************************************/

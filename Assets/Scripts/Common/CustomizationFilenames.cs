@@ -1,4 +1,8 @@
-﻿namespace UStacker.Common
+
+/************************************
+CustomizationFilenames.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.Common
 {
     public static class CustomizationFilenames
     {
@@ -9,3 +13,6 @@
         public static string SkinConfiguration => "skinConfig.json";
     }
 }
+/************************************
+end CustomizationFilenames.cs
+*************************************/

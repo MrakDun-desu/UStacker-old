@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+StatCounterGroup.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -63,3 +67,6 @@ namespace UStacker.GlobalSettings.StatCounting
         }
     }
 }
+/************************************
+end StatCounterGroup.cs
+*************************************/

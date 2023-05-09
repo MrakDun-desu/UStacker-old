@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine.SceneManagement;
 
 namespace FishNet.Managing.Scened
 {
     /// <summary>
-    /// Data container about a scene load start.
+    ///     Data container about a scene load start.
     /// </summary>
     public struct SceneLoadStartEventArgs
     {
         /// <summary>
-        /// Queue data used by the current scene action.
+        ///     Queue data used by the current scene action.
         /// </summary>
         public readonly LoadQueueData QueueData;
 
@@ -21,16 +20,17 @@ namespace FishNet.Managing.Scened
 
 
     /// <summary>
-    /// Data container about a scene load percent change.
+    ///     Data container about a scene load percent change.
     /// </summary>
     public struct SceneLoadPercentEventArgs
     {
         /// <summary>
-        /// Queue data used by the current scene action.
+        ///     Queue data used by the current scene action.
         /// </summary>
         public readonly LoadQueueData QueueData;
+
         /// <summary>
-        /// Percentage of change completion. 1f is equal to 100% complete.
+        ///     Percentage of change completion. 1f is equal to 100% complete.
         /// </summary>
         public readonly float Percent;
 
@@ -43,24 +43,27 @@ namespace FishNet.Managing.Scened
 
 
     /// <summary>
-    /// Data container about a scene load end.
+    ///     Data container about a scene load end.
     /// </summary>
     public struct SceneLoadEndEventArgs
     {
         /// <summary>
-        /// Queue data used by the current scene action.
+        ///     Queue data used by the current scene action.
         /// </summary>
         public readonly LoadQueueData QueueData;
+
         /// <summary>
-        /// Scenes which were loaded.
+        ///     Scenes which were loaded.
         /// </summary>
         public readonly Scene[] LoadedScenes;
+
         /// <summary>
-        /// Scenes which were skipped because they were already loaded.
+        ///     Scenes which were skipped because they were already loaded.
         /// </summary>
         public readonly string[] SkippedSceneNames;
+
         /// <summary>
-        /// Scenes which were unloaded.
+        ///     Scenes which were unloaded.
         /// </summary>
         public readonly string[] UnloadedSceneNames;
 
@@ -71,8 +74,5 @@ namespace FishNet.Managing.Scened
             LoadedScenes = loaded;
             UnloadedSceneNames = unloadedSceneNames;
         }
-
-
     }
-
 }

@@ -1,4 +1,8 @@
-﻿using UStacker.Gameplay.Communication;
+
+/************************************
+IGarbageGenerator.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UStacker.Gameplay.Communication;
 
 namespace UStacker.Gameplay.GarbageGeneration
 {
@@ -9,3 +13,6 @@ namespace UStacker.Gameplay.GarbageGeneration
         void GenerateGarbage(uint amount, PiecePlacedMessage message);
     }
 }
+/************************************
+end IGarbageGenerator.cs
+*************************************/

@@ -1,4 +1,8 @@
-﻿using UStacker.Gameplay.Enums;
+
+/************************************
+GameStateChangedMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UStacker.Gameplay.Enums;
 
 namespace UStacker.Gameplay.Communication
 {
@@ -18,3 +22,6 @@ namespace UStacker.Gameplay.Communication
         }
     }
 }
+/************************************
+end GameStateChangedMessage.cs
+*************************************/

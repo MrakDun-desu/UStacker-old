@@ -1,89 +1,18 @@
-﻿using FishNet.Utility.Extension;
+﻿using System.Runtime.CompilerServices;
 using FishNet.Object;
-using System.Runtime.CompilerServices;
+using FishNet.Utility.Extension;
 using UnityEngine;
 
 namespace FishNet.Component.Prediction
 {
     internal class PredictedObjectOwnerSmoother
     {
-        #region Serialized.
         /// <summary>
-        /// Transform which holds the graphical features of this object. This transform will be smoothed when desynchronizations occur.
+        ///     Initializes this script for use.
         /// </summary>
-        private Transform _graphicalObject;
-        /// <summary>
-        /// Sets GraphicalObject.
-        /// </summary>
-        /// <param name="value"></param>
-        public void SetGraphicalObject(Transform value)
-        {
-            _graphicalObject = value;
-            _networkBehaviour.transform.SetTransformOffsets(value, ref _graphicalInstantiatedOffsetPosition, ref _graphicalInstantiatedOffsetRotation);
-        }
-        /// <summary>
-        /// NetworkBehaviour which is using this object.
-        /// </summary>
-        private NetworkBehaviour _networkBehaviour;
-        /// <summary>
-        /// How far the transform must travel in a single update to cause a teleport rather than smoothing. Using 0f will teleport every update.
-        /// </summary>
-        private float _teleportThreshold = 1f;
-        /// <summary>
-        /// How far in the past to keep the graphical object when owner.
-        /// </summary>
-        private byte _interpolation = 1;
-        /// <summary>
-        /// Sets the interpolation value to use when the owner of this object.
-        /// </summary>
-        /// <param name="value"></param>
-        public void SetInterpolation(byte value) => _interpolation = value;
-        #endregion
-
-        #region Private.
-        /// <summary>
-        /// World position before transform was predicted or reset.
-        /// </summary>
-        private Vector3 _graphicalStartPosition;
-        /// <summary>
-        /// World rotation before transform was predicted or reset.
-        /// </summary>
-        private Quaternion _graphicalStartRotation;
-        /// <summary>
-        /// GraphicalObject position difference from the PredictedObject when this is initialized.
-        /// </summary>
-        private Vector3 _graphicalInstantiatedOffsetPosition;
-        /// <summary>
-        /// How quickly to move towards TargetPosition.
-        /// </summary>
-        private float _positionMoveRate = -2;
-        /// <summary>
-        /// GraphicalObject rotation difference from the PredictedObject when this is initialized.
-        /// </summary>
-        private Quaternion _graphicalInstantiatedOffsetRotation;
-        /// <summary>
-        /// How quickly to move towards TargetRotation.
-        /// </summary>
-        private float _rotationMoveRate = -2;
-        /// <summary>
-        /// True if OnPreTick was received this frame.
-        /// </summary>
-        private bool _preTickReceived;
-        /// <summary>
-        /// True to move towards position goals.
-        /// </summary>
-        private bool _smoothPosition;
-        /// <summary>
-        /// True to move towards rotation goals.
-        /// </summary>
-        private bool _smoothRotation;
-        #endregion
-
-        /// <summary>
-        /// Initializes this script for use.
-        /// </summary>
-        public void Initialize(NetworkBehaviour nb, Vector3 instantiatedOffsetPosition, Quaternion instantiatedOffsetRotation, Transform graphicalObject
-              , bool smoothPosition, bool smoothRotation, byte interpolation, float teleportThreshold)
+        public void Initialize(NetworkBehaviour nb, Vector3 instantiatedOffsetPosition,
+            Quaternion instantiatedOffsetRotation, Transform graphicalObject
+            , bool smoothPosition, bool smoothRotation, byte interpolation, float teleportThreshold)
         {
             _networkBehaviour = nb;
             _graphicalInstantiatedOffsetPosition = instantiatedOffsetPosition;
@@ -98,7 +27,7 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Called every frame.
+        ///     Called every frame.
         /// </summary>
         public void ManualUpdate()
         {
@@ -106,7 +35,7 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Called when the TimeManager invokes OnPreTick.
+        ///     Called when the TimeManager invokes OnPreTick.
         /// </summary>
         public void OnPreTick()
         {
@@ -134,7 +63,7 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Returns if prediction can be used on this rigidbody.
+        ///     Returns if prediction can be used on this rigidbody.
         /// </summary>
         /// <returns></returns>
         private bool CanSmooth()
@@ -149,7 +78,7 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Moves transform to target values.
+        ///     Moves transform to target values.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void MoveToTarget()
@@ -158,13 +87,13 @@ namespace FishNet.Component.Prediction
             if (_positionMoveRate == -2f && _rotationMoveRate == -2f)
                 return;
 
-            Vector3 posGoal = GetGraphicalGoalPosition();
-            Quaternion rotGoal = GetGraphicalGoalRotation();
+            var posGoal = GetGraphicalGoalPosition();
+            var rotGoal = GetGraphicalGoalRotation();
 
             /* Only try to update properties if they have a valid move rate.
              * Properties may have 0f move rate if they did not change. */
-            Transform t = _graphicalObject;
-            float delta = Time.deltaTime;
+            var t = _graphicalObject;
+            var delta = Time.deltaTime;
 
             //Position.
             if (SmoothPosition())
@@ -192,33 +121,40 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Returns if this transform matches arguments.
+        ///     Returns if this transform matches arguments.
         /// </summary>
         /// <returns></returns>
         private bool GraphicalObjectMatches(Vector3 position, Quaternion rotation)
         {
-            bool positionMatches = (!_smoothPosition || (_graphicalObject.position == position));
-            bool rotationMatches = (!_smoothRotation || (_graphicalObject.rotation == rotation));
-            return (positionMatches && rotationMatches);
+            var positionMatches = !_smoothPosition || _graphicalObject.position == position;
+            var rotationMatches = !_smoothRotation || _graphicalObject.rotation == rotation;
+            return positionMatches && rotationMatches;
         }
 
         /// <summary>
-        /// True to smooth position. When false the graphicalObjects property will not be updated.
+        ///     True to smooth position. When false the graphicalObjects property will not be updated.
         /// </summary>
         /// <returns></returns>
-        private bool SmoothPosition() => (_smoothPosition && (_networkBehaviour.IsOwner || _networkBehaviour.IsHost));
-        /// <summary>
-        /// True to smooth rotation. When false the graphicalObjects property will not be updated.
-        /// </summary>
-        /// <returns></returns>
-        private bool SmoothRotation() => (_smoothRotation && (_networkBehaviour.IsOwner || _networkBehaviour.IsHost));
+        private bool SmoothPosition()
+        {
+            return _smoothPosition && (_networkBehaviour.IsOwner || _networkBehaviour.IsHost);
+        }
 
         /// <summary>
-        /// Sets Position and Rotation move rates to reach Target datas.
+        ///     True to smooth rotation. When false the graphicalObjects property will not be updated.
+        /// </summary>
+        /// <returns></returns>
+        private bool SmoothRotation()
+        {
+            return _smoothRotation && (_networkBehaviour.IsOwner || _networkBehaviour.IsHost);
+        }
+
+        /// <summary>
+        ///     Sets Position and Rotation move rates to reach Target datas.
         /// </summary>
         private void SetGraphicalMoveRates()
         {
-            float delta = ((float)_networkBehaviour.TimeManager.TickDelta * _interpolation);
+            var delta = (float) _networkBehaviour.TimeManager.TickDelta * _interpolation;
 
             float distance;
             distance = Vector3.Distance(_graphicalObject.position, GetGraphicalGoalPosition());
@@ -231,40 +167,39 @@ namespace FishNet.Component.Prediction
             //Smoothing.
             else
             {
-                _positionMoveRate = (distance / delta);
+                _positionMoveRate = distance / delta;
                 distance = Quaternion.Angle(_graphicalObject.rotation, GetGraphicalGoalRotation());
                 if (distance > 0f)
-                    _rotationMoveRate = (distance / delta);
+                    _rotationMoveRate = distance / delta;
             }
         }
 
         /// <summary>
-        /// Gets a goal position for the graphical object.
+        ///     Gets a goal position for the graphical object.
         /// </summary>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private Vector3 GetGraphicalGoalPosition()
         {
             if (SmoothPosition())
-                return (_networkBehaviour.transform.position + _graphicalInstantiatedOffsetPosition);
-            else
-                return _graphicalObject.position;
+                return _networkBehaviour.transform.position + _graphicalInstantiatedOffsetPosition;
+            return _graphicalObject.position;
         }
 
         /// <summary>
-        /// Gets a goal rotation for the graphical object.
+        ///     Gets a goal rotation for the graphical object.
         /// </summary>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private Quaternion GetGraphicalGoalRotation()
         {
             if (SmoothRotation())
-                return (_graphicalInstantiatedOffsetRotation * _networkBehaviour.transform.rotation);
-            else
-                return _graphicalObject.rotation;
+                return _graphicalInstantiatedOffsetRotation * _networkBehaviour.transform.rotation;
+            return _graphicalObject.rotation;
         }
+
         /// <summary>
-        /// Caches the graphical object' current position and rotation.
+        ///     Caches the graphical object' current position and rotation.
         /// </summary>
         private void SetGraphicalPreviousProperties()
         {
@@ -273,7 +208,7 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Resets the graphical object to cached position and rotation of the transform.
+        ///     Resets the graphical object to cached position and rotation of the transform.
         /// </summary>
         private void ResetGraphicalToPreviousProperties()
         {
@@ -281,7 +216,7 @@ namespace FishNet.Component.Prediction
         }
 
         /// <summary>
-        /// Resets the graphical object to it's transform offsets during instantiation.
+        ///     Resets the graphical object to it's transform offsets during instantiation.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ResetGraphicalToInstantiatedProperties(bool position, bool rotation)
@@ -292,8 +227,99 @@ namespace FishNet.Component.Prediction
                 _graphicalObject.rotation = GetGraphicalGoalRotation();
         }
 
+        #region Serialized.
 
+        /// <summary>
+        ///     Transform which holds the graphical features of this object. This transform will be smoothed when
+        ///     desynchronizations occur.
+        /// </summary>
+        private Transform _graphicalObject;
+
+        /// <summary>
+        ///     Sets GraphicalObject.
+        /// </summary>
+        /// <param name="value"></param>
+        public void SetGraphicalObject(Transform value)
+        {
+            _graphicalObject = value;
+            _networkBehaviour.transform.SetTransformOffsets(value, ref _graphicalInstantiatedOffsetPosition,
+                ref _graphicalInstantiatedOffsetRotation);
+        }
+
+        /// <summary>
+        ///     NetworkBehaviour which is using this object.
+        /// </summary>
+        private NetworkBehaviour _networkBehaviour;
+
+        /// <summary>
+        ///     How far the transform must travel in a single update to cause a teleport rather than smoothing. Using 0f will
+        ///     teleport every update.
+        /// </summary>
+        private float _teleportThreshold = 1f;
+
+        /// <summary>
+        ///     How far in the past to keep the graphical object when owner.
+        /// </summary>
+        private byte _interpolation = 1;
+
+        /// <summary>
+        ///     Sets the interpolation value to use when the owner of this object.
+        /// </summary>
+        /// <param name="value"></param>
+        public void SetInterpolation(byte value)
+        {
+            _interpolation = value;
+        }
+
+        #endregion
+
+        #region Private.
+
+        /// <summary>
+        ///     World position before transform was predicted or reset.
+        /// </summary>
+        private Vector3 _graphicalStartPosition;
+
+        /// <summary>
+        ///     World rotation before transform was predicted or reset.
+        /// </summary>
+        private Quaternion _graphicalStartRotation;
+
+        /// <summary>
+        ///     GraphicalObject position difference from the PredictedObject when this is initialized.
+        /// </summary>
+        private Vector3 _graphicalInstantiatedOffsetPosition;
+
+        /// <summary>
+        ///     How quickly to move towards TargetPosition.
+        /// </summary>
+        private float _positionMoveRate = -2;
+
+        /// <summary>
+        ///     GraphicalObject rotation difference from the PredictedObject when this is initialized.
+        /// </summary>
+        private Quaternion _graphicalInstantiatedOffsetRotation;
+
+        /// <summary>
+        ///     How quickly to move towards TargetRotation.
+        /// </summary>
+        private float _rotationMoveRate = -2;
+
+        /// <summary>
+        ///     True if OnPreTick was received this frame.
+        /// </summary>
+        private bool _preTickReceived;
+
+        /// <summary>
+        ///     True to move towards position goals.
+        /// </summary>
+        private bool _smoothPosition;
+
+        /// <summary>
+        ///     True to move towards rotation goals.
+        /// </summary>
+        private bool _smoothRotation;
+
+        #endregion
     }
-
-
 }

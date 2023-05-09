@@ -1,12 +1,17 @@
-using UStacker.Common;
+
+/************************************
+RandomRandomizer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.Collections.Generic;
+using System.Linq;
+using UStacker.Common;
 using UStacker.Common.Extensions;
 
 namespace UStacker.Gameplay.Randomizers
 {
     public class RandomRandomizer : IRandomizer
     {
-        private readonly List<string> _availableValues = new()
+        private readonly string[] _availableValues =
         {
             "i",
             "t",
@@ -21,12 +26,12 @@ namespace UStacker.Gameplay.Randomizers
 
         public RandomRandomizer(IEnumerable<string> availablePieces)
         {
-            _availableValues = _availableValues.Filter(availablePieces);
+            _availableValues = _availableValues.Filter(availablePieces).ToArray();
         }
 
         public string GetNextPiece()
         {
-            return _availableValues[_random.NextInt(_availableValues.Count)];
+            return _availableValues[_random.NextInt(_availableValues.Length)];
         }
 
         public void Reset(ulong newSeed)
@@ -35,3 +40,6 @@ namespace UStacker.Gameplay.Randomizers
         }
     }
 }
+/************************************
+end RandomRandomizer.cs
+*************************************/

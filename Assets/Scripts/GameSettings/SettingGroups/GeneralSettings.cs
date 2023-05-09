@@ -1,9 +1,13 @@
+
+/************************************
+GeneralSettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.IO;
-using UStacker.Common.Alerts;
-using UStacker.GameSettings.Enums;
 using UnityEngine;
 using UStacker.Common;
+using UStacker.Common.Alerts;
+using UStacker.GameSettings.Enums;
 
 namespace UStacker.GameSettings.SettingGroups
 {
@@ -11,23 +15,21 @@ namespace UStacker.GameSettings.SettingGroups
     public record GeneralSettings
     {
         // backing fields
-        [SerializeField]
-        private uint _nextPieceCount = 5;
-        [SerializeField]
-        private RandomizerType _randomizerType = RandomizerType.SevenBag;
-        [SerializeField]
-        private string _customRandomizerName = string.Empty;
+        [SerializeField] private uint _nextPieceCount = 5;
 
-        [field: SerializeField]
-        public AllowedSpins AllowedSpins { get; set; } = AllowedSpins.TSpins;
-        [field: SerializeField]
-        public bool UseCustomSeed { get; set; }
-        [field: SerializeField]
-        public ulong CustomSeed { get; set; }
-        [field: SerializeField]
-        public string CustomRandomizerScript { get; set; } = "";
-        [field: SerializeField]
-        public ulong ActiveSeed { get; set; }
+        [SerializeField] private RandomizerType _randomizerType = RandomizerType.SevenBag;
+
+        [SerializeField] private string _customRandomizerName = string.Empty;
+
+        [field: SerializeField] public AllowedSpins AllowedSpins { get; set; } = AllowedSpins.TSpins;
+
+        [field: SerializeField] public bool UseCustomSeed { get; set; }
+
+        [field: SerializeField] public ulong CustomSeed { get; set; }
+
+        [field: SerializeField] public string CustomRandomizerScript { get; set; } = "";
+
+        [field: SerializeField] public ulong ActiveSeed { get; set; }
 
         public RandomizerType RandomizerType
         {
@@ -86,3 +88,6 @@ namespace UStacker.GameSettings.SettingGroups
         }
     }
 }
+/************************************
+end GeneralSettings.cs
+*************************************/

@@ -1,3 +1,7 @@
+
+/************************************
+IRandomizer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 namespace UStacker.Gameplay.Randomizers
 {
     public interface IRandomizer
@@ -7,3 +11,6 @@ namespace UStacker.Gameplay.Randomizers
         void Reset(ulong newSeed);
     }
 }
+/************************************
+end IRandomizer.cs
+*************************************/

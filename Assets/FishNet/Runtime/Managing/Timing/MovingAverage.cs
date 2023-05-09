@@ -1,50 +1,54 @@
-﻿using FishNet.Documenting;
-using System;
-using UnityEngine;
+﻿using System;
+using FishNet.Documenting;
 
 namespace FishNet.Managing.Timing
 {
-
     [APIExclude]
     public class MovingAverage
     {
-        #region Public.
         /// <summary>
-        /// Average from samples favoring the most recent sample.
-        /// </summary>
-        public float Average { get; private set; }
-        #endregion
-
-        /// <summary>
-        /// Next index to write a sample to.
-        /// </summary>
-        private int _writeIndex;
-        /// <summary>
-        /// Collected samples.
-        /// </summary>
-        private float[] _samples;
-        /// <summary>
-        /// Number of samples written. Will be at most samples size.
-        /// </summary>
-        private int _writtenSamples;
-        /// <summary>
-        /// Samples accumulated over queue.
+        ///     Samples accumulated over queue.
         /// </summary>
         private float _sampleAccumulator;
+
+        /// <summary>
+        ///     Collected samples.
+        /// </summary>
+        private readonly float[] _samples;
+
+        /// <summary>
+        ///     Next index to write a sample to.
+        /// </summary>
+        private int _writeIndex;
+
+        /// <summary>
+        ///     Number of samples written. Will be at most samples size.
+        /// </summary>
+        private int _writtenSamples;
 
         public MovingAverage(int sampleSize)
         {
             if (sampleSize < 0)
                 sampleSize = 0;
             else if (sampleSize < 2)
-                NetworkManager.StaticLogWarning("Using a sampleSize of less than 2 will always return the most recent value as Average.");
+                NetworkManager.StaticLogWarning(
+                    "Using a sampleSize of less than 2 will always return the most recent value as Average.");
 
             _samples = new float[sampleSize];
         }
 
+        #region Public.
 
         /// <summary>
-        /// Computes a new windowed average each time a new sample arrives
+        ///     Average from samples favoring the most recent sample.
+        /// </summary>
+        public float Average { get; private set; }
+
+        #endregion
+
+
+        /// <summary>
+        ///     Computes a new windowed average each time a new sample arrives
         /// </summary>
         /// <param name="newSample"></param>
         public void ComputeAverage(float newSample)
@@ -73,9 +77,6 @@ namespace FishNet.Managing.Timing
             * be overwritten next sample. */
             if (_writtenSamples >= _samples.Length)
                 _sampleAccumulator -= _samples[_writeIndex];
-
         }
     }
-
-
 }

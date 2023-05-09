@@ -8,14 +8,14 @@ namespace FishNet.Managing.Object
         Nested = 1,
         Scene = 2,
         Instantiated = 4,
-        InstantiatedGlobal = 8,
+        InstantiatedGlobal = 8
     }
 
     [APIExclude]
-    internal static partial class SpawnTypeEnum
+    internal static class SpawnTypeEnum
     {
         /// <summary>
-        /// Returns if whole contains part.
+        ///     Returns if whole contains part.
         /// </summary>
         /// <param name="whole"></param>
         /// <param name="part"></param>
@@ -25,7 +25,4 @@ namespace FishNet.Managing.Object
             return (whole & part) == part;
         }
     }
-
-
-
 }

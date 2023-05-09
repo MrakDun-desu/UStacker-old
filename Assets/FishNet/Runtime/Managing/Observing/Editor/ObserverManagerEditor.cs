@@ -4,16 +4,14 @@ using UnityEngine;
 
 namespace FishNet.Managing.Observing.Editing
 {
-
-
     [CustomEditor(typeof(ObserverManager), true)]
     [CanEditMultipleObjects]
     public class ObserverManagerEditor : Editor
     {
-        private SerializedProperty _useNetworkLod;
+        private SerializedProperty _defaultConditions;
         private SerializedProperty _levelOfDetailDistances;
         private SerializedProperty _updateHostVisibility;
-        private SerializedProperty _defaultConditions;
+        private SerializedProperty _useNetworkLod;
 
         protected virtual void OnEnable()
         {
@@ -28,7 +26,8 @@ namespace FishNet.Managing.Observing.Editing
             serializedObject.Update();
 
             GUI.enabled = false;
-            EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour((ObserverManager)target), typeof(ObserverManager), false);
+            EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour((ObserverManager) target),
+                typeof(ObserverManager), false);
             GUI.enabled = true;
 
 
@@ -47,7 +46,6 @@ namespace FishNet.Managing.Observing.Editing
 
             serializedObject.ApplyModifiedProperties();
         }
-
     }
 }
 #endif

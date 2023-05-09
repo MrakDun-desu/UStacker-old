@@ -1,4 +1,9 @@
-﻿using System;
+
+/************************************
+MultiplayerInitializer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
+using System.Linq;
 using System.Net;
 using FishNet;
 using FishNet.Transporting;
@@ -12,17 +17,12 @@ namespace UStacker.Multiplayer.Initialization
         [SerializeField] private GameObject _searchingForGameCanvas;
         [SerializeField] private GameObject _disconnectedCanvas;
         [SerializeField] private GameObject _lobbyCanvas;
-        
+
         public static MultiplayerInitType InitType { get; set; }
 
         private void Awake()
         {
             Player.LocalPlayerStarted += OnLocalPlayerStarted;
-        }
-
-        private void OnLocalPlayerStarted(Player localPlayer)
-        {
-            _lobbyCanvas.SetActive(true);
         }
 
         private void Start()
@@ -35,18 +35,27 @@ namespace UStacker.Multiplayer.Initialization
                     InstanceFinder.ClientManager.StartConnection();
                     break;
                 case MultiplayerInitType.LocalClient:
-#if UNITY_EDITOR
-                    InstanceFinder.ClientManager.StartConnection();
-#else
                     _networkDiscovery.ServerDiscovered += OnServerDiscovered;
                     _networkDiscovery.StartSearchingForServers();
-#endif
                     _searchingForGameCanvas.SetActive(true);
                     InstanceFinder.ClientManager.OnClientConnectionState += OnClientStateChanged;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private void OnDisable()
+        {
+            _networkDiscovery.ServerDiscovered -= OnServerDiscovered;
+            Player.LocalPlayerStarted -= OnLocalPlayerStarted;
+            if (InstanceFinder.ClientManager != null)
+                InstanceFinder.ClientManager.OnClientConnectionState -= OnClientStateChanged;
+        }
+
+        private void OnLocalPlayerStarted(Player localPlayer)
+        {
+            _lobbyCanvas.SetActive(true);
         }
 
         private void OnClientStateChanged(ClientConnectionStateArgs args)
@@ -60,6 +69,7 @@ namespace UStacker.Multiplayer.Initialization
                         _searchingForGameCanvas.SetActive(false);
                         _lobbyCanvas.SetActive(false);
                     }
+
                     break;
                 case LocalConnectionState.Started:
                     _lobbyCanvas.SetActive(true);
@@ -68,26 +78,22 @@ namespace UStacker.Multiplayer.Initialization
             }
         }
 
-        private void OnDisable()
-        {
-            _networkDiscovery.ServerDiscovered -= OnServerDiscovered;
-            Player.LocalPlayerStarted -= OnLocalPlayerStarted;
-            if (InstanceFinder.ClientManager != null)
-                InstanceFinder.ClientManager.OnClientConnectionState -= OnClientStateChanged;
-        }
-
         private void OnServerStateChanged(ServerConnectionStateArgs args)
         {
-            if (args.ConnectionState == LocalConnectionState.Started)
-            {
-                _networkDiscovery.StartAdvertisingServer();
-            }
+            if (args.ConnectionState == LocalConnectionState.Started) _networkDiscovery.StartAdvertisingServer();
         }
 
         private void OnServerDiscovered(IPEndPoint serverEndpoint)
         {
-            InstanceFinder.ClientManager.StartConnection(serverEndpoint.Address.ToString(), (ushort)serverEndpoint.Port);
+            var address = serverEndpoint.Address.ToString();
+            if (Dns.GetHostEntry(Dns.GetHostName()).AddressList.Contains(serverEndpoint.Address))
+                address = "localhost";
+
+            InstanceFinder.ClientManager.StartConnection(address);
             _networkDiscovery.ServerDiscovered -= OnServerDiscovered;
         }
     }
 }
+/************************************
+end MultiplayerInitializer.cs
+*************************************/

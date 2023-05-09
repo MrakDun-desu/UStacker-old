@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+BoardVisibilityApplier.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 
 namespace UStacker.GlobalSettings.Appliers
 {
@@ -12,3 +16,6 @@ namespace UStacker.GlobalSettings.Appliers
         }
     }
 }
+/************************************
+end BoardVisibilityApplier.cs
+*************************************/
