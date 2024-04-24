@@ -1,13 +1,16 @@
+
+/************************************
+SoundPackLoader.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using UnityEngine;
 using UStacker.Common;
 using UStacker.Common.Alerts;
-using Newtonsoft.Json;
-using NLua.Exceptions;
-using UnityEngine;
 
 namespace UStacker.GlobalSettings.Music
 {
@@ -38,26 +41,21 @@ namespace UStacker.GlobalSettings.Music
             SoundEffects.Clear();
             SoundEffectsScript = "";
             if (Path.GetFileName(path).Equals(DEFAULT_PATH))
-            {
                 if (!Directory.Exists(path))
-                {
-                    SoundPackChanged?.Invoke();
-                    if (showAlert)
-                        _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
-                    return;
-                }
-            }
+                    Directory.CreateDirectory(path);
 
             if (!Directory.Exists(path))
             {
                 SoundPackChanged?.Invoke();
                 if (showAlert)
-                    _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                    AlertDisplayer.ShowAlert(defaultAlert);
                 return;
             }
+
             var taskList = new List<Task>
             {
-                LoadSoundEffectsAsync(Path.Combine(path, CustomizationFilenames.SoundEffects)), LoadMusicAsync(Path.Combine(path, CustomizationFilenames.Music))
+                LoadSoundEffectsAsync(Path.Combine(path, CustomizationFilenames.SoundEffects)),
+                LoadMusicAsync(Path.Combine(path, CustomizationFilenames.Music))
             };
 
             await Task.WhenAll(taskList);
@@ -72,7 +70,7 @@ namespace UStacker.GlobalSettings.Music
                     "Sound pack has been successfully loaded and changed",
                     AlertType.Success
                 );
-            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.ShowAlert(shownAlert);
         }
 
         private static async Task LoadSoundEffectsAsync(string path)
@@ -84,19 +82,6 @@ namespace UStacker.GlobalSettings.Music
                 return;
 
             SoundEffectsScript = await File.ReadAllTextAsync(scriptPath);
-            var lua = CreateLua.WithAllPrerequisites(out _);
-            try
-            {
-                lua.DoString(SoundEffectsScript);
-            }
-            catch (LuaException ex)
-            {
-                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
-                    "Error loading script!",
-                    $"Error loading sound effects script.\nLua error: {ex.Message}",
-                    AlertType.Error));
-                SoundEffectsScript = null;
-            }
         }
 
         private static async Task LoadMusicAsync(string path)
@@ -110,7 +95,9 @@ namespace UStacker.GlobalSettings.Music
                 return;
 
             var musicConfStr = await File.ReadAllTextAsync(confPath);
-            var musicConf = JsonConvert.DeserializeObject<MusicConfiguration>(musicConfStr, StaticSettings.DefaultSerializerSettings);
+            var musicConf =
+                JsonConvert.DeserializeObject<MusicConfiguration>(musicConfStr,
+                    StaticSettings.DefaultSerializerSettings);
 
             MusicPlayer.Instance.Configuration.Rewrite(musicConf);
         }
@@ -128,10 +115,13 @@ namespace UStacker.GlobalSettings.Music
         private static async Task GetAudioClipAsync(string path, IDictionary<string, AudioClip> target)
         {
             var clipName = Path.GetFileNameWithoutExtension(path);
-            var clip = await FileLoading.LoadAudioClipFromUrl(path);
+            var clip = await FileHandling.LoadAudioClipFromUrlAsync(path);
             if (clip is null) return;
 
             target[clipName] = clip;
         }
     }
 }
+/************************************
+end SoundPackLoader.cs
+*************************************/

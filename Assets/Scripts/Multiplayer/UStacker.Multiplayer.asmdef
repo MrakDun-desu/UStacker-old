@@ -1,0 +1,22 @@
+{
+  "name": "UStacker.Multiplayer",
+  "rootNamespace": "UStacker.Multiplayer",
+  "references": [
+    "GUID:3b1ccb2572982554ea16427ef70e2576",
+    "GUID:efcc3dd6ca4f7744a917b0ba3b796cb5",
+    "GUID:2671f72ad3fbaa642968f31ff5bb9198",
+    "GUID:35280ebff7eeb5f42821ca180823349c",
+    "GUID:6055be8ebefd69e48b49212b09b47b2f",
+    "GUID:7c88a4a7926ee5145ad2dfa06f454c67",
+    "GUID:894a6cc6ed5cd2645bb542978cbed6a9"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

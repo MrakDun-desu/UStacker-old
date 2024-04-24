@@ -1,8 +1,12 @@
-﻿using System;
+
+/************************************
+GameResultStatDisplayer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Globalization;
-using UStacker.Common.Extensions;
 using TMPro;
 using UnityEngine;
+using UStacker.Common.Extensions;
 
 namespace UStacker.Gameplay.Stats
 {
@@ -38,3 +42,6 @@ namespace UStacker.Gameplay.Stats
         }
     }
 }
+/************************************
+end GameResultStatDisplayer.cs
+*************************************/

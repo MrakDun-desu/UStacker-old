@@ -1,29 +1,35 @@
-﻿using System;
+
+/************************************
+MusicPlayer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UStacker.Common;
-using UStacker.Common.Extensions;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using UStacker.Common;
+using UStacker.Common.Extensions;
 
 namespace UStacker.GlobalSettings.Music
 {
     [RequireComponent(typeof(AudioSource))]
     public class MusicPlayer : MonoSingleton<MusicPlayer>
     {
-        [FormerlySerializedAs("_musicConfiguration")] [ContextMenuItem("Copy JSON to clipboard", nameof(CopyToClipboard))]
+        private const string MENU_STRING = "Scene_Menu";
+        private const string GAME_STRING = "Scene_Game";
+
+        [FormerlySerializedAs("_musicConfiguration")]
+        [ContextMenuItem("Copy JSON to clipboard", nameof(CopyToClipboard))]
         public MusicConfiguration Configuration;
+
         [Range(0, 10)] [SerializeField] private float _switchInterval;
         [Range(0, 10)] [SerializeField] private float _quietenTime = 1f;
         [Range(0, 0.1f)] [SerializeField] private float _quietenInterval = .01f;
         [SerializeField] private AudioClipCollection _defaultMusic = new();
 
-        private const string MENU_STRING = "Scene_Menu";
-        private const string GAME_STRING = "Scene_Game";
-        
         private AudioSource _audioSource;
         private string _currentSceneType = MENU_STRING;
         private float _nextSongStartTime;
@@ -56,7 +62,8 @@ namespace UStacker.GlobalSettings.Music
         public List<MusicOption> ListAvailableOptions()
         {
             var outList =
-                Configuration.GameMusicGroups.Keys.Select(groupName => new MusicOption(OptionType.Group, groupName)).ToList();
+                Configuration.GameMusicGroups.Keys.Select(groupName => new MusicOption(OptionType.Group, groupName))
+                    .ToList();
             outList.AddRange(Configuration.GameMusic.Select(trackName => new MusicOption(OptionType.Track, trackName)));
 
             return outList;
@@ -73,14 +80,13 @@ namespace UStacker.GlobalSettings.Music
             _nextSongStartTime = float.PositiveInfinity;
             _timeUntilQuiet = 0;
             _audioSource.Stop();
-            if (SoundPackLoader.Music.ContainsKey(trackName))
-                _audioSource.clip = SoundPackLoader.Music[trackName];
-            else if (_defaultMusic.ContainsKey(trackName))
-                _audioSource.clip = _defaultMusic[trackName];
+            if (SoundPackLoader.Music.TryGetValue(trackName, out var usedClip))
+                _audioSource.clip = usedClip;
+            else if (_defaultMusic.TryGetValue(trackName, out usedClip))
+                _audioSource.clip = usedClip;
             else return;
             _audioSource.volume = 1;
             ResumeNormalPlaying();
-
         }
 
         public void PlayTrackByGameTypeImmediate(string gameType)
@@ -118,18 +124,6 @@ namespace UStacker.GlobalSettings.Music
             }
         }
 
-        public void PlayVictoryTrack()
-        {
-            if (Configuration.VictoryMusic.TryGetRandomElement(out var trackName))
-                PlayNextTrack(trackName);
-        }
-
-        public void PlayLossTrack()
-        {
-            if (Configuration.LossMusic.TryGetRandomElement(out var trackName))
-                PlayNextTrack(trackName);
-        }
-
         public void PlayFromGroupImmediate(string groupName)
         {
             if (Configuration.GameMusicGroups[groupName].TryGetRandomElement(out var trackName))
@@ -151,14 +145,13 @@ namespace UStacker.GlobalSettings.Music
         private void PlayNextTrack(string trackName)
         {
             _nextSongStartTime = Time.time + _switchInterval;
-            AudioClip nextSong = null;
 
-            if (SoundPackLoader.Music.ContainsKey(trackName))
-                nextSong = SoundPackLoader.Music[trackName];
-            else if (_defaultMusic.ContainsKey(trackName))
-                nextSong = _defaultMusic[trackName];
+            var songFound = SoundPackLoader.Music.TryGetValue(trackName, out var nextSong);
+            if (!songFound)
+                songFound = _defaultMusic.TryGetValue(trackName, out nextSong);
 
-            StartCoroutine(PlayNextTrackCor(nextSong));
+            if (songFound)
+                StartCoroutine(PlayNextTrackCor(nextSong));
         }
 
         private IEnumerator PlayNextTrackCor(AudioClip nextTrack)
@@ -195,7 +188,6 @@ namespace UStacker.GlobalSettings.Music
 
         private void PlayTrackByScene(string sceneName)
         {
-
             if (sceneName.StartsWith(MENU_STRING))
             {
                 if (Configuration.MenuMusic.TryGetRandomElement(out var nextTrack))
@@ -210,3 +202,6 @@ namespace UStacker.GlobalSettings.Music
         }
     }
 }
+/************************************
+end MusicPlayer.cs
+*************************************/

@@ -1,3 +1,7 @@
+
+/************************************
+MuteOutOfFocusApplier.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -37,8 +41,13 @@ namespace UStacker.GlobalSettings.Appliers
                     mixer.SetFloat(fieldName, Mathf.Log10(volume) * 20);
                 }
                 else
+                {
                     mixer.SetFloat(fieldName, -80f);
+                }
             }
         }
     }
 }
+/************************************
+end MuteOutOfFocusApplier.cs
+*************************************/

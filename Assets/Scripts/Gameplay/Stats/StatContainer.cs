@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+StatContainer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 
 namespace UStacker.Gameplay.Stats
 {
@@ -40,3 +44,6 @@ namespace UStacker.Gameplay.Stats
         }
     }
 }
+/************************************
+end StatContainer.cs
+*************************************/

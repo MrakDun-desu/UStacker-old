@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+NotFocusedWarning.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 
 namespace UStacker.GlobalSettings.Appliers
 {
@@ -27,3 +31,6 @@ namespace UStacker.GlobalSettings.Appliers
         }
     }
 }
+/************************************
+end NotFocusedWarning.cs
+*************************************/

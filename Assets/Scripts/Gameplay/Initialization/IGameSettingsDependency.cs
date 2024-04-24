@@ -1,4 +1,8 @@
-﻿using UStacker.GameSettings;
+
+/************************************
+IGameSettingsDependency.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UStacker.GameSettings;
 
 namespace UStacker.Gameplay.Initialization
 {
@@ -7,3 +11,6 @@ namespace UStacker.Gameplay.Initialization
         GameSettingsSO.SettingsContainer GameSettings { set; }
     }
 }
+/************************************
+end IGameSettingsDependency.cs
+*************************************/

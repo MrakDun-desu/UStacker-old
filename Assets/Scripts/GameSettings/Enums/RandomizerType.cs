@@ -1,3 +1,7 @@
+
+/************************************
+RandomizerType.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 namespace UStacker.GameSettings.Enums
 {
     public enum RandomizerType : byte
@@ -8,6 +12,10 @@ namespace UStacker.GameSettings.Enums
         Classic = 3,
         Pairs = 4,
         Random = 5,
+        Advanced = 7,
         Custom = 6
     }
 }
+/************************************
+end RandomizerType.cs
+*************************************/

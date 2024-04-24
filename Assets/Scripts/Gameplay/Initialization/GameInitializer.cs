@@ -1,56 +1,52 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TMPro;
+
+/************************************
+GameInitializer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
-using UStacker.Gameplay.Blocks;
-using UStacker.Gameplay.Communication;
-using UStacker.Gameplay.Pieces;
-using UStacker.Gameplay.Presentation;
-using UStacker.Gameplay.Stats;
-using UStacker.Gameplay.Timing;
+using UStacker.Gameplay.GameStateManagement;
+using UStacker.Gameplay.InputProcessing;
 using UStacker.GameSettings;
+using UStacker.GameSettings.Enums;
+using UStacker.GlobalSettings;
 using UStacker.GlobalSettings.Music;
 
 namespace UStacker.Gameplay.Initialization
 {
     public class GameInitializer : MonoBehaviour
     {
-
+        private static GameSettingsSO.SettingsContainer _gameSettings;
         private static GameReplay _replay;
-        [Space][SerializeField] private PieceDictionary _availablePieces = new();
-
-        [Header("Board")][SerializeField] private PieceSpawner _pieceSpawner;
-        [SerializeField] private Board _board;
-        [SerializeField] private RectTransform _statsCanvasTransform;
-        [SerializeField] private GameObject _boardBackground;
-        [SerializeField] private BlockBase _gridBlock;
-        [SerializeField] private BoardGrid _gridPrefab;
-        [SerializeField] private PieceContainer _pieceContainerPrefab;
-        [SerializeField] private InputProcessor _inputProcessor;
-
-        [Header("Rotation systems")]
-        [SerializeField]
-        private RotationSystemSO _srsRotationSystemSo;
-        [SerializeField] private RotationSystemSO _srsPlusRotationSystemSo;
-
-        [Header("Others")][SerializeField] private GameCountdown _countdown;
-        [SerializeField] private TMP_Text _gameTitle;
-        [SerializeField] private GameObject _loadingOverlay;
-        [SerializeField] private MediatorSO _mediator;
-        [SerializeField] private GameStateManager _stateManager;
         [SerializeField] private MusicPlayerFinder _playerFinder;
-        [SerializeField] private StatCounterManager _statCounterManager;
-        [SerializeField] private ReplayController _replayController;
-        [SerializeField] private GameTimer _timer;
-        [SerializeField] private GameObject[] _gameSettingsDependencies = Array.Empty<GameObject>();
+        [SerializeField] private RotationSystemSO _srsRotationSystemSo;
+        [SerializeField] private RotationSystemSO _srsPlusRotationSystemSo;
+        [SerializeField] private InputProcessor _inputProcessor;
+        [SerializeField] private GameRecorder _recorder;
+        [SerializeField] private GameStateManager _stateManager;
 
-        [Header("Events")] public UnityEvent GameInitialized;
-        public UnityEvent ReplayStarted;
-        public UnityEvent ReplayInitialized;
-        public UnityEvent<string> GameFailedToInitialize;
-        public static GameSettingsSO.SettingsContainer GameSettings { get; set; }
+        private IGameSettingsDependency[] _gameSettingsDependencies;
+
+        public static GameSettingsSO.SettingsContainer GameSettings
+        {
+            get => _gameSettings;
+            set
+            {
+                _gameSettings = value;
+
+                if (!_gameSettings.Controls.OverrideHandling && _replay is null)
+                    _gameSettings.Controls.Handling.Override(AppSettings.Handling);
+
+                if (!AppSettings.GameOverrides.TryGetValue(GameType, out var overrides)) return;
+                if (overrides.CountdownCount is { } count)
+                    _gameSettings.Presentation.CountdownCount = count;
+                if (overrides.CountdownInterval is { } interval)
+                    _gameSettings.Presentation.CountdownInterval = interval;
+                if (overrides.StartingLevel is { } startingLevel)
+                    _gameSettings.Objective.StartingLevel = startingLevel;
+
+                _gameSettings.Presentation.StatCounterGroupOverrideId = overrides.StatCounterGroupId;
+            }
+        }
 
         public static GameReplay Replay
         {
@@ -59,129 +55,68 @@ namespace UStacker.Gameplay.Initialization
             {
                 _replay = value;
                 if (_replay is not null)
-                    GameSettings = _replay?.GameSettings;
+                    GameSettings = _replay.GameSettings;
             }
         }
 
         public static string GameType { get; set; }
-        public static bool InitAsReplay { get; set; }
+
+        private void Awake()
+        {
+            _gameSettingsDependencies = GetComponentsInChildren<IGameSettingsDependency>();
+        }
 
         private void Start()
         {
-            _loadingOverlay.SetActive(true);
-            StringBuilder errorBuilder = new();
-            foreach (var dependantObject in _gameSettingsDependencies)
+            var isReplay = Replay is not null;
+            _stateManager.IsReplay = isReplay;
+            if (isReplay)
             {
-                var dependencies = dependantObject.GetComponents<IGameSettingsDependency>();
-                foreach (var dependency in dependencies)
-                    dependency.GameSettings = GameSettings;
+                _inputProcessor.PlacementsList = Replay.PiecePlacementList;
+                _inputProcessor.ActionList = Replay.ActionList;
+                _recorder.Replay = Replay;
             }
-            if (TryInitialize(errorBuilder))
+            else
             {
-                if (InitAsReplay)
-                    ReplayInitialized.Invoke();
-                else
-                    GameInitialized.Invoke();
-                _loadingOverlay.SetActive(false);
-                return;
+                _recorder.GameType = GameType;
             }
 
-            GameFailedToInitialize.Invoke("Game failed to initialize:\n" + errorBuilder);
-        }
-
-        public void Restart()
-        {
-            _loadingOverlay.SetActive(true);
-
-            StringBuilder errorBuilder = new();
-            if (TryReinitialize(errorBuilder))
-            {
-                if (InitAsReplay)
+            GameSettings.Controls.ActiveRotationSystem =
+                GameSettings.Controls.RotationSystemType switch
                 {
-                    ReplayStarted.Invoke();
-                    _replayController.SetReplay(Replay);
-                }
-                else
-                    GameInitialized.Invoke();
-                _loadingOverlay.SetActive(false);
-                return;
-            }
+                    RotationSystemType.SRS => _srsRotationSystemSo.RotationSystem,
+                    RotationSystemType.SRSPlus => _srsPlusRotationSystemSo.RotationSystem,
+                    RotationSystemType.None => new RotationSystem(),
+                    RotationSystemType.Custom => GameSettings.Controls.ActiveRotationSystem,
+                    _ => new RotationSystem()
+                };
 
-            GameFailedToInitialize.Invoke("Game failed to initialize: \n" + errorBuilder);
-        }
-
-        private bool TryInitialize(StringBuilder errorBuilder)
-        {
-            _playerFinder.GameType = GameType;
-            _statCounterManager.GameType = GameType;
-            _stateManager.GameType = GameType;
-            List<InitializerBase> initializers = new()
-            {
-                new OverridesInitializer(errorBuilder, GameSettings, GameType, InitAsReplay),
-                new BoardDimensionsInitializer(
-                    errorBuilder, GameSettings,
-                    _board,
-                    _boardBackground,
-                    _gridBlock,
-                    _gridPrefab,
-                    _statsCanvasTransform,
-                    Camera.main
-                ),
-                new GeneralInitializer(
-                    errorBuilder, GameSettings,
-                    _availablePieces,
-                    _pieceSpawner,
-                    _board,
-                    _pieceContainerPrefab,
-                    _inputProcessor,
-                    _stateManager,
-                    Replay,
-                    false),
-                new ControlsInitializer(
-                    errorBuilder, GameSettings,
-                    _srsRotationSystemSo.RotationSystem,
-                    _srsPlusRotationSystemSo.RotationSystem,
-                    _inputProcessor,
-                    InitAsReplay),
-                new PresentationInitializer(
-                    errorBuilder, GameSettings,
-                    _gameTitle,
-                    _countdown
-                ),
-                new ObjectiveInitializer(
-                    errorBuilder, GameSettings,
-                    _mediator,
-                    _stateManager,
-                    _board,
-                    _timer)
-            };
-
-            foreach (var initializer in initializers) initializer.Execute();
-
-            return errorBuilder.Length <= 0;
-        }
-
-        private bool TryReinitialize(StringBuilder errorBuilder)
-        {
             _playerFinder.GameType = GameType;
 
-            List<InitializerBase> initializers = new()
-            {
-                new GeneralInitializer(
-                    errorBuilder, GameSettings,
-                    _availablePieces,
-                    _pieceSpawner,
-                    _board,
-                    _pieceContainerPrefab,
-                    _inputProcessor,
-                    _stateManager,
-                    Replay,
-                    true)
-            };
+            foreach (var dependency in _gameSettingsDependencies)
+                dependency.GameSettings = GameSettings;
 
-            foreach (var initializer in initializers) initializer.Execute();
+            GameStateChangeEventReceiver.Activate();
 
-            return errorBuilder.Length <= 0;
+            StartCoroutine(ScheduleGameStart());
+        }
+
+        private void OnDestroy()
+        {
+            GameStateChangeEventReceiver.Deactivate();
+        }
+
+        private IEnumerator ScheduleGameStart()
+        {
+            yield return new WaitForEndOfFrame();
+
+            if (Replay is null)
+                _stateManager.InitializeGame();
+            else
+                _stateManager.InitializeGameWithoutCountdown();
         }
     }
 }
+/************************************
+end GameInitializer.cs
+*************************************/

@@ -1,12 +1,16 @@
-﻿using UStacker.Common.Converters;
+
+/************************************
+StaticSettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using Newtonsoft.Json;
+using UStacker.Common.Converters;
 
 namespace UStacker.Common
 {
     public static class StaticSettings
     {
-
         public const string WikiUrl = "https://github.com/MrakDun-desu/UStackerDocs/";
+
         public static readonly JsonSerializerSettings DefaultSerializerSettings = new()
         {
 #if UNITY_EDITOR
@@ -35,3 +39,6 @@ namespace UStacker.Common
         };
     }
 }
+/************************************
+end StaticSettings.cs
+*************************************/

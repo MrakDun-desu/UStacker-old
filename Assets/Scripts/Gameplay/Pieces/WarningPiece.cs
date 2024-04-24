@@ -1,12 +1,17 @@
-﻿using System;
+
+/************************************
+WarningPiece.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.Pool;
+using UStacker.Common.Extensions;
 using UStacker.Gameplay.Blocks;
 using UStacker.Gameplay.Initialization;
 using UStacker.GameSettings;
 using UStacker.GameSettings.Enums;
-using UnityEngine;
-using UnityEngine.Pool;
 
 namespace UStacker.Gameplay.Pieces
 {
@@ -17,17 +22,36 @@ namespace UStacker.Gameplay.Pieces
         [SerializeField] private SpriteRenderer _warningLine;
 
         private readonly List<BlockBase> _blocks = new();
+        private bool _awake;
         private ObjectPool<BlockBase> _blockPool;
         private string _currentPieceType = "";
         private bool _isEnabled = true;
         private GameSettingsSO.SettingsContainer _settings;
 
+        private float _visibility;
+
+        private float Visibility
+        {
+            get => _visibility;
+            set
+            {
+                _visibility = value;
+                foreach (var block in _blocks)
+                    block.Visibility = _visibility;
+            }
+        }
+
+
         private void Awake()
         {
+            if (_awake)
+                return;
+
+            _awake = true;
             _blockPool = new ObjectPool<BlockBase>(
                 CreateBlock,
-                block => block.gameObject.SetActive(true),
-                block => block.gameObject.SetActive(false),
+                block => block.Visibility = Visibility,
+                block => block.Visibility = 0,
                 block => Destroy(block.gameObject),
                 true,
                 4,
@@ -35,17 +59,9 @@ namespace UStacker.Gameplay.Pieces
             );
         }
 
-        private void Start()
+        private void OnDestroy()
         {
-            if (_settings.General.NextPieceCount <= 0)
-                _isEnabled = false;
-
-            MakeInvisible();
-
-            var warningLineTransform = _warningLine.transform;
-            warningLineTransform.localScale = new Vector2(_settings.BoardDimensions.BoardWidth, warningLineTransform.localScale.y);
-            warningLineTransform.localPosition = new Vector3(_settings.BoardDimensions.BoardWidth / 2f,
-                _settings.BoardDimensions.BoardHeight);
+            _blockPool.Dispose();
         }
 
         public IEnumerable<Vector3> BlockPositions => _blocks.Select(block => block.transform.position);
@@ -53,26 +69,45 @@ namespace UStacker.Gameplay.Pieces
 
         public GameSettingsSO.SettingsContainer GameSettings
         {
-            set => _settings = value;
+            set
+            {
+                _settings = value;
+                Awake();
+                Initialize();
+            }
         }
 
         public event Action PieceChanged;
 
+        private void Initialize()
+        {
+            if (_settings.General.NextPieceCount <= 0)
+                _isEnabled = false;
+
+            MakeInvisible();
+
+            var warningLineTransform = _warningLine.transform;
+            warningLineTransform.localScale =
+                new Vector2(_settings.BoardDimensions.BoardWidth, warningLineTransform.localScale.y);
+            warningLineTransform.localPosition = new Vector3(_settings.BoardDimensions.BoardWidth / 2f,
+                _settings.BoardDimensions.BoardHeight);
+        }
+
         public void MakeVisible()
         {
             if (!_isEnabled) return;
-            gameObject.SetActive(true);
+
+            Visibility = 1;
 
             if (_settings.Gravity.TopoutCondition == TopoutCondition.PieceSpawn) return;
-            _warningLine.gameObject.SetActive(true);
+            _warningLine.color = _warningLine.color.WithAlpha(1);
         }
 
         public void MakeInvisible()
         {
-            if (!_isEnabled) return;
+            Visibility = 0;
 
-            gameObject.SetActive(false);
-            _warningLine.gameObject.SetActive(false);
+            _warningLine.color = _warningLine.color.WithAlpha(0);
         }
 
         private BlockBase CreateBlock()
@@ -80,6 +115,7 @@ namespace UStacker.Gameplay.Pieces
             var newBlock = Instantiate(_blockPrefab, transform);
             newBlock.Board = _board;
             newBlock.BlockNumber = (uint) Mathf.Min(_blocks.Count, 3);
+            newBlock.Visibility = Visibility;
             return newBlock;
         }
 
@@ -112,6 +148,7 @@ namespace UStacker.Gameplay.Pieces
             transform.Rotate(Vector3.forward, (float) rotation);
 
             PieceChanged?.Invoke();
+            Visibility = Visibility;
         }
 
         private void UpdateBlockCount(int blocksCount)
@@ -126,3 +163,6 @@ namespace UStacker.Gameplay.Pieces
         }
     }
 }
+/************************************
+end WarningPiece.cs
+*************************************/

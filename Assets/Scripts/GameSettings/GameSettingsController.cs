@@ -1,6 +1,11 @@
+
+/************************************
+GameSettingsController.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using UnityEngine;
 
+// TODO rename to represent functionality and move to the UStacker.Common namespace
 public class GameSettingsController : MonoBehaviour
 {
     [SerializeField] private GameObject _firstOpenTab;
@@ -10,12 +15,10 @@ public class GameSettingsController : MonoBehaviour
 
     private void Start()
     {
-        _currentOpenTab = _firstOpenTab;
         foreach (var settingsTab in _settingsTabs)
-        {
-            if (settingsTab != _firstOpenTab) settingsTab.SetActive(false);
-        }
-        _currentOpenTab.SetActive(true);
+            settingsTab.SetActive(settingsTab == _firstOpenTab);
+
+        _currentOpenTab = _firstOpenTab;
     }
 
     public void ChangeOpenTab(GameObject newTab)
@@ -25,3 +28,6 @@ public class GameSettingsController : MonoBehaviour
         _currentOpenTab.SetActive(true);
     }
 }
+/************************************
+end GameSettingsController.cs
+*************************************/

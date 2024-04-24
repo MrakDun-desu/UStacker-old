@@ -1,3 +1,7 @@
+
+/************************************
+TopoutCondition.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 namespace UStacker.GameSettings.Enums
 {
     public enum TopoutCondition : byte
@@ -7,3 +11,6 @@ namespace UStacker.GameSettings.Enums
         AllBlocksAboveLethal = 2
     }
 }
+/************************************
+end TopoutCondition.cs
+*************************************/

@@ -1,5 +1,9 @@
-﻿using UStacker.Gameplay.Pieces;
+
+/************************************
+PieceContainer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
+using UStacker.Gameplay.Pieces;
 
 namespace UStacker.Gameplay
 {
@@ -7,8 +11,8 @@ namespace UStacker.Gameplay
     {
         public const string USED_HOLD_TYPE = "usedHold";
 
-        public const float Width = 6;
-        public const float Height = 3;
+        public const float WIDTH = 6;
+        public const float HEIGHT = 3;
         private Piece _piece;
         private bool _pieceIsNull = true;
 
@@ -17,12 +21,10 @@ namespace UStacker.Gameplay
             get => _piece;
             private set
             {
-                _pieceIsNull = value == null;
+                _pieceIsNull = value is null;
                 _piece = value;
             }
         }
-
-        public string PieceType => _piece.Type;
 
         public void MarkUsed()
         {
@@ -40,29 +42,32 @@ namespace UStacker.Gameplay
                 return;
 
             _piece.RevertType();
-            // rotating to reset state
+            // rotating to reset block skins
             _piece.Rotate(0);
         }
 
         public Piece SwapPiece(Piece newPiece)
         {
-            var temp = Piece;
+            var oldPiece = Piece;
             Piece = newPiece;
 
-            if (_pieceIsNull) return temp;
+            if (_pieceIsNull) return oldPiece;
 
             var pieceTransform = _piece.transform;
             pieceTransform.SetParent(transform);
-            pieceTransform.localPosition = new Vector3(_piece.ContainerOffset.x + Width * .5f,
-                _piece.ContainerOffset.y + Height * .5f);
+            pieceTransform.localPosition = new Vector3(_piece.ContainerOffset.x + WIDTH * .5f,
+                _piece.ContainerOffset.y + HEIGHT * .5f);
             pieceTransform.localScale = new Vector3(1, 1, 1);
             pieceTransform.rotation = transform.rotation;
 
-            // rotating to reset state
+            // rotating to reset block skins
             Piece.Rotate(0);
-            Piece.Visibility = 1;
+            Piece.SetVisibility(1);
 
-            return temp;
+            return oldPiece;
         }
     }
 }
+/************************************
+end PieceContainer.cs
+*************************************/

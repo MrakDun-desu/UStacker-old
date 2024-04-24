@@ -1,4 +1,8 @@
-﻿namespace UStacker.Gameplay.Enums
+
+/************************************
+RotateDirection.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.Gameplay.Enums
 {
     public enum RotateDirection : byte
     {
@@ -7,3 +11,6 @@
         OneEighty
     }
 }
+/************************************
+end RotateDirection.cs
+*************************************/

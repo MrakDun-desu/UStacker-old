@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+MusicPlayerFinder.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 
 namespace UStacker.GlobalSettings.Music
 {
@@ -9,16 +13,6 @@ namespace UStacker.GlobalSettings.Music
         public void PlayGameTrackByType()
         {
             MusicPlayer.Instance.PlayTrackByGameTypeImmediate(GameType);
-        }
-
-        public void PlayVictoryTrack()
-        {
-            MusicPlayer.Instance.PlayVictoryTrack();
-        }
-
-        public void PlayLossTrack()
-        {
-            MusicPlayer.Instance.PlayLossTrack();
         }
 
         public void StopPlaying()
@@ -32,3 +26,6 @@ namespace UStacker.GlobalSettings.Music
         }
     }
 }
+/************************************
+end MusicPlayerFinder.cs
+*************************************/

@@ -1,15 +1,23 @@
-﻿namespace UStacker.Gameplay.Communication
+
+/************************************
+PieceMovedMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using JetBrains.Annotations;
+
+namespace UStacker.Gameplay.Communication
 {
-    public record PieceMovedMessage : MidgameMessage
+    public readonly struct PieceMovedMessage : IMidgameMessage
     {
-        public readonly bool HitWall;
+        [UsedImplicitly] public readonly bool HitWall;
         public readonly bool WasHardDrop;
         public readonly bool WasSoftDrop;
         public readonly int X;
         public readonly int Y;
+        public double Time { get; }
 
-        public PieceMovedMessage(int x, int y, bool wasHardDrop, bool wasSoftDrop, bool hitWall, double time) : base(time)
+        public PieceMovedMessage(int x, int y, bool wasHardDrop, bool wasSoftDrop, bool hitWall, double time)
         {
+            Time = time;
             X = x;
             Y = y;
             WasHardDrop = wasHardDrop;
@@ -18,3 +26,6 @@
         }
     }
 }
+/************************************
+end PieceMovedMessage.cs
+*************************************/

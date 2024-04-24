@@ -1,5 +1,11 @@
+
+/************************************
+PresentationSettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
+using Newtonsoft.Json;
 using UnityEngine;
+using UStacker.GlobalSettings.StatCounting;
 
 namespace UStacker.GameSettings.SettingGroups
 {
@@ -7,15 +13,26 @@ namespace UStacker.GameSettings.SettingGroups
     public record PresentationSettings
     {
         // backing fields
-        [SerializeField]
-        private float _countdownInterval = .8f;
-        [SerializeField]
-        private uint _countdownCount = 3;
+        [SerializeField] private string _title = "Custom game";
+        [SerializeField] private float _countdownInterval = .65f;
+        [SerializeField] private uint _countdownCount = 3;
+        [SerializeField] private uint _gamePadding = 3;
 
-        [field: SerializeField]
-        public string Title { get; set; } = "Custom game";
-        [field: SerializeField]
-        public bool UseCountdown { get; set; } = true;
+        [field: SerializeField] public StatCounterGroup DefaultStatCounterGroup { get; set; } = new();
+
+        public string Title
+        {
+            get => _title;
+            set
+            {
+                _title = value.Length switch
+                {
+                    <= 0 => "Unset",
+                    > 100 => value[..100],
+                    _ => value
+                };
+            }
+        }
 
         public float CountdownInterval
         {
@@ -26,7 +43,18 @@ namespace UStacker.GameSettings.SettingGroups
         public uint CountdownCount
         {
             get => _countdownCount;
-            set => _countdownCount = Math.Min(value, 10);
+            set => _countdownCount = Math.Clamp(value, 1, 10);
         }
+
+        public uint GamePadding
+        {
+            get => _gamePadding;
+            set => _gamePadding = Math.Min(value, 50);
+        }
+
+        [JsonIgnore] public Guid? StatCounterGroupOverrideId { get; set; }
     }
 }
+/************************************
+end PresentationSettings.cs
+*************************************/

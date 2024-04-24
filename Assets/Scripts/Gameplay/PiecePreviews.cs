@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+
+/************************************
+PiecePreviews.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections.Generic;
 using System.Linq;
 using UStacker.Gameplay.Pieces;
 
@@ -11,7 +15,6 @@ namespace UStacker.Gameplay
         public PiecePreviews(List<PieceContainer> containers)
         {
             _containers = containers;
-            _containers.Sort((x, y) => x.transform.position.y > y.transform.position.y ? 1 : -1);
         }
 
         public Piece AddPiece(Piece newPiece)
@@ -21,14 +24,12 @@ namespace UStacker.Gameplay
                 : newPiece;
         }
 
-        public string GetFirstPieceType()
-        {
-            return _containers.Count > 0 ? _containers[^1].PieceType : "";
-        }
-
         public Piece GetFirstPiece()
         {
             return _containers.Count > 0 ? _containers[^1].Piece : null;
         }
     }
 }
+/************************************
+end PiecePreviews.cs
+*************************************/

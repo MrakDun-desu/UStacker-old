@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+GameReplay.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -24,8 +28,8 @@ namespace UStacker.Gameplay
         public DateTime TimeStamp { get; set; }
         public StatContainer Stats { get; set; }
         public GameSettingsSO.SettingsContainer GameSettings { get; set; }
-        public List<InputActionMessage> ActionList { get; set; } = new();
-        public List<PiecePlacementInfo> PiecePlacementList { get; set; } = new();
+        public List<InputActionMessage> ActionList { get; } = new();
+        public List<double> PiecePlacementList { get; } = new();
 
         public void Save()
         {
@@ -39,9 +43,9 @@ namespace UStacker.Gameplay
                 _ => throw new ArgumentOutOfRangeException()
             };
             var filename = AppSettings.Gameplay.ReplayNamingFormat
-                .Replace("{GameType}", GameType)
-                .Replace("{Timestamp}", TimeStamp.ToLocalTime().ToString(CultureInfo.InvariantCulture))
-                .Replace("{MainStat}", mainStat);
+                               .Replace("{GameType}", GameType)
+                               .Replace("{MainStat}", mainStat) +
+                           TimeStamp.ToLocalTime().ToString(CultureInfo.InvariantCulture) + ".bsrep";
 
             var invalidChars = new List<char>();
             invalidChars.AddRange(Path.GetInvalidPathChars());
@@ -55,7 +59,6 @@ namespace UStacker.Gameplay
 
             filename = invalidChars.Aggregate(filename,
                 (current, invalidChar) => current.Replace(invalidChar, invalidCharReplacement));
-            filename += ".bsrep";
 
             var savePath = Path.Combine(PersistentPaths.Replays, GameType, filename);
             if (!File.Exists(savePath))
@@ -64,7 +67,7 @@ namespace UStacker.Gameplay
                 return;
             }
 
-            for (var i = 0; ; i++)
+            for (var i = 0;; i++)
             {
                 var actualSavePath = savePath + $"_{i}";
                 if (File.Exists(actualSavePath)) continue;
@@ -80,31 +83,36 @@ namespace UStacker.Gameplay
                 Directory.CreateDirectory(directory);
 
             var serializedReplay = JsonConvert.SerializeObject(this, StaticSettings.ReplaySerializerSettings);
-            await File.WriteAllBytesAsync(savePath, FileLoading.Zip(serializedReplay));
+            await File.WriteAllBytesAsync(savePath, await FileHandling.ZipAsync(serializedReplay));
 
-            _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+            AlertDisplayer.ShowAlert(new Alert(
                 "Replay saved!",
                 $"Game replay has been saved into a file {savePath}",
                 AlertType.Success));
         }
 
-        public static bool TryLoad(string path, out GameReplay output)
+        public static async Task<(bool, GameReplay)> TryLoad(string path)
         {
-            output = default;
-            if (!File.Exists(path)) return false;
+            (bool, GameReplay) output = (false, null);
+            if (!File.Exists(path)) return output;
 
-            var replayJson = FileLoading.Unzip(File.ReadAllBytes(path));
+            var replayJson = await FileHandling.UnzipAsync(await File.ReadAllBytesAsync(path));
 
             try
             {
-                output = JsonConvert.DeserializeObject<GameReplay>(replayJson, StaticSettings.ReplaySerializerSettings);
+                output.Item2 =
+                    JsonConvert.DeserializeObject<GameReplay>(replayJson, StaticSettings.ReplaySerializerSettings);
             }
             catch
             {
-                return false;
+                // if we get an exception, output item 1 is false so we know that we got an error
             }
 
-            return true;
+            output.Item1 = true;
+            return output;
         }
     }
 }
+/************************************
+end GameReplay.cs
+*************************************/

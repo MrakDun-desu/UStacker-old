@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+GameSettingsOverrides.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -7,11 +11,9 @@ namespace UStacker.GlobalSettings.Groups
     [Serializable]
     public record GameSettingsOverrides
     {
-        [SerializeField]
-        private uint? _countdownCount;
-        [SerializeField]
-        private float? _countdownInterval;
         [field: SerializeField] [CanBeNull] public string StartingLevel { get; set; }
+        private uint? _countdownCount;
+        private float? _countdownInterval;
 
         public float? CountdownInterval
         {
@@ -35,12 +37,17 @@ namespace UStacker.GlobalSettings.Groups
             {
                 if (value is { } uintVal)
                 {
-                    _countdownCount = Math.Clamp(uintVal, 2u, 10u);
+                    _countdownCount = Math.Clamp(uintVal, 1u, 10u);
                     return;
                 }
 
                 _countdownCount = null;
             }
         }
+
+        public Guid? StatCounterGroupId { get; set; }
     }
 }
+/************************************
+end GameSettingsOverrides.cs
+*************************************/

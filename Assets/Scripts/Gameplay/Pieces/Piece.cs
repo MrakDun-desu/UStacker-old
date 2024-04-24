@@ -1,18 +1,22 @@
+
+/************************************
+Piece.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UStacker.Gameplay.Blocks;
-using UStacker.GameSettings.Enums;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Pool;
+using UStacker.Gameplay.Blocks;
+using UStacker.GameSettings.Enums;
 
 namespace UStacker.Gameplay.Pieces
 {
     public class Piece : MonoBehaviour, IBlockCollection
     {
         [SerializeField] private string _type;
-        public List<Block> Blocks = new();
+        public List<PieceBlock> Blocks = new();
         public Color GhostPieceColor;
         public Vector2 SpawnOffset;
         public Vector2 ContainerOffset;
@@ -25,17 +29,6 @@ namespace UStacker.Gameplay.Pieces
 
         private bool _activeInPool = true;
         private string _currentType;
-
-        private float _visibility;
-        public float Visibility
-        {
-            get => _visibility;
-            set
-            {
-                _visibility = value;
-                foreach (var block in Blocks) block.Visibility = _visibility;
-            }
-        }
 
         public ObjectPool<Piece> SourcePool { get; set; }
 
@@ -64,9 +57,16 @@ namespace UStacker.Gameplay.Pieces
                     block.CollectionType = _currentType;
             }
         }
+
         public IEnumerable<Vector3> BlockPositions =>
             _activeTransforms.Select(tf => tf.position);
+
         public event Action Rotated;
+
+        public void SetVisibility(float value)
+        {
+            foreach (var block in Blocks) block.Visibility = value;
+        }
 
         private void OnBlockCleared(ClearableBlock sender)
         {
@@ -82,6 +82,17 @@ namespace UStacker.Gameplay.Pieces
             Rotated?.Invoke();
         }
 
+        public void Move(Vector2Int moveVector)
+        {
+            var selfTransform = transform;
+            var piecePosition = selfTransform.localPosition;
+            piecePosition = new Vector3(
+                piecePosition.x + moveVector.x,
+                piecePosition.y + moveVector.y,
+                piecePosition.z);
+            selfTransform.localPosition = piecePosition;
+        }
+
         public void SetBoard(Board board)
         {
             foreach (var block in Blocks) block.Board = board;
@@ -92,23 +103,28 @@ namespace UStacker.Gameplay.Pieces
             Type = _type;
         }
 
-        public void ResetState()
+        public void Deactivate()
         {
-            gameObject.SetActive(true);
+            SetVisibility(0);
+        }
+
+        public void Activate()
+        {
             _activeInPool = true;
-            Visibility = 1;
+            SetVisibility(1);
             foreach (var block in Blocks)
             {
                 if (!_activeTransforms.Contains(block.transform))
                     _activeTransforms.Add(block.transform);
 
-                block.gameObject.SetActive(true);
                 block.ResetPosition();
-                Rotated?.Invoke();
-                RotationState = RotationState.Zero;
             }
+
+            RotationState = RotationState.Zero;
+            Rotated?.Invoke();
         }
 
+        [ContextMenu("Return to the pool")]
         public void ReleaseFromPool()
         {
             if (!_activeInPool) return;
@@ -120,7 +136,11 @@ namespace UStacker.Gameplay.Pieces
         [ContextMenu("Log block positions")]
         private void LogBlockPositions()
         {
-            foreach (var block in Blocks.Where(block => _activeTransforms.Contains(block.transform))) Debug.Log(block.Board.WorldSpaceToBoardPosition(block.transform.position));
+            foreach (var block in Blocks.Where(block => _activeTransforms.Contains(block.transform)))
+                Debug.Log(block.Board.WorldSpaceToBoardPosition(block.transform.position));
         }
     }
 }
+/************************************
+end Piece.cs
+*************************************/

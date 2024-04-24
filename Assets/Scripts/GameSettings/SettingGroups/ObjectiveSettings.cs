@@ -1,9 +1,14 @@
+
+/************************************
+ObjectiveSettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.IO;
+using UnityEngine;
+using UnityEngine.Serialization;
 using UStacker.Common;
 using UStacker.Common.Alerts;
 using UStacker.GameSettings.Enums;
-using UnityEngine;
 
 namespace UStacker.GameSettings.SettingGroups
 {
@@ -11,36 +16,35 @@ namespace UStacker.GameSettings.SettingGroups
     public record ObjectiveSettings
     {
         // backing fields
-        [SerializeField]
-        private GameManagerType _gameManagerType = GameManagerType.None;
-        [SerializeField]
-        private string _customGameManager = string.Empty;
-        [SerializeField]
-        private GarbageGeneration _garbageGeneration;
-        [SerializeField]
-        private string _customGarbageGeneratorName = string.Empty;
-        [SerializeField]
-        private double _endConditionCount = 40d;
-        [SerializeField]
-        private uint _garbageHeight = 10;
+        [SerializeField] private GameManagerType _gameManagerType = GameManagerType.None;
 
-        [field: SerializeField]
-        public MainStat MainStat { get; set; } = MainStat.Time;
-        [field: SerializeField]
-        public GameEndCondition GameEndCondition { get; set; } = GameEndCondition.LinesCleared;
-        [field: SerializeField]
-        public string CustomGarbageScript { get; set; } = "";
-        [field: SerializeField]
-        public string CustomGameManagerScript { get; set; } = "";
-        [field: SerializeField]
-        public bool ToppingOutIsOkay { get; set; }
+        [SerializeField] private string _customGameManager = string.Empty;
+
+        [FormerlySerializedAs("_garbageGeneration")] [SerializeField]
+        private GarbageGenerationType _garbageGenerationType;
+
+        [SerializeField] private string _customGarbageGeneratorName = string.Empty;
+
+        [SerializeField] private double _endConditionCount = 40d;
+
+        [SerializeField] private uint _garbageHeight = 10;
+
+        [field: SerializeField] public MainStat MainStat { get; set; } = MainStat.Time;
+
+        [field: SerializeField] public GameEndCondition GameEndCondition { get; set; } = GameEndCondition.LinesCleared;
+
+        [field: SerializeField] public string CustomGarbageScript { get; set; } = "";
+
+        [field: SerializeField] public string CustomGameManagerScript { get; set; } = "";
+
+        [field: SerializeField] public bool ToppingOutIsOkay { get; set; }
 
         [field: SerializeField] public string StartingLevel { get; set; } = string.Empty;
 
         public double EndConditionCount
         {
             get => _endConditionCount;
-            set => _endConditionCount = Math.Max(value, 0);
+            set => _endConditionCount = Math.Max(value, 1);
         }
 
         public GameManagerType GameManagerType
@@ -63,12 +67,12 @@ namespace UStacker.GameSettings.SettingGroups
             }
         }
 
-        public GarbageGeneration GarbageGeneration
+        public GarbageGenerationType GarbageGenerationType
         {
-            get => _garbageGeneration;
+            get => _garbageGenerationType;
             set
             {
-                _garbageGeneration = value;
+                _garbageGenerationType = value;
                 ReloadGarbageGeneratorIfNeeded();
             }
         }
@@ -76,7 +80,7 @@ namespace UStacker.GameSettings.SettingGroups
         public uint GarbageHeight
         {
             get => _garbageHeight;
-            set => _garbageHeight = Math.Max(value, 400);
+            set => _garbageHeight = Math.Min(value, 400);
         }
 
         public string CustomGarbageScriptName
@@ -104,7 +108,7 @@ namespace UStacker.GameSettings.SettingGroups
 
         private void ReloadGarbageGeneratorIfNeeded()
         {
-            if (!_garbageGeneration.HasFlag(GarbageGeneration.CustomFlag) ||
+            if (!_garbageGenerationType.HasFlag(GarbageGenerationType.CustomFlag) ||
                 string.IsNullOrEmpty(_customGarbageGeneratorName))
                 return;
 
@@ -116,7 +120,7 @@ namespace UStacker.GameSettings.SettingGroups
                     $"Garbage script {CustomGarbageScriptName} couldn't be found.",
                     AlertType.Error);
 
-            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.ShowAlert(shownAlert);
         }
 
         private bool TryReloadGameManagerScript()
@@ -146,7 +150,10 @@ namespace UStacker.GameSettings.SettingGroups
                     $"Game manager {CustomGameManager} couldn't be found.",
                     AlertType.Error);
 
-            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.ShowAlert(shownAlert);
         }
     }
 }
+/************************************
+end ObjectiveSettings.cs
+*************************************/

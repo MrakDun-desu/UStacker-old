@@ -1,9 +1,13 @@
+
+/************************************
+SkinChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.IO;
-using UStacker.Common;
-using UStacker.GlobalSettings.BlockSkins;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UStacker.Common;
+using UStacker.GlobalSettings.BlockSkins;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -13,20 +17,24 @@ namespace UStacker.GlobalSettings.Changers
         [SerializeField] private Button _folderButton;
         [SerializeField] private Button _docsButton;
 
-        private void Start()
+        private void Awake()
         {
             RefreshNames();
+        }
 
-            AppSettings.SettingsReloaded += RefreshValue;
+        protected override void Start()
+        {
+            base.Start();
+
             _dropdown.onValueChanged.AddListener(OptionPicked);
             _folderButton.onClick.AddListener(OpenSkinFolder);
             _docsButton.onClick.AddListener(OpenDocumentation);
         }
-        
+
         private void OnApplicationFocus(bool hasFocus)
         {
             if (!hasFocus) return;
-            
+
             RefreshNames();
         }
 
@@ -37,7 +45,7 @@ namespace UStacker.GlobalSettings.Changers
             SetValue(newSkin);
         }
 
-        private void RefreshValue()
+        protected override void RefreshValue()
         {
             for (var i = 0; i < _dropdown.options.Count; i++)
             {
@@ -46,6 +54,7 @@ namespace UStacker.GlobalSettings.Changers
                 _dropdown.SetValueWithoutNotify(i);
                 break;
             }
+
             _dropdown.RefreshShownValue();
         }
 
@@ -81,3 +90,6 @@ namespace UStacker.GlobalSettings.Changers
         }
     }
 }
+/************************************
+end SkinChanger.cs
+*************************************/

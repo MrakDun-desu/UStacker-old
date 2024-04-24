@@ -1,4 +1,8 @@
-﻿using System.Linq;
+
+/************************************
+OpenablePanelGroup.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Linq;
 using UnityEngine;
 
 namespace UStacker.Common.UI
@@ -26,7 +30,9 @@ namespace UStacker.Common.UI
             if (!_openablePanels.Contains(toggledPanel)) return;
 
             if (_currentlyOpen == toggledPanel)
+            {
                 CloseCurrent();
+            }
             else
             {
                 // ReSharper disable once Unity.NoNullPropagation
@@ -46,3 +52,6 @@ namespace UStacker.Common.UI
         }
     }
 }
+/************************************
+end OpenablePanelGroup.cs
+*************************************/

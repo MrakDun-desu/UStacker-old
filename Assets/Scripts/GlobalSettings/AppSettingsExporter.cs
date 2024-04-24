@@ -1,7 +1,12 @@
+
+/************************************
+AppSettingsExporter.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
-using UStacker.GlobalSettings.Changers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using UStacker.GlobalSettings.Changers;
 
 namespace UStacker.GlobalSettings
 {
@@ -13,14 +18,23 @@ namespace UStacker.GlobalSettings
         [SerializeField] private GameObject _successSignal;
         [SerializeField] private TMP_Text _successText;
 
+        [SerializeField] private Button _exportButton;
+        [SerializeField] private Button _importButton;
+
+        private void Awake()
+        {
+            _exportButton.onClick.AddListener(ExportAsync);
+            _importButton.onClick.AddListener(ImportAsync);
+        }
+
         public event Action SettingChanged;
 
-        public void Export()
+        private async void ExportAsync()
         {
             var path = _pathField.text;
             _errorSignal.SetActive(false);
             _successSignal.SetActive(false);
-            if (AppSettings.TrySave(path))
+            if (await AppSettings.TrySaveAsync(path))
             {
                 _successSignal.SetActive(true);
                 _successText.text = "Successfully saved!";
@@ -31,12 +45,12 @@ namespace UStacker.GlobalSettings
             _errorText.text = "Couldn't find save path!";
         }
 
-        public void Import()
+        private async void ImportAsync()
         {
             var path = _pathField.text;
             _errorSignal.SetActive(false);
             _successSignal.SetActive(false);
-            if (AppSettings.TryLoad(path))
+            if (await AppSettings.TryLoadAsync(path))
             {
                 _successSignal.SetActive(true);
                 _successText.text = "Successfully loaded settings!";
@@ -49,3 +63,6 @@ namespace UStacker.GlobalSettings
         }
     }
 }
+/************************************
+end AppSettingsExporter.cs
+*************************************/

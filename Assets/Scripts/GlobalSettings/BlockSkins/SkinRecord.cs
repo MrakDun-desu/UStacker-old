@@ -1,5 +1,10 @@
-﻿using System;
+
+/************************************
+SkinRecord.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
+using UStacker.GlobalSettings.Enums;
 
 namespace UStacker.GlobalSettings.BlockSkins
 {
@@ -7,6 +12,7 @@ namespace UStacker.GlobalSettings.BlockSkins
     public class SkinRecord
     {
         public string SkinType = "i";
+
         public uint[] BlockNumbers =
         {
             0u,
@@ -14,11 +20,15 @@ namespace UStacker.GlobalSettings.BlockSkins
             2u,
             3u
         };
+
         public int Layer;
         public bool IsConnected;
         public bool RotateWithPiece;
         public float AnimationFps = 60f;
         public List<SpriteRecord> Sprites = new();
-        public List<ConnectedSprite> ConnectedSprites = new();
+        public Dictionary<Edges, List<SpriteRecord>> ConnectedSprites = new();
     }
 }
+/************************************
+end SkinRecord.cs
+*************************************/

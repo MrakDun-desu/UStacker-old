@@ -1,5 +1,11 @@
-﻿using System.Collections.Generic;
+
+/************************************
+BlockSkin.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UStacker.Common.Extensions;
 using UStacker.Gameplay.GarbageGeneration;
 using UStacker.Gameplay.Pieces;
@@ -7,7 +13,6 @@ using UStacker.GlobalSettings;
 using UStacker.GlobalSettings.Appliers;
 using UStacker.GlobalSettings.BlockSkins;
 using UStacker.GlobalSettings.Enums;
-using UnityEngine;
 
 namespace UStacker.Gameplay.Blocks
 {
@@ -16,10 +21,11 @@ namespace UStacker.Gameplay.Blocks
     {
         [SerializeField] private SkinRecord _skinRecord;
         [SerializeField] private SpriteRenderer _renderer;
+        private Coroutine _animationCoroutine;
         private List<SpriteRecord> _currentSprites = new();
 
         private float _switchFrameTime;
-        private float _visibility;
+        private float _visibility = 1;
 
         public float Visibility
         {
@@ -45,8 +51,19 @@ namespace UStacker.Gameplay.Blocks
             }
         }
 
-        private void Update()
+        private void OnDestroy()
         {
+            UnregisterEvents();
+        }
+
+        private void HandleSpritesChanged()
+        {
+            if (_animationCoroutine != null)
+            {
+                StopCoroutine(_animationCoroutine);
+                _animationCoroutine = null;
+            }
+
             switch (_currentSprites.Count)
             {
                 case 0:
@@ -56,17 +73,22 @@ namespace UStacker.Gameplay.Blocks
                     return;
             }
 
-            if (SkinRecord.AnimationFps == 0) return;
+            if (SkinRecord.AnimationFps <= 0) return;
 
-            var newSpriteIndex = Mathf.FloorToInt(Time.realtimeSinceStartup / _switchFrameTime);
-            newSpriteIndex %= _currentSprites.Count;
-            newSpriteIndex = Mathf.Max(newSpriteIndex, 0);
-            _renderer.sprite = _currentSprites[newSpriteIndex].Sprite;
+            _animationCoroutine = StartCoroutine(AnimationCor());
         }
 
-        private void OnDestroy()
+        private IEnumerator AnimationCor()
         {
-            UnregisterEvents();
+            var currentSpriteIndex = 0;
+            while (true)
+            {
+                currentSpriteIndex %= _currentSprites.Count;
+                _renderer.sprite = _currentSprites[currentSpriteIndex].Sprite;
+                yield return new WaitForSeconds(_switchFrameTime);
+                currentSpriteIndex++;
+            }
+            // ReSharper disable once IteratorNeverReturns
         }
 
         public void RefreshSkin()
@@ -75,7 +97,6 @@ namespace UStacker.Gameplay.Blocks
             _renderer.sortingOrder = SkinRecord.Layer;
 
             if (!SkinRecord.RotateWithPiece)
-            {
                 switch (BlockCollection)
                 {
                     case Piece piece:
@@ -87,12 +108,11 @@ namespace UStacker.Gameplay.Blocks
                         ghost.Rendered += ResetRotation;
                         break;
                 }
-            }
 
             if (!SkinRecord.IsConnected)
             {
                 _currentSprites = SkinRecord.Sprites;
-                Update();
+                HandleSpritesChanged();
             }
             else
             {
@@ -121,9 +141,6 @@ namespace UStacker.Gameplay.Blocks
             switch (BlockCollection)
             {
                 case GhostPiece ghostPiece:
-                    _renderer.color = _renderer.color.WithAlpha(
-                        AppSettings.Gameplay.GhostPieceVisibility);
-
                     GhostPieceVisibilityApplier.VisibilityChanged += ChangeAlpha;
 
                     if (!AppSettings.Gameplay.ColorGhostPiece) return;
@@ -131,9 +148,6 @@ namespace UStacker.Gameplay.Blocks
                     ChangeColor(ghostPiece.CurrentColor);
                     break;
                 case BoardGrid:
-                    _renderer.color = _renderer.color.WithAlpha(
-                        AppSettings.Gameplay.GridVisibility);
-
                     GridVisibilityApplier.VisibilityChanged += ChangeAlpha;
                     break;
             }
@@ -147,10 +161,11 @@ namespace UStacker.Gameplay.Blocks
             return myPos + (myTransform.right * (pos.x * boardScale.x) + myTransform.up * (pos.y * boardScale.y));
         }
 
-        private bool MyPieceInPos(Vector2Int pos)
+        private bool ConnectedBlockInPos(Vector2Int pos, IEnumerable<Vector3> traversedBlocks)
         {
             var checkedPos = RelativePos(pos);
-            return BlockCollection.BlockPositions.Any(worldPos => AreClose(worldPos, checkedPos));
+
+            return traversedBlocks.Any(worldPos => AreClose(worldPos, checkedPos));
         }
 
         private bool AreClose(Vector3 pos1, Vector3 pos2)
@@ -191,37 +206,48 @@ namespace UStacker.Gameplay.Blocks
 
         private void PickConnectedPart()
         {
+            var connectedBlocksEnumerable = BlockCollection.BlockPositions;
+
+            var connectedBlocks = connectedBlocksEnumerable as Vector3[] ?? connectedBlocksEnumerable.ToArray();
+
             var edges = Edges.None;
-            if (!MyPieceInPos(Vector2Int.right))
+            if (!ConnectedBlockInPos(Vector2Int.right, connectedBlocks))
                 edges |= Edges.Right;
-            if (!MyPieceInPos(Vector2Int.left))
+            if (!ConnectedBlockInPos(Vector2Int.left, connectedBlocks))
                 edges |= Edges.Left;
-            if (!MyPieceInPos(Vector2Int.up))
+            if (!ConnectedBlockInPos(Vector2Int.up, connectedBlocks))
                 edges |= Edges.Top;
-            if (!MyPieceInPos(Vector2Int.down))
+            if (!ConnectedBlockInPos(Vector2Int.down, connectedBlocks))
                 edges |= Edges.Bottom;
 
-            if (!MyPieceInPos(new Vector2Int(1, 1)) && MyPieceInPos(Vector2Int.up) && MyPieceInPos(Vector2Int.right))
+            if (!ConnectedBlockInPos(new Vector2Int(1, 1), connectedBlocks) &&
+                ConnectedBlockInPos(Vector2Int.up, connectedBlocks) &&
+                ConnectedBlockInPos(Vector2Int.right, connectedBlocks))
                 edges |= Edges.TopRight;
-            if (!MyPieceInPos(new Vector2Int(-1, 1)) && MyPieceInPos(Vector2Int.up) && MyPieceInPos(Vector2Int.left))
+            if (!ConnectedBlockInPos(new Vector2Int(-1, 1), connectedBlocks) &&
+                ConnectedBlockInPos(Vector2Int.up, connectedBlocks) &&
+                ConnectedBlockInPos(Vector2Int.left, connectedBlocks))
                 edges |= Edges.TopLeft;
-            if (!MyPieceInPos(new Vector2Int(1, -1)) && MyPieceInPos(Vector2Int.down) && MyPieceInPos(Vector2Int.right))
+            if (!ConnectedBlockInPos(new Vector2Int(1, -1), connectedBlocks) &&
+                ConnectedBlockInPos(Vector2Int.down, connectedBlocks) &&
+                ConnectedBlockInPos(Vector2Int.right, connectedBlocks))
                 edges |= Edges.BottomRight;
-            if (!MyPieceInPos(new Vector2Int(-1, -1)) && MyPieceInPos(Vector2Int.down) && MyPieceInPos(Vector2Int.left))
+            if (!ConnectedBlockInPos(new Vector2Int(-1, -1), connectedBlocks) &&
+                ConnectedBlockInPos(Vector2Int.down, connectedBlocks) &&
+                ConnectedBlockInPos(Vector2Int.left, connectedBlocks))
                 edges |= Edges.BottomLeft;
 
-            var connectedSprite = SkinRecord.ConnectedSprites.Find(sprite => sprite.Edges == edges) ??
-                                  SkinRecord.ConnectedSprites.Find(sprite => sprite.Edges == Edges.None);
-            if (connectedSprite is null)
-                return;
+            if (!SkinRecord.ConnectedSprites.TryGetValue(edges, out var newSprites))
+                if (!SkinRecord.ConnectedSprites.TryGetValue(Edges.None, out newSprites))
+                    return;
 
-            _currentSprites = connectedSprite.Sprites;
-            Update();
+            _currentSprites = newSprites;
+            HandleSpritesChanged();
         }
 
         private void ResetRotation()
         {
-            transform.rotation = Quaternion.Euler(Vector3.zero);
+            transform.rotation = Board.transform.rotation;
         }
 
         private void ChangeColor(Color color)
@@ -237,3 +263,6 @@ namespace UStacker.Gameplay.Blocks
         #endregion
     }
 }
+/************************************
+end BlockSkin.cs
+*************************************/

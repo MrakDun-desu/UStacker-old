@@ -1,11 +1,15 @@
-﻿using System;
+
+/************************************
+GarbageLayer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using UStacker.Gameplay.Blocks;
-using UStacker.Gameplay.Pieces;
 using UnityEngine;
 using UnityEngine.Pool;
+using UStacker.Gameplay.Blocks;
+using UStacker.Gameplay.Pieces;
 
 namespace UStacker.Gameplay.GarbageGeneration
 {
@@ -25,6 +29,7 @@ namespace UStacker.Gameplay.GarbageGeneration
         {
             block.SetBlockCollection(this);
             _blocks.Add(block);
+            block.Visibility = 1;
             block.Cleared += OnBlockCleared;
         }
 
@@ -46,3 +51,6 @@ namespace UStacker.Gameplay.GarbageGeneration
         }
     }
 }
+/************************************
+end GarbageLayer.cs
+*************************************/

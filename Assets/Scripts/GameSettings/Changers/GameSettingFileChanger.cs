@@ -1,10 +1,14 @@
-﻿using System;
+
+/************************************
+GameSettingFileChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.IO;
 using System.Linq;
-using UStacker.Common;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UStacker.Common;
 
 namespace UStacker.GameSettings.Changers
 {
@@ -15,11 +19,9 @@ namespace UStacker.GameSettings.Changers
 
         protected abstract string TargetDir { get; }
 
-        private void Start()
+        protected override void Start()
         {
-            RefreshValue();
-
-            _gameSettingsSO.SettingsReloaded += RefreshValue;
+            base.Start();
             _dropdown.onValueChanged.AddListener(OnValuePicked);
             _openDirectoryButton.onClick.AddListener(OpenTargetDir);
         }
@@ -46,10 +48,11 @@ namespace UStacker.GameSettings.Changers
             SetValue(optionName);
         }
 
-        private void RefreshValue()
+        protected override void RefreshValue()
         {
+            const string unpickedOptionName = "Unused";
             _dropdown.ClearOptions();
-            _dropdown.options.Add(new TMP_Dropdown.OptionData(string.Empty));
+            _dropdown.options.Add(new TMP_Dropdown.OptionData(unpickedOptionName));
             _dropdown.SetValueWithoutNotify(0);
 
             var options = Array.Empty<string>();
@@ -61,10 +64,13 @@ namespace UStacker.GameSettings.Changers
                 var optionName = options[i];
                 _dropdown.options.Add(new TMP_Dropdown.OptionData(optionName));
                 if (optionName == _gameSettingsSO.GetValue<string>(_controlPath))
-                    _dropdown.SetValueWithoutNotify(i);
+                    _dropdown.SetValueWithoutNotify(i + 1);
             }
 
             _dropdown.RefreshShownValue();
         }
     }
 }
+/************************************
+end GameSettingFileChanger.cs
+*************************************/

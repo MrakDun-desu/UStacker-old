@@ -1,27 +1,63 @@
-﻿using System;
+
+/************************************
+SoundEffectsPlayer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
+using System.Collections.Generic;
 using NLua;
 using NLua.Exceptions;
 using UnityEngine;
-using UStacker.Common;
 using UStacker.Common.Alerts;
+using UStacker.Common.LuaApi;
 using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Enums;
 using UStacker.GlobalSettings.Music;
 
 namespace UStacker.Gameplay.SoundEffects
 {
     [RequireComponent(typeof(AudioSource))]
-    public class SoundEffectsPlayer : MonoBehaviour
+    public class SoundEffectsPlayer : MonoBehaviour, IDisposable
     {
         [SerializeField] private AudioClipCollection _defaultEffects = new();
-        [SerializeField] private MediatorSO _mediator;
+        [SerializeField] private Mediator _mediator;
+        [SerializeField] private AudioSource _audioSource;
 
         public bool RepressSfx;
-        private AudioSource _audioSource;
+        private readonly List<string> _playedInThisUpdate = new();
         private Lua _luaState;
 
         private void Awake()
         {
-            _audioSource = GetComponent<AudioSource>();
+            if (!TryRegisterCustomFunctions())
+                RegisterDefaultFunctions();
+            SoundPackLoader.SoundPackChanged += Reload;
+        }
+
+        private void LateUpdate()
+        {
+            _playedInThisUpdate.Clear();
+        }
+
+        private void OnDestroy()
+        {
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            _mediator.Unregister<PiecePlacedMessage>(HandlePiecePlaced);
+            _mediator.Unregister<PieceRotatedMessage>(HandlePieceRotated);
+            _mediator.Unregister<PieceMovedMessage>(HandlePieceMoved);
+            _mediator.Unregister<HoldUsedMessage>(HandleHoldUsed);
+            _mediator.Unregister<PieceSpawnedMessage>(HandlePieceSpawned);
+            _mediator.Unregister<CountdownTickedMessage>(HandleCountdownTicked);
+            _mediator.Unregister<GameStateChangedMessage>(HandleGameStateChanged);
+            _luaState?.Dispose();
+        }
+
+        private void Reload()
+        {
+            Dispose();
             if (!TryRegisterCustomFunctions())
                 RegisterDefaultFunctions();
         }
@@ -34,8 +70,7 @@ namespace UStacker.Gameplay.SoundEffects
             _mediator.Register<HoldUsedMessage>(HandleHoldUsed);
             _mediator.Register<PieceSpawnedMessage>(HandlePieceSpawned);
             _mediator.Register<CountdownTickedMessage>(HandleCountdownTicked);
-            _mediator.Register<GameLostMessage>(_ => TryPlayClip("death"));
-            _mediator.Register<GameEndedMessage>(_ => TryPlayClip("finish"));
+            _mediator.Register<GameStateChangedMessage>(HandleGameStateChanged);
         }
 
         private bool TryRegisterCustomFunctions()
@@ -43,9 +78,10 @@ namespace UStacker.Gameplay.SoundEffects
             if (string.IsNullOrEmpty(SoundPackLoader.SoundEffectsScript))
                 return false;
 
+            var myType = GetType();
             _luaState = CreateLua.WithAllPrerequisites(out _);
-            _luaState.RegisterFunction(nameof(Play), this, GetType().GetMethod(nameof(Play)));
-            _luaState.RegisterFunction(nameof(PlayAsAnnouncer), this, GetType().GetMethod(nameof(PlayAsAnnouncer)));
+            _luaState.RegisterFunction(nameof(Play), this, myType.GetMethod(nameof(Play)));
+            _luaState.RegisterFunction(nameof(PlayAsAnnouncer), this, myType.GetMethod(nameof(PlayAsAnnouncer)));
             LuaTable events = null;
             try
             {
@@ -55,7 +91,7 @@ namespace UStacker.Gameplay.SoundEffects
             }
             catch (LuaException ex)
             {
-                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                AlertDisplayer.ShowAlert(new Alert(
                     "Error reading sound effects script!",
                     $"Switching to default sound effects.\nLua error: {ex.Message}",
                     AlertType.Error
@@ -65,11 +101,36 @@ namespace UStacker.Gameplay.SoundEffects
 
             if (events is null) return false;
 
-            foreach (var entry in RegisterableMessages.Default)
+            foreach (var eventNameObj in events.Keys)
             {
-                if (events[entry.Key] is not LuaFunction function) continue;
+                if (eventNameObj is not string eventName)
+                {
+                    AlertDisplayer.ShowAlert(new Alert(
+                        "Invalid event name!",
+                        $"Custom sound effects script tried registering an invalid event {eventNameObj}",
+                        AlertType.Warning));
+                    continue;
+                }
 
-                void Action(Message message)
+                if (events[eventNameObj] is not LuaFunction function)
+                {
+                    AlertDisplayer.ShowAlert(new Alert(
+                        "Invalid event handler!",
+                        $"Custom sound effects script tried registering an invalid handler for event {eventName}",
+                        AlertType.Warning));
+                    continue;
+                }
+
+                if (!RegisterableMessages.Default.ContainsKey(eventName))
+                {
+                    AlertDisplayer.ShowAlert(new Alert(
+                        "Invalid event name!",
+                        $"Custom sound effects script tried registering an invalid event {eventName}",
+                        AlertType.Warning));
+                    continue;
+                }
+
+                void Action(IMessage message)
                 {
                     object[] output = null;
                     try
@@ -78,7 +139,7 @@ namespace UStacker.Gameplay.SoundEffects
                     }
                     catch (LuaException ex)
                     {
-                        _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                        AlertDisplayer.ShowAlert(new Alert(
                             "Error executing user code!",
                             $"Error executing sound effects script.\nLua error: {ex.Message}",
                             AlertType.Error
@@ -95,10 +156,33 @@ namespace UStacker.Gameplay.SoundEffects
                     }
                 }
 
-                _mediator.Register((Action<Message>)Action, entry.Value);
+                _mediator.Register((Action<IMessage>) Action, RegisterableMessages.Default[eventName]);
             }
 
             return true;
+        }
+
+        private void HandleGameStateChanged(GameStateChangedMessage message)
+        {
+            switch (message.NewState)
+            {
+                case GameState.Lost:
+                    TryPlayClip("death");
+                    break;
+                case GameState.Ended:
+                    TryPlayClip("finish");
+                    break;
+                case GameState.Unset or
+                    GameState.Any or
+                    GameState.Initializing or
+                    GameState.StartCountdown or
+                    GameState.Running or
+                    GameState.Paused or
+                    GameState.ResumeCountdown:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private void HandleHoldUsed(HoldUsedMessage message)
@@ -111,7 +195,7 @@ namespace UStacker.Gameplay.SoundEffects
         {
             string countdownKey = null;
             var found = false;
-            for (var i = message.RemainingTicks; i > 0; i--)
+            for (var i = (int) message.RemainingTicks; i >= 0; i--)
             {
                 countdownKey = $"countdown{i}";
                 if (SoundPackLoader.SoundEffects.ContainsKey(countdownKey))
@@ -119,6 +203,7 @@ namespace UStacker.Gameplay.SoundEffects
                     found = true;
                     break;
                 }
+
                 if (_defaultEffects.ContainsKey(countdownKey))
                 {
                     found = true;
@@ -126,13 +211,14 @@ namespace UStacker.Gameplay.SoundEffects
                 }
             }
 
-            TryPlayClip(found ? countdownKey : $"countdown{message.RemainingTicks}");
+            if (found)
+                TryPlayClip(countdownKey);
         }
 
         private void HandlePieceSpawned(PieceSpawnedMessage message)
         {
             if (!string.IsNullOrEmpty(message.NextPiece))
-                TryPlayClip(message.NextPiece[0].ToString().ToLower());
+                TryPlayClip(message.NextPiece[^1].ToString().ToLowerInvariant());
         }
 
         private void HandlePiecePlaced(PiecePlacedMessage message)
@@ -147,7 +233,7 @@ namespace UStacker.Gameplay.SoundEffects
 
                     TryPlayClip("floor");
                     break;
-                case > 0 and < 4:
+                case < 4:
                     if (message.WasSpin || message.WasSpinMini)
                     {
                         switch (message.CurrentCombo)
@@ -215,52 +301,58 @@ namespace UStacker.Gameplay.SoundEffects
                 TryPlayClip("move");
             else if (message.Y != 0 && message.WasSoftDrop)
                 TryPlayClip("softdrop");
-            else if (message.Y != 0 && message.WasHardDrop)
+            else if (message.WasHardDrop)
                 TryPlayClip("harddrop");
         }
 
-        private void PlayAsAnnouncer(string clipName)
+        public void PlayAsAnnouncer(string clipName)
         {
-            var clipExists = SoundPackLoader.SoundEffects.TryGetValue(clipName, out var clip);
-            if (!clipExists)
-                _defaultEffects.TryGetValue(clipName, out clip);
-
-            if (!clipExists)
-            {
-                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
-                    "Clip not found!",
-                    $"Sound effect with a name {clipName} was not found.",
-                    AlertType.Warning
-                ));
+            if (_playedInThisUpdate.Contains(clipName) || RepressSfx)
                 return;
-            }
+
+            if (!SoundPackLoader.SoundEffects.TryGetValue(clipName, out var clip))
+                if (!_defaultEffects.TryGetValue(clipName, out clip))
+                {
+                    AlertDisplayer.ShowAlert(new Alert(
+                        "Clip not found!",
+                        $"Sound effect with a name {clipName} was not found.",
+                        AlertType.Warning
+                    ));
+                    return;
+                }
 
             _audioSource.clip = clip;
             _audioSource.Play();
+
+            _playedInThisUpdate.Add(clipName);
         }
 
-        private void Play(string clipName)
+        public void Play(string clipName)
         {
             TryPlayClip(clipName);
         }
 
         private void TryPlayClip(string clipName)
         {
-            if (RepressSfx)
+            if (RepressSfx || _playedInThisUpdate.Contains(clipName))
                 return;
 
-            if (SoundPackLoader.SoundEffects.TryGetValue(clipName, out var clip))
-                _audioSource.PlayOneShot(clip);
-            else if (_defaultEffects.TryGetValue(clipName, out clip))
-                _audioSource.PlayOneShot(clip);
-            else
-            {
-                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
-                    "Clip not found!",
-                    $"Sound effect with a name {clipName} was not found.",
-                    AlertType.Warning
-                ));
-            }
+            if (!SoundPackLoader.SoundEffects.TryGetValue(clipName, out var clip))
+                if (!_defaultEffects.TryGetValue(clipName, out clip))
+                {
+                    AlertDisplayer.ShowAlert(new Alert(
+                        "Clip not found!",
+                        $"Sound effect with a name {clipName} was not found.",
+                        AlertType.Warning
+                    ));
+                    return;
+                }
+
+            _audioSource.PlayOneShot(clip);
+            _playedInThisUpdate.Add(clipName);
         }
     }
 }
+/************************************
+end SoundEffectsPlayer.cs
+*************************************/

@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+
+/************************************
+SpinHandler.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Linq;
+using UnityEngine;
 using UStacker.Gameplay.Enums;
 using UStacker.Gameplay.Pieces;
 using UStacker.GameSettings;
 using UStacker.GameSettings.Enums;
-using UnityEngine;
 
 namespace UStacker.Gameplay.Spins
 {
@@ -20,31 +23,11 @@ namespace UStacker.Gameplay.Spins
             _allowedSpins = allowedSpins;
         }
 
-        public void RotateWithFirstKick(Piece piece, RotateDirection direction)
-        {
-            var rotationAngle = direction switch
-            {
-
-                RotateDirection.Clockwise => -90,
-                RotateDirection.Counterclockwise => 90,
-                RotateDirection.OneEighty => 180,
-                _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
-            };
-            piece.Rotate(rotationAngle);
-
-            var kick = GetKickList(piece, direction).First();
-            var pieceTransform = piece.transform;
-            var piecePosition = pieceTransform.localPosition;
-            pieceTransform.localPosition = new Vector3(
-                piecePosition.x + kick.x,
-                piecePosition.y + kick.y,
-                piecePosition.z
-            );
-        }
-
-        public bool TryKick(Piece piece, Board board, RotateDirection direction, out SpinResult result)
+        public bool TryKick(Piece piece, Board board, RotateDirection direction, bool firstOnly, out SpinResult result)
         {
             var kickList = GetKickList(piece, direction);
+            if (firstOnly)
+                kickList = kickList.Take(1).ToArray();
 
             result = new SpinResult(Vector2Int.zero);
 
@@ -57,13 +40,13 @@ namespace UStacker.Gameplay.Spins
                 if (!board.CanPlace(piece, actualKick)) continue;
 
                 result.Kick = actualKick;
-                
+
                 if (_allowedSpins.HasFlag(AllowedSpins.StupidSpinsFlag))
                 {
                     result.WasSpin = true;
                     result.WasSpinMini = false;
                 }
-                
+
                 if (piece.SpinDetectors.Count(spinDetector => !board.IsEmpty(spinDetector.position, actualKick)) <
                     piece.MinimumSpinDetectors)
                     return true;
@@ -86,32 +69,6 @@ namespace UStacker.Gameplay.Spins
         {
             if (_allowedSpins.HasFlag(AllowedSpins.StupidSpinsFlag))
                 return;
-            
-            switch (_allowedSpins)
-            {
-                case AllowedSpins.All:
-                    formerResult.WasSpin = formerResult.WasSpinRaw;
-                    formerResult.WasSpinMini = formerResult.WasSpinMiniRaw;
-                    return;
-                case AllowedSpins.Stupid:
-                    formerResult.WasSpin = true;
-                    formerResult.WasSpinMini = false;
-                    return;
-                case AllowedSpins.None:
-                    formerResult.WasSpin = false;
-                    formerResult.WasSpinMini = false;
-                    return;
-                case AllowedSpins.ISpins:
-                case AllowedSpins.TSpins:
-                case AllowedSpins.LSpins:
-                case AllowedSpins.JSpins:
-                case AllowedSpins.OSpins:
-                case AllowedSpins.SSpins:
-                case AllowedSpins.ZSpins:
-                case AllowedSpins.StupidSpinsFlag:
-                default:
-                    break;
-            }
 
             if (CheckSpinValidity(pieceType))
             {
@@ -119,14 +76,14 @@ namespace UStacker.Gameplay.Spins
                 formerResult.WasSpinMini = formerResult.WasSpinMiniRaw;
                 return;
             }
+
             formerResult.WasSpin = false;
             formerResult.WasSpinMini = false;
         }
 
         private bool CheckSpinValidity(string pieceType)
         {
-            if (pieceType.StartsWith("giant"))
-                pieceType = pieceType[^1].ToString().ToLowerInvariant();
+            pieceType = pieceType[^1].ToString().ToLowerInvariant();
 
             return pieceType switch
             {
@@ -141,10 +98,10 @@ namespace UStacker.Gameplay.Spins
             };
         }
 
-        private IEnumerable<Vector2Int> GetKickList(Piece piece, RotateDirection direction)
+        private Vector2Int[] GetKickList(Piece piece, RotateDirection direction)
         {
             var kickTable = _rotationSystem.GetKickTable(piece.Type);
-            return direction switch
+            var output = direction switch
             {
                 RotateDirection.Clockwise => piece.RotationState switch
                 {
@@ -172,6 +129,10 @@ namespace UStacker.Gameplay.Spins
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
             };
+            return output.Length <= 0 ? new[] {Vector2Int.zero} : output;
         }
     }
 }
+/************************************
+end SpinHandler.cs
+*************************************/

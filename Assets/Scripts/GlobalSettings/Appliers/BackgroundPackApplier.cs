@@ -1,9 +1,13 @@
+
+/************************************
+BackgroundPackApplier.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.IO;
 using System.Threading.Tasks;
-using UStacker.Common;
-using UStacker.GlobalSettings.Backgrounds;
 using UnityEngine;
 using UnityEngine.Events;
+using UStacker.Common;
+using UStacker.GlobalSettings.Backgrounds;
 
 namespace UStacker.GlobalSettings.Appliers
 {
@@ -25,6 +29,9 @@ namespace UStacker.GlobalSettings.Appliers
 
         private async Task ReloadAndInvoke()
         {
+            if (string.IsNullOrEmpty(AppSettings.Customization.BackgroundFolder))
+                AppSettings.Customization.BackgroundFolder = BackgroundPackLoader.DEFAULT_PATH;
+
             var backgroundFolder = Path.Combine(PersistentPaths.BackgroundPacks,
                 AppSettings.Customization.BackgroundFolder);
             await BackgroundPackLoader.Reload(backgroundFolder, _showAlert);
@@ -32,3 +39,6 @@ namespace UStacker.GlobalSettings.Appliers
         }
     }
 }
+/************************************
+end BackgroundPackApplier.cs
+*************************************/

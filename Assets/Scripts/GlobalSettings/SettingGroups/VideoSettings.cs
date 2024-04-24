@@ -1,3 +1,7 @@
+
+/************************************
+VideoSettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using UnityEngine;
 
@@ -6,8 +10,8 @@ namespace UStacker.GlobalSettings.Groups
     [Serializable]
     public record VideoSettings
     {
-        // backing fields
         private float _backgroundVisibility = .6f;
+        private float _targetFramerate = float.PositiveInfinity;
 
         public FullScreenMode FullscreenMode { get; set; } = FullScreenMode.ExclusiveFullScreen;
         public Resolution Resolution { get; set; } = new();
@@ -18,6 +22,13 @@ namespace UStacker.GlobalSettings.Groups
             set => _backgroundVisibility = Mathf.Clamp(value, 0, 1);
         }
 
-        public bool UseVsync { get; set; }
+        public float TargetFramerate
+        {
+            get => _targetFramerate;
+            set => _targetFramerate = Mathf.Max(value, 1);
+        }
     }
 }
+/************************************
+end VideoSettings.cs
+*************************************/

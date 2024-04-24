@@ -1,5 +1,7 @@
-using UnityEngine;
 
+/************************************
+GameSettingUIntChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 namespace UStacker.GameSettings.Changers
 {
     public class GameSettingUintChanger : GameSettingChangerWithField<uint>
@@ -13,8 +15,9 @@ namespace UStacker.GameSettings.Changers
             }
 
             SetValue(uintValue);
-            var actualValue = _gameSettingsSO.GetValue<uint>(_controlPath);
-            _valueField.SetTextWithoutNotify(actualValue.ToString());
         }
     }
 }
+/************************************
+end GameSettingUIntChanger.cs
+*************************************/

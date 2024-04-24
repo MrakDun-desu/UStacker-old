@@ -1,9 +1,13 @@
-﻿using System;
+
+/************************************
+MusicOptionChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
-using UStacker.Common;
-using UStacker.GlobalSettings.Music;
 using TMPro;
 using UnityEngine;
+using UStacker.Common;
+using UStacker.GlobalSettings.Music;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -33,7 +37,6 @@ namespace UStacker.GlobalSettings.Changers
         private void Awake()
         {
             foreach (var option in MusicPlayer.Instance.ListAvailableOptions())
-            {
                 switch (option.OptionType)
                 {
                     case OptionType.Group:
@@ -47,16 +50,13 @@ namespace UStacker.GlobalSettings.Changers
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            }
         }
 
-        private void Start()
+        protected override void Start()
         {
-            RefreshValue();
-
+            base.Start();
             _nameDropdown.onValueChanged.AddListener(OnNameSelected);
             _typeDropdown.onValueChanged.AddListener(OnTypeSelected);
-            AppSettings.SettingsReloaded += RefreshValue;
         }
 
         private void RefreshNameOptions(MusicOption currentOption)
@@ -97,7 +97,7 @@ namespace UStacker.GlobalSettings.Changers
             }
         }
 
-        private void RefreshValue()
+        protected override void RefreshValue()
         {
             _typeDropdown.ClearOptions();
             foreach (var optionName in Enum.GetNames(typeof(OptionType)))
@@ -130,7 +130,6 @@ namespace UStacker.GlobalSettings.Changers
 
             ChangedOption = new MusicOption(newType, _nameDropdown.options[0].text);
             InvokeSettingChanged();
-            AppSettings.TrySave();
         }
 
         private void OnNameSelected(int index)
@@ -141,7 +140,9 @@ namespace UStacker.GlobalSettings.Changers
             ChangedOption = new MusicOption(optionType, newName);
 
             InvokeSettingChanged();
-            AppSettings.TrySave();
         }
     }
 }
+/************************************
+end MusicOptionChanger.cs
+*************************************/

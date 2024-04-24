@@ -1,3 +1,7 @@
+
+/************************************
+GameplaySettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using UnityEngine;
 
@@ -6,14 +10,12 @@ namespace UStacker.GlobalSettings.Groups
     [Serializable]
     public record GameplaySettings
     {
-        // backing fields
         private float _boardVisibility = .8f;
         private float _boardZoom = 1f;
         private float _ghostPieceVisibility = .5f;
         private float _gridVisibility = .6f;
-        private float _warningPieceTreshhold = 2f;
         private bool _pauseSingleplayerGamesOutOfFocus = true;
-        public event Action<bool> PauseSingleplayerGamesOutOfFocusChanged;
+        private float _warningPieceTreshhold = 2f;
 
 
         public float BoardVisibility
@@ -21,6 +23,7 @@ namespace UStacker.GlobalSettings.Groups
             get => _boardVisibility;
             set => _boardVisibility = Mathf.Clamp(value, 0, 1);
         }
+
         public float GridVisibility
         {
             get => _gridVisibility;
@@ -56,17 +59,23 @@ namespace UStacker.GlobalSettings.Groups
             }
         }
 
-        public bool CtrlScrollToChangeBoardZoom { get; set; }
+        public bool CtrlScrollToChangeBoardZoom { get; set; } = true;
 
-        public bool DragMiddleButtonToRepositionBoard { get; set; }
+        public bool DragMiddleButtonToRepositionBoard { get; set; } = true;
 
         public bool ColorGhostPiece { get; set; } = true;
 
         public bool ShowNotFocusedWarning { get; set; } = true;
 
-        public string ReplayNamingFormat { get; set; } = "BSReplay_{GameType}_{MainStat}_{Timestamp}";
+        public string ReplayNamingFormat { get; set; } = "BSReplay_{GameType}_{MainStat}";
+
+        public bool AutosaveReplaysOnDisk { get; set; } = true;
 
         // not shown in the game menu
         public Vector2 BoardOffset { get; set; }
+        public event Action<bool> PauseSingleplayerGamesOutOfFocusChanged;
     }
 }
+/************************************
+end GameplaySettings.cs
+*************************************/

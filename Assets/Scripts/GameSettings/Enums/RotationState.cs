@@ -1,3 +1,7 @@
+
+/************************************
+RotationState.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 namespace UStacker.GameSettings.Enums
 {
     public enum RotationState
@@ -8,3 +12,6 @@ namespace UStacker.GameSettings.Enums
         Three = 90
     }
 }
+/************************************
+end RotationState.cs
+*************************************/

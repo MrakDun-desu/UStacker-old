@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+CommunityLinkOpener.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 
 namespace UStacker.Common.UI
 {
@@ -15,3 +19,6 @@ namespace UStacker.Common.UI
         }
     }
 }
+/************************************
+end CommunityLinkOpener.cs
+*************************************/

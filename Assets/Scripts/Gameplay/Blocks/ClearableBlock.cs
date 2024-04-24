@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+ClearableBlock.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using UnityEngine.Events;
 
 namespace UStacker.Gameplay.Blocks
@@ -15,3 +19,6 @@ namespace UStacker.Gameplay.Blocks
         }
     }
 }
+/************************************
+end ClearableBlock.cs
+*************************************/

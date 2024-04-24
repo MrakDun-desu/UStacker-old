@@ -1,9 +1,14 @@
-﻿using System.Linq;
-using UStacker.Common;
-using UStacker.Common.Alerts;
+
+/************************************
+PresetChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UStacker.Common;
+using UStacker.Common.Alerts;
 
 namespace UStacker.GameSettings.Changers
 {
@@ -48,7 +53,9 @@ namespace UStacker.GameSettings.Changers
                 }
             }
             else
+            {
                 _dropdown.AddOptions(availableOptions.Select(opt => new TMP_Dropdown.OptionData(opt)).ToList());
+            }
 
             if (_dropdown.options.Count == 1)
             {
@@ -61,32 +68,37 @@ namespace UStacker.GameSettings.Changers
 
         private void OnOptionPicked(int optIndex)
         {
+            _ = TryLoadSettingsAsync(optIndex);
+        }
+
+        private async Task TryLoadSettingsAsync(int optIndex)
+        {
             var presetName = _dropdown.options[optIndex].text;
 
             if (presetName == _defaultPrompt || presetName == _emptyPrompt)
                 return;
 
-            if (_targetSo.TryLoad(presetName))
-            {
-                _ = AlertDisplayer.Instance.ShowAlert(
-                    new Alert("Game settings reloaded!",
-                        $"Game settings overriden with a preset {presetName}.",
-                        AlertType.Success));
-            }
-            else
-            {
-                _ = AlertDisplayer.Instance.ShowAlert(
-                    new Alert("Game settings load failed!",
-                        $"Game preset {presetName} couldn't be found.",
-                        AlertType.Error));
-            }
+            var shownAlert = await _targetSo.TryLoad(presetName)
+                ? new Alert("Game settings reloaded!",
+                    $"Game settings overriden with a preset {presetName}.",
+                    AlertType.Success)
+                : new Alert("Game settings load failed!",
+                    $"Game preset {presetName} couldn't be found.",
+                    AlertType.Error);
+
+            AlertDisplayer.ShowAlert(shownAlert);
         }
 
         private void OnSaveButtonClicked()
         {
-            var presetName = _targetSo.Presentation.Title;
-            presetName = _targetSo.Save(presetName);
-            _ = AlertDisplayer.Instance.ShowAlert(
+            _ = SaveSettingsAsync();
+        }
+
+        private async Task SaveSettingsAsync()
+        {
+            var presetName = _targetSo.Settings.Presentation.Title;
+            presetName = await _targetSo.Save(presetName);
+            AlertDisplayer.ShowAlert(
                 new Alert("Game settings saved!",
                     $"Game settings have been saved to a file {presetName}.",
                     AlertType.Success));
@@ -95,3 +107,6 @@ namespace UStacker.GameSettings.Changers
         }
     }
 }
+/************************************
+end PresetChanger.cs
+*************************************/

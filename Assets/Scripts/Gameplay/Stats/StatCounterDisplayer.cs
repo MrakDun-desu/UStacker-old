@@ -1,10 +1,9 @@
-﻿using System;
+
+/************************************
+StatCounterDisplayer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections;
-using UStacker.Common;
-using UStacker.Common.Alerts;
-using UStacker.Common.Extensions;
-using UStacker.Gameplay.Communication;
-using UStacker.GlobalSettings.StatCounting;
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
@@ -13,13 +12,19 @@ using NLua.Exceptions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UStacker.Common;
+using UStacker.Common.Alerts;
+using UStacker.Common.Extensions;
+using UStacker.Common.LuaApi;
+using UStacker.Gameplay.Communication;
+using UStacker.GlobalSettings.StatCounting;
+using Logger = UStacker.Common.Logger;
 using Random = UStacker.Common.Random;
 
 namespace UStacker.Gameplay.Stats
 {
-    public class StatCounterDisplayer : MonoBehaviour
+    public class StatCounterDisplayer : MonoBehaviour, IDisposable
     {
-
         private const string UPDATED_KEY = "CounterUpdated";
         private const string UTILITY_NAME = "StatUtility";
         private const string BOARD_INTERFACE_NAME = "Board";
@@ -40,13 +45,14 @@ namespace UStacker.Gameplay.Stats
 
         private Lua _luaState;
 
-        private MediatorSO _mediator;
+        private Mediator _mediator;
+        private Random _random;
         private ReadonlyStatContainer _statContainer;
         private StatCounterRecord _statCounter;
         private StatUtility _statUtility;
         private LuaFunction _updateFunction;
-        private Random _random;
 
+        private Coroutine _updateRoutine;
         private TweenerCore<Color, Color, ColorOptions> _visibilityTween;
 
         private void Awake()
@@ -54,25 +60,16 @@ namespace UStacker.Gameplay.Stats
             _camera = FindObjectOfType<Camera>();
         }
 
-        private void OnDestroy()
-        {
-            _mediator.Unregister<GameStartedMessage>(OnGameStarted);
-            if (_currentlyUnderMouse == this)
-                _currentlyUnderMouse = null;
-        }
-
         private void Update()
         {
             Vector2 mousePos = _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             if (_currentlyUnderMouse is null)
-            {
                 if (_textContainer.GetWorldSpaceRect().Contains(mousePos))
                 {
                     _currentlyUnderMouse = this;
                     _moveHandle.gameObject.SetActive(true);
                     _sizeHandle.gameObject.SetActive(true);
                 }
-            }
 
             if (_currentlyUnderMouse != this) return;
 
@@ -88,76 +85,45 @@ namespace UStacker.Gameplay.Stats
             _sizeHandle.gameObject.SetActive(false);
         }
 
-        private void OnGameStarted(GameStartedMessage message)
+        private void OnEnable()
         {
-            _random.State = message.Seed;
+            if (_updateFunction is not null && _updateRoutine is null)
+                _updateRoutine = StartCoroutine(UpdateCor());
+
+            if (_mediator != null)
+                _mediator.Register<SeedSetMessage>(OnSeedSet);
         }
 
-        private void RefreshStatCounter()
+        private void OnDisable()
         {
-            _textContainer.localPosition =
-                new Vector3(_statCounter.Position.x, _statCounter.Position.y, _textContainer.localPosition.z);
-            _textContainer.sizeDelta = _statCounter.Size;
-
-            _luaState = CreateLua.WithAllPrerequisites(out _random);
-            _luaState[UTILITY_NAME] = _statUtility;
-            _luaState[STAT_CONTAINER_NAME] = _statContainer;
-            _luaState[BOARD_INTERFACE_NAME] = _boardInterface;
-            RegisterMethod(nameof(SetText));
-            RegisterMethod(nameof(SetColor));
-            RegisterMethod(nameof(SetVisibility));
-            RegisterMethod(nameof(AnimateColor));
-            RegisterMethod(nameof(AnimateVisibility));
-            RegisterMethod(nameof(SetAlignment));
-            RegisterMethod(nameof(SetTextSize));
-            LuaTable events = null;
-            try
+            if (_updateRoutine is not null)
             {
-                var returnedValue = _luaState.DoString(_statCounter.Script);
-                if (returnedValue.Length == 0) return;
-                if (returnedValue[0] is LuaTable eventTable) events = eventTable;
-            }
-            catch (LuaException ex)
-            {
-                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
-                    "Error reading stat counter script!",
-                    $"Stat {_statCounter.Name} won't be displayed.\nLua error: {ex.Message}",
-                    AlertType.Error
-                ));
-                gameObject.SetActive(false);
-                return;
+                StopCoroutine(_updateRoutine);
+                _updateRoutine = null;
             }
 
-            if (events is null) return;
+            _mediator.Register<SeedSetMessage>(OnSeedSet);
+        }
 
-            foreach (var entry in RegisterableMessages.Default)
-            {
-                if (events[entry.Key] is not LuaFunction function) continue;
+        private void OnDestroy()
+        {
+            Dispose();
+            if (_currentlyUnderMouse == this)
+                _currentlyUnderMouse = null;
+        }
 
-                void Action(Message message)
-                {
-                    try
-                    {
-                        DisplayOutput(function.Call(message));
-                    }
-                    catch (LuaException ex)
-                    {
-                        _ = AlertDisplayer.Instance.ShowAlert(new Alert(
-                            "Error executing stat counter script!",
-                            $"Error executing stat counter script with name {_statCounter.Name}.\nLua error: {ex.Message}",
-                            AlertType.Error
-                        ));
-                        gameObject.SetActive(false);
-                    }
-                }
+        public void Dispose()
+        {
+            _luaState?.Dispose();
+            _updateFunction?.Dispose();
 
-                _mediator.Register((Action<Message>) Action, entry.Value);
-            }
+            _luaState = null;
+            _updateFunction = null;
+        }
 
-            if (events[UPDATED_KEY] is not LuaFunction updateFunc) return;
-            _updateFunction = updateFunc;
-
-            StartCoroutine(UpdateCor());
+        private void OnSeedSet(SeedSetMessage message)
+        {
+            _random.State = message.Seed;
         }
 
         private void RegisterMethod(string methodName)
@@ -169,13 +135,16 @@ namespace UStacker.Gameplay.Stats
         {
             while (true)
             {
+                if (!gameObject.activeSelf)
+                    yield break;
+
                 try
                 {
                     DisplayOutput(_updateFunction.Call());
                 }
                 catch (LuaException ex)
                 {
-                    _ = AlertDisplayer.Instance.ShowAlert(new Alert(
+                    AlertDisplayer.ShowAlert(new Alert(
                         "Error executing stat counter script!",
                         $"Error executing stat counter script with name {_statCounter.Name}.\nLua error: {ex.Message}",
                         AlertType.Error
@@ -214,13 +183,18 @@ namespace UStacker.Gameplay.Stats
                 _textContainer.localPosition = newPos;
                 _statCounter.Position = newPos;
             }
-            else if (Mouse.current.leftButton.wasReleasedThisFrame) _isDraggingPosition = false;
+            else if (Mouse.current.leftButton.wasReleasedThisFrame)
+            {
+                _isDraggingPosition = false;
+            }
         }
 
         private void HandleSizeDrag(Vector2 mousePos)
         {
             if (Mouse.current.leftButton.wasPressedThisFrame && _sizeHandle.GetWorldSpaceRect().Contains(mousePos))
+            {
                 _isDraggingSize = true;
+            }
             else if (Mouse.current.leftButton.isPressed && _isDraggingSize)
             {
                 var containerPos = (Vector2) _textContainer.position;
@@ -231,20 +205,123 @@ namespace UStacker.Gameplay.Stats
                 _textContainer.sizeDelta = sizeDelta;
                 _statCounter.Size = sizeDelta;
             }
-            else if (Mouse.current.leftButton.wasReleasedThisFrame) _isDraggingSize = false;
+            else if (Mouse.current.leftButton.wasReleasedThisFrame)
+            {
+                _isDraggingSize = false;
+            }
         }
 
-        public void Initialize(MediatorSO mediator, StatBoardInterface board,
-            ReadonlyStatContainer statContainer, StatUtility statUtility,
-            StatCounterRecord statCounter)
+        public void RefreshStatCounter(StatCounterRecord statCounter)
+        {
+            _statCounter = statCounter;
+
+            _textContainer.localPosition =
+                new Vector3(_statCounter.Position.x, _statCounter.Position.y, _textContainer.localPosition.z);
+            _textContainer.sizeDelta = _statCounter.Size;
+            _displayText.enableAutoSizing = true;
+
+            Dispose();
+            _luaState = CreateLua.WithAllPrerequisites(out _random);
+            _luaState[UTILITY_NAME] = _statUtility;
+            _luaState[STAT_CONTAINER_NAME] = _statContainer;
+            _luaState[BOARD_INTERFACE_NAME] = _boardInterface;
+            RegisterMethod(nameof(SetText));
+            RegisterMethod(nameof(SetColor));
+            RegisterMethod(nameof(SetVisibility));
+            RegisterMethod(nameof(AnimateColor));
+            RegisterMethod(nameof(AnimateVisibility));
+            RegisterMethod(nameof(SetAlignment));
+            RegisterMethod(nameof(SetTextSize));
+            LuaTable events = null;
+            try
+            {
+                var returnedValue = _luaState.DoString(_statCounter.Script);
+                if (returnedValue.Length == 0) return;
+                if (returnedValue[0] is LuaTable eventTable) events = eventTable;
+            }
+            catch (LuaException ex)
+            {
+                AlertDisplayer.ShowAlert(new Alert(
+                    "Error reading stat counter script!",
+                    $"Stat {_statCounter.Name} won't be displayed.\nLua error: {ex.Message}",
+                    AlertType.Error
+                ));
+                Logger.Log(_statCounter.Script);
+                gameObject.SetActive(false);
+                return;
+            }
+
+            if (events is null) return;
+
+            foreach (var eventNameObj in events.Keys)
+            {
+                if (eventNameObj is not string eventName)
+                {
+                    AlertDisplayer.ShowAlert(new Alert(
+                        "Invalid event name!",
+                        $"Stat counter {_statCounter.Name} tried registering an invalid event {eventNameObj}",
+                        AlertType.Warning));
+                    continue;
+                }
+
+                if (events[eventNameObj] is not LuaFunction function)
+                {
+                    AlertDisplayer.ShowAlert(new Alert(
+                        "Invalid event handler!",
+                        $"Stat counter {_statCounter.Name} tried registering an invalid handler for event {eventName}",
+                        AlertType.Warning));
+                    continue;
+                }
+
+                if (eventName == UPDATED_KEY) continue;
+
+                if (!RegisterableMessages.Default.ContainsKey(eventName))
+                {
+                    AlertDisplayer.ShowAlert(new Alert(
+                        "Invalid event name!",
+                        $"Stat counter {_statCounter.Name} tried registering an invalid event {eventName}",
+                        AlertType.Warning));
+                    continue;
+                }
+
+                void Action(IMessage message)
+                {
+                    if (!gameObject.activeSelf)
+                        return;
+
+                    try
+                    {
+                        DisplayOutput(function.Call(message));
+                    }
+                    catch (LuaException ex)
+                    {
+                        AlertDisplayer.ShowAlert(new Alert(
+                            "Error executing stat counter script!",
+                            $"Error executing stat counter script with name {_statCounter.Name}.\nLua error: {ex.Message}",
+                            AlertType.Error
+                        ));
+                        gameObject.SetActive(false);
+                    }
+                }
+
+                _mediator.Register((Action<IMessage>) Action, RegisterableMessages.Default[eventName]);
+            }
+
+            if (events[UPDATED_KEY] is not LuaFunction updateFunc) return;
+            _updateFunction = updateFunc;
+            if (gameObject.activeInHierarchy)
+                _updateRoutine = StartCoroutine(UpdateCor());
+        }
+
+
+        public void Initialize(Mediator mediator, StatBoardInterface board,
+            ReadonlyStatContainer statContainer, StatUtility statUtility)
         {
             _mediator = mediator;
             _boardInterface = board;
             _statContainer = statContainer;
-            _statCounter = statCounter;
             _statUtility = statUtility;
-            _mediator.Register<GameStartedMessage>(OnGameStarted);
-            RefreshStatCounter();
+            _mediator.Register<SeedSetMessage>(OnSeedSet);
         }
 
         #region Callable functions
@@ -314,3 +391,6 @@ namespace UStacker.Gameplay.Stats
         #endregion
     }
 }
+/************************************
+end StatCounterDisplayer.cs
+*************************************/

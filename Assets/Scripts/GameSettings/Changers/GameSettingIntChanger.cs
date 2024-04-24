@@ -1,3 +1,7 @@
+
+/************************************
+GameSettingIntChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 namespace UStacker.GameSettings.Changers
 {
     public class GameSettingIntChanger : GameSettingChangerWithField<int>
@@ -11,8 +15,9 @@ namespace UStacker.GameSettings.Changers
             }
 
             SetValue(intValue);
-            var actualValue = _gameSettingsSO.GetValue<int>(_controlPath);
-            _valueField.SetTextWithoutNotify(actualValue.ToString());
         }
     }
 }
+/************************************
+end GameSettingIntChanger.cs
+*************************************/

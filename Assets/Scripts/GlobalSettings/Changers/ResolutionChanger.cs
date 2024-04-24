@@ -1,3 +1,7 @@
+
+/************************************
+ResolutionChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Globalization;
 using System.Linq;
@@ -13,7 +17,28 @@ namespace UStacker.GlobalSettings.Changers
         private RefreshRate[] _refreshRates = Array.Empty<RefreshRate>();
         private Vector2Int[] _resolutions = Array.Empty<Vector2Int>();
 
-        private void Start()
+        private void Awake()
+        {
+            RefreshResolutions();
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+
+            _resolutionDropdown.onValueChanged.AddListener(OnResolutionPicked);
+            _refreshRateDropdown.onValueChanged.AddListener(OnRefreshRatePicked);
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (!hasFocus)
+                return;
+
+            RefreshResolutions();
+        }
+
+        private void RefreshResolutions()
         {
             _resolutions = Screen.resolutions
                 .Select(res => new Vector2Int(res.width, res.height))
@@ -33,16 +58,11 @@ namespace UStacker.GlobalSettings.Changers
 
             _refreshRateDropdown.ClearOptions();
             foreach (var refreshRate in _refreshRates)
-                _refreshRateDropdown.options.Add(new TMP_Dropdown.OptionData(refreshRate.value.ToString(CultureInfo.InvariantCulture)));
-
-            RefreshValue();
-
-            _resolutionDropdown.onValueChanged.AddListener(OnResolutionPicked);
-            _refreshRateDropdown.onValueChanged.AddListener(OnRefreshRatePicked);
-            AppSettings.SettingsReloaded += RefreshValue;
+                _refreshRateDropdown.options.Add(
+                    new TMP_Dropdown.OptionData(refreshRate.value.ToString(CultureInfo.InvariantCulture)));
         }
 
-        private void RefreshValue()
+        protected override void RefreshValue()
         {
             for (var i = 0; i < _resolutionDropdown.options.Count; i++)
             {
@@ -79,9 +99,13 @@ namespace UStacker.GlobalSettings.Changers
         {
             var newRes = new Resolution
             {
-                height = Screen.currentResolution.height, width = Screen.currentResolution.width, refreshRateRatio = _refreshRates[value]
+                height = Screen.currentResolution.height, width = Screen.currentResolution.width,
+                refreshRateRatio = _refreshRates[value]
             };
             SetValue(newRes);
         }
     }
 }
+/************************************
+end ResolutionChanger.cs
+*************************************/

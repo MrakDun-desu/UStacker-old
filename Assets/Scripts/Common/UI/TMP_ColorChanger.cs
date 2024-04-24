@@ -1,4 +1,8 @@
-﻿using TMPro;
+
+/************************************
+TMP_ColorChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using TMPro;
 using UnityEngine;
 
 namespace UStacker.Common.UI
@@ -18,3 +22,6 @@ namespace UStacker.Common.UI
         }
     }
 }
+/************************************
+end TMP_ColorChanger.cs
+*************************************/

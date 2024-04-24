@@ -1,12 +1,19 @@
-﻿using UStacker.Common;
+
+/************************************
+OnQuitSettingsSaver.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UStacker.Common;
 
 namespace UStacker.GlobalSettings.Startup
 {
     public class OnQuitSettingsSaver : MonoSingleton<OnQuitSettingsSaver>
     {
-        private void OnApplicationQuit()
+        private async void OnApplicationQuit()
         {
-            AppSettings.TrySave();
+            await AppSettings.TrySaveAsync();
         }
     }
 }
+/************************************
+end OnQuitSettingsSaver.cs
+*************************************/

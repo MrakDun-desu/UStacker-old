@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+MinRestraintAttribute.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 
 namespace UStacker.Common.Attributes
 {
@@ -14,3 +18,6 @@ namespace UStacker.Common.Attributes
         public bool UseForValidation { get; }
     }
 }
+/************************************
+end MinRestraintAttribute.cs
+*************************************/

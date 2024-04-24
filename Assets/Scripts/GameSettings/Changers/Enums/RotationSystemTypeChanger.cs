@@ -1,3 +1,7 @@
+
+/************************************
+RotationSystemTypeChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UStacker.GameSettings.Enums;
 
 namespace UStacker.GameSettings.Changers.Enums
@@ -6,3 +10,6 @@ namespace UStacker.GameSettings.Changers.Enums
     {
     }
 }
+/************************************
+end RotationSystemTypeChanger.cs
+*************************************/

@@ -1,28 +1,33 @@
-﻿using System;
+
+/************************************
+GhostPiece.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.Pool;
 using UStacker.Gameplay.Blocks;
 using UStacker.Gameplay.Initialization;
 using UStacker.GameSettings;
 using UStacker.GlobalSettings;
 using UStacker.GlobalSettings.Appliers;
-using UnityEngine;
-using UnityEngine.Pool;
 
 namespace UStacker.Gameplay.Pieces
 {
     public class GhostPiece : MonoBehaviour, IBlockCollection, IGameSettingsDependency
     {
-
         private static readonly Color _defaultColor = Color.white;
         [SerializeField] private BlockBase _blockPrefab;
         [SerializeField] private Board _board;
         private readonly List<BlockBase> _blocks = new();
         private Piece _activePiece;
+        private bool _awake;
         private ObjectPool<BlockBase> _blockPool;
         private bool _colorGhostPiece;
         private Color _currentColor = _defaultColor;
         private GameSettingsSO.SettingsContainer _settings;
+
 
         public Piece ActivePiece
         {
@@ -53,28 +58,24 @@ namespace UStacker.Gameplay.Pieces
 
         private void Awake()
         {
+            if (_awake)
+                return;
+
+            _awake = true;
             _blockPool = new ObjectPool<BlockBase>(
                 CreateBlock,
-                block => block.gameObject.SetActive(true),
-                block => block.gameObject.SetActive(false),
+                block => block.Visibility = AppSettings.Gameplay.GhostPieceVisibility,
+                block => block.Visibility = 0,
                 block => Destroy(block.gameObject),
                 true,
                 4,
-                20
+                50
             );
-        }
-
-        private void Start()
-        {
-            if (!_settings.Controls.ShowGhostPiece)
-                gameObject.SetActive(false);
-
-            _colorGhostPiece = AppSettings.Gameplay.ColorGhostPiece;
-            ColorGhostPieceApplier.ColorGhostPieceChanged += ChangeColoring;
         }
 
         private void OnDestroy()
         {
+            _blockPool?.Dispose();
             ColorGhostPieceApplier.ColorGhostPieceChanged -= ChangeColoring;
         }
 
@@ -85,16 +86,32 @@ namespace UStacker.Gameplay.Pieces
 
         public GameSettingsSO.SettingsContainer GameSettings
         {
-            set => _settings = value;
+            set
+            {
+                _settings = value;
+                Awake();
+                Initialize();
+            }
         }
+
         public event Action<Color> ColorChanged;
         public event Action Rendered;
+
+        private void Initialize()
+        {
+            if (!_settings.Controls.ShowGhostPiece)
+                gameObject.SetActive(false);
+
+            _colorGhostPiece = AppSettings.Gameplay.ColorGhostPiece;
+            ColorGhostPieceApplier.ColorGhostPieceChanged += ChangeColoring;
+        }
 
         private BlockBase CreateBlock()
         {
             var newBlock = Instantiate(_blockPrefab, transform);
             newBlock.Board = _board;
             newBlock.BlockNumber = (uint) Mathf.Min(_blocks.Count, 3);
+            newBlock.Visibility = AppSettings.Gameplay.GhostPieceVisibility;
             return newBlock;
         }
 
@@ -143,12 +160,17 @@ namespace UStacker.Gameplay.Pieces
 
         public void Disable()
         {
-            gameObject.SetActive(false);
+            foreach (var block in _blocks)
+                block.Visibility = 0;
         }
 
         public void Enable()
         {
-            gameObject.SetActive(true);
+            foreach (var block in _blocks)
+                block.Visibility = AppSettings.Gameplay.GhostPieceVisibility;
         }
     }
 }
+/************************************
+end GhostPiece.cs
+*************************************/

@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+StatCounterRecord.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using UnityEngine;
 
 namespace UStacker.GlobalSettings.StatCounting
@@ -50,3 +54,6 @@ namespace UStacker.GlobalSettings.StatCounting
         }
     }
 }
+/************************************
+end StatCounterRecord.cs
+*************************************/

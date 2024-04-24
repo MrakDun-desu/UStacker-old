@@ -1,7 +1,11 @@
+
+/************************************
+AppSettingChangerBase.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
-using UStacker.Common.Extensions;
 using TMPro;
 using UnityEngine;
+using UStacker.Common.Extensions;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -11,7 +15,18 @@ namespace UStacker.GlobalSettings.Changers
         [SerializeField] private TMP_Text _title;
         [SerializeField] private bool _autoformatName = true;
 
-        protected void OnValidate()
+        protected virtual void Start()
+        {
+            RefreshValue();
+            AppSettings.SettingsReloaded += RefreshValue;
+        }
+
+        protected virtual void OnDestroy()
+        {
+            AppSettings.SettingsReloaded -= RefreshValue;
+        }
+
+        protected virtual void OnValidate()
         {
             if (_title == null) return;
             if (!AppSettings.SettingExists<T>(_controlPath))
@@ -22,14 +37,22 @@ namespace UStacker.GlobalSettings.Changers
 
         public event Action SettingChanged;
 
+        protected abstract void RefreshValue();
+
         protected void InvokeSettingChanged()
         {
             SettingChanged?.Invoke();
         }
 
-        public void SetValue(T value)
+        protected void SetValue(T value)
         {
-            if (AppSettings.TrySetValue(value, _controlPath)) SettingChanged?.Invoke();
+            if (AppSettings.TrySetValue(value, _controlPath))
+                SettingChanged?.Invoke();
+
+            RefreshValue();
         }
     }
 }
+/************************************
+end AppSettingChangerBase.cs
+*************************************/

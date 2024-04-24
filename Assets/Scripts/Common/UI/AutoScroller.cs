@@ -1,7 +1,11 @@
-﻿using UStacker.Common.Extensions;
+
+/************************************
+AutoScroller.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UStacker.Common.Extensions;
 
 namespace UStacker.Common.UI
 {
@@ -68,3 +72,6 @@ namespace UStacker.Common.UI
         }
     }
 }
+/************************************
+end AutoScroller.cs
+*************************************/

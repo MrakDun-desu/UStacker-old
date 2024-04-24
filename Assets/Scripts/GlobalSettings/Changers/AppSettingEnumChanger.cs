@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+AppSettingEnumChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -6,23 +10,24 @@ namespace UStacker.GlobalSettings.Changers
 {
     public class AppSettingEnumChanger<TEnum> : AppSettingChangerBase<TEnum> where TEnum : Enum
     {
-        [Space]
-        [SerializeField]
-        private TMP_Dropdown _dropdown;
+        [Space] [SerializeField] private TMP_Dropdown _dropdown;
 
         [SerializeField] private EnumWithName[] _values;
 
-        protected virtual void Start()
+        private void Awake()
         {
             _dropdown.ClearOptions();
-            foreach (var value in _values) _dropdown.options.Add(new TMP_Dropdown.OptionData(value.Name));
+            foreach (var value in _values)
+                _dropdown.options.Add(new TMP_Dropdown.OptionData(value.Name));
+        }
 
-            RefreshDropdownValue();
-            AppSettings.SettingsReloaded += RefreshDropdownValue;
+        protected override void Start()
+        {
+            base.Start();
             _dropdown.onValueChanged.AddListener(OnValuePicked);
         }
 
-        private void RefreshDropdownValue()
+        protected override void RefreshValue()
         {
             for (var i = 0; i < _values.Length; i++)
             {
@@ -53,3 +58,6 @@ namespace UStacker.GlobalSettings.Changers
         }
     }
 }
+/************************************
+end AppSettingEnumChanger.cs
+*************************************/

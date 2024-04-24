@@ -1,14 +1,18 @@
+
+/************************************
+StartupHandler.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
-using System.Linq;
-using UStacker.GlobalSettings.Appliers;
-using UStacker.GlobalSettings.Changers;
-using UStacker.GlobalSettings.StatCounting;
+using System.IO;
+using System.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UStacker.Common;
+using UStacker.GlobalSettings.Appliers;
+using UStacker.GlobalSettings.Changers;
 
 namespace UStacker.GlobalSettings.Startup
 {
@@ -17,13 +21,14 @@ namespace UStacker.GlobalSettings.Startup
         [SerializeField] private InputActionAsset _actionAsset;
         [SerializeField] private TMP_Text _loaderMessagePrefab;
         [SerializeField] private Transform _loaderMessageParent;
-        [SerializeField] private PremadeStatCountersSo _premadeStatCounters;
-        [SerializeField] private StringReferenceSO[] _gameTypes = Array.Empty<StringReferenceSO>();
 
         private uint _loadersActive;
 
         private void Start()
         {
+            if (!Directory.Exists(PersistentPaths.DataPath))
+                FileHandling.CreateDirectoriesRecursively(PersistentPaths.DataPath);
+
             foreach (var loader in GetComponents<IAsyncApplier>())
             {
                 TMP_Text messageText = null;
@@ -37,24 +42,24 @@ namespace UStacker.GlobalSettings.Startup
                 {
                     if (messageText != null)
                         messageText.gameObject.SetActive(false);
-                    RemoveLoader();
+                    DecrementLoaderCount();
                 });
             }
 
             AddSceneChangeMethods();
             var settingsSaver = new GameObject("OnQuitSettingsSaver");
             settingsSaver.AddComponent<OnQuitSettingsSaver>();
-#if !UNITY_EDITOR
-            var collectorManager = new GameObject("GarbageCollectorManager");
-            collectorManager.AddComponent<GarbageCollectorManager>();
-#endif
-            AppSettings.TryLoad();
-            SettingChanged?.Invoke();
-            AddDefaultStatCounters();
-            FinishStartup();
+            _ = LoadAppSettings();
         }
 
         public event Action SettingChanged;
+
+        private async Task LoadAppSettings()
+        {
+            await AppSettings.TryLoadAsync();
+            SettingChanged?.Invoke();
+            FinishStartup();
+        }
 
         private void FinishStartup()
         {
@@ -68,29 +73,13 @@ namespace UStacker.GlobalSettings.Startup
             SceneManager.sceneLoaded += (_, _) => DOTween.KillAll();
         }
 
-        private void RemoveLoader()
+        private void DecrementLoaderCount()
         {
             _loadersActive--;
             FinishStartup();
         }
-
-        private void AddDefaultStatCounters()
-        {
-            if (AppSettings.StatCounting.StatCounterGroups.Count > 0 || _premadeStatCounters == null) return;
-            AppSettings.StatCounting.DefaultGroup = _premadeStatCounters.DefaultGroup;
-
-            foreach (var group in _premadeStatCounters.PremadeGroups)
-            {
-                var groupId = Guid.NewGuid();
-                while (AppSettings.StatCounting.StatCounterGroups.ContainsKey(groupId))
-                    groupId = Guid.NewGuid();
-
-                AppSettings.StatCounting.StatCounterGroups[groupId] = group;
-
-                if (_gameTypes.Select(gameType => gameType.Value).Contains(group.Name))
-                    AppSettings.StatCounting.GameStatCounterDictionary[group.Name] = groupId;
-            }
-
-        }
     }
 }
+/************************************
+end StartupHandler.cs
+*************************************/

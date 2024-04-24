@@ -1,3 +1,7 @@
+
+/************************************
+AppSettingBoolChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,16 +11,18 @@ namespace UStacker.GlobalSettings.Changers
     {
         [Space] [SerializeField] private Toggle _toggle;
 
-        private void Start()
+        protected override void Start()
         {
-            RefreshValue();
-            AppSettings.SettingsReloaded += RefreshValue;
+            base.Start();
             _toggle.onValueChanged.AddListener(SetValue);
         }
 
-        private void RefreshValue()
+        protected override void RefreshValue()
         {
             _toggle.isOn = AppSettings.GetValue<bool>(_controlPath);
         }
     }
 }
+/************************************
+end AppSettingBoolChanger.cs
+*************************************/

@@ -1,4 +1,8 @@
-﻿using System.Collections;
+
+/************************************
+FpsCounter.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -8,7 +12,6 @@ namespace UStacker.Common.UI
     public class FpsCounter : MonoBehaviour
     {
         [SerializeField] private float _interval = 1f;
-        private float _currentFps;
 
         private TMP_Text _text;
 
@@ -22,18 +25,16 @@ namespace UStacker.Common.UI
             StartCoroutine(ShowFpsCor());
         }
 
-        private void Update()
-        {
-            _currentFps = 1 / Time.deltaTime;
-        }
-
         private IEnumerator ShowFpsCor()
         {
             while (true)
             {
-                _text.text = $"FPS: {_currentFps}";
+                _text.text = $"FPS: {Mathf.RoundToInt(1 / Time.deltaTime)}";
                 yield return new WaitForSeconds(_interval);
             }
         }
     }
 }
+/************************************
+end FpsCounter.cs
+*************************************/

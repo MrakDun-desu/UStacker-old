@@ -1,3 +1,7 @@
+
+/************************************
+Navigator.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,3 +32,6 @@ namespace UStacker.Common
         }
     }
 }
+/************************************
+end Navigator.cs
+*************************************/

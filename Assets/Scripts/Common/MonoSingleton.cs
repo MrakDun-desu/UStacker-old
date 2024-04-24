@@ -1,3 +1,7 @@
+
+/************************************
+MonoSingleton.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
 
 namespace UStacker.Common
@@ -27,3 +31,6 @@ namespace UStacker.Common
         }
     }
 }
+/************************************
+end MonoSingleton.cs
+*************************************/

@@ -16,11 +16,12 @@ MonoBehaviour:
     Name: Pieces
     Type: 0
     Filename: 
-    Script: "function FormatOutput()\r\n\tlocal pps = Stats.PiecesPerSecond\r\n\tlocal
-      piecesPlaced = Stats.PiecesPlaced\r\n\treturn \"Pieces: \" .. piecesPlaced
-      .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
-      {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] = FormatOutput,\r\n\t[\"GameStarted\"]
-      = FormatOutput,\r\n\t[\"GameRestarted\"] = FormatOutput\n}"
+    Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+      then\n\t\treturn FormatOutput()\n\tend\nend\n\nfunction FormatOutput()\r\n\tlocal
+      pps = Stats.PiecesPerSecond\r\n\tlocal piecesPlaced = Stats.PiecesPlaced\r\n\treturn
+      \"Pieces: \" .. piecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
+      {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] = FormatOutput,\n\t[\"GameStateChanged\"]
+      = Reset\n}"
     Position: {x: -9, y: 6}
     Size: {x: 8, y: 3}
     UpdateInterval: 0.1

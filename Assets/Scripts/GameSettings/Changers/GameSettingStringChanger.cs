@@ -1,12 +1,17 @@
-﻿namespace UStacker.GameSettings.Changers
+
+/************************************
+GameSettingStringChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.GameSettings.Changers
 {
     public class GameSettingStringChanger : GameSettingChangerWithField<string>
     {
         protected override void OnValueOverwritten(string newValue)
         {
             SetValue(newValue);
-            var actualValue = _gameSettingsSO.GetValue<string>(_controlPath);
-            _valueField.SetTextWithoutNotify(actualValue);
         }
     }
 }
+/************************************
+end GameSettingStringChanger.cs
+*************************************/

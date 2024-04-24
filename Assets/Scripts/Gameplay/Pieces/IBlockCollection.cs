@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+
+/************************************
+IBlockCollection.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace UStacker.Gameplay.Pieces
@@ -9,3 +13,6 @@ namespace UStacker.Gameplay.Pieces
         string Type { get; }
     }
 }
+/************************************
+end IBlockCollection.cs
+*************************************/

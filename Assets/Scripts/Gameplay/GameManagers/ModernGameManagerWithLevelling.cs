@@ -1,6 +1,11 @@
+
+/************************************
+ModernGameManagerWithLevelling.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
-using UStacker.Gameplay.Communication;
 using UnityEngine;
+using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Enums;
 
 namespace UStacker.Gameplay.GameManagers
 {
@@ -19,24 +24,28 @@ namespace UStacker.Gameplay.GameManagers
         private long _currentScore;
         private int _linesToNextLevel;
 
-        private MediatorSO _mediator;
+        private Mediator _mediator;
         private uint _startingLevel;
         private int _totalLinesToNextLevel;
 
         private int _linesClearedThisLevel => _totalLinesToNextLevel - _linesToNextLevel;
 
-        public void Initialize(string startingLevel, MediatorSO mediator)
+        public void Initialize(string startingLevel, Mediator mediator)
         {
             uint.TryParse(startingLevel, out _startingLevel);
             _mediator = mediator;
 
             _mediator.Register<PiecePlacedMessage>(HandlePiecePlaced);
             _mediator.Register<PieceMovedMessage>(HandlePieceMoved);
-            _mediator.Register<GameStartedMessage>(_ => ResetGameManager());
-            _mediator.Register<GameRestartedMessage>(_ => ResetGameManager());
+            _mediator.Register<GameStateChangedMessage>(HandleGameStateChange);
         }
 
-        private void ResetGameManager()
+        public void Delete()
+        {
+            Destroy(this);
+        }
+
+        private void ResetState()
         {
             _currentLevel = Math.Clamp(_startingLevel, MIN_LEVEL, MAX_LEVEL);
             _currentScore = 0;
@@ -50,13 +59,20 @@ namespace UStacker.Gameplay.GameManagers
                 LEVEUP_CONDITION_NAME));
         }
 
+        private void HandleGameStateChange(GameStateChangedMessage message)
+        {
+            if (message.NewState != GameState.Initializing)
+                return;
+
+            ResetState();
+        }
+
         private void HandlePiecePlaced(PiecePlacedMessage message)
         {
             long scoreAddition;
             if (message.WasSpin)
                 scoreAddition = ((int) message.LinesCleared + 1) * 400;
             else if (message.WasSpinMini)
-            {
                 scoreAddition = message.LinesCleared switch
                 {
                     0 => 100,
@@ -64,9 +80,7 @@ namespace UStacker.Gameplay.GameManagers
                     2 => 400,
                     var amount => (int) amount * 300
                 };
-            }
             else
-            {
                 scoreAddition = message.LinesCleared switch
                 {
                     0 => 0,
@@ -76,7 +90,6 @@ namespace UStacker.Gameplay.GameManagers
                     4 => 800,
                     var amount => (int) amount * 200
                 };
-            }
 
             scoreAddition += (int) message.CurrentCombo * 50;
 
@@ -145,3 +158,6 @@ namespace UStacker.Gameplay.GameManagers
         }
     }
 }
+/************************************
+end ModernGameManagerWithLevelling.cs
+*************************************/

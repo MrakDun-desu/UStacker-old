@@ -1,3 +1,7 @@
+
+/************************************
+FullscreenModeChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
 
 namespace UStacker.GlobalSettings.Changers
@@ -6,3 +10,6 @@ namespace UStacker.GlobalSettings.Changers
     {
     }
 }
+/************************************
+end FullscreenModeChanger.cs
+*************************************/

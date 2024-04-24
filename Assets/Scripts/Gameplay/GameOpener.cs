@@ -1,7 +1,11 @@
-﻿using UStacker.Gameplay.Initialization;
-using UStacker.GameSettings;
+
+/************************************
+GameOpener.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UStacker.Gameplay.Initialization;
+using UStacker.GameSettings;
 
 namespace UStacker.Gameplay
 {
@@ -10,10 +14,12 @@ namespace UStacker.Gameplay
         public void OpenGame(GameSettingsSO gameSettingsAsset)
         {
             GameInitializer.Replay = null;
-            GameInitializer.GameSettings = gameSettingsAsset.Settings;
             GameInitializer.GameType = gameSettingsAsset.GameType.Value;
-            GameInitializer.InitAsReplay = false;
+            GameInitializer.GameSettings = gameSettingsAsset.Settings;
             SceneManager.LoadScene("Scene_Game_Singleplayer");
         }
     }
 }
+/************************************
+end GameOpener.cs
+*************************************/

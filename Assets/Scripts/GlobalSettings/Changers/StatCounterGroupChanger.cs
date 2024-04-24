@@ -1,9 +1,13 @@
-﻿using System;
+
+/************************************
+StatCounterGroupChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
-using UStacker.GlobalSettings.StatCounting;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UStacker.GlobalSettings.StatCounting;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -38,9 +42,6 @@ namespace UStacker.GlobalSettings.Changers
         }
 
         public Guid Id { get; set; }
-        
-        public event Action<Guid> GroupRemoved;
-        public event Action<float> SizeChanged;
 
         private void Awake()
         {
@@ -56,6 +57,9 @@ namespace UStacker.GlobalSettings.Changers
             _groupRemoveButton.onClick.AddListener(() => GroupRemoved?.Invoke(Id));
             _counterAddButton.onClick.AddListener(OnStatCounterAdded);
         }
+
+        public event Action<Guid> GroupRemoved;
+        public event Action<float> SizeChanged;
 
         private void ChangeHeight(float sizeDelta)
         {
@@ -77,10 +81,7 @@ namespace UStacker.GlobalSettings.Changers
         private void RefreshStatCounters()
         {
             foreach (var counterChanger in _statCounterChangers)
-            {
-                counterChanger.Removed -= DeleteStatCounter;
                 DeleteStatCounter(counterChanger);
-            }
 
             _statCounterChangers.Clear();
 
@@ -119,10 +120,10 @@ namespace UStacker.GlobalSettings.Changers
             Value.Name = newValue;
         }
 
-        private void AddStatCounter(StatCounterRecord newCounter, bool addToValue = false)
+        private StatCounterChanger AddStatCounter(StatCounterRecord newCounter, bool addToValue = false)
         {
             var newCounterChanger = Instantiate(_counterChangerPrefab, _counterChangersContainer);
-            newCounterChanger.Removed += DeleteStatCounter;
+            newCounterChanger.Removed += RemoveStatCounter;
             newCounterChanger.Value = newCounter;
 
             _statCounterChangers.Add(newCounterChanger);
@@ -137,11 +138,21 @@ namespace UStacker.GlobalSettings.Changers
 
             if (addToValue)
                 Value.StatCounters.Add(newCounter);
+
+            return newCounterChanger;
+        }
+
+        private void RemoveStatCounter(StatCounterChanger changer)
+        {
+            if (!_statCounterChangers.Remove(changer)) return;
+
+            DeleteStatCounter(changer);
         }
 
         private void DeleteStatCounter(StatCounterChanger changer)
         {
-            if (!_statCounterChangers.Remove(changer)) return;
+            if (changer == null)
+                return;
 
             var reducedSize = ((RectTransform) changer.transform).sizeDelta.y;
             if (_statCounterChangers.Count > 0)
@@ -149,17 +160,24 @@ namespace UStacker.GlobalSettings.Changers
 
             SizeChanged?.Invoke(-reducedSize);
 
+            changer.Removed -= RemoveStatCounter;
+            changer.SizeChanged -= SizeChanged;
             Destroy(changer.gameObject);
-            changer.Removed -= DeleteStatCounter;
             Value.StatCounters.Remove(changer.Value);
-            _statCounterChangers.Remove(changer);
         }
 
         private void OnStatCounterAdded()
         {
-            AddStatCounter(new StatCounterRecord(), true);
+            var newCounterChanger = AddStatCounter(new StatCounterRecord(), true);
+            // invoking on type picked so the user doesn't need to pick from dropdown
+            // to actually set the counter type
+            newCounterChanger.OnTypePicked(0);
+
             if (_isMinimized)
                 OnMinimize();
         }
     }
 }
+/************************************
+end StatCounterGroupChanger.cs
+*************************************/

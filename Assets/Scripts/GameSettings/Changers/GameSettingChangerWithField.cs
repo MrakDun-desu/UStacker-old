@@ -1,4 +1,8 @@
-﻿using TMPro;
+
+/************************************
+GameSettingChangerWithField.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using TMPro;
 using UnityEngine;
 
 namespace UStacker.GameSettings.Changers
@@ -7,14 +11,13 @@ namespace UStacker.GameSettings.Changers
     {
         [SerializeField] protected TMP_InputField _valueField;
 
-        protected void Start()
+        protected override void Start()
         {
-            RefreshValue();
-            _gameSettingsSO.SettingsReloaded += RefreshValue;
+            base.Start();
             _valueField.onEndEdit.AddListener(OnValueOverwritten);
         }
 
-        protected virtual void RefreshValue()
+        protected override void RefreshValue()
         {
             _valueField.SetTextWithoutNotify(_gameSettingsSO.GetValue<T>(_controlPath).ToString());
         }
@@ -22,3 +25,6 @@ namespace UStacker.GameSettings.Changers
         protected abstract void OnValueOverwritten(string newValue);
     }
 }
+/************************************
+end GameSettingChangerWithField.cs
+*************************************/

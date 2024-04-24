@@ -1,3 +1,7 @@
+
+/************************************
+ISettingChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 
 namespace UStacker.GlobalSettings.Changers
@@ -7,3 +11,6 @@ namespace UStacker.GlobalSettings.Changers
         event Action SettingChanged;
     }
 }
+/************************************
+end ISettingChanger.cs
+*************************************/

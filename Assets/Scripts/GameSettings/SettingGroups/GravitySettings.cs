@@ -1,6 +1,10 @@
+
+/************************************
+GravitySettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
-using UStacker.GameSettings.Enums;
 using UnityEngine;
+using UStacker.GameSettings.Enums;
 
 namespace UStacker.GameSettings.SettingGroups
 {
@@ -8,25 +12,23 @@ namespace UStacker.GameSettings.SettingGroups
     public record GravitySettings
     {
         // backing fields
-        [SerializeField]
-        private double _defaultGravity = 0.02d;
-        [SerializeField]
-        private double _defaultLockDelay = .5d;
-        [SerializeField]
-        private double _piecePlacementDelay;
-        [SerializeField]
-        private double _lineClearDelay;
-        [SerializeField]
-        private double _hardLockAmount = 5d;
+        [SerializeField] private double _defaultGravity = 0.02d;
 
-        [field: SerializeField]
-        public LockDelayType LockDelayType { get; set; } = LockDelayType.OnIllegalMovement;
-        [field: SerializeField]
-        public HardLockType HardLockType { get; set; } = HardLockType.LimitedTime;
-        [field: SerializeField]
-        public TopoutCondition TopoutCondition { get; set; } = TopoutCondition.PieceSpawn;
-        [field: SerializeField]
-        public bool AllowClutchClears { get; set; } = true;
+        [SerializeField] private double _defaultLockDelay = .5d;
+
+        [SerializeField] private double _piecePlacementDelay;
+
+        [SerializeField] private double _lineClearDelay;
+
+        [SerializeField] private double _hardLockAmount = 5d;
+
+        [field: SerializeField] public LockDelayType LockDelayType { get; set; } = LockDelayType.OnIllegalMovement;
+
+        [field: SerializeField] public HardLockType HardLockType { get; set; } = HardLockType.LimitedTime;
+
+        [field: SerializeField] public TopoutCondition TopoutCondition { get; set; } = TopoutCondition.PieceSpawn;
+
+        [field: SerializeField] public bool AllowClutchClears { get; set; } = true;
 
         public double DefaultGravity
         {
@@ -59,3 +61,6 @@ namespace UStacker.GameSettings.SettingGroups
         }
     }
 }
+/************************************
+end GravitySettings.cs
+*************************************/

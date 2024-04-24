@@ -47,13 +47,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _blockSkinPrefab: {fileID: 8615181212073349032, guid: 394ce65bb77d5f6468e62ab063fe7d9b, type: 3}
   _skinsParent: {fileID: 8930887072479603306}
+  <BlockNumber>k__BackingField: 0
   OnCleared:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8930887072479603306}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1817985151758386682}
+        m_TargetAssemblyTypeName: UStacker.Gameplay.Blocks.BlockBase, UStacker.Gameplay
+        m_MethodName: set_Visibility
+        m_Mode: 4
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -74,6 +75,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 5e406bc1b26a2864391d2b98f197ce07, type: 3}
+    - target: {fileID: 251863856023356778, guid: 394ce65bb77d5f6468e62ab063fe7d9b, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 251863856023356778, guid: 394ce65bb77d5f6468e62ab063fe7d9b, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1

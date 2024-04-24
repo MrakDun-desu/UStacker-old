@@ -1,57 +1,92 @@
-﻿using System;
-using UStacker.Common;
-using UStacker.Common.Alerts;
-using UStacker.Gameplay.Communication;
+
+/************************************
+CustomGameManager.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using NLua;
 using NLua.Exceptions;
 using UnityEngine;
+using UnityEngine.Events;
+using UStacker.Common.Alerts;
+using UStacker.Common.LuaApi;
+using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Enums;
 using UStacker.Gameplay.Timing;
 using Random = UStacker.Common.Random;
 
 namespace UStacker.Gameplay.GameManagers
 {
-    public class CustomGameManager : MonoBehaviour, IGameManager
+    public class CustomGameManager : MonoBehaviour, IGameManager, IDisposable
     {
         private const string STARTING_LEVEL_NAME = "StartingLevel";
         private const string BOARD_INTERFACE_NAME = "Board";
-        private Lua _luaState;
-        private MediatorSO _mediator;
-        private uint _startingLevel;
-        private GameStateManager _stateManager;
         private double? _currentMessageTime;
-        private GameTimer _timer;
+        private long _currentScore;
+        private Lua _luaState;
+        private Mediator _mediator;
         private Random _random;
+        private uint _startingLevel;
+        private GameTimer _timer;
+        private UnityEvent<double> EndEvent;
+        private UnityEvent<double> LoseEvent;
 
-        public void Initialize(string startingLevel, MediatorSO mediator)
+        public void Dispose()
+        {
+            _luaState?.Dispose();
+        }
+
+        public void Initialize(string startingLevel, Mediator mediator)
         {
             uint.TryParse(startingLevel, out _startingLevel);
             _mediator = mediator;
-            _mediator.Register<GameStartedMessage>(OnGameStarted);
+            _mediator.Register<GameStateChangedMessage>(HandleGameStateChange);
+            _mediator.Register<SeedSetMessage>(OnSeedSet);
         }
 
-        private void OnDestroy()
+        public void Delete()
         {
-            _mediator.Unregister<GameStartedMessage>(OnGameStarted);
+            Destroy(this);
         }
 
-        private void OnGameStarted(GameStartedMessage message)
+        private void ResetState()
+        {
+            _currentScore = 0;
+            _mediator.Send(new ScoreChangedMessage(_currentScore, 0));
+        }
+
+        private void HandleGameStateChange(GameStateChangedMessage message)
+        {
+            if (message.NewState is not GameState.Initializing)
+                return;
+
+            ResetState();
+        }
+
+        private void OnSeedSet(SeedSetMessage message)
         {
             _random.State = message.Seed;
         }
 
-        public void CustomInitialize(GameStateManager stateManager, Board board, GameTimer timer, string script)
+        public void CustomInitialize(
+            Board board,
+            GameTimer timer,
+            string script,
+            UnityEvent<double> endEvent,
+            UnityEvent<double> loseEvent,
+            ulong seed)
         {
-            _stateManager = stateManager;
             _timer = timer;
+            EndEvent = endEvent;
+            LoseEvent = loseEvent;
 
             _luaState = CreateLua.WithAllPrerequisites(out _random);
+            _random.State = seed;
             _luaState[STARTING_LEVEL_NAME] = _startingLevel;
             _luaState[BOARD_INTERFACE_NAME] = new GameManagerBoardInterface(board);
 
             RegisterMethod(nameof(LoseGame));
             RegisterMethod(nameof(EndGame));
             RegisterMethod(nameof(AddScore));
-            RegisterMethod(nameof(ResetScore));
             RegisterMethod(nameof(SetLevel));
             RegisterMethod(nameof(SetGravity));
             RegisterMethod(nameof(SetLockDelay));
@@ -67,25 +102,44 @@ namespace UStacker.Gameplay.GameManagers
             }
             catch (LuaException ex)
             {
-                _ = AlertDisplayer.Instance.ShowAlert(new Alert(
-                    "Error reading custom game manager script!",
-                    $"Game manager won't be functional. Lua exception: {ex.Message}",
-                    AlertType.Error
-                ));
-                enabled = false;
+                _mediator.Send(new GameCrashedMessage($"Custom game manager crashed! Lua exception: {ex.Message}"));
                 return;
             }
 
             if (events is null) return;
 
-            foreach (var entry in RegisterableMessages.Default)
+            foreach (var eventNameObj in events.Keys)
             {
-                if (events[entry.Key] is not LuaFunction function) continue;
-
-                void Action(Message message)
+                if (eventNameObj is not string eventName)
                 {
-                    if (!enabled) return;
-                    if (message is MidgameMessage m)
+                    AlertDisplayer.ShowAlert(new Alert(
+                        "Invalid event name!",
+                        $"Custom game manager tried registering an invalid event {eventNameObj}",
+                        AlertType.Warning));
+                    continue;
+                }
+
+                if (events[eventNameObj] is not LuaFunction function)
+                {
+                    AlertDisplayer.ShowAlert(new Alert(
+                        "Invalid event handler!",
+                        $"Custom game manager tried registering an invalid handler for event {eventName}",
+                        AlertType.Warning));
+                    continue;
+                }
+
+                if (!RegisterableMessages.Default.ContainsKey(eventName))
+                {
+                    AlertDisplayer.ShowAlert(new Alert(
+                        "Invalid event name!",
+                        $"Custom game manager tried registering an invalid event {eventName}",
+                        AlertType.Warning));
+                    continue;
+                }
+
+                void Action(IMessage message)
+                {
+                    if (message is IMidgameMessage m)
                         _currentMessageTime = m.Time;
                     else
                         _currentMessageTime = null;
@@ -96,16 +150,12 @@ namespace UStacker.Gameplay.GameManagers
                     }
                     catch (LuaException ex)
                     {
-                        _ = AlertDisplayer.Instance.ShowAlert(new Alert(
-                            "Error executing custom game manager script!",
-                            $"Game manager will be turned off. Lua exception: {ex.Message}",
-                            AlertType.Error
-                        ));
-                        enabled = false;
+                        _mediator.Send(
+                            new GameCrashedMessage($"Custom game manager crashed! Lua exception: {ex.Message}"));
                     }
                 }
 
-                _mediator.Register((Action<Message>) Action, entry.Value);
+                _mediator.Register((Action<IMessage>) Action, RegisterableMessages.Default[eventName]);
             }
         }
 
@@ -118,22 +168,18 @@ namespace UStacker.Gameplay.GameManagers
 
         public void EndGame()
         {
-            _stateManager.EndGame(_currentMessageTime ?? _timer.CurrentTime);
+            EndEvent.Invoke(_currentMessageTime ?? _timer.CurrentTime);
         }
 
         public void LoseGame()
         {
-            _stateManager.LoseGame(_currentMessageTime ?? _timer.CurrentTime);
+            LoseEvent.Invoke(_currentMessageTime ?? _timer.CurrentTime);
         }
 
         public void AddScore(object score)
         {
-            _mediator.Send(new ScoreAddedMessage(Convert.ToInt64(score), _currentMessageTime ?? _timer.CurrentTime));
-        }
-
-        public void ResetScore()
-        {
-            _mediator.Send(new ScoreChangedMessage(0, _currentMessageTime ?? _timer.CurrentTime));
+            _currentScore += Convert.ToInt64(score);
+            _mediator.Send(new ScoreChangedMessage(_currentScore, _currentMessageTime ?? _timer.CurrentTime));
         }
 
         public void SetLevel(object level)
@@ -171,6 +217,14 @@ namespace UStacker.Gameplay.GameManagers
                 _currentMessageTime ?? _timer.CurrentTime));
         }
 
+        private void OnDestroy()
+        {
+            Dispose();
+        }
+
         #endregion
     }
 }
+/************************************
+end CustomGameManager.cs
+*************************************/

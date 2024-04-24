@@ -1,3 +1,7 @@
+
+/************************************
+BackgroundPackLoader.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,21 +44,14 @@ namespace UStacker.GlobalSettings.Backgrounds
             );
             Backgrounds.Clear();
             if (Path.GetFileName(path).Equals(DEFAULT_PATH))
-            {
                 if (!Directory.Exists(path))
-                {
-                    BackgroundPackChanged?.Invoke();
-                    if (showAlert)
-                        _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
-                    return;
-                }
-            }
+                    Directory.CreateDirectory(path);
 
             if (!Directory.Exists(path))
             {
                 BackgroundPackChanged?.Invoke();
                 if (showAlert)
-                    _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                    AlertDisplayer.ShowAlert(defaultAlert);
                 return;
             }
 
@@ -74,7 +71,7 @@ namespace UStacker.GlobalSettings.Backgrounds
                     "Background pack has been successfully loaded and changed",
                     AlertType.Success
                 );
-            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.ShowAlert(shownAlert);
         }
 
         private static async Task HandleBackgroundLoadAsync(string path)
@@ -109,10 +106,10 @@ namespace UStacker.GlobalSettings.Backgrounds
 
         private static async Task<BackgroundRecord> LoadBackgroundRecordAsync(string path)
         {
-            switch (FileLoading.GetFileType(path))
+            switch (FileHandling.GetFileType(path))
             {
                 case FileType.Texture:
-                    var newBackground = await FileLoading.LoadTextureFromUrl(path);
+                    var newBackground = await FileHandling.LoadTextureFromUrlAsync(path);
                     return new BackgroundRecord(newBackground);
                 case FileType.Video:
                     return new BackgroundRecord(path);
@@ -125,3 +122,6 @@ namespace UStacker.GlobalSettings.Backgrounds
         }
     }
 }
+/************************************
+end BackgroundPackLoader.cs
+*************************************/

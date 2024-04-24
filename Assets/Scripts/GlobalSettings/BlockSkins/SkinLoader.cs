@@ -1,12 +1,16 @@
+
+/************************************
+SkinLoader.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using UStacker.Common;
-using UStacker.Common.Alerts;
 using Newtonsoft.Json;
 using UnityEngine;
+using UStacker.Common;
+using UStacker.Common.Alerts;
 
 namespace UStacker.GlobalSettings.BlockSkins
 {
@@ -33,21 +37,14 @@ namespace UStacker.GlobalSettings.BlockSkins
             );
             SkinRecords.Clear();
             if (Path.GetFileName(path).Equals(DEFAULT_PATH))
-            {
                 if (!Directory.Exists(path))
-                {
-                    SkinChanged?.Invoke();
-                    if (showAlert)
-                        _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
-                    return;
-                }
-            }
+                    Directory.CreateDirectory(path);
 
             if (!Directory.Exists(path))
             {
                 SkinChanged?.Invoke();
                 if (showAlert)
-                    _ = AlertDisplayer.Instance.ShowAlert(defaultAlert);
+                    AlertDisplayer.ShowAlert(defaultAlert);
                 return;
             }
 
@@ -63,12 +60,12 @@ namespace UStacker.GlobalSettings.BlockSkins
                     "Skin has been successfully loaded and changed",
                     AlertType.Success
                 );
-            _ = AlertDisplayer.Instance.ShowAlert(shownAlert);
+            AlertDisplayer.ShowAlert(shownAlert);
         }
 
         private static async Task GetSkinAsync(string path)
         {
-            var configFilePath = Path.Combine(path, PersistentPaths.SkinConfiguration);
+            var configFilePath = Path.Combine(path, CustomizationFilenames.SkinConfiguration);
             if (!File.Exists(configFilePath)) return;
 
             var skinJson = await File.ReadAllTextAsync(configFilePath);
@@ -85,16 +82,22 @@ namespace UStacker.GlobalSettings.BlockSkins
         {
             if (skinRecord.IsConnected)
             {
-                foreach (var connectedSprite in skinRecord.ConnectedSprites)
+                var availableKeys = skinRecord.ConnectedSprites.Keys;
+                foreach (var key in availableKeys)
                 {
-                    foreach (var spriteRecord in connectedSprite.Sprites)
+                    var spriteRecords = skinRecord.ConnectedSprites[key];
+                    for (var i = 0; i < spriteRecords.Count; i++)
                     {
-                        if (!spriteRecord.TryLoadSpriteFromDict(existingTextures))
-                            connectedSprite.Sprites.Remove(spriteRecord);
+                        if (spriteRecords[i].TryLoadSpriteFromDict(existingTextures)) continue;
+
+                        // if we couldn't load the sprite record, we remove it from the collection
+                        spriteRecords.RemoveAt(i);
+                        i--;
                     }
 
-                    if (connectedSprite.Sprites.Count == 0)
-                        skinRecord.ConnectedSprites.Remove(connectedSprite);
+                    // if there were no valid sprites, we remove the whole collection
+                    if (spriteRecords.Count == 0)
+                        skinRecord.ConnectedSprites.Remove(key);
                 }
 
                 if (skinRecord.ConnectedSprites.Count == 0)
@@ -103,10 +106,8 @@ namespace UStacker.GlobalSettings.BlockSkins
             else
             {
                 foreach (var spriteRecord in skinRecord.Sprites)
-                {
                     if (!spriteRecord.TryLoadSpriteFromDict(existingTextures))
                         skinRecord.Sprites.Remove(spriteRecord);
-                }
 
                 if (skinRecord.Sprites.Count == 0)
                     SkinRecords.Remove(skinRecord);
@@ -120,11 +121,10 @@ namespace UStacker.GlobalSettings.BlockSkins
             var output = new Dictionary<string, Texture2D>();
             var fileList = new List<string>();
             foreach (var skinRecord in skinRecords)
-            {
                 if (skinRecord.IsConnected)
                 {
                     var spriteRecords = skinRecords
-                        .SelectMany(sr => sr.ConnectedSprites.SelectMany(cr => cr.Sprites));
+                        .SelectMany(sr => sr.ConnectedSprites.Values.SelectMany(sprite => sprite));
 
                     foreach (var spriteRecord in spriteRecords)
                     {
@@ -149,7 +149,6 @@ namespace UStacker.GlobalSettings.BlockSkins
                             path));
                     }
                 }
-            }
 
             await Task.WhenAll(taskList);
             return output;
@@ -160,10 +159,13 @@ namespace UStacker.GlobalSettings.BlockSkins
         {
             var actualFilename = isFile ? Path.Combine(path, filename) : filename;
 
-            var texture = await FileLoading.LoadTextureFromUrl(actualFilename, isFile);
+            var texture = await FileHandling.LoadTextureFromUrlAsync(actualFilename, isFile);
 
             if (texture is not null)
                 textures[filename] = texture;
         }
     }
 }
+/************************************
+end SkinLoader.cs
+*************************************/

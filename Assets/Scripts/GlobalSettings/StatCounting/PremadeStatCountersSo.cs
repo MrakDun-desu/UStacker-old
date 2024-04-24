@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+PremadeStatCountersSo.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using UnityEngine;
 
 namespace UStacker.GlobalSettings.StatCounting
@@ -10,3 +14,6 @@ namespace UStacker.GlobalSettings.StatCounting
         public StatCounterGroup DefaultGroup = new();
     }
 }
+/************************************
+end PremadeStatCountersSo.cs
+*************************************/

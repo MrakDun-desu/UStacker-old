@@ -1,4 +1,8 @@
-﻿using UnityEngine.Events;
+
+/************************************
+IAsyncApplier.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine.Events;
 
 namespace UStacker.GlobalSettings.Appliers
 {
@@ -9,3 +13,6 @@ namespace UStacker.GlobalSettings.Appliers
         public string OngoingMessage { get; }
     }
 }
+/************************************
+end IAsyncApplier.cs
+*************************************/

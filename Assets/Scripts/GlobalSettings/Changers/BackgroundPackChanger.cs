@@ -1,10 +1,13 @@
-using System;
+
+/************************************
+BackgroundPackChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.IO;
-using UStacker.Common;
-using UStacker.GlobalSettings.Backgrounds;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UStacker.Common;
+using UStacker.GlobalSettings.Backgrounds;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -14,11 +17,15 @@ namespace UStacker.GlobalSettings.Changers
         [SerializeField] private Button _folderButton;
         [SerializeField] private Button _docsButton;
 
-        private void Start()
+        private void Awake()
         {
             RefreshNames();
+        }
 
-            AppSettings.SettingsReloaded += RefreshValue;
+        protected override void Start()
+        {
+            base.Start();
+
             _dropdown.onValueChanged.AddListener(OnOptionPicked);
             _folderButton.onClick.AddListener(OpenBackgroundFolder);
             _docsButton.onClick.AddListener(OpenDocumentation);
@@ -27,7 +34,7 @@ namespace UStacker.GlobalSettings.Changers
         private void OnApplicationFocus(bool hasFocus)
         {
             if (!hasFocus) return;
-            
+
             RefreshNames();
         }
 
@@ -38,7 +45,7 @@ namespace UStacker.GlobalSettings.Changers
             SetValue(newBackgroundFolder);
         }
 
-        private void RefreshValue()
+        protected override void RefreshValue()
         {
             for (var i = 0; i < _dropdown.options.Count; i++)
             {
@@ -47,6 +54,7 @@ namespace UStacker.GlobalSettings.Changers
                 _dropdown.SetValueWithoutNotify(i);
                 break;
             }
+
             _dropdown.RefreshShownValue();
         }
 
@@ -64,7 +72,8 @@ namespace UStacker.GlobalSettings.Changers
 
         private void OpenDocumentation()
         {
-            const string backgroundDocsUrl = StaticSettings.WikiUrl + "blob/main/Style customization/Background-customization.md";
+            const string backgroundDocsUrl =
+                StaticSettings.WikiUrl + "blob/main/Style customization/Background-customization.md";
             Application.OpenURL(backgroundDocsUrl);
         }
 
@@ -77,7 +86,11 @@ namespace UStacker.GlobalSettings.Changers
 
             if (!_dropdown.options.Exists(item => item.text == BackgroundPackLoader.DEFAULT_PATH))
                 _dropdown.options.Insert(0, new TMP_Dropdown.OptionData(BackgroundPackLoader.DEFAULT_PATH));
+
             RefreshValue();
         }
     }
 }
+/************************************
+end BackgroundPackChanger.cs
+*************************************/

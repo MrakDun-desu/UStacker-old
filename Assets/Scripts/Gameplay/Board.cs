@@ -1,14 +1,18 @@
+
+/************************************
+Board.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.Events;
 using UnityEngine.Pool;
-using UnityEngine.Serialization;
 using UStacker.Common.Extensions;
 using UStacker.Gameplay.Blocks;
 using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Enums;
 using UStacker.Gameplay.GarbageGeneration;
 using UStacker.Gameplay.Initialization;
 using UStacker.Gameplay.Pieces;
@@ -23,141 +27,177 @@ namespace UStacker.Gameplay
     public class Board : MonoBehaviour, IGameSettingsDependency
     {
         [SerializeField] private Transform _helperTransform;
-
-        [FormerlySerializedAs("_manager")]
-        [SerializeField]
-        private GameStateManager _stateManager;
-
-        [SerializeField] private MediatorSO _mediator;
         [SerializeField] private SpriteRenderer _backgroundRenderer;
         [SerializeField] private WarningPiece _warningPiece;
+        [SerializeField] private Mediator _mediator;
         [SerializeField] private ClearableBlock _garbageBlockPrefab;
         [SerializeField] private GarbageLayer _garbageLayerPrefab;
+        [SerializeField] private RectTransform _statsCanvasTransform;
 
-        [Tooltip("Zoom percentage change with one scroll unit")]
-        [Range(0, 1)]
-        [SerializeField]
-        private float _boardZoomFactor = .05f;
-
-        [Range(0.00001f, 1)][SerializeField] private float _minimumBoardScale = 0.1f;
+        [SerializeField] private UnityEvent<double> ToppedOut;
 
         private readonly List<ClearableBlock[]> Blocks = new();
+        private bool _awake;
+
         private bool _backToBackActive;
         private bool _comboActive;
         private uint _currentBackToBack;
-
         private uint _currentCombo;
 
-        private Camera _camera;
-        private Vector3 _dragStartPosition;
-        private Vector3 _dragStartTransformPosition;
+        private GameSettingsSO.SettingsContainer _gameSettings;
+
         private ObjectPool<ClearableBlock> _garbageBlockPool;
-
+        private IGarbageGenerator _garbageGenerator;
         private ObjectPool<GarbageLayer> _garbageLayerPool;
-        private uint _height;
-
         private GarbageLayer _lastGarbageLayer;
-        private Vector3 _offset;
 
-        private GameSettingsSO.SettingsContainer _settings;
         private float _warningPieceTreshhold;
-        private uint _width;
 
-        public IGarbageGenerator GarbageGenerator;
+        public IEnumerable<Vector3> BlockPositions =>
+            Blocks.SelectMany(tf => tf.Where(block => block is not null).Select(block => block.transform.position));
 
         public ReadOnlyCollection<ReadOnlyCollection<bool>> Slots =>
             Blocks
                 .Select(line => line.Select(block => block is not null).ToList().AsReadOnly())
                 .ToList().AsReadOnly();
 
-        public uint Width
-        {
-            get => _width;
-            set
-            {
-                _width = value;
-                var mytransform = transform;
-                var myPos = mytransform.position;
-                mytransform.position =
-                    new Vector3(-value * .5f * mytransform.localScale.x + _offset.x, myPos.y, myPos.z);
-            }
-        }
-
-        public uint Height
-        {
-            get => _height;
-            set
-            {
-                _height = value;
-                var mytransform = transform;
-                var myPos = mytransform.position;
-                mytransform.position =
-                    new Vector3(myPos.x, -value * .5f * mytransform.localScale.y + _offset.y, myPos.z);
-            }
-        }
-
+        public uint Width { get; private set; }
+        public uint Height { get; private set; }
         public uint GarbageHeight { get; private set; }
-        public uint LethalHeight { get; set; }
-        private Vector3 Up => transform.up * transform.localScale.y;
-
-        private Vector2 CurrentOffset => new(
-            transform.position.x + Width * .5f * transform.localScale.x,
-            transform.position.y + Height * .5f * transform.localScale.y
-        );
+        public uint LethalHeight { get; private set; }
 
         private void Awake()
         {
-            _offset = AppSettings.Gameplay.BoardOffset;
-            _camera = Camera.main;
-            transform.position += _offset;
+            if (_awake)
+                return;
 
-            ChangeBoardZoom(AppSettings.Gameplay.BoardZoom);
+            _awake = true;
             ChangeVisibility(AppSettings.Gameplay.BoardVisibility);
             _warningPieceTreshhold = AppSettings.Gameplay.WarningPieceTreshhold;
 
-            BoardVisibilityApplier.VisibilityChanged += ChangeVisibility;
-            BoardZoomApplier.BoardZoomChanged += ChangeBoardZoom;
-            WarningPieceTreshholdApplier.TreshholdChanged += ChangeWarningPieceTreshhold;
+            InitializeGarbagePools();
 
-            _mediator.Register<GameStartedMessage>(OnGameStarted);
+            BoardVisibilityApplier.VisibilityChanged += ChangeVisibility;
+            WarningPieceTreshholdApplier.TreshholdChanged += ChangeWarningPieceTreshhold;
         }
 
-        private void Update()
+        private void OnEnable()
         {
-            HandleBoardZooming();
-            HandleBoardDrag();
+            _mediator.Register<GameStateChangedMessage>(OnGameStateChanged);
+            _mediator.Register<SeedSetMessage>(OnSeedSet);
+        }
+
+        private void OnDisable()
+        {
+            _mediator.Unregister<GameStateChangedMessage>(OnGameStateChanged);
+            _mediator.Unregister<SeedSetMessage>(OnSeedSet);
         }
 
         private void OnDestroy()
         {
-            BoardVisibilityApplier.VisibilityChanged -= ChangeVisibility;
-            BoardZoomApplier.BoardZoomChanged -= ChangeBoardZoom;
-            WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
+            _garbageLayerPool?.Dispose();
+            _garbageBlockPool?.Dispose();
+            if (_garbageGenerator is CustomGarbageGenerator gen)
+                gen.Dispose();
 
-            _mediator.Unregister<GameStartedMessage>(OnGameStarted);
+            BoardVisibilityApplier.VisibilityChanged -= ChangeVisibility;
+            WarningPieceTreshholdApplier.TreshholdChanged -= ChangeWarningPieceTreshhold;
         }
 
         public GameSettingsSO.SettingsContainer GameSettings
         {
-            set => _settings = value;
+            private get => _gameSettings;
+            set
+            {
+                _gameSettings = value;
+                Awake();
+                Initialize();
+            }
         }
 
         public event Action LinesCleared;
 
-        private void OnGameStarted(GameStartedMessage message)
+        private void OnSeedSet(SeedSetMessage message)
         {
-            GarbageGenerator?.ResetState(message.Seed);
-            GarbageGenerator?.GenerateGarbage(_settings.Objective.GarbageHeight);
+            _garbageGenerator?.ResetState(message.Seed);
+        }
+
+        private void OnGameStateChanged(GameStateChangedMessage message)
+        {
+            if (message.NewState != GameState.Initializing)
+                return;
+
+            ClearAllBlocks();
+            ResetB2bAndCombo();
+            _garbageGenerator?.GenerateGarbage(GameSettings.Objective.GarbageHeight, new PiecePlacedMessage());
+        }
+
+        private void Initialize()
+        {
+            InitializeDimensions();
+            InitializeGarbageGenerator();
+        }
+
+        private void InitializeDimensions()
+        {
+            var boardDimensions = GameSettings.BoardDimensions;
+            _backgroundRenderer.transform.localScale = new Vector3(
+                boardDimensions.BoardWidth,
+                boardDimensions.BoardHeight,
+                1
+            );
+
+            Width = boardDimensions.BoardWidth;
+            Height = boardDimensions.BoardHeight;
+            LethalHeight = boardDimensions.LethalHeight;
+            _statsCanvasTransform.sizeDelta =
+                new Vector2(boardDimensions.BoardWidth + 200f, boardDimensions.BoardHeight + 200f);
+        }
+
+        private void InitializeGarbageGenerator()
+        {
+            if (_garbageGenerator is CustomGarbageGenerator gen)
+            {
+                gen.Dispose();
+                _garbageGenerator = null;
+            }
+
+            if (GameSettings.Objective.GarbageGenerationType == GarbageGenerationType.None)
+                return;
+
+            var readonlyBoard = new GarbageBoardInterface(this);
+
+            if (GameSettings.Objective.GarbageGenerationType.HasFlag(GarbageGenerationType.CustomFlag))
+                _garbageGenerator = new CustomGarbageGenerator(readonlyBoard,
+                    GameSettings.Objective.CustomGarbageScript, _mediator);
+            else
+                _garbageGenerator = new DefaultGarbageGenerator(
+                    readonlyBoard, GameSettings.Objective.GarbageGenerationType);
+        }
+
+        private void InitializeGarbagePools()
+        {
+            _garbageLayerPool = new ObjectPool<GarbageLayer>(
+                CreateGarbageLayer,
+                layer => layer.gameObject.SetActive(true),
+                layer => layer.gameObject.SetActive(false),
+                DestroyGarbageLayer);
+
+            _garbageBlockPool = new ObjectPool<ClearableBlock>(
+                CreateGarbageBlock,
+                block => block.Visibility = 1,
+                block => block.Visibility = 0,
+                b => Destroy(b.gameObject));
         }
 
         private GarbageLayer CreateGarbageLayer()
         {
-            var newCheeseCollection = Instantiate(_garbageLayerPrefab, transform);
-            newCheeseCollection.transform.localPosition = Vector3.zero;
-            newCheeseCollection.SourcePool = _garbageLayerPool;
-            newCheeseCollection.BlockSourcePool = _garbageBlockPool;
+            var newGarbageLayer = Instantiate(_garbageLayerPrefab, transform);
+            newGarbageLayer.transform.localPosition = Vector3.zero;
+            newGarbageLayer.SourcePool = _garbageLayerPool;
+            newGarbageLayer.BlockSourcePool = _garbageBlockPool;
 
-            return newCheeseCollection;
+            return newGarbageLayer;
         }
 
         private void DestroyGarbageLayer(GarbageLayer layer)
@@ -186,9 +226,7 @@ namespace UStacker.Gameplay
 
         private void HandleWarningPiece()
         {
-            var blockCount = Blocks.Count;
-            var lethalHeight = LethalHeight;
-            if (blockCount + _warningPieceTreshhold >= lethalHeight)
+            if (Blocks.Count + _warningPieceTreshhold >= LethalHeight)
                 _warningPiece.MakeVisible();
             else
                 _warningPiece.MakeInvisible();
@@ -197,51 +235,6 @@ namespace UStacker.Gameplay
         private void ChangeVisibility(float newAlpha)
         {
             _backgroundRenderer.color = _backgroundRenderer.color.WithAlpha(newAlpha);
-        }
-
-        private void HandleBoardZooming()
-        {
-            const float ONE_SCROLL_UNIT = 1 / 120f;
-
-            if (!AppSettings.Gameplay.CtrlScrollToChangeBoardZoom) return;
-
-            if (!Keyboard.current.ctrlKey.isPressed) return;
-
-            var mouseScroll = Mouse.current.scroll.ReadValue().y * ONE_SCROLL_UNIT;
-            var newScale = transform.localScale.x + mouseScroll * _boardZoomFactor;
-            var newZoom = newScale < _minimumBoardScale ? _minimumBoardScale : newScale;
-            ChangeBoardZoom(newZoom);
-            AppSettings.Gameplay.BoardZoom = newZoom;
-            AppSettings.Gameplay.BoardOffset = CurrentOffset;
-        }
-
-        private void HandleBoardDrag()
-        {
-            if (!AppSettings.Gameplay.DragMiddleButtonToRepositionBoard) return;
-
-            var mouse = Mouse.current;
-            var middleButton = mouse.middleButton;
-            if (middleButton.wasPressedThisFrame)
-            {
-                _dragStartPosition = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
-                _dragStartTransformPosition = transform.position;
-            }
-            else if (middleButton.isPressed)
-            {
-                var currentPosition = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
-                var positionDifference = currentPosition - _dragStartPosition;
-                transform.position = _dragStartTransformPosition + positionDifference;
-                AppSettings.Gameplay.BoardOffset = CurrentOffset;
-                _offset = CurrentOffset;
-            }
-        }
-
-        private void ChangeBoardZoom(float zoom)
-        {
-            if (Mathf.Abs(zoom - transform.localScale.x) < .01f) return;
-            var mytransform = transform;
-            mytransform.localScale = new Vector3(zoom, zoom, 1);
-            mytransform.position = new Vector3(-zoom * .5f * Width, -zoom * .5f * Height, 1);
         }
 
         private void ClearLine(int lineNumber)
@@ -266,16 +259,18 @@ namespace UStacker.Gameplay
             {
                 if (!slots[y][x]) continue;
 
-                Blocks[y][x].transform.position -= Up;
+                var blockTransform = Blocks[y][x].transform;
+                var selfTransform = transform;
+                blockTransform.position -= selfTransform.up * selfTransform.lossyScale.y;
             }
         }
 
-        private void CheckAndClearLines(out uint linesCleared, out uint cheeseLinesCleared)
+        private void CheckAndClearLines(out uint linesCleared, out uint garbageLinesCleared)
         {
             linesCleared = 0;
-            var cheeseHeightStart = GarbageHeight;
+            var garbageHeightStart = GarbageHeight;
             var slots = Slots;
-            for (var y = Blocks.Count - 1; y >= _settings.BoardDimensions.BlockCutHeight; y--)
+            for (var y = Blocks.Count - 1; y >= GameSettings.BoardDimensions.BlockCutHeight; y--)
             {
                 for (var x = 0; x < Blocks[y].Length; x++)
                 {
@@ -299,11 +294,12 @@ namespace UStacker.Gameplay
             if (linesCleared > 0)
                 LinesCleared?.Invoke();
 
-            cheeseLinesCleared = cheeseHeightStart - GarbageHeight;
+            garbageLinesCleared = garbageHeightStart - GarbageHeight;
         }
 
         private void SendPlacementMessage(uint linesCleared, uint garbageLinesCleared, bool wasAllClear,
-            double placementTime, SpinResult lastResult, string pieceType, int totalRotation, Vector2Int totalMovement)
+            double placementTime, SpinResult lastResult, string pieceType, int totalRotation, Vector2Int totalMovement,
+            Vector2Int[] blockPositions)
         {
             var brokenBtb = false;
             var brokenCombo = false;
@@ -339,9 +335,9 @@ namespace UStacker.Gameplay
                 _currentCombo, _currentBackToBack,
                 pieceType, wasAllClear, lastResult.WasSpin,
                 lastResult.WasSpinMini, lastResult.WasSpinRaw, lastResult.WasSpinMiniRaw,
-                brokenCombo, brokenBtb, totalRotation, totalMovement, placementTime);
+                brokenCombo, brokenBtb, totalRotation, totalMovement, blockPositions, placementTime);
             _mediator.Send(newMessage);
-            GarbageGenerator?.GenerateGarbage(_settings.Objective.GarbageHeight - GarbageHeight, newMessage);
+            _garbageGenerator?.GenerateGarbage(GameSettings.Objective.GarbageHeight - GarbageHeight, newMessage);
         }
 
         public Vector2Int WorldSpaceToBoardPosition(Vector3 worldSpacePos)
@@ -387,10 +383,13 @@ namespace UStacker.Gameplay
             Blocks[blockPos.y][blockPos.x] = block;
         }
 
-        public bool Place(Piece piece, double placementTime, int totalRotation, Vector2Int totalMovement, SpinResult lastSpinResult)
+        public bool Place(Piece piece, double placementTime, int totalRotation, Vector2Int totalMovement,
+            SpinResult lastSpinResult)
         {
             if (!CanPlace(piece)) return false;
             lastSpinResult ??= new SpinResult();
+
+            var placedPositions = piece.BlockPositions.Select(WorldSpaceToBoardPosition).ToArray();
 
             var isPartlyBelowLethal = false;
             var isCompletelyBelowLethal = true;
@@ -403,7 +402,7 @@ namespace UStacker.Gameplay
                 if (blockPos.y >= LethalHeight) isCompletelyBelowLethal = false;
             }
 
-            CheckAndClearLines(out var linesCleared, out var cheeseLinesCleared);
+            CheckAndClearLines(out var linesCleared, out var garbageLinesCleared);
 
             var linesWereCleared = linesCleared > 0;
             var wasAllClear = Blocks.Count == 0;
@@ -412,27 +411,28 @@ namespace UStacker.Gameplay
 
             SendPlacementMessage(
                 linesCleared,
-                cheeseLinesCleared,
+                garbageLinesCleared,
                 wasAllClear,
                 placementTime,
                 lastSpinResult,
                 piece.Type,
                 totalRotation,
-                totalMovement);
+                totalMovement,
+                placedPositions);
 
-            if (_settings.Gravity.AllowClutchClears && linesWereCleared) return true;
+            if (GameSettings.Gravity.AllowClutchClears && linesWereCleared) return true;
 
-            switch (_settings.Gravity.TopoutCondition)
+            switch (GameSettings.Gravity.TopoutCondition)
             {
                 case TopoutCondition.PieceSpawn:
                     break;
                 case TopoutCondition.OneBlockAboveLethal:
                     if (!isCompletelyBelowLethal)
-                        _stateManager.LoseGame(placementTime);
+                        ToppedOut.Invoke(placementTime);
                     break;
                 case TopoutCondition.AllBlocksAboveLethal:
                     if (!isPartlyBelowLethal)
-                        _stateManager.LoseGame(placementTime);
+                        ToppedOut.Invoke(placementTime);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -454,7 +454,7 @@ namespace UStacker.Gameplay
             _lastGarbageLayer = null;
         }
 
-        public void ResetB2bAndCombo()
+        private void ResetB2bAndCombo()
         {
             _backToBackActive = false;
             _currentBackToBack = 0;
@@ -462,20 +462,23 @@ namespace UStacker.Gameplay
             _currentCombo = 0;
         }
 
-        public void AddGarbageLayer(IList<List<bool>> slots, bool addToLast)
+        public void AddGarbageLayer(IList<List<bool>> garbageLines, bool addToLast)
         {
+            if (garbageLines.Count <= 0)
+                return;
+
             var newGarbageLayer = addToLast && _lastGarbageLayer is not null
                 ? _lastGarbageLayer
                 : _garbageLayerPool.Get();
 
             var height = 0;
 
-            for (; height < slots.Count; height++)
+            for (; height < garbageLines.Count; height++)
             {
-                var line = slots[height];
+                var line = garbageLines[height];
                 if (line.Count != Width)
                 {
-                    slots.RemoveAt(height);
+                    garbageLines.RemoveAt(height);
                     height--;
                     continue;
                 }
@@ -484,12 +487,11 @@ namespace UStacker.Gameplay
                 {
                     if (!line[x]) continue;
 
-                    var cheeseBlock = _garbageBlockPool.Get();
-                    var cheeseBlockTransform = cheeseBlock.transform;
-                    cheeseBlockTransform.SetParent(newGarbageLayer.transform);
-                    cheeseBlockTransform.localPosition = new Vector3(x + .5f, height + .5f);
-                    cheeseBlockTransform.localScale = Vector3.one;
-                    newGarbageLayer.AddBlock(cheeseBlock);
+                    var garbageBlock = _garbageBlockPool.Get();
+                    var garbageBlockTransform = garbageBlock.transform;
+                    garbageBlockTransform.SetParent(newGarbageLayer.transform);
+                    garbageBlockTransform.localPosition = new Vector3(x + .5f, height + .5f);
+                    newGarbageLayer.AddBlock(garbageBlock);
                 }
             }
 
@@ -497,7 +499,7 @@ namespace UStacker.Gameplay
                 return;
 
             _lastGarbageLayer = newGarbageLayer;
-            GarbageHeight += (uint)height;
+            GarbageHeight += (uint) height;
 
             var activeSlots = Slots;
             for (var y = 0; y < Blocks.Count; y++)
@@ -505,7 +507,9 @@ namespace UStacker.Gameplay
             {
                 if (!activeSlots[y][x]) continue;
 
-                Blocks[y][x].transform.position += Up * height;
+                var blockTransform = Blocks[y][x].transform;
+                var selfTransform = transform;
+                blockTransform.position += selfTransform.up * selfTransform.lossyScale.y;
             }
 
             for (var i = 0; i < height; i++)
@@ -516,25 +520,18 @@ namespace UStacker.Gameplay
             newGarbageLayer.TriggerBlocksAdded();
         }
 
-        public void InitializeGarbagePools()
+        // for future use
+        [ContextMenu("Rotate by 30 deg")]
+        private void RotateBy30()
         {
-            _garbageLayerPool = new ObjectPool<GarbageLayer>(
-                CreateGarbageLayer,
-                cc => cc.gameObject.SetActive(true),
-                cc => cc.gameObject.SetActive(false),
-                DestroyGarbageLayer,
-                true,
-                (int)(_height / 2u),
-                (int)_height);
+            var up = transform.lossyScale.y * transform.up;
+            var right = transform.lossyScale.x * transform.right;
 
-            _garbageBlockPool = new ObjectPool<ClearableBlock>(
-                CreateGarbageBlock,
-                b => b.gameObject.SetActive(true),
-                null,
-                b => Destroy(b.gameObject),
-                true,
-                (int)(_height * _width / 2u),
-                (int)(_height * _width));
+            transform.RotateAround(transform.position + Width * .5f * right + Height * .5f * up,
+                Vector3.forward, 30f);
         }
     }
 }
+/************************************
+end Board.cs
+*************************************/

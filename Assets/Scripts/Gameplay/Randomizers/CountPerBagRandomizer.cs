@@ -1,4 +1,9 @@
+
+/************************************
+CountPerBagRandomizer.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System.Collections.Generic;
+using System.Linq;
 using UStacker.Common;
 using UStacker.Common.Extensions;
 
@@ -6,7 +11,7 @@ namespace UStacker.Gameplay.Randomizers
 {
     public class CountPerBagRandomizer : IRandomizer
     {
-        private readonly List<string> _availableValues = new()
+        private readonly string[] _availableValues =
         {
             "i",
             "t",
@@ -23,14 +28,13 @@ namespace UStacker.Gameplay.Randomizers
 
         public CountPerBagRandomizer(IEnumerable<string> availablePieces, int count = 1)
         {
-            _availableValues = _availableValues.Filter(availablePieces);
+            _availableValues = _availableValues.Filter(availablePieces).ToArray();
             _count = count;
-            InitializeCurrentPieces();
         }
 
         public string GetNextPiece()
         {
-            if (_currentValues.Count == 0) InitializeCurrentPieces();
+            if (_currentValues.Count == 0) InitializeCurrentValues();
             var nextIndex = _random.NextInt(_currentValues.Count);
             var nextValue = _currentValues[nextIndex];
             _currentValues.RemoveAt(nextIndex);
@@ -41,13 +45,16 @@ namespace UStacker.Gameplay.Randomizers
         {
             _random.State = newSeed;
             _currentValues.Clear();
-            InitializeCurrentPieces();
+            InitializeCurrentValues();
         }
 
-        private void InitializeCurrentPieces()
+        private void InitializeCurrentValues()
         {
             for (var i = 0; i < _count; i++)
                 _currentValues.AddRange(_availableValues);
         }
     }
 }
+/************************************
+end CountPerBagRandomizer.cs
+*************************************/

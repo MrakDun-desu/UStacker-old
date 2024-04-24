@@ -1,5 +1,9 @@
-using UStacker.Common.Extensions;
+
+/************************************
+ResolutionApplier.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
+using UStacker.Common.Extensions;
 
 namespace UStacker.GlobalSettings.Appliers
 {
@@ -17,7 +21,13 @@ namespace UStacker.GlobalSettings.Appliers
                 newResolution.refreshRateRatio
             );
 
-            QualitySettings.vSyncCount = AppSettings.Video.UseVsync ? 1 : 0;
+            if (float.IsInfinity(AppSettings.Video.TargetFramerate))
+                QualitySettings.vSyncCount = 0;
+            else
+                Application.targetFrameRate = (int) AppSettings.Video.TargetFramerate;
         }
     }
 }
+/************************************
+end ResolutionApplier.cs
+*************************************/

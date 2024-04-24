@@ -46,16 +46,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 212dcad1910ff8f45a46be7d7add2308, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BlockNumber: 0
   _blockSkinPrefab: {fileID: 8615181212073349032, guid: 394ce65bb77d5f6468e62ab063fe7d9b, type: 3}
   _skinsParent: {fileID: 3688347092978483058}
+  <BlockNumber>k__BackingField: 0
   OnCleared:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3163467946176739645}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 3252452442773879894}
+        m_TargetAssemblyTypeName: UStacker.Gameplay.Blocks.BlockBase, UStacker.Gameplay
+        m_MethodName: set_Visibility
+        m_Mode: 4
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -135,6 +135,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 3863361525092732315}
     m_Modifications:
     - target: {fileID: 3243141826717396948, guid: 394ce65bb77d5f6468e62ab063fe7d9b, type: 3}
@@ -186,6 +187,9 @@ PrefabInstance:
       value: Skin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 394ce65bb77d5f6468e62ab063fe7d9b, type: 3}
 --- !u!4 &243666509627072440 stripped
 Transform:
@@ -197,6 +201,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1362700643953681171}
     m_Modifications:
     - target: {fileID: 251863856023356778, guid: 394ce65bb77d5f6468e62ab063fe7d9b, type: 3}
@@ -260,6 +265,9 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 394ce65bb77d5f6468e62ab063fe7d9b, type: 3}
 --- !u!4 &7010851475981606205 stripped
 Transform:

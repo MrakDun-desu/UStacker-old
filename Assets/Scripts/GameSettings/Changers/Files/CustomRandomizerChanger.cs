@@ -1,4 +1,8 @@
-﻿using UStacker.Common;
+
+/************************************
+CustomRandomizerChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UStacker.Common;
 
 namespace UStacker.GameSettings.Changers.Files
 {
@@ -7,3 +11,6 @@ namespace UStacker.GameSettings.Changers.Files
         protected override string TargetDir => PersistentPaths.Randomizers;
     }
 }
+/************************************
+end CustomRandomizerChanger.cs
+*************************************/

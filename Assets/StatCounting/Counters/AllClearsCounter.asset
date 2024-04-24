@@ -16,11 +16,10 @@ MonoBehaviour:
     Name: All clears
     Type: 0
     Filename: 
-    Script: "function Reset()\n\tAllClears = 0\n\treturn \"All clears: 0\"\nend\nfunction
-      OnPiecePlaced(message)\n\tif message.WasAllClear then\n\t\tAllClears = AllClears
-      + 1\n\tend\n\treturn \"All clears: \" .. AllClears\nend\nSetText(Reset())\nSetAlignment(\"left\")\nreturn
-      {\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStarted\"] = Reset,\n\t[\"GameRestarted\"]
-      = Reset\n}"
+    Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+      then\n\t\treturn \"All clears: 0\"\n\tend\nend\nfunction OnPiecePlaced(message)\n\treturn
+      \"All clears: \" .. Stats.AllClears\nend\nSetText(\"All clears: 0\")\nSetAlignment(\"left\")\nreturn
+      {\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStateChanged\"] = Reset\n}"
     Position: {x: 11, y: 1}
     Size: {x: 5, y: 1}
     UpdateInterval: 0

@@ -1,16 +1,19 @@
+
+/************************************
+AppSettings.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using UStacker.Common;
 using UStacker.GlobalSettings.Groups;
-using Newtonsoft.Json;
-using UnityEngine;
 
 namespace UStacker.GlobalSettings
 {
     public static class AppSettings
     {
-        private const char INVALID_CHAR_REPLACEMENT = '_';
         private static SettingsContainer Settings = new();
         public static HandlingSettings Handling => Settings.Handling;
         public static SoundSettings Sound => Settings.Sound;
@@ -29,30 +32,36 @@ namespace UStacker.GlobalSettings
 
         public static event Action SettingsReloaded;
 
-        public static bool TrySave(string path = null)
+        public static async Task<bool> TrySaveAsync(string path = null)
         {
+            const char INVALID_CHAR_REPLACEMENT = '_';
             if (path is not null)
             {
+                var filename = Path.GetFileName(path);
                 foreach (var invalidChar in Path.GetInvalidFileNameChars())
-                    path = path.Replace(invalidChar, INVALID_CHAR_REPLACEMENT);
+                    filename = filename.Replace(invalidChar, INVALID_CHAR_REPLACEMENT);
+
+                path = Path.Combine(Path.GetDirectoryName(path) ?? string.Empty, filename);
             }
 
             path ??= PersistentPaths.GlobalSettings;
 
             if (!Directory.Exists(Path.GetDirectoryName(path))) return false;
-            File.WriteAllText(path, JsonConvert.SerializeObject(Settings, StaticSettings.DefaultSerializerSettings));
+            await File.WriteAllTextAsync(path,
+                JsonConvert.SerializeObject(Settings, StaticSettings.DefaultSerializerSettings));
             return true;
         }
 
-        public static bool TryLoad(string path = null)
+        public static async Task<bool> TryLoadAsync(string path = null)
         {
             path ??= PersistentPaths.GlobalSettings;
             if (!File.Exists(path))
                 return false;
 
-            Settings = JsonConvert.DeserializeObject<SettingsContainer>(File.ReadAllText(path),
+            Settings = JsonConvert.DeserializeObject<SettingsContainer>(await File.ReadAllTextAsync(path),
                 StaticSettings.DefaultSerializerSettings);
             Settings ??= new SettingsContainer();
+
             SettingsReloaded?.Invoke();
             return true;
         }
@@ -125,6 +134,7 @@ namespace UStacker.GlobalSettings
             return type == typeof(T);
         }
 
+        // for later usage for tooltips
         public static bool TryGetSettingAttribute<T>(string[] path, out T output) where T : Attribute
         {
             output = default;
@@ -146,18 +156,24 @@ namespace UStacker.GlobalSettings
             return output is not null;
         }
 
-        [Serializable]
         internal record SettingsContainer
         {
-            [field: SerializeField] public HandlingSettings Handling { get; set; } = new();
-            [field: SerializeField] public SoundSettings Sound { get; set; } = new();
-            [field: SerializeField] public GameplaySettings Gameplay { get; set; } = new();
-            [field: SerializeField] public VideoSettings Video { get; set; } = new();
-            [field: SerializeField] public CustomizationSettings Customization { get; set; } = new();
-            [field: SerializeField] public StatCountingSettings StatCounting { get; set; } = new();
-            [field: SerializeField] public OtherSettings Others { get; set; } = new();
-            [field: SerializeField] public string Rebinds { get; set; } = string.Empty;
-            [field: SerializeField] public OverridesDictionary GameOverrrides { get; set; } = new();
+            public OverridesDictionary GameOverrrides { get; } = new();
+
+            // ReSharper disable MemberHidesStaticFromOuterClass
+            public HandlingSettings Handling { get; } = new();
+            public SoundSettings Sound { get; } = new();
+            public GameplaySettings Gameplay { get; } = new();
+            public VideoSettings Video { get; } = new();
+            public CustomizationSettings Customization { get; } = new();
+            public StatCountingSettings StatCounting { get; } = new();
+            public OtherSettings Others { get; } = new();
+
+            public string Rebinds { get; set; } = string.Empty;
+            // ReSharper restore MemberHidesStaticFromOuterClass
         }
     }
 }
+/************************************
+end AppSettings.cs
+*************************************/

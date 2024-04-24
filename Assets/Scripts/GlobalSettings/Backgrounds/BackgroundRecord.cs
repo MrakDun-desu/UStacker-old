@@ -1,4 +1,8 @@
-﻿using System;
+
+/************************************
+BackgroundRecord.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -58,3 +62,6 @@ namespace UStacker.GlobalSettings.Backgrounds
         Video
     }
 }
+/************************************
+end BackgroundRecord.cs
+*************************************/

@@ -1,3 +1,7 @@
+
+/************************************
+RotationSystem.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections.Generic;
 
@@ -11,13 +15,16 @@ namespace UStacker.GameSettings
 
         public KickTable GetKickTable(string pieceType)
         {
+            if (KickTables.ContainsKey(pieceType))
+                return KickTables[pieceType];
+
             if (pieceType.StartsWith("giant"))
-            {
-                var simplifiedPieceType = pieceType[^1].ToString().ToLowerInvariant();
-                return KickTables.ContainsKey(simplifiedPieceType) ? KickTables[simplifiedPieceType] : DefaultTable;
-            }
+                pieceType = pieceType[^1].ToString().ToLowerInvariant();
 
             return KickTables.ContainsKey(pieceType) ? KickTables[pieceType] : DefaultTable;
         }
     }
 }
+/************************************
+end RotationSystem.cs
+*************************************/

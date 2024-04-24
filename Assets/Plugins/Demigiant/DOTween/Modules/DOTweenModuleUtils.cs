@@ -155,11 +155,9 @@ namespace DG.Tweening
                 }
 #endif
                 if (!rBodyFoundAndTweened)
-                {
                     t = isLocal
                         ? target.transform.DOLocalPath(path, duration, pathMode)
                         : target.transform.DOPath(path, duration, pathMode);
-                }
                 return t;
             }
 

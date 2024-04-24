@@ -1,9 +1,12 @@
-﻿using System;
+
+/************************************
+StatCountingChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using UStacker.GlobalSettings.StatCounting;
 using UnityEngine;
 using UnityEngine.UI;
+using UStacker.GlobalSettings.StatCounting;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -37,8 +40,9 @@ namespace UStacker.GlobalSettings.Changers
         private void RefreshGroups()
         {
             foreach (var changer in _groupChangers.Values)
-                RemoveGroup(changer.Id);
+                DeleteGroup(changer.Id);
 
+            _groupChangers.Clear();
             _statCounterGroups = AppSettings.StatCounting.StatCounterGroups;
 
             foreach (var (id, group) in _statCounterGroups)
@@ -93,14 +97,9 @@ namespace UStacker.GlobalSettings.Changers
                 _statCounterGroups.Add(newId, newGroup);
         }
 
-        private void RemoveGroup(Guid groupId)
+        private void DeleteGroup(Guid groupId)
         {
             if (!_groupChangers.ContainsKey(groupId)) return;
-
-            var keysToRemove = AppSettings.StatCounting.GameStatCounterDictionary.Where(pair => pair.Value == groupId)
-                .Select(pair => pair.Key).ToArray();
-            foreach (var key in keysToRemove)
-                AppSettings.StatCounting.GameStatCounterDictionary.Remove(key);
 
             var removedChanger = _groupChangers[groupId];
 
@@ -116,8 +115,14 @@ namespace UStacker.GlobalSettings.Changers
 
             OnSizeChanged(-sizeDelta);
 
-            _groupChangers.Remove(groupId);
             _statCounterGroups.Remove(groupId);
+        }
+
+        private void RemoveGroup(Guid groupId)
+        {
+            if (!_groupChangers.ContainsKey(groupId)) return;
+            DeleteGroup(groupId);
+            _groupChangers.Remove(groupId);
         }
 
         private void AddGroup()
@@ -132,3 +137,6 @@ namespace UStacker.GlobalSettings.Changers
         }
     }
 }
+/************************************
+end StatCountingChanger.cs
+*************************************/

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: game_Ultra
   m_EditorClassIdentifier: 
   GameType: {fileID: 11400000, guid: b7f7ff470392d2d4ba48edcd7444df3d, type: 2}
-  Settings:
+  _settings:
     <General>k__BackingField:
       _nextPieceCount: 5
       _randomizerType: 0
@@ -22,37 +22,123 @@ MonoBehaviour:
       <UseCustomSeed>k__BackingField: 0
       <CustomSeed>k__BackingField: 0
       <CustomRandomizerScript>k__BackingField: 
-      <ActiveSeed>k__BackingField: 0
+      <ActiveSeed>k__BackingField: 13032450281327208164
     <Controls>k__BackingField:
-      _rotationSystemType: 4
+      _rotationSystemType: 2
       _customRotationSystem: 
-      <Allow180Spins>k__BackingField: 1
+      <Allow180Rotations>k__BackingField: 1
       <AllowHardDrop>k__BackingField: 1
       <AllowHold>k__BackingField: 1
       <AllowMoveToWall>k__BackingField: 1
+      <AllowInitialActions>k__BackingField: 1
+      <AllowAutomaticInitialRotation>k__BackingField: 1
       <UnlimitedHold>k__BackingField: 0
       <ShowGhostPiece>k__BackingField: 1
       <OverrideHandling>k__BackingField: 0
       <Handling>k__BackingField:
-        _delayedAutoShift: 0.125
-        _automaticRepeatRate: 0.2
-        _softDropFactor: 20
-        _dasCutDelay: 0
-        _doubleDropPreventionInterval: 0
+        _delayedAutoShift: 0.08500000089406967
+        _automaticRepeatRate: 0
+        _dasCutDelay: 0.01666666753590107
+        _cancelDasDelayWithInput: 1
+        _delayDasOn: 1
+        _simultaneousDasBehavior: 2
+        _softDropFactor: Infinity
         _softDropDelay: 0
+        _minSoftDropGravity: 0
+        _maxSoftDropGravity: Infinity
         _zeroGravitySoftDropBase: 0.02
-        <DelayDasOn>k__BackingField: 0
-        <SimultaneousDasBehavior>k__BackingField: 1
-        <DiagonalLockBehavior>k__BackingField: 0
-        <CancelDasDelayWithInput>k__BackingField: 1
-        <CheckForGravityAfterEachMovement>k__BackingField: 0
+        _doubleDropPreventionInterval: 0.01666666753590107
+        _diagonalLockBehavior: 0
+        _initialActionsType: 1
+        _automaticInitialRotation: 0
+      <ActiveRotationSystem>k__BackingField:
+        DefaultTable:
+          StartState: 0
+          FullSpinKicks:
+          - {x: -1, y: -2}
+          - {x: 1, y: -2}
+          ZeroToThree:
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 1, y: 1}
+          - {x: 0, y: -2}
+          - {x: 1, y: -2}
+          ZeroToOne:
+          - {x: 0, y: 0}
+          - {x: -1, y: 0}
+          - {x: -1, y: 1}
+          - {x: 0, y: -2}
+          - {x: -1, y: -2}
+          OneToZero:
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 1, y: -1}
+          - {x: 0, y: 2}
+          - {x: 1, y: 2}
+          OneToTwo:
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 1, y: -1}
+          - {x: 0, y: 2}
+          - {x: 1, y: 2}
+          TwoToOne:
+          - {x: 0, y: 0}
+          - {x: -1, y: 0}
+          - {x: -1, y: 1}
+          - {x: 0, y: -2}
+          - {x: -1, y: -2}
+          TwoToThree:
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 1, y: 1}
+          - {x: 0, y: -2}
+          - {x: 1, y: -2}
+          ThreeToTwo:
+          - {x: 0, y: 0}
+          - {x: -1, y: 0}
+          - {x: -1, y: -1}
+          - {x: 0, y: 2}
+          - {x: -1, y: 2}
+          ThreeToZero:
+          - {x: 0, y: 0}
+          - {x: -1, y: 0}
+          - {x: -1, y: -1}
+          - {x: 0, y: 2}
+          - {x: -1, y: 2}
+          ZeroToTwo:
+          - {x: 0, y: 0}
+          - {x: 0, y: 1}
+          - {x: 1, y: 1}
+          - {x: -1, y: 1}
+          - {x: 1, y: 0}
+          - {x: -1, y: 0}
+          TwoToZero:
+          - {x: 0, y: 0}
+          - {x: 0, y: -1}
+          - {x: -1, y: -1}
+          - {x: 1, y: -1}
+          - {x: -1, y: 0}
+          - {x: 1, y: 0}
+          OneToThree:
+          - {x: 0, y: 0}
+          - {x: 1, y: 0}
+          - {x: 1, y: 2}
+          - {x: 1, y: 1}
+          - {x: 0, y: 2}
+          - {x: 0, y: 1}
+          ThreeToOne:
+          - {x: 0, y: 0}
+          - {x: -1, y: 0}
+          - {x: -1, y: 2}
+          - {x: -1, y: 1}
+          - {x: 0, y: 2}
+          - {x: 0, y: 1}
     <BoardDimensions>k__BackingField:
       _boardWidth: 10
       _boardHeight: 20
       _lethalHeight: 20
       _pieceSpawnHeight: 21
       _blockCutHeight: 40
-      _boardPadding: 4
     <Gravity>k__BackingField:
       _defaultGravity: 0.02
       _defaultLockDelay: 0.5
@@ -66,7 +152,7 @@ MonoBehaviour:
     <Objective>k__BackingField:
       _gameManagerType: 1
       _customGameManager: 
-      _garbageGeneration: 0
+      _garbageGenerationType: 0
       _customGarbageGeneratorName: 
       _endConditionCount: 120
       _garbageHeight: 10
@@ -77,7 +163,125 @@ MonoBehaviour:
       <ToppingOutIsOkay>k__BackingField: 0
       <StartingLevel>k__BackingField: 
     <Presentation>k__BackingField:
-      _countdownInterval: 0.8
+      _title: Ultra
+      _countdownInterval: 0.65
       _countdownCount: 3
-      <Title>k__BackingField: Ultra
-      <UseCountdown>k__BackingField: 1
+      _gamePadding: 5
+      <DefaultStatCounterGroup>k__BackingField:
+        _name: Ultra
+        _statCounterSos:
+        - {fileID: 11400000, guid: a93c75259ac95fa4c8e35e2570556598, type: 2}
+        - {fileID: 11400000, guid: a059b8164b4204e44b92ef546184abe2, type: 2}
+        - {fileID: 11400000, guid: b8aa3efaa10821544ab1a3937865e458, type: 2}
+        - {fileID: 11400000, guid: 7df7f198474b5174297ea76a062840b6, type: 2}
+        - {fileID: 11400000, guid: 2077419e4bb765a4d9bc5e3f7bbc20fa, type: 2}
+        - {fileID: 11400000, guid: 99a1507bdfe942c41a6dd7fe380ea1cb, type: 2}
+        - {fileID: 11400000, guid: da01094586ea3ff42b5d0427967e84f5, type: 2}
+        - {fileID: 11400000, guid: 5a65acaebf7418442a6506c2d5647d0d, type: 2}
+        - {fileID: 11400000, guid: 62d14d5b7668c504ba2065b11d6e10b6, type: 2}
+        _statCounters:
+        - Name: Clear type action text
+          Type: 0
+          Filename: 
+          Script: "PieceTypes = {\n\t[\"t\"] = \"T\",\n\t[\"i\"] = \"I\",\n\t[\"o\"]
+            = \"O\",\n\t[\"s\"] = \"S\",\n\t[\"z\"] = \"Z\",\n\t[\"l\"] = \"L\",\n\t[\"j\"]
+            = \"J\"\n}\n\nClearCounts = {\n\t\"Single\",\n\t\"Double\",\n\t\"Triple\",\n\t\"Quad\",\n\t\"Quint\",\n\t\"Hexad\",\n\t\"Heptad\",\n\t\"Octad\",\n\t\"Nonad\",\n\t\"Decad\"\n}\n\nfunction
+            OnPiecePlaced(message)\n\tlocal output = \"\"\n\t\n\tif message.WasSpin
+            or message.WasSpinMini then\n\t\toutput = PieceTypes[message.PieceType]\n\tend\n\tif
+            output == nil then output = \"\" end\n\tif message.WasSpin then\n\t\toutput
+            = output .. \" Spin \"\n\telseif message.WasSpinMini then\n\t\toutput
+            = output .. \" Spin Mini \"\n\tend\n\n\tif message.LinesCleared <= 0
+            then\n\t\tif output == \"\" then\n\t\t\treturn\n\t\tend\n\t\tSetVisibility(1)\n\t\tAnimateVisibility(0,
+            2)\n\t\treturn output\n\tend\n\n\tSetVisibility(1)\n\tAnimateVisibility(0,
+            2)\n\tif message.LinesCleared <= #ClearCounts then\n\t\treturn output
+            .. ClearCounts[message.LinesCleared]\n\telse\n\t\tlocal overflow = message.LinesCleared
+            - #ClearCounts\n\t\treturn output .. ClearCounts[#ClearCounts] .. overflow\n\tend\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
+            {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
+          Position: {x: -10, y: 13}
+          Size: {x: 9, y: 2}
+          UpdateInterval: 0
+        - Name: Lines cleared
+          Type: 0
+          Filename: 
+          Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+            then\n\t\treturn \"Lines cleared: 0\"\n\tend\nend\nfunction OnPiecePlaced(message)\n\treturn
+            \"Lines cleared: \" .. Stats.LinesCleared\nend\nSetText(\"Lines cleared:
+            0\")\nreturn {\n\t[\"PiecePlaced\"] = OnPiecePlaced,\n\t[\"GameStateChanged\"]
+            = Reset\n}"
+          Position: {x: -10, y: 2}
+          Size: {x: 9, y: 2}
+          UpdateInterval: 0
+        - Name: Pieces
+          Type: 0
+          Filename: 
+          Script: "function Reset(message)\n\tif message.NewState:ToString() == \"Initializing\"
+            then\n\t\treturn FormatOutput()\n\tend\nend\n\nfunction FormatOutput()\r\n\tlocal
+            pps = Stats.PiecesPerSecond\r\n\tlocal piecesPlaced = Stats.PiecesPlaced\r\n\treturn
+            \"Pieces: \" .. piecesPlaced .. \"\\nPPS: \" .. StatUtility:FormatNumber(pps)\r\nend\r\nSetText(FormatOutput())\r\nreturn
+            {\r\n\t[\"CounterUpdated\"] = FormatOutput,\r\n\t[\"PiecePlaced\"] =
+            FormatOutput,\n\t[\"GameStateChanged\"] = Reset\n}"
+          Position: {x: -9, y: 4}
+          Size: {x: 8, y: 3}
+          UpdateInterval: 0.1
+        - Name: Score
+          Type: 0
+          Filename: 
+          Script: "function OnUpdated()\n\tlocal spp = Stats.Score / Stats.PiecesPlaced\n\treturn
+            \"Score: \" .. Stats.Score .. \"\\n\" .. StatUtility:FormatNumber(spp,
+            0) .. \" per piece\"\nend\nSetText(\"Score: 0\\n0 per piece\")\nreturn
+            {\n\t[\"ScoreChanged\"] = OnUpdated,\n\t[\"PiecePlaced\"] = OnUpdated\n}"
+          Position: {x: -10, y: 7}
+          Size: {x: 9, y: 3}
+          UpdateInterval: 0
+        - Name: Stopwatch
+          Type: 0
+          Filename: 
+          Script: "function OnUpdated()\n\treturn \"Time: \" .. StatUtility:GetFormattedTime()\nend\nSetText(\"Time:
+            \" .. StatUtility:FormatTime(0))\nreturn {\n\t[\"CounterUpdated\"] =
+            OnUpdated\n}"
+          Position: {x: -9, y: 0}
+          Size: {x: 8, y: 2}
+          UpdateInterval: 0.01
+        - Name: All clears action text
+          Type: 0
+          Filename: 
+          Script: "function OnPiecePlaced(message)\n\tif not message.WasAllClear
+            then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0, 2)\n\treturn
+            \"ALL CLEAR\"\nend\n\nSetAlignment(\"center\")\nSetColor(\"#ffe44d00\")\nSetText(\"\")\n\nreturn
+            {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
+          Position: {x: 1, y: 10}
+          Size: {x: 8, y: 2}
+          UpdateInterval: 0
+        - Name: Back to back action text
+          Type: 0
+          Filename: 
+          Script: "function OnPiecePlaced(message)\n\tif message.CurrentBackToBack
+            == 0 or not message.WasBtbClear then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
+            2)\n\treturn \"Back to Back x\" .. message.CurrentBackToBack\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
+            {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
+          Position: {x: -10, y: 15}
+          Size: {x: 9, y: 2}
+          UpdateInterval: 0
+        - Name: Combo action text
+          Type: 0
+          Filename: 
+          Script: "function OnPiecePlaced(message)\n\tif message.CurrentCombo ==
+            0 then\n\t\treturn\n\tend\n\tSetVisibility(1)\n\tAnimateVisibility(0,
+            2)\n\treturn \"Combo \" .. message.CurrentCombo\nend\nSetVisibility(0)\nSetText(\"\")\nreturn
+            {\n\t[\"PiecePlaced\"] = OnPiecePlaced\n}"
+          Position: {x: -10, y: 11}
+          Size: {x: 9, y: 2}
+          UpdateInterval: 0
+        - Name: Remaining end condition
+          Type: 0
+          Filename: 
+          Script: "function OnChange(message)\n\tif message.ConditionName == nil
+            or message.ConditionName == \"None\" or message.ConditionName == \"\"
+            then\n\t\treturn \"\"\n\tend\n\tlocal remaining = message.TotalCount
+            - message.CurrentCount\n\tif remaining < 0 then remaining = 0 end\n\tif
+            message.ConditionName == \"Time\" then\n\t\treturn StatUtility:FormatTime(remaining,
+            false)\n\tend\n\treturn StatUtility:FormatNumber(remaining, 0)\nend\nSetText(\"\")\nSetAlignment(\"center\")\nSetVisibility(0.4)\nreturn
+            {\n\t[\"GameEndConditionChanged\"] = OnChange\n}"
+          Position: {x: 3, y: 16}
+          Size: {x: 4, y: 4}
+          UpdateInterval: 0

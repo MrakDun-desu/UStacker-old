@@ -1,22 +1,27 @@
-﻿using JetBrains.Annotations;
+
+/************************************
+GameEndConditionChangedMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using JetBrains.Annotations;
 
 namespace UStacker.Gameplay.Communication
 {
-    public record GameEndConditionChangedMessage : MidgameMessage
+    public readonly struct GameEndConditionChangedMessage : IMidgameMessage
     {
-        [UsedImplicitly]
-        public readonly string ConditionName;
-        [UsedImplicitly]
-        public readonly double CurrentCount;
-        [UsedImplicitly]
-        public readonly double TotalCount;
+        [UsedImplicitly] public readonly string ConditionName;
+        [UsedImplicitly] public readonly double CurrentCount;
+        [UsedImplicitly] public readonly double TotalCount;
+        public double Time { get; }
 
         public GameEndConditionChangedMessage(double time, double totalCount, double currentCount, string conditionName)
-            : base(time)
         {
+            Time = time;
             TotalCount = totalCount;
             CurrentCount = currentCount;
             ConditionName = conditionName;
         }
     }
 }
+/************************************
+end GameEndConditionChangedMessage.cs
+*************************************/

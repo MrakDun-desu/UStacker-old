@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+RectTransformExtensions.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 
 namespace UStacker.Common.Extensions
 {
@@ -20,3 +24,6 @@ namespace UStacker.Common.Extensions
         }
     }
 }
+/************************************
+end RectTransformExtensions.cs
+*************************************/

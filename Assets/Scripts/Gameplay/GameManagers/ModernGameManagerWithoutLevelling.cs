@@ -1,5 +1,10 @@
-﻿using UStacker.Gameplay.Communication;
+
+/************************************
+ModernGameManagerWithoutLevelling.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using UnityEngine;
+using UStacker.Gameplay.Communication;
+using UStacker.Gameplay.Enums;
 
 namespace UStacker.Gameplay.GameManagers
 {
@@ -7,24 +12,36 @@ namespace UStacker.Gameplay.GameManagers
     {
         private long _currentScore;
 
-        private MediatorSO _mediator;
+        private Mediator _mediator;
 
-        public void Initialize(string _, MediatorSO mediator)
+        public void Initialize(string _, Mediator mediator)
         {
             _mediator = mediator;
 
             _mediator.Register<PiecePlacedMessage>(HandlePiecePlaced);
             _mediator.Register<PieceMovedMessage>(HandlePieceMoved);
-            _mediator.Register<GameStartedMessage>(_ => ResetGameManager());
-            _mediator.Register<GameRestartedMessage>(_ => ResetGameManager());
+            _mediator.Register<GameStateChangedMessage>(HandleGameStateChange);
         }
 
-        private void ResetGameManager()
+        public void Delete()
+        {
+            Destroy(this);
+        }
+
+        private void ResetState()
         {
             _currentScore = 0;
             _mediator.Send(new ScoreChangedMessage(0, 0));
             _mediator.Send(new LevelChangedMessage(string.Empty, 0));
             _mediator.Send(new LevelUpConditionChangedMessage(0, 0, 0, "None"));
+        }
+
+        private void HandleGameStateChange(GameStateChangedMessage message)
+        {
+            if (message.NewState != GameState.Initializing)
+                return;
+
+            ResetState();
         }
 
         private void HandlePiecePlaced(PiecePlacedMessage message)
@@ -33,7 +50,6 @@ namespace UStacker.Gameplay.GameManagers
             if (message.WasSpin)
                 scoreAddition = ((int) message.LinesCleared + 1) * 400;
             else if (message.WasSpinMini)
-            {
                 scoreAddition = message.LinesCleared switch
                 {
                     0 => 100,
@@ -41,9 +57,7 @@ namespace UStacker.Gameplay.GameManagers
                     2 => 400,
                     var amount => (int) amount * 300
                 };
-            }
             else
-            {
                 scoreAddition = message.LinesCleared switch
                 {
                     0 => 0,
@@ -52,7 +66,6 @@ namespace UStacker.Gameplay.GameManagers
                     3 => 500,
                     var amount => (int) amount * 200
                 };
-            }
 
             scoreAddition += (int) message.CurrentCombo * 50;
             if (message.WasAllClear)
@@ -62,7 +75,7 @@ namespace UStacker.Gameplay.GameManagers
                 return;
 
             const float backToBackMultiplier = 1.5f;
-            if (message.CurrentBackToBack >= 1 && message.LinesCleared > 0)
+            if (message is {CurrentBackToBack: >= 1, LinesCleared: > 0})
                 scoreAddition = (int) (scoreAddition * backToBackMultiplier);
 
             _currentScore += scoreAddition;
@@ -84,3 +97,6 @@ namespace UStacker.Gameplay.GameManagers
         }
     }
 }
+/************************************
+end ModernGameManagerWithoutLevelling.cs
+*************************************/

@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+StringReferenceSO.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 
 namespace UStacker.Common
 {
@@ -8,3 +12,6 @@ namespace UStacker.Common
         public string Value;
     }
 }
+/************************************
+end StringReferenceSO.cs
+*************************************/

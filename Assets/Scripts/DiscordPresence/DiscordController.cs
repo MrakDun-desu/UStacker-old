@@ -1,5 +1,12 @@
-using UStacker.Common;
+
+/************************************
+DiscordController.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using System;
 using Discord;
+using UnityEngine.SceneManagement;
+using UStacker.Common;
+using UStacker.Common.Alerts;
 
 namespace UStacker.DiscordPresence
 {
@@ -14,7 +21,7 @@ namespace UStacker.DiscordPresence
             {
                 discord?.RunCallbacks();
             }
-            catch (ResultException)
+            catch
             {
                 DisconnectFromDiscord();
             }
@@ -35,23 +42,54 @@ namespace UStacker.DiscordPresence
             try
             {
                 discord = new Discord.Discord(ApplicationID, (ulong) CreateFlags.NoRequireDiscord);
-                var activityManager = discord.GetActivityManager();
-                var activity = new Activity
-                {
-                    State = "Still Testing", Details = "Imagine you see me stacking blocks here"
-                };
-                activityManager.UpdateActivity(activity, _ => { });
+                SceneManager.sceneLoaded += SceneManagerOnsceneLoaded;
             }
-            catch (ResultException)
+            catch
             {
                 discord = null;
             }
         }
 
+        private void SceneManagerOnsceneLoaded(Scene scene, LoadSceneMode _)
+        {
+            if (discord is null)
+                return;
+
+            var activity = new Activity
+            {
+                State = scene.name switch
+                {
+                    "Scene_Menu_Main" => "In main menu",
+                    "Scene_Menu_GameSettings_Singleplayer" => "Deciding how to play a game",
+                    "Scene_Menu_GameSettings_Custom" => "Creating a custom game",
+                    "Scene_Game_Singleplayer" => "In a singleplayer game",
+                    "Scene_Game_Multiplayer" => "In a multiplayer game",
+                    _ => string.Empty
+                },
+                ApplicationId = ApplicationID,
+                Timestamps = new ActivityTimestamps {Start = DateTimeOffset.Now.ToUnixTimeSeconds()}
+            };
+            discord.GetActivityManager().UpdateActivity(activity, ActivityUpdatedCallback);
+        }
+
+        private void ActivityUpdatedCallback(Result result)
+        {
+            if (result == Result.Ok) return;
+
+            AlertDisplayer.ShowAlert(new Alert("Couldn't connect to Discord!", "Disabling rich presence.",
+                AlertType.Info));
+            DisconnectFromDiscord();
+        }
+
+
         public void DisconnectFromDiscord()
         {
+            SceneManager.sceneLoaded -= SceneManagerOnsceneLoaded;
             discord?.Dispose();
             discord = null;
         }
     }
 }
+/************************************
+end DiscordController.cs
+*************************************/

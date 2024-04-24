@@ -16,9 +16,10 @@ MonoBehaviour:
     Name: Score
     Type: 0
     Filename: 
-    Script: "function OnUpdated()\n\tlocal spp = Stats.Score / Stats.PiecesPlaced\n\treturn
-      \"Score: \" .. Stats.Score .. \"\\n\" .. StatUtility:FormatNumber(spp, 0) ..
-      \" per piece\"\nend\nSetText(\"Score: 0\\n0 per piece\")\nreturn {\n\t[\"ScoreChanged\"]
+    Script: "function OnUpdated()\n\tlocal spp = 0\n\tif Stats.PiecesPlaced ~= 0
+      then\n\t\tspp = Stats.Score / Stats.PiecesPlaced\n\tend\n\treturn \"Score:
+      \" .. Stats.Score .. \"\\n\" .. StatUtility:FormatNumber(spp, 0) .. \" per
+      piece\"\nend\nSetText(\"Score: 0\\n0 per piece\")\nreturn {\n\t[\"ScoreChanged\"]
       = OnUpdated,\n\t[\"PiecePlaced\"] = OnUpdated\n}"
     Position: {x: -10, y: 10}
     Size: {x: 9, y: 3}

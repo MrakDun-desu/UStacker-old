@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+
+/************************************
+GameSettingsOpener.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace UStacker.GameSettings
@@ -12,3 +16,6 @@ namespace UStacker.GameSettings
         }
     }
 }
+/************************************
+end GameSettingsOpener.cs
+*************************************/

@@ -49,7 +49,8 @@ namespace DG.DOTweenEditor
 
                 previewBox = new GUIStyle(GUI.skin.box).Clone().Padding(1, 1, 0, 3)
                     .Background(DeStylePalette.squareBorderCurved_darkBorders).Border(7, 7, 7, 7);
-                previewLabel = new GUIStyle(GUI.skin.label).Clone(10, FontStyle.Bold).Padding(1, 0, 3, 0).Margin(3, 6, 0, 0).StretchWidth(false);
+                previewLabel = new GUIStyle(GUI.skin.label).Clone(10, FontStyle.Bold).Padding(1, 0, 3, 0)
+                    .Margin(3, 6, 0, 0).StretchWidth(false);
                 btOption = DeGUI.styles.button.bBlankBorderCompact.MarginBottom(2).MarginRight(4);
                 btPreview = EditorStyles.miniButton.Clone(Format.RichText);
                 previewStatusLabel = EditorStyles.miniLabel.Clone().Padding(4, 0, 0, 0).Margin(0);
@@ -89,13 +90,14 @@ namespace DG.DOTweenEditor
             GUILayout.BeginHorizontal();
             EditorGUI.BeginDisabledGroup(
                 isPreviewingThis || src.animationType == DOTweenAnimation.AnimationType.None
-                                 || !src.isActive || _previewOnlyIfSetToAutoPlay && !src.autoPlay
+                                 || !src.isActive || (_previewOnlyIfSetToAutoPlay && !src.autoPlay)
             );
             if (GUILayout.Button("► Play", Styles.btPreview))
             {
                 if (!isPreviewing) StartupGlobalPreview();
                 AddAnimationToGlobalPreview(src);
             }
+
             EditorGUI.EndDisabledGroup();
             EditorGUI.BeginDisabledGroup(isPreviewing);
             if (GUILayout.Button("► Play All <i>on GameObject</i>", Styles.btPreview))
@@ -104,12 +106,14 @@ namespace DG.DOTweenEditor
                 var anims = src.gameObject.GetComponents<DOTweenAnimation>();
                 foreach (var anim in anims) AddAnimationToGlobalPreview(anim);
             }
+
             if (GUILayout.Button("► Play All <i>in Scene</i>", Styles.btPreview))
             {
                 if (!isPreviewing) StartupGlobalPreview();
                 var anims = Object.FindObjectsOfType<DOTweenAnimation>();
                 foreach (var anim in anims) AddAnimationToGlobalPreview(anim);
             }
+
             EditorGUI.EndDisabledGroup();
             GUILayout.EndHorizontal();
             // Preview - Stop
@@ -136,10 +140,12 @@ namespace DG.DOTweenEditor
                     else if (t.IsComplete()) completedTweens++;
                     else pausedTweens++;
                 }
+
                 GUILayout.Label("Playing Tweens: " + playingTweens, Styles.previewStatusLabel);
                 GUILayout.Label("Completed Tweens: " + completedTweens, Styles.previewStatusLabel);
 //                GUILayout.Label("Paused Tweens: " + playingTweens);
             }
+
             GUILayout.EndVertical();
 
             return isPreviewing;
@@ -206,6 +212,7 @@ namespace DG.DOTweenEditor
                 if (kvp.Key.gameObject != go) continue;
                 _TmpKeys.Add(kvp.Key);
             }
+
             StopPreview(_TmpKeys);
             _TmpKeys.Clear();
 
@@ -223,11 +230,13 @@ namespace DG.DOTweenEditor
                 _AnimationToTween.Remove(kvp.Key);
                 break;
             }
+
             if (tInfo == null)
             {
                 Debug.LogWarning("DOTween Preview ► Couldn't find tween to stop");
                 return;
             }
+
             if (tInfo.isFrom)
             {
                 var totLoops = tInfo.tween.Loops();
@@ -235,7 +244,11 @@ namespace DG.DOTweenEditor
                     tInfo.tween.Goto(tInfo.tween.Duration(false));
                 else tInfo.tween.Complete();
             }
-            else tInfo.tween.Rewind();
+            else
+            {
+                tInfo.tween.Rewind();
+            }
+
             tInfo.tween.Kill();
             EditorUtility.SetDirty(tInfo.animation); // Refresh views
 
@@ -257,7 +270,11 @@ namespace DG.DOTweenEditor
                         tInfo.tween.Goto(tInfo.tween.Duration(false));
                     else tInfo.tween.Complete();
                 }
-                else tInfo.tween.Rewind();
+                else
+                {
+                    tInfo.tween.Rewind();
+                }
+
                 tInfo.tween.Kill();
                 EditorUtility.SetDirty(anim); // Refresh views
                 _AnimationToTween.Remove(anim);

@@ -1,6 +1,10 @@
-﻿namespace UStacker.Gameplay.Communication
+
+/************************************
+CountdownTickedMessage.cs -- created by Marek Dančo (xdanco00)
+*************************************/
+namespace UStacker.Gameplay.Communication
 {
-    public record CountdownTickedMessage : Message
+    public readonly struct CountdownTickedMessage : IMessage
     {
         public readonly uint RemainingTicks;
 
@@ -10,3 +14,6 @@
         }
     }
 }
+/************************************
+end CountdownTickedMessage.cs
+*************************************/

@@ -1,12 +1,16 @@
+
+/************************************
+InputPresetChanger.cs -- created by Marek Dančo (xdanco00)
+*************************************/
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using UStacker.Common;
 using TMPro;
 using UnityEngine;
+using UStacker.Common;
 
 namespace UStacker.GlobalSettings.Changers
 {
@@ -106,3 +110,6 @@ namespace UStacker.GlobalSettings.Changers
         }
     }
 }
+/************************************
+end InputPresetChanger.cs
+*************************************/
