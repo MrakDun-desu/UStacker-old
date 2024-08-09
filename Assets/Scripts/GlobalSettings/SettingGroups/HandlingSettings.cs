@@ -3,7 +3,6 @@
 HandlingSettings.cs -- created by Marek Dančo (xdanco00)
 *************************************/
 using System;
-using FishNet.Serializing;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -12,61 +11,6 @@ using UStacker.GlobalSettings.Enums;
 
 namespace UStacker.GlobalSettings.Groups
 {
-    [UsedImplicitly]
-    public static class HandlingSerializer
-    {
-        [UsedImplicitly]
-        public static void WriteHandling(this Writer writer, HandlingSettings handling)
-        {
-            writer.WriteDouble(handling.DelayedAutoShift);
-            writer.WriteDouble(handling.AutomaticRepeatRate);
-            writer.WriteDouble(handling.DasCutDelay);
-            writer.WriteBoolean(handling.CancelDasDelayWithInput);
-            writer.WriteByte((byte) handling.DelayDasOn);
-            writer.WriteByte((byte) handling.SimultaneousDasBehavior);
-
-            writer.WriteDouble(handling.SoftDropFactor);
-            writer.WriteDouble(handling.SoftDropDelay);
-            writer.WriteDouble(handling.MinSoftDropGravity);
-            writer.WriteDouble(handling.MaxSoftDropGravity);
-            writer.WriteDouble(handling.ZeroGravitySoftDropBase);
-
-            writer.WriteDouble(handling.DoubleDropPreventionInterval);
-            writer.WriteByte((byte) handling.DiagonalLockBehavior);
-            writer.WriteByte((byte) handling.InitialActionsType);
-            writer.WriteBoolean(handling.UseInitialRotations);
-            writer.WriteBoolean(handling.UseInitialHold);
-            writer.WriteByte((byte) handling.AutomaticInitialRotation);
-        }
-
-        [UsedImplicitly]
-        public static HandlingSettings ReadHandling(this Reader reader)
-        {
-            return new HandlingSettings
-            {
-                DelayedAutoShift = reader.ReadDouble(),
-                AutomaticRepeatRate = reader.ReadDouble(),
-                DasCutDelay = reader.ReadDouble(),
-                CancelDasDelayWithInput = reader.ReadBoolean(),
-                DelayDasOn = (DelayDasOn) reader.ReadByte(),
-                SimultaneousDasBehavior = (SimultaneousDasBehavior) reader.ReadByte(),
-
-                SoftDropFactor = reader.ReadDouble(),
-                SoftDropDelay = reader.ReadDouble(),
-                MinSoftDropGravity = reader.ReadDouble(),
-                MaxSoftDropGravity = reader.ReadDouble(),
-                ZeroGravitySoftDropBase = reader.ReadDouble(),
-
-                DoubleDropPreventionInterval = reader.ReadDouble(),
-                DiagonalLockBehavior = (DiagonalLockBehavior) reader.ReadByte(),
-                InitialActionsType = (InitialActionsType) reader.ReadByte(),
-                UseInitialRotations = reader.ReadBoolean(),
-                UseInitialHold = reader.ReadBoolean(),
-                AutomaticInitialRotation = (AutomaticInitialRotation) reader.ReadByte()
-            };
-        }
-    }
-
     [Serializable]
     public record HandlingSettings
     {
